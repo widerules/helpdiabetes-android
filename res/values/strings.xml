@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">HelpDiabetes</string>
+    <string name="search">Zoeken: </string>
+    <string name="creatingData">Aanmaken gegevens</string>
+    <string name="pleaseWaite">Even geduld</string>
+    <string name="add">Toevoegen</string>
+    <string name="menu_delete">Delete</string>
+    <string name="DeleteAll">Wis alles</string>
+    <string name="ShowSelectedFood">Selecties</string>
+    <string name="Back">Terug</string>
+    <string name="menu_edit">Aanpassen</string>
+    <string name="amound_of_kcal">kilocalories</string>
+    <string name="total">Totaal: </string>
+    <string name="items_selected">items geselecteerd</string>
+
+</resources>
