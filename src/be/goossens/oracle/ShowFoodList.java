@@ -20,31 +20,27 @@ public class ShowFoodList extends ListActivity {
 	// editTextSearch is the search box above the listview
 	private EditText editTextSearch;
 
-	// activity ids
-	private static final int ACTIVITY_CREATE_DATA = 0;
-	private static final int ACTIVITY_ADD_FOOD = 1;
-	private static final int ACTIVITY_SELECTED_FOOD = 2;
-
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.show_food_list);
+
 		editTextSearch = (EditText) findViewById(R.id.editTextSearch);
 		dbHelper = new DbAdapter(this);
 		dbHelper.open();
 		// check the data to see if its the first time this app is running
 		checkData();
-		registerForContextMenu(getListView());
 	}
 
 	private void checkData() {
 		Cursor foodCursor = dbHelper.fetchAllFood();
+		startManagingCursor(foodCursor);
 		switch (foodCursor.getCount()) {
 		// When it is the first time this app is running
 		// go to the page to create the data
 		case 0:
-			Intent i = new Intent(this, CreateData.class);
-			startActivityForResult(i, ACTIVITY_CREATE_DATA);
+			Intent i = new Intent(this, ShowCreateData.class);
+			startActivity(i);
 			break;
 		// if data already exists, fill the listview
 		default:
@@ -73,7 +69,10 @@ public class ShowFoodList extends ListActivity {
 
 	private void updateTitle() {
 		Cursor selectedFood = dbHelper.fetchAllSelectedFood();
-		setTitle(getResources().getString(R.string.app_name) + " (" + selectedFood.getCount() + " " + getResources().getString(R.string.items_selected) + ")");
+		startManagingCursor(selectedFood);
+		setTitle(getResources().getString(R.string.app_name) + " ("
+				+ selectedFood.getCount() + " "
+				+ getResources().getString(R.string.items_selected) + ")");
 	}
 
 	// when we press a key ( update the listview )
@@ -88,9 +87,9 @@ public class ShowFoodList extends ListActivity {
 	@Override
 	protected void onListItemClick(ListView l, View v, int position, long id) {
 		super.onListItemClick(l, v, position, id);
-		Intent i = new Intent(this, AddFood.class);
+		Intent i = new Intent(this, ShowAddFood.class);
 		i.putExtra(DbAdapter.DATABASE_FOOD_ID, id);
-		startActivityForResult(i, ACTIVITY_ADD_FOOD);
+		startActivity(i);
 	}
 
 	@Override
@@ -110,18 +109,26 @@ public class ShowFoodList extends ListActivity {
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
-		Intent i = new Intent(this, SelectedFood.class);
-		startActivityForResult(i, ACTIVITY_SELECTED_FOOD);
+		switch (item.getItemId()) {
+		//if we press in the menu on selections
+		case R.id.selected_food:
+			goToPageSelectedFood();
+			break;
+		//if we press in the menu on update own food
+		case R.id.update_own_food:
+			Intent i =new Intent(this,ShowUpdateOwnFood.class);
+			startActivity(i);
+			break;
+		}
 		return true;
 	}
 
 	public void onClickShowSelectedFood(View view) {
-		Intent i = new Intent(this, SelectedFood.class);
-		startActivityForResult(i, ACTIVITY_SELECTED_FOOD);
+		goToPageSelectedFood();
 	}
 
 	public void goToPageSelectedFood() {
-		Intent i = new Intent(this, SelectedFood.class);
-		startActivityForResult(i, ACTIVITY_SELECTED_FOOD);
+		Intent i = new Intent(this, ShowSelectedFood.class);
+		startActivity(i);
 	}
 }

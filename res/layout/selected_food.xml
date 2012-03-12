@@ -9,11 +9,12 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceMedium" />
-    
+
     <ListView
         android:id="@+android:id/list"
         android:layout_width="fill_parent"
-        android:layout_height="wrap_content" >
+        android:layout_height="0dip"
+        android:layout_weight="1.0" >
     </ListView>
 
     <LinearLayout
@@ -26,15 +27,14 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:onClick="onClickDeleteAll"
-            android:text="@string/DeleteAll" />
-
+            android:text="@string/delete_all" />
+
         <Button
             android:id="@+id/button2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/Back"
-            android:onClick="onClickBack" />
-
+            android:onClick="onClickBack"
+            android:text="@string/back" />
     </LinearLayout>
 
 </LinearLayout>
