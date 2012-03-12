@@ -4,19 +4,19 @@
     android:layout_height="fill_parent"
     android:gravity="center"
     android:orientation="vertical" >
-
+
     <TextView
         android:id="@+id/textView1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/creatingData"
+        android:text="@string/creating_data"
         android:textAppearance="?android:attr/textAppearanceLarge" />
-
+
     <TextView
         android:id="@+id/textView2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/pleaseWaite"
+        android:text="@string/please_waite"
         android:textAppearance="?android:attr/textAppearanceMedium" />
 
     <ProgressBar

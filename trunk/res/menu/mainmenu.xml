@@ -1,6 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android" >
-    <item android:id="@+id/selecties" android:title="@string/ShowSelectedFood"></item>
-    
+
+    <item
+        android:id="@+id/selected_food"
+        android:title="@string/show_selected_food">
+    </item>
+    <item android:id="@+id/update_own_food" android:title="@string/update_own_food"></item>
 
 </menu>
