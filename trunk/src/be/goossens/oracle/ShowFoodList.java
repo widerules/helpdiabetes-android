@@ -12,6 +12,7 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.SimpleCursorAdapter;
+import android.widget.Toast;
 
 public class ShowFoodList extends ListActivity {
 	// dbHelper to get the food list out the database
@@ -63,7 +64,7 @@ public class ShowFoodList extends ListActivity {
 		String[] name = new String[] { DbAdapter.DATABASE_FOOD_NAME };
 		int[] id = new int[] { R.id.text1 };
 		SimpleCursorAdapter food = new SimpleCursorAdapter(this,
-				R.layout.food_row, foodCursor, name, id);
+				R.layout.row_food, foodCursor, name, id);
 		setListAdapter(food);
 	}
 
@@ -87,7 +88,7 @@ public class ShowFoodList extends ListActivity {
 	@Override
 	protected void onListItemClick(ListView l, View v, int position, long id) {
 		super.onListItemClick(l, v, position, id);
-		Intent i = new Intent(this, ShowAddFood.class);
+		Intent i = new Intent(this, ShowAddFoodToSelection.class);
 		i.putExtra(DbAdapter.DATABASE_FOOD_ID, id);
 		startActivity(i);
 	}
@@ -95,6 +96,9 @@ public class ShowFoodList extends ListActivity {
 	@Override
 	protected void onResume() {
 		super.onResume();
+		// every time we resume make the search box empty so the user dont have
+		// to press delete search box every time he adds a selection
+		editTextSearch.setText("");
 		updateTitle();
 		fillListView();
 	}
@@ -110,21 +114,34 @@ public class ShowFoodList extends ListActivity {
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
-		//if we press in the menu on selections
-		case R.id.selected_food:
+		// if we press in the menu on selections
+		case R.id.menu_selected_food:
 			goToPageSelectedFood();
 			break;
-		//if we press in the menu on update own food
-		case R.id.update_own_food:
-			Intent i =new Intent(this,ShowUpdateOwnFood.class);
+		// if we press in the menu on update own food
+		case R.id.menu_update_own_food:
+			Intent i = new Intent(this, ShowManageOwnFood.class);
 			startActivity(i);
+			break;
+		//if we press in the menu on preferences
+		case R.id.menu_preferences:
+			Intent o = new Intent(this,ShowPreferencesInsulineRatio.class);
+			startActivity(o);
 			break;
 		}
 		return true;
 	}
 
 	public void onClickShowSelectedFood(View view) {
-		goToPageSelectedFood();
+		Cursor selectedFood = dbHelper.fetchAllSelectedFood();
+		startManagingCursor(selectedFood);
+		if (selectedFood.getCount() > 0) {
+			goToPageSelectedFood();
+		} else {
+			Toast.makeText(this,
+					getResources().getString(R.string.selections_are_empty),
+					Toast.LENGTH_SHORT).show();
+		}
 	}
 
 	public void goToPageSelectedFood() {

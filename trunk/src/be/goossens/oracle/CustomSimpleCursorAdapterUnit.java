@@ -9,11 +9,11 @@ import android.widget.SimpleCursorAdapter;
 import android.widget.TextView;
 
 
-public class CustomAdapterUnit extends SimpleCursorAdapter {
+public class CustomSimpleCursorAdapterUnit extends SimpleCursorAdapter {
 
 	private Context context;
 	
-	public CustomAdapterUnit(Context context, int layout, Cursor c, String[] from,
+	public CustomSimpleCursorAdapterUnit(Context context, int layout, Cursor c, String[] from,
 			int[] to) {
 		super(context, layout, c, from, to);
 		this.context = context;

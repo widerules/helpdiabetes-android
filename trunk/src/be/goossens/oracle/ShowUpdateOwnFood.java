@@ -1,6 +1,9 @@
 package be.goossens.oracle;
 
+import java.util.ArrayList;
+
 import android.app.ListActivity;
+import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.view.ContextMenu;
@@ -9,95 +12,147 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView.AdapterContextMenuInfo;
-import android.widget.SimpleCursorAdapter;
+import android.widget.EditText;
 import android.widget.Toast;
 
 public class ShowUpdateOwnFood extends ListActivity {
 	private DbAdapter dbHelper;
+	private EditText editTextFoodName;
+	private long foodId;
 
-	private static final int UPDATE_ID = Menu.FIRST;
+	private static final int EDIT_ID = Menu.FIRST;
 	private static final int DELETE_ID = Menu.FIRST + 1;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.show_update_own_food);
+
 		dbHelper = new DbAdapter(this);
 		dbHelper.open();
-		// fill the listview with own created food
-		fillData();
+		foodId = getIntent().getExtras().getLong(DbAdapter.DATABASE_FOOD_ID);
+		editTextFoodName = (EditText) findViewById(R.id.editTextShowUpdateOwnFoodFoodName);
+
+		//fillData();
 		registerForContextMenu(getListView());
+	}
+	
+	// converts the cursor with food units to a arrayList<DBFoodunit>
+	// and retturns that arrayList
+	private ArrayList<DBFoodUnit> getFoodUnitsFromSelectedFood() {
+		Cursor cFoodUnits = dbHelper.fetchFoodUnitByFoodId(foodId);
+		startManagingCursor(cFoodUnits);
+		ArrayList<DBFoodUnit> list = new ArrayList<DBFoodUnit>();
+		do {
+			DBFoodUnit unit = new DBFoodUnit();
+			unit.setId(cFoodUnits.getInt(cFoodUnits
+					.getColumnIndexOrThrow(DbAdapter.DATABASE_FOODUNIT_ID)));
+			unit.setStandardamound(cFoodUnits.getFloat(cFoodUnits
+					.getColumnIndexOrThrow(DbAdapter.DATABASE_FOODUNIT_STANDARDAMOUNT)));
+			unit.setName(cFoodUnits.getString(cFoodUnits
+					.getColumnIndexOrThrow(DbAdapter.DATABASE_FOODUNIT_NAME)));
+			list.add(unit);
+		} while (cFoodUnits.moveToNext());
+		return list;
 	}
 
 	private void fillData() {
-		Cursor foodCursor = dbHelper.fetchAllOwnCreatedFood();
-		startManagingCursor(foodCursor);
-		String[] name = new String[] { DbAdapter.DATABASE_FOOD_NAME };
-		int[] id = new int[] { android.R.id.text1 };
-		SimpleCursorAdapter adapter = new SimpleCursorAdapter(this,
-				android.R.layout.simple_list_item_1, foodCursor, name, id);
+		// set the text on the editTextFoodName
+		Cursor cFood = dbHelper.fetchFood(foodId);
+		startManagingCursor(cFood);
+		editTextFoodName.setText(cFood.getString(cFood
+				.getColumnIndexOrThrow(DbAdapter.DATABASE_FOOD_NAME)));
+		cFood.close();
+		// fill the listview with all the units
+		CustomBaseAdapterUnit adapter = new CustomBaseAdapterUnit(this,
+				getFoodUnitsFromSelectedFood());
 		setListAdapter(adapter);
 	}
 
-	@Override
-	public void onCreateContextMenu(ContextMenu menu, View v,
-			ContextMenuInfo menuInfo) {
-		super.onCreateContextMenu(menu, v, menuInfo);
-		menu.add(0, UPDATE_ID, 0, R.string.menu_edit);
-		menu.add(0, DELETE_ID, 0, R.string.menu_delete);
+	// On click save food name
+	public void onClickSaveFoodName(View view) {
+		// update food name
+		if (editTextFoodName.getText().length() > 0) {
+			dbHelper.updateFoodName(foodId, editTextFoodName.getText()
+					.toString());
+			Toast.makeText(
+					this,
+					getResources().getString(
+							R.string.food_name_succesfull_updated),
+					Toast.LENGTH_LONG).show();
+		} else {
+			// return message food name cant be empty
+			Toast.makeText(this,
+					getResources().getString(R.string.food_name_is_required),
+					Toast.LENGTH_LONG).show();
+		}
 	}
 
+	// on click add unit
+	public void onClickAddUnit(View view) {
+		// Go to the unit add page
+		Intent i = new Intent(this, ShowCreateUnit.class);
+		i.putExtra(DbAdapter.DATABASE_FOOD_ID, foodId);
+		startActivity(i);
+	}
+
+	@Override
+	protected void onResume() {
+		fillData();
+		super.onResume();
+	}
+	
 	@Override
 	public boolean onContextItemSelected(MenuItem item) {
 		AdapterContextMenuInfo info = (AdapterContextMenuInfo) item
 				.getMenuInfo();
 
 		switch (item.getItemId()) {
-		case UPDATE_ID:
-			break;
 		case DELETE_ID:
-			// if the food is in use we cant delete it!
-			if (checkIfTheFoodIsInUse(info.id)) {
+			Cursor cFoodUnit = dbHelper.fetchFoodUnit(info.id);
+			// check if food is in use
+			if (dbHelper.fetchSelectedFoodByFoodUnitId(info.id).getCount() <= 0) {
+				// if food is not in use, check if the food has more then 1 unit
+				if (dbHelper
+						.fetchFoodUnitByFoodId(
+								cFoodUnit.getLong(cFoodUnit
+										.getColumnIndexOrThrow(DbAdapter.DATABASE_FOODUNIT_FOODID)))
+						.getCount() > 1) {
+					dbHelper.deleteFoodUnit(info.id);
+					fillData();
+				} else {
+					Toast.makeText(
+							this,
+							getResources()
+									.getString(
+											R.string.cant_delete_food_unit_caus_food_unit_is_last_one),
+							Toast.LENGTH_LONG).show();
+				}
+			} else {
 				Toast.makeText(
 						this,
-						getResources().getString(
-								R.string.cant_delete_food_caus_food_is_in_use),
+						getResources()
+								.getString(
+										R.string.cant_delete_food_unit_caus_food_unit_is_in_use),
 						Toast.LENGTH_LONG).show();
-			} else {
-				// else we can delete it
-				deleteFoodAndFoodUnits(info.id);
-				//and refresh the list
-				fillData();
 			}
+			break;
+		case EDIT_ID:
+			Intent i = new Intent(this, ShowCreateUnit.class);
+			i.putExtra("unitId", info.id);
+			startActivity(i);
 			break;
 		}
 		return super.onContextItemSelected(item);
 	}
 
-	private void deleteFoodAndFoodUnits(long id) {
-		// First we delete all foodUnits from the food we want to delete
-		Cursor cFoodUnit = dbHelper.fetchFoodUnitByFoodId(id);
-		startManagingCursor(cFoodUnit);
-		if (cFoodUnit != null) {
-			// delete first foodUnit
-			dbHelper.deleteFoodUnit(cFoodUnit.getInt(cFoodUnit
-					.getColumnIndexOrThrow(DbAdapter.DATABASE_FOODUNIT_ID)));
-			// delete the other foodUnits
-			while (cFoodUnit.moveToNext()) {
-				dbHelper.deleteFoodUnit(cFoodUnit.getInt(cFoodUnit
-						.getColumnIndexOrThrow(DbAdapter.DATABASE_FOODUNIT_ID)));
-			}
-		}
-		// Then we delete the food self
-		dbHelper.deleteFood(id);
+	// Create context menu ( long pressed on item in listview )
+	@Override
+	public void onCreateContextMenu(ContextMenu menu, View v,
+			ContextMenuInfo menuInfo) {
+		super.onCreateContextMenu(menu, v, menuInfo);
+		menu.add(0, EDIT_ID, 0, R.string.menu_edit);
+		menu.add(0, DELETE_ID, 0, R.string.menu_delete);
 	}
 
-	private boolean checkIfTheFoodIsInUse(long foodId) {
-		return dbHelper.fetchSelectedFoodByFoodId(foodId).getCount() > 0;
-	}
-
-	// if we press on create new food
-	public void onClickCreateNewFood(View view) {
-		//Go to new page to create new food
-	}
 }

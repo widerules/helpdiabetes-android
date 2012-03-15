@@ -20,8 +20,8 @@ public class ShowSelectedFood extends ListActivity {
 
 	private List<DBSelectedFood> listOfSelectedFood;
 
-	private static final int DELETE_ID = Menu.FIRST;
-	private static final int EDIT_ID = Menu.FIRST + 1;
+	private static final int EDIT_ID = Menu.FIRST;
+	private static final int DELETE_ID = Menu.FIRST + 1;
 
 	// Need this id to update all the values afther we updated a selectedFood
 	private static final int update_selectedFood_id = 0;
@@ -29,7 +29,7 @@ public class ShowSelectedFood extends ListActivity {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.selected_food);
+		setContentView(R.layout.show_selected_food);
 
 		dbHelper = new DbAdapter(this);
 		dbHelper.open();
@@ -47,10 +47,7 @@ public class ShowSelectedFood extends ListActivity {
 		startManagingCursor(selectedFoodCursor);
 		ArrayList<DBSelectedFood> list = new ArrayList<DBSelectedFood>();
 		while (selectedFoodCursor.moveToNext()) {
-			list.add(
-			// new DBSelectedFood(id, amound, foodName, kcal, unitName, carbs,
-			// prot, fat, standardAmound)
-			new DBSelectedFood(
+			list.add(new DBSelectedFood(
 					selectedFoodCursor
 							.getString(selectedFoodCursor
 									.getColumnIndexOrThrow(DbAdapter.DATABASE_SELECTEDFOOD_ID)),
@@ -135,8 +132,8 @@ public class ShowSelectedFood extends ListActivity {
 	public void onCreateContextMenu(ContextMenu menu, View v,
 			ContextMenuInfo menuInfo) {
 		super.onCreateContextMenu(menu, v, menuInfo);
-		menu.add(0, DELETE_ID, 0, R.string.menu_delete);
 		menu.add(0, EDIT_ID, 0, R.string.menu_edit);
+		menu.add(0, DELETE_ID, 0, R.string.menu_delete);
 	}
 
 	// if we select a item in the context menu check if pressed delete or edit.
@@ -155,7 +152,7 @@ public class ShowSelectedFood extends ListActivity {
 		// go back to the select page
 		case EDIT_ID:
 			Cursor cSelectedFood = dbHelper.fetchSelectedFood(info.id);
-			Intent i = new Intent(this, ShowAddFood.class);
+			Intent i = new Intent(this, ShowAddFoodToSelection.class);
 			i.putExtra(
 					DbAdapter.DATABASE_FOOD_ID,
 					cSelectedFood.getLong(cSelectedFood
@@ -184,8 +181,8 @@ public class ShowSelectedFood extends ListActivity {
 	// to fill the listview with data
 	private void fillData() {
 		listOfSelectedFood = getSelectedFood();
-		CustomAdapterSelectedFood adapter = new CustomAdapterSelectedFood(this,
-				listOfSelectedFood);
+		CustomBaseAdapterSelectedFood adapter = new CustomBaseAdapterSelectedFood(
+				this, listOfSelectedFood);
 		setListAdapter(adapter);
 	}
 

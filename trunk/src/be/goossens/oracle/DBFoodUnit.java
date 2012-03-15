@@ -26,6 +26,12 @@ public class DBFoodUnit {
 		this.visible = visible;
 		this.foodid = foodid;
 	}
+	
+	public DBFoodUnit() {
+		super();
+	}
+
+
 	public int getId() {
 		return id;
 	}
