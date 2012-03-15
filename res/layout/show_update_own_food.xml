@@ -3,18 +3,53 @@
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     android:orientation="vertical" >
+
+    <LinearLayout
+        android:id="@+id/linearLayout1"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content" >
+
+        <TextView
+            android:id="@+id/textView1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/food_name" />
+
+        <EditText
+            android:id="@+id/editTextShowUpdateOwnFoodFoodName"
+            android:layout_width="0dip"
+            android:layout_height="wrap_content"
+            android:layout_weight="1" >
+
+            <requestFocus />
+        </EditText>
+
+    </LinearLayout>
 
     <Button
         android:id="@+id/button1"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:text="@string/create_new_food"
-        android:onClick="onClickCreateNewFood" />
+        android:text="@string/save_food_name"
+        android:onClick="onClickSaveFoodName" />
+
+    <Button
+        android:id="@+id/button2"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/add_unit"
+        android:onClick="onClickAddUnit" />
+
+    <TextView
+        android:id="@+id/textView2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/units" />
 
     <ListView
         android:id="@+android:id/list"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content" >
     </ListView>
-
+    
 </LinearLayout>

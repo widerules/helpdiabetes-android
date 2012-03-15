@@ -21,25 +21,49 @@
     <string name="multiplie">X</string>
     <string name="cant_add_more_then_five_digits">U kan niet meer dan 5 digits ingeven!</string>
     <string name="cant_delete_food_caus_food_is_in_use">Dit eten kan niet verwijderd worden (Het word nog gebruikt in een selectie)!</string>
+    <string name="cant_delete_food_unit_caus_food_unit_is_in_use">Deze hoeveelheid kan niet verwijderd worden (Hij word nog gebruikt in een selectie)!</string>
+    <string name="cant_delete_food_unit_caus_food_unit_is_last_one">Deze hoeveelheid kan niet verwijderd worden (Het is de laatste van dit eten)!</string>
     <string name="value_cant_be_more_then_ninety_nine">De waarde mag niet meer dan 999 zijn!</string>
     <string name="selected_food_aint_added">Geselecteerd eten niet toegevoegd</string>
     <string name="value_amount_cant_be_zero">waarde aantal mag niet 0 zijn</string>
-    <string name="settings">Settings</string>
+    <string name="settings">Instellingen</string>
     <string name="update_own_food">Eigen eten updaten</string>
     <string name="create_new_food">Nieuw eten maken</string>
+    <string name="food_name">Naam eten</string>
+    <string name="gram">gram</string>
+    <string name="hundred">100</string>
+    <string name="food_name_is_required">Naam eten mag niet leeg zijn</string>
+    <string name="save_food_name">Eten naam wijzigen</string>
+    <string name="unit_name_is_required">Hoeveelheid mag niet leeg zijn</string>
+    <string name="kcal_is_required">kilocalories mag niet leeg zijn</string>
+    <string name="prot_is_required">eiwit mag niet leeg zijn</string>
+    <string name="carbs_is_required">koolhydraten mag niet leeg zijn</string>
+    <string name="fat_is_required">Vet mag niet leeg zijn</string>
+    <string name="food_name_succesfull_updated">Eten naam is succesvol aangepast</string>
+    <string name="add_unit">Hoeveelheid toevoegen</string>
+    <string name="units">Hoeveelheden</string>
+    <string name="unit">Hoeveelheid</string>
+    <string name="selections_are_empty">Selecties is leeg</string>
     
    	<!-- Preference category strings -->
-    <string name="pref_insuline_ratio">Insuline ratio</string>
-	<string name="pref_meal_times">Maaltijd tijden</string>
-	
+    <string name="pref_insuline_ratio">Insuline ratio aanpassen</string>
+	<string name="pref_meal_times">Maaltijd tijden aanpassen</string>
 	<!-- Preference editText strings -->
 	<string name="pref_breakfastratio_title">Ontbijt</string>
 	<string name="pref_lunchratio_title">Middag</string>
 	<string name="pref_snackratio_title">Vieruurtje</string>
 	<string name="pref_dinnerratio_title">Avondmaal</string>
-	
-	<string name="pref_time_breakfast_to_lunch">Ontbijt tot middag</string>
-	<string name="pref_time_lunch_to_snack">Middag tot vieruurtje</string>
-	<string name="pref_time_snack_to_dinner">Vieruurtje tot avondmaal</string>
-	
+	<string name="to">tot</string>
+    <string name="starts_at"> begint om</string>
+    
+    <string name="pref_time_breakfast">Ontbijt</string>
+    <string name="pref_time_lunch">Middag</string>
+    <string name="pref_time_snack">Vieruurtje</string>
+    <string name="pref_time_dinner">Avondmaal</string>
+    
+	<string name="pref_standard_time_breakfast">06:00</string>
+	<string name="pref_standard_time_lunch">12:00</string>
+	<string name="pref_standard_time_snack">16:00</string>
+	<string name="pref_standard_time_dinner">18:00</string>
+	<string name="pref_standard_insuline_ratio">0.0</string>
 </resources>

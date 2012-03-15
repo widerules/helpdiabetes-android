@@ -2,9 +2,16 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android" >
 
     <item
-        android:id="@+id/selected_food"
+        android:id="@+id/menu_selected_food"
         android:title="@string/show_selected_food">
     </item>
-    <item android:id="@+id/update_own_food" android:title="@string/update_own_food"></item>
+    <item
+        android:id="@+id/menu_update_own_food"
+        android:title="@string/update_own_food">
+    </item>
+    <item
+        android:id="@+id/menu_preferences"
+        android:title="@string/settings">
+    </item>
 
 </menu>
