@@ -18,9 +18,20 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".CreateData"></activity>
-        <activity android:name=".AddFood"></activity>
-        <activity android:name=".SelectedFood"></activity>
+        <activity android:name=".ShowCreateData" >
+        </activity>
+        <activity android:name=".ShowAddFoodToSelection" >
+        </activity>
+        <activity android:name=".ShowSelectedFood" >
+        </activity>
+        <activity android:name=".Preferences" >
+        </activity>
+        <activity android:name=".ShowManageOwnFood"></activity>
+        <activity android:name=".ShowCreateFood"></activity>
+        <activity android:name=".ShowUpdateOwnFood"></activity>
+        <activity android:name=".ShowCreateUnit"></activity>
+        <activity android:name=".ShowPreferencesInsulineRatio"></activity>
+        <activity android:name=".ShowPreferencesMealTimes"></activity>
     </application>
 
 </manifest>
