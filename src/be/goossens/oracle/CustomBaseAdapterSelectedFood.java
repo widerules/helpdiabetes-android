@@ -10,11 +10,11 @@ import android.view.View.OnClickListener;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 
-public class CustomAdapterSelectedFood extends BaseAdapter implements OnClickListener {
+public class CustomBaseAdapterSelectedFood extends BaseAdapter implements OnClickListener {
 	private Context context;
 	private List<DBSelectedFood> listSelectedFood;
 	 
-	public CustomAdapterSelectedFood(Context context, List<DBSelectedFood> listSelectedFood){
+	public CustomBaseAdapterSelectedFood(Context context, List<DBSelectedFood> listSelectedFood){
 		this.context = context;
 		this.listSelectedFood = listSelectedFood;
 	}
@@ -35,7 +35,7 @@ public class CustomAdapterSelectedFood extends BaseAdapter implements OnClickLis
 		DBSelectedFood entry = listSelectedFood.get(position);
 		if(convertView == null){
 			LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-			convertView = inflater.inflate(R.layout.selected_food_row, null);
+			convertView = inflater.inflate(R.layout.row_selected_food, null);
 		}
 		float standardAmound = entry.getStandardAmound();
 		float amound = entry.getAmound();
