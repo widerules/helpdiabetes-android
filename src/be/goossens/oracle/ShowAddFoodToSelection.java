@@ -356,7 +356,6 @@ public class ShowAddFoodToSelection extends Activity {
 			// if we cant get the amound as a float return message
 			returnMessageFoodAintAddedValueCantBeZero();
 		}
-
 		setResult(RESULT_OK);
 		finish();
 	}

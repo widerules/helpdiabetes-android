@@ -44,7 +44,7 @@
     <string name="units">Hoeveelheden</string>
     <string name="unit">Hoeveelheid</string>
     <string name="selections_are_empty">Selecties is leeg</string>
-    
+    <string name="saved">Opgeslagen</string>
    	<!-- Preference category strings -->
     <string name="pref_insuline_ratio">Insuline ratio aanpassen</string>
 	<string name="pref_meal_times">Maaltijd tijden aanpassen</string>

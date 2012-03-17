@@ -4,7 +4,8 @@ import android.app.ListActivity;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
-import android.view.KeyEvent;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -28,27 +29,24 @@ public class ShowFoodList extends ListActivity {
 
 		editTextSearch = (EditText) findViewById(R.id.editTextSearch);
 		dbHelper = new DbAdapter(this);
-		dbHelper.open();
-		// check the data to see if its the first time this app is running
-		checkData();
-	}
+		dbHelper.createDatabase();
 
-	private void checkData() {
-		Cursor foodCursor = dbHelper.fetchAllFood();
-		startManagingCursor(foodCursor);
-		switch (foodCursor.getCount()) {
-		// When it is the first time this app is running
-		// go to the page to create the data
-		case 0:
-			Intent i = new Intent(this, ShowCreateData.class);
-			startActivity(i);
-			break;
-		// if data already exists, fill the listview
-		default:
-			updateTitle();
-			fillListView();
-			break;
-		}
+		// This is used to update the listview when the text in the search boxs
+		// changes
+		editTextSearch.addTextChangedListener(new TextWatcher() {
+
+			public void onTextChanged(CharSequence s, int start, int before,
+					int count) {
+				refresh();
+			}
+
+			public void beforeTextChanged(CharSequence s, int start, int count,
+					int after) {
+			}
+
+			public void afterTextChanged(Editable s) {
+			}
+		});
 	}
 
 	// Fill the listview with all the food data
@@ -76,14 +74,6 @@ public class ShowFoodList extends ListActivity {
 				+ getResources().getString(R.string.items_selected) + ")");
 	}
 
-	// when we press a key ( update the listview )
-	@Override
-	public boolean dispatchKeyEvent(KeyEvent event) {
-		updateTitle();
-		fillListView();
-		return super.dispatchKeyEvent(event);
-	}
-
 	// when we click on a item in the listview
 	@Override
 	protected void onListItemClick(ListView l, View v, int position, long id) {
@@ -96,11 +86,11 @@ public class ShowFoodList extends ListActivity {
 	@Override
 	protected void onResume() {
 		super.onResume();
+		dbHelper.open();
 		// every time we resume make the search box empty so the user dont have
 		// to press delete search box every time he adds a selection
 		editTextSearch.setText("");
-		updateTitle();
-		fillListView();
+		refresh();
 	}
 
 	// Menu
@@ -123,9 +113,9 @@ public class ShowFoodList extends ListActivity {
 			Intent i = new Intent(this, ShowManageOwnFood.class);
 			startActivity(i);
 			break;
-		//if we press in the menu on preferences
+		// if we press in the menu on preferences
 		case R.id.menu_preferences:
-			Intent o = new Intent(this,ShowPreferencesInsulineRatio.class);
+			Intent o = new Intent(this, ShowPreferencesInsulineRatio.class);
 			startActivity(o);
 			break;
 		}
@@ -147,5 +137,22 @@ public class ShowFoodList extends ListActivity {
 	public void goToPageSelectedFood() {
 		Intent i = new Intent(this, ShowSelectedFood.class);
 		startActivity(i);
+	}
+
+	private void refresh() {
+		updateTitle();
+		fillListView();
+	}
+
+	@Override
+	protected void onPause() {
+		dbHelper.close();
+		super.onPause();
+	}
+
+	@Override
+	protected void onStop() {
+		dbHelper.close();
+		super.onStop();
 	}
 }

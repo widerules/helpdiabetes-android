@@ -33,10 +33,10 @@ public class ShowUpdateOwnFood extends ListActivity {
 		foodId = getIntent().getExtras().getLong(DbAdapter.DATABASE_FOOD_ID);
 		editTextFoodName = (EditText) findViewById(R.id.editTextShowUpdateOwnFoodFoodName);
 
-		//fillData();
+		// fillData();
 		registerForContextMenu(getListView());
 	}
-	
+
 	// converts the cursor with food units to a arrayList<DBFoodunit>
 	// and retturns that arrayList
 	private ArrayList<DBFoodUnit> getFoodUnitsFromSelectedFood() {
@@ -101,7 +101,7 @@ public class ShowUpdateOwnFood extends ListActivity {
 		fillData();
 		super.onResume();
 	}
-	
+
 	@Override
 	public boolean onContextItemSelected(MenuItem item) {
 		AdapterContextMenuInfo info = (AdapterContextMenuInfo) item
