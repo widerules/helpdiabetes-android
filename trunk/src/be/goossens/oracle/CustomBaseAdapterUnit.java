@@ -1,5 +1,9 @@
 package be.goossens.oracle;
 
+/*
+ * This class is used to show a popup if we click on a spinner with the unit standardamount + the unit name
+ */
+
 import java.util.List;
 
 import android.content.Context;

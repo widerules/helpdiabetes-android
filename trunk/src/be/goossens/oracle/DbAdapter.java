@@ -19,11 +19,11 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 public class DbAdapter extends SQLiteOpenHelper {
 	// The android default system path to my application database
-		private static String DB_PATH = "/data/data/be.goossens.oracle/databases/";
-		private static String DB_NAME = "dbhelpdiabetesnl";
-		private static final int DATABASE_VERSION = 1;
-		private SQLiteDatabase mDb;
-		private final Context mCtx;
+	private static String DB_PATH = "/data/data/be.goossens.oracle/databases/";
+	private static String DB_NAME = "dbhelpdiabetesnl";
+	private static final int DATABASE_VERSION = 1;
+	private SQLiteDatabase mDb;
+	private final Context mCtx;
 
 	// settings
 	private static final String DATABASE_SETTINGS_TABLE = "settings";
@@ -36,7 +36,7 @@ public class DbAdapter extends SQLiteOpenHelper {
 	public static final String DATABASE_SETTINGS_MEAL_TIME_LUNCH = "mealtimelunch";
 	public static final String DATABASE_SETTINGS_MEAL_TIME_SNACK = "mealtimesnack";
 	public static final String DATABASE_SETTINGS_MEAL_TIME_DINNER = "mealtimedinner";
-	
+
 	// SelectedFood
 	private static final String DATABASE_SELECTEDFOOD_TABLE = "selectedfood";
 	public static final String DATABASE_SELECTEDFOOD_ID = "_id";
@@ -74,10 +74,9 @@ public class DbAdapter extends SQLiteOpenHelper {
 	public static final String DATABASE_FOODUNIT_FAT = "fat";
 	public static final String DATABASE_FOODUNIT_VISIBLE = "visible";
 	public static final String DATABASE_FOODUNIT_FOODID = "foodid";
-	
-	
+
 	public DbAdapter(Context ctx) {
-		super(ctx,DB_NAME,null,DATABASE_VERSION);
+		super(ctx, DB_NAME, null, DATABASE_VERSION);
 		this.mCtx = ctx;
 	}
 
@@ -140,15 +139,16 @@ public class DbAdapter extends SQLiteOpenHelper {
 			// The database does not exists
 		}
 		return checkDB != null ? true : false;
-		//return false;
+		// return false;
 	}
 
-	public void open() throws SQLException{
-		String myPath = DB_PATH + DB_NAME;
-		mDb = SQLiteDatabase.openDatabase(myPath, null, SQLiteDatabase.OPEN_READWRITE);
+	public void open() throws SQLException {
+			String myPath = DB_PATH + DB_NAME;
+			mDb = SQLiteDatabase.openDatabase(myPath, null,
+					SQLiteDatabase.OPEN_READWRITE);
 	}
-	
-	// SETTINGS Functions
+
+	// SETTINGS Functions 
 	// create settings
 	public long createSettings() {
 		ContentValues initialValues = new ContentValues();
@@ -465,12 +465,12 @@ public class DbAdapter extends SQLiteOpenHelper {
 	@Override
 	public void onCreate(SQLiteDatabase arg0) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
 	public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
 		// TODO Auto-generated method stub
-		
+
 	}
 }

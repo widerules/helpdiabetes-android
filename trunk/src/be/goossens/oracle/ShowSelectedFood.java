@@ -83,8 +83,10 @@ public class ShowSelectedFood extends ListActivity {
 		Cursor allSelectedFood = dbHelper.fetchAllSelectedFood();
 		startManagingCursor(allSelectedFood);
 		while (allSelectedFood.moveToNext()) {
+			float subKcal,subCarbs,subProtein,subFat;
+			
 			// add the calculated kcal to the total
-			totalKcal += allSelectedFood
+			subKcal = allSelectedFood
 					.getFloat(allSelectedFood
 							.getColumnIndexOrThrow(DbAdapter.DATABASE_SELECTEDFOOD_AMOUNT))
 					* allSelectedFood
@@ -92,7 +94,7 @@ public class ShowSelectedFood extends ListActivity {
 									.getColumnIndexOrThrow(DbAdapter.DATABASE_SELECTEDFOOD_KCAL));
 
 			// add the calculated carbs to the total
-			totalCarbs += allSelectedFood
+			subCarbs = allSelectedFood
 					.getFloat(allSelectedFood
 							.getColumnIndexOrThrow(DbAdapter.DATABASE_SELECTEDFOOD_AMOUNT))
 					* allSelectedFood
@@ -100,19 +102,31 @@ public class ShowSelectedFood extends ListActivity {
 									.getColumnIndexOrThrow(DbAdapter.DATABASE_SELECTEDFOOD_CARBS));
 
 			// add the calculated protein to the total
-			totalProtein += allSelectedFood
+			subProtein = allSelectedFood
 					.getFloat(allSelectedFood
 							.getColumnIndexOrThrow(DbAdapter.DATABASE_SELECTEDFOOD_AMOUNT))
 					* allSelectedFood
 							.getFloat(allSelectedFood
 									.getColumnIndexOrThrow(DbAdapter.DATABASE_SELECTEDFOOD_PROTEIN));
 
-			totalFat += allSelectedFood
+			subFat = allSelectedFood
 					.getFloat(allSelectedFood
 							.getColumnIndexOrThrow(DbAdapter.DATABASE_SELECTEDFOOD_AMOUNT))
 					* allSelectedFood
 							.getFloat(allSelectedFood
 									.getColumnIndexOrThrow(DbAdapter.DATABASE_SELECTEDFOOD_FAT));
+			
+			//Update when the unit is 100 gram we do /100
+			if(allSelectedFood.getInt(allSelectedFood.getColumnIndexOrThrow(DbAdapter.DATABASE_SELECTEDFOOD_STANDARDAMOUNT)) == 100){
+				subKcal = subKcal / 100;
+				subCarbs= subCarbs / 100;
+				subProtein= subProtein / 100;
+				subFat = subFat / 100;
+			}
+			totalKcal += subKcal;
+			totalCarbs += subCarbs;
+			totalProtein += subProtein;
+			totalFat += subFat;
 		}
 		tvTotal.setText(getResources().getString(R.string.total) + ": \n" + " "
 				+ totalKcal + " "

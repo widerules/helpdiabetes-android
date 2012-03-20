@@ -1,5 +1,10 @@
 package be.goossens.oracle;
 
+/*
+ * This class is used in ShowAddFoodToSelection.java
+ * This class will handle the text on the spinner
+ * */
+
 import android.content.Context;
 import android.database.Cursor;
 import android.view.LayoutInflater;
@@ -28,8 +33,8 @@ public class CustomSimpleCursorAdapterUnit extends SimpleCursorAdapter {
 			convertView = inflater.inflate(android.R.layout.simple_spinner_item, null);
 		}
 		TextView tvText = (TextView) convertView.findViewById(android.R.id.text1);
-		//set the text on the spinner unitStandardamount + " " + unitName
-		tvText.setText(cursor.getString(cursor.getColumnIndexOrThrow(DbAdapter.DATABASE_FOODUNIT_STANDARDAMOUNT)) + " " + cursor.getString(cursor.getColumnIndexOrThrow(DbAdapter.DATABASE_FOODUNIT_NAME)));
+		//set the text on the spinner unitName
+		tvText.setText(cursor.getString(cursor.getColumnIndexOrThrow(DbAdapter.DATABASE_FOODUNIT_NAME)));
 		
 		return convertView;
 	}
