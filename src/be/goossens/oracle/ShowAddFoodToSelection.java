@@ -14,6 +14,7 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.SimpleCursorAdapter;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -30,6 +31,11 @@ public class ShowAddFoodToSelection extends Activity {
 
 	// To store the selected food in
 	private Cursor foodCursor;
+	private SimpleCursorAdapter adapter;
+
+	// use this boolean so if we come from update we dont set standardamound in
+	// editTextFoodAMound
+	private boolean first;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -38,6 +44,8 @@ public class ShowAddFoodToSelection extends Activity {
 
 		dbHelper = new DbAdapter(this);
 		dbHelper.open();
+
+		first = false;
 
 		// Get the selected food
 		foodCursor = dbHelper.fetchFood(getIntent().getExtras().getLong(
@@ -55,8 +63,13 @@ public class ShowAddFoodToSelection extends Activity {
 				.setOnItemSelectedListener(new OnItemSelectedListener() {
 					public void onItemSelected(AdapterView<?> arg0, View arg1,
 							int arg2, long arg3) {
+						if (!first)
+							checkStandardAmound();
 						fillTextViewSelectedFood();
 						fillTextViewCalculated();
+
+						if (first)
+							first = !first;
 					}
 
 					public void onNothingSelected(AdapterView<?> arg0) {
@@ -66,9 +79,12 @@ public class ShowAddFoodToSelection extends Activity {
 
 		fillData();
 
+		checkStandardAmound();
+
 		// after we filled the data in the spinner we have to check if we need
 		// to update or create a selectedFood
 		if (getIntent().getExtras().getLong("selectedfoodid") != 0) {
+			first = true;
 			Cursor cSelectedFood = dbHelper.fetchSelectedFood(getIntent()
 					.getExtras().getLong("selectedfoodid"));
 			startManagingCursor(cSelectedFood);
@@ -87,35 +103,50 @@ public class ShowAddFoodToSelection extends Activity {
 		}
 
 		fillTextViewSelectedFood();
+		fillTextViewCalculated();
+	}
+
+	private void checkStandardAmound() {
+		Cursor cUnit = dbHelper.fetchFoodUnit(spinnerFoodUnits
+				.getSelectedItemId());
+		cUnit.moveToFirst();
+		if (cUnit
+				.getInt(cUnit
+						.getColumnIndexOrThrow(DbAdapter.DATABASE_FOODUNIT_STANDARDAMOUNT)) != 100) {
+			editTextFoodAmound
+					.setText(cUnit.getString(cUnit
+							.getColumnIndexOrThrow(DbAdapter.DATABASE_FOODUNIT_STANDARDAMOUNT)));
+		} else {
+			editTextFoodAmound.setText("");
+		}
+		cUnit.close();
 	}
 
 	private void setSelectedFoodUnitItemInSpinnerSelected(int selectedFoodUnitId) {
 		int position = 0;
-
-		// First we get all the foodUnits from the spinner
-		CustomSimpleCursorAdapterUnit adapter = (CustomSimpleCursorAdapterUnit) spinnerFoodUnits
-				.getAdapter();
-		Cursor cursorTest = adapter.getCursor();
-		startManagingCursor(cursorTest);
-		cursorTest.moveToFirst();
-		startManagingCursor(cursorTest);
+		Cursor cursorTemp = dbHelper.fetchFoodUnitByFoodId(getIntent()
+				.getExtras().getLong(DbAdapter.DATABASE_FOOD_ID));
+		startManagingCursor(cursorTemp);
+		cursorTemp.moveToFirst();
+		startManagingCursor(cursorTemp);
 
 		// check the first one ( if the id is the same of the units )
-		if (cursorTest.getInt(cursorTest
+		if (cursorTemp.getInt(cursorTemp
 				.getColumnIndexOrThrow(DbAdapter.DATABASE_FOODUNIT_ID)) == selectedFoodUnitId) {
-			position = cursorTest.getPosition();
+			position = cursorTemp.getPosition();
 		}
 
 		// move next and keep checking if the id is the same
-		while (cursorTest.moveToNext()) {
-			if (cursorTest.getInt(cursorTest
+		while (cursorTemp.moveToNext()) {
+			if (cursorTemp.getInt(cursorTemp
 					.getColumnIndexOrThrow(DbAdapter.DATABASE_FOODUNIT_ID)) == selectedFoodUnitId) {
-				position = cursorTest.getPosition();
+				position = cursorTemp.getPosition();
 			}
 		}
 
 		// This will set the selected item = position that is given
 		spinnerFoodUnits.setSelection(position);
+		cursorTemp.close();
 	}
 
 	// This method will fill the calculated textView ( its under the spinner )
@@ -124,14 +155,11 @@ public class ShowAddFoodToSelection extends Activity {
 	private void fillTextViewCalculated() {
 		float amound = 0;
 
-		if (editTextFoodAmound.getText().length() > 0) {
-			// if we press in 0. then the app crashes so amound = 0 then
-			try {
-				amound = Float.parseFloat(editTextFoodAmound.getText()
-						.toString());
-			} catch (Exception e) {
-				amound = 0;
-			}
+		// if we press in 0. then the app crashes so amound = 0 then
+		try {
+			amound = Float.parseFloat(editTextFoodAmound.getText().toString());
+		} catch (Exception e) {
+			amound = 0;
 		}
 
 		Cursor selectedFoodUnitCursor = dbHelper.fetchFoodUnit(spinnerFoodUnits
@@ -157,32 +185,34 @@ public class ShowAddFoodToSelection extends Activity {
 						.getFloat(selectedFoodUnitCursor
 								.getColumnIndexOrThrow(DbAdapter.DATABASE_FOODUNIT_FAT));
 
+		// Update: when the unit = 100 gram we only display gram and do all the
+		// calculations / 100
+		if (selectedFoodUnitCursor
+				.getInt(selectedFoodUnitCursor
+						.getColumnIndexOrThrow(DbAdapter.DATABASE_FOODUNIT_STANDARDAMOUNT)) == 100) {
+			hoeveelheidCal = hoeveelheidCal / 100;
+			hoeveelheidCarb = hoeveelheidCarb / 100;
+			hoeveelheidProt = hoeveelheidProt / 100;
+			hoeveelheidFat = hoeveelheidFat / 100;
+		}
+
 		textViewCalculated
-				.setText(Math.round(amound
-						* selectedFoodUnitCursor.getFloat(selectedFoodUnitCursor
-								.getColumnIndexOrThrow(DbAdapter.DATABASE_FOODUNIT_STANDARDAMOUNT)))
+				.setText(amound
 						+ " "
 						+ selectedFoodUnitCursor.getString(selectedFoodUnitCursor
 								.getColumnIndexOrThrow(DbAdapter.DATABASE_FOODUNIT_NAME))
 						+ " "
 						+ foodCursor.getString(foodCursor
 								.getColumnIndexOrThrow(DbAdapter.DATABASE_FOOD_NAME))
-						+ "\n"
-						+ hoeveelheidCal
-						+ " "
+						+ "\n" + hoeveelheidCal + " "
 						+ getResources().getString(R.string.amound_of_kcal)
-						+ "\n"
-						+ hoeveelheidCarb
-						+ " "
+						+ "\n" + hoeveelheidCarb + " "
 						+ getResources().getString(R.string.amound_of_carbs)
-						+ "\n"
-						+ hoeveelheidProt
-						+ " "
+						+ "\n" + hoeveelheidProt + " "
 						+ getResources().getString(R.string.amound_of_protein)
-						+ "\n"
-						+ hoeveelheidFat
-						+ " "
+						+ "\n" + hoeveelheidFat + " "
 						+ getResources().getString(R.string.amound_of_fat));
+		selectedFoodUnitCursor.close();
 	}
 
 	// This method will fill the textView selectedFood and selectedFoodValues
@@ -228,20 +258,21 @@ public class ShowAddFoodToSelection extends Activity {
 						+ getResources().getString(R.string.amound_of_fat)
 
 				);
+		selectedFoodUnitCursor.close();
 	}
 
 	private void fillData() {
-		String[] from = new String[] {
-				DbAdapter.DATABASE_FOODUNIT_STANDARDAMOUNT,
-				DbAdapter.DATABASE_FOODUNIT_NAME };
-		int[] to = new int[] { R.id.spinnerPopupPartOne,
-				R.id.spinnerPopupPartTwo };
-		CustomSimpleCursorAdapterUnit adapter = new CustomSimpleCursorAdapterUnit(this,
+
+		adapter = new SimpleCursorAdapter(this,
 				android.R.layout.simple_spinner_item,
 				dbHelper.fetchFoodUnitByFoodId(getIntent().getExtras().getLong(
-						DbAdapter.DATABASE_FOOD_ID)), from, to);
+						DbAdapter.DATABASE_FOOD_ID)),
+				new String[] { DbAdapter.DATABASE_FOODUNIT_NAME },
+				new int[] { android.R.id.text1 });
+
 		spinnerFoodUnits.setAdapter(adapter);
-		adapter.setDropDownViewResource(R.layout.row_add_food_spinner_popup);
+		adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+
 	}
 
 	// this is called every time a user presses a key
@@ -351,6 +382,7 @@ public class ShowAddFoodToSelection extends Activity {
 				} else {
 					returnMessageFoodAintAddedValueCantBeZero();
 				}
+				selectedFoodUnitCursor.close();
 			}
 		} catch (Exception e) {
 			// if we cant get the amound as a float return message
@@ -370,5 +402,13 @@ public class ShowAddFoodToSelection extends Activity {
 						+ getResources().getString(
 								R.string.value_amount_cant_be_zero),
 				Toast.LENGTH_LONG).show();
+	}
+
+	@Override
+	protected void onStop() {
+		foodCursor.close();
+		adapter = null;
+		dbHelper.close();
+		super.onStop();
 	}
 }

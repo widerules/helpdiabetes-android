@@ -13,7 +13,7 @@ import android.widget.TextView;
 public class CustomBaseAdapterSelectedFood extends BaseAdapter implements OnClickListener {
 	private Context context;
 	private List<DBSelectedFood> listSelectedFood;
-	 
+	  
 	public CustomBaseAdapterSelectedFood(Context context, List<DBSelectedFood> listSelectedFood){
 		this.context = context;
 		this.listSelectedFood = listSelectedFood;
@@ -37,11 +37,9 @@ public class CustomBaseAdapterSelectedFood extends BaseAdapter implements OnClic
 			LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 			convertView = inflater.inflate(R.layout.row_selected_food, null);
 		}
-		float standardAmound = entry.getStandardAmound();
-		float amound = entry.getAmound();
-		float totalAmound = standardAmound * amound;
+
 		TextView tvSelectedFoodName = (TextView) convertView.findViewById(R.id.textViewSelectedFoodValues);
-		tvSelectedFoodName.setText(entry.getFoodName() + " (" + Math.round(totalAmound)  + " " + entry.getUnitName() + ")");
+		tvSelectedFoodName.setText(entry.getFoodName() + " (" + entry.getAmound()  + " " + entry.getUnitName() + ")");
 				
 		return convertView;
 	}

@@ -1,6 +1,8 @@
 package be.goossens.oracle;
 
+import android.app.AlertDialog;
 import android.app.ListActivity;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
@@ -12,7 +14,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ListView;
-import android.widget.SimpleCursorAdapter;
 import android.widget.Toast;
 
 public class ShowFoodList extends ListActivity {
@@ -22,10 +23,21 @@ public class ShowFoodList extends ListActivity {
 	// editTextSearch is the search box above the listview
 	private EditText editTextSearch;
 
+	// private Cursor cFoodCursor;
+	// private SimpleCursorAdapter scaFood;
+
+	private CustomArrayAdapterFoodList fooditemlist;
+
+	//This is used to know if we need to show the pop up to delete selected food
+	//without this boolean the pop up would spawn every time we come back to this activity
+	private boolean startUp;
+	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.show_food_list);
+		startUp = true;
+		fooditemlist = null;
 
 		editTextSearch = (EditText) findViewById(R.id.editTextSearch);
 		dbHelper = new DbAdapter(this);
@@ -37,7 +49,7 @@ public class ShowFoodList extends ListActivity {
 
 			public void onTextChanged(CharSequence s, int start, int before,
 					int count) {
-				refresh();
+				setSelection(fooditemlist.getFirstMatchingItem(s));
 			}
 
 			public void beforeTextChanged(CharSequence s, int start, int count,
@@ -47,23 +59,17 @@ public class ShowFoodList extends ListActivity {
 			public void afterTextChanged(Editable s) {
 			}
 		});
-	}
 
-	// Fill the listview with all the food data
-	private void fillListView() {
-		Cursor foodCursor = null;
-		if (editTextSearch.getText().length() == 0) {
-			foodCursor = dbHelper.fetchAllFood();
+		if (fooditemlist == null) {
+			fooditemlist = new CustomArrayAdapterFoodList(this,
+					R.layout.row_food,20);
+			fooditemlist.initializeFoodItemList(null);
+			setListAdapter(fooditemlist);
 		} else {
-			foodCursor = dbHelper.fetchFoodWithFilterByName(editTextSearch
-					.getText().toString());
+			setListAdapter(fooditemlist);
+			setSelection(fooditemlist.getFirstMatchingItem(editTextSearch
+					.getText()));
 		}
-		startManagingCursor(foodCursor);
-		String[] name = new String[] { DbAdapter.DATABASE_FOOD_NAME };
-		int[] id = new int[] { R.id.text1 };
-		SimpleCursorAdapter food = new SimpleCursorAdapter(this,
-				R.layout.row_food, foodCursor, name, id);
-		setListAdapter(food);
 	}
 
 	private void updateTitle() {
@@ -72,6 +78,7 @@ public class ShowFoodList extends ListActivity {
 		setTitle(getResources().getString(R.string.app_name) + " ("
 				+ selectedFood.getCount() + " "
 				+ getResources().getString(R.string.items_selected) + ")");
+		selectedFood.close();
 	}
 
 	// when we click on a item in the listview
@@ -79,7 +86,13 @@ public class ShowFoodList extends ListActivity {
 	protected void onListItemClick(ListView l, View v, int position, long id) {
 		super.onListItemClick(l, v, position, id);
 		Intent i = new Intent(this, ShowAddFoodToSelection.class);
-		i.putExtra(DbAdapter.DATABASE_FOOD_ID, id);
+
+		// Toast.makeText(this, "SelectedFoodName = " +
+		// fooditemlist.getFoodItem(position).getName() + " and id = " +
+		// fooditemlist.getFoodItem(position).getId(),
+		// Toast.LENGTH_LONG).show();
+		i.putExtra(DbAdapter.DATABASE_FOOD_ID,
+				Long.parseLong("" + fooditemlist.getFoodItem(position).getId()));
 		startActivity(i);
 	}
 
@@ -90,7 +103,45 @@ public class ShowFoodList extends ListActivity {
 		// every time we resume make the search box empty so the user dont have
 		// to press delete search box every time he adds a selection
 		editTextSearch.setText("");
-		refresh();
+		updateTitle();
+		if(startUp)
+			checkToShowPopUpToDeleteSelectedFood();
+	}
+
+	private void checkToShowPopUpToDeleteSelectedFood() {
+		// check if there are still selections in the selectedFood table
+		if (dbHelper.fetchAllSelectedFood().getCount() > 0) {
+			// Show dialog box to delete the selections
+			DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
+
+				public void onClick(DialogInterface dialog, int which) {
+					switch (which) {
+					case DialogInterface.BUTTON_POSITIVE:
+ 						startUp = false;
+						Cursor cSelectedFood = dbHelper.fetchAllSelectedFood();
+						cSelectedFood.moveToFirst();
+						do {
+							dbHelper.deleteSelectedFood(cSelectedFood.getLong(cSelectedFood
+									.getColumnIndexOrThrow(DbAdapter.DATABASE_SELECTEDFOOD_ID)));
+						} while (cSelectedFood.moveToNext());
+						updateTitle();
+						break;
+					case DialogInterface.BUTTON_NEGATIVE:
+						startUp = false;
+						break;
+					}
+				}
+			};
+
+			AlertDialog.Builder builder = new AlertDialog.Builder(this);
+			builder.setMessage(
+					getResources().getString(
+							R.string.do_you_want_to_delete_the_selections))
+					.setPositiveButton(getResources().getString(R.string.yes),
+							dialogClickListener)
+					.setNegativeButton(getResources().getString(R.string.no),
+							dialogClickListener).show();
+		}
 	}
 
 	// Menu
@@ -125,13 +176,16 @@ public class ShowFoodList extends ListActivity {
 	public void onClickShowSelectedFood(View view) {
 		Cursor selectedFood = dbHelper.fetchAllSelectedFood();
 		startManagingCursor(selectedFood);
-		if (selectedFood.getCount() > 0) {
+		int count = selectedFood.getCount();
+		selectedFood.close();
+		if (count > 0) {
 			goToPageSelectedFood();
 		} else {
 			Toast.makeText(this,
 					getResources().getString(R.string.selections_are_empty),
 					Toast.LENGTH_SHORT).show();
 		}
+
 	}
 
 	public void goToPageSelectedFood() {
@@ -139,10 +193,9 @@ public class ShowFoodList extends ListActivity {
 		startActivity(i);
 	}
 
-	private void refresh() {
-		updateTitle();
-		fillListView();
-	}
+	/*
+	 * private void refresh() { updateTitle(); fillListView(); }
+	 */
 
 	@Override
 	protected void onPause() {
@@ -152,7 +205,11 @@ public class ShowFoodList extends ListActivity {
 
 	@Override
 	protected void onStop() {
-		dbHelper.close();
 		super.onStop();
+	}
+
+	public void triggerSearching() {
+		setSelection(fooditemlist
+				.getFirstMatchingItem(editTextSearch.getText()));
 	}
 }
