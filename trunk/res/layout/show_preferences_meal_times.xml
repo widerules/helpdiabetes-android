@@ -6,7 +6,7 @@
     <LinearLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
+        android:layout_height="wrap_content"
         android:orientation="vertical" >
 
         <TextView
@@ -64,16 +64,36 @@
                         android:text="@string/starts_at" />
                 </LinearLayout>
 
-                <EditText
-                    android:id="@+id/editTextShowPreferencesMealTimesBreakfastTime"
-                    android:layout_width="0dip"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:inputType="time"
-                    android:text="@string/pref_standard_time_breakfast" >
+                <LinearLayout
+                    android:id="@+id/linearLayout4"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content" >
 
-                    <requestFocus />
-                </EditText>
+                    <EditText
+                        android:id="@+id/editTextShowPreferencesMealTimesBreakfastTime"
+                        android:layout_width="0dip"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:inputType="time" >
+
+                        <requestFocus />
+                    </EditText>
+
+                    <TextView
+                        android:id="@+id/textView10"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/time_seperator"
+                        android:textSize="16sp"
+                        android:textStyle="bold" />
+
+                    <EditText
+                        android:id="@+id/editTextShowPreferencesMealTimesBreakfastTimeTwo"
+                        android:layout_width="0dip"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:inputType="time" />
+                </LinearLayout>
             </TableRow>
 
             <TableRow
@@ -82,7 +102,7 @@
                 android:layout_height="wrap_content" >
 
                 <LinearLayout
-                    android:id="@+id/linearLayout4"
+                    android:id="@+id/linearLayout6"
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content" >
 
@@ -93,19 +113,39 @@
                         android:text="@string/pref_time_lunch" />
 
                     <TextView
-                        android:id="@+id/textView10"
+                        android:id="@+id/textView11"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/starts_at" />
                 </LinearLayout>
 
-                <EditText
-                    android:id="@+id/editTextShowPreferencesMealTimesLunchTime"
-                    android:layout_width="0dip"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:inputType="numberDecimal"
-                    android:text="@string/pref_standard_time_lunch" />
+                <LinearLayout
+                    android:id="@+id/linearLayout5"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content" >
+
+                    <EditText
+                        android:id="@+id/editTextShowPreferencesMealTimesLunchTime"
+                        android:layout_width="0dip"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:inputType="numberDecimal" />
+
+                    <TextView
+                        android:id="@+id/textView12"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/time_seperator"
+                        android:textSize="16sp"
+                        android:textStyle="bold" />
+
+                    <EditText
+                        android:id="@+id/editTextShowPreferencesMealTimesLunchTimeTwo"
+                        android:layout_width="0dip"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:inputType="numberDecimal" />
+                </LinearLayout>
             </TableRow>
 
             <TableRow
@@ -114,7 +154,7 @@
                 android:layout_height="wrap_content" >
 
                 <LinearLayout
-                    android:id="@+id/linearLayout5"
+                    android:id="@+id/linearLayout7"
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content" >
 
@@ -125,19 +165,39 @@
                         android:text="@string/pref_time_snack" />
 
                     <TextView
-                        android:id="@+id/textView11"
+                        android:id="@+id/textView13"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/starts_at" />
                 </LinearLayout>
 
-                <EditText
-                    android:id="@+id/editTextShowPreferencesMealTimesSnackTime"
-                    android:layout_width="0dip"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:inputType="numberDecimal"
-                    android:text="@string/pref_standard_time_snack" />
+                <LinearLayout
+                    android:id="@+id/linearLayout8"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content" >
+
+                    <EditText
+                        android:id="@+id/editTextShowPreferencesMealTimesSnackTime"
+                        android:layout_width="0dip"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:inputType="numberDecimal" />
+
+                    <TextView
+                        android:id="@+id/textView14"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/time_seperator"
+                        android:textSize="16sp"
+                        android:textStyle="bold" />
+
+                    <EditText
+                        android:id="@+id/editTextShowPreferencesMealTimesSnackTimeTwo"
+                        android:layout_width="0dip"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:inputType="numberDecimal" />
+                </LinearLayout>
             </TableRow>
 
             <TableRow
@@ -146,7 +206,7 @@
                 android:layout_height="wrap_content" >
 
                 <LinearLayout
-                    android:id="@+id/linearLayout6"
+                    android:id="@+id/linearLayout9"
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content" >
 
@@ -163,13 +223,33 @@
                         android:text="@string/starts_at" />
                 </LinearLayout>
 
-                <EditText
-                    android:id="@+id/editTextShowPreferencesMealTimesDinnerTime"
-                    android:layout_width="0dip"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:inputType="numberDecimal"
-                    android:text="@string/pref_standard_time_dinner" />
+                <LinearLayout
+                    android:id="@+id/linearLayout10"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content" >
+
+                    <EditText
+                        android:id="@+id/editTextShowPreferencesMealTimesDinnerTime"
+                        android:layout_width="0dip"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:inputType="numberDecimal" />
+
+                    <TextView
+                        android:id="@+id/textView15"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/time_seperator"
+                        android:textSize="16sp"
+                        android:textStyle="bold" />
+
+                    <EditText
+                        android:id="@+id/editTextShowPreferencesMealTimesDinnerTimeTwo"
+                        android:layout_width="0dip"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:inputType="numberDecimal" />
+                </LinearLayout>
             </TableRow>
         </TableLayout>
 
@@ -193,4 +273,5 @@
                 android:text="@string/back" />
         </LinearLayout>
     </LinearLayout>
+
 </ScrollView>

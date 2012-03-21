@@ -19,7 +19,7 @@ import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
 public class CustomArrayAdapterFoodList extends ArrayAdapter<String> {
-
+  
 	private List<Food> foodItemList = null;
 	private String previousSearchString = null;
 	private int[] firstIndex;
@@ -213,7 +213,7 @@ public class CustomArrayAdapterFoodList extends ArrayAdapter<String> {
 		backgroundThread = new Thread(new Runnable() {
 
 			public void run() {
-				thisList.initialize();
+ 				thisList.initialize();
 			}
 		});
 		backgroundThread.start();
@@ -245,6 +245,13 @@ public class CustomArrayAdapterFoodList extends ArrayAdapter<String> {
 		cFoodList.close();
 		dbHelper.close();
 
+		/*
+		 * Use the food comparator to sort the list of food on foodName and sort them like in excel
+		 * meaning 'jä' comes on same hight as 'ja'.
+		 * */
+		FoodComparator comparator = new FoodComparator();
+		Collections.sort(foodItemList,comparator);
+		
 		if (callingContext != null) {
 			final Runnable runInUIThread = new Runnable() {
 

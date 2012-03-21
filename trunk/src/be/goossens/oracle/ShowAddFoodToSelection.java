@@ -8,7 +8,8 @@ package be.goossens.oracle;
 import android.app.Activity;
 import android.database.Cursor;
 import android.os.Bundle;
-import android.view.KeyEvent;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemSelectedListener;
@@ -101,9 +102,65 @@ public class ShowAddFoodToSelection extends Activity {
 					.getInt(cSelectedFood
 							.getColumnIndexOrThrow(DbAdapter.DATABASE_SELECTEDFOOD_UNITID)));
 		}
-
+		
 		fillTextViewSelectedFood();
 		fillTextViewCalculated();
+		
+		/*
+		 * Set a listener on the editTextFoodAmound so values can be updated
+		 * when the amound changes
+		 * */
+		editTextFoodAmound.addTextChangedListener(new TextWatcher() {
+			
+			public void onTextChanged(CharSequence s, int start, int before, int count) {
+				onKeyPress();
+			}
+			
+			public void beforeTextChanged(CharSequence s, int start, int count,
+					int after) {
+				
+			}
+			
+			public void afterTextChanged(Editable s) {
+				
+			}
+		});
+	}
+	
+	/*
+	 * This function will always be executed when a user changes the value of the amound
+	 * */
+	private void onKeyPress() {
+		// check if the user try's to add more then 999 as value
+				// this is becaus if we try to add 999999 the application crash!
+				int insertedAmound;
+
+				try {
+					insertedAmound = Integer.parseInt(editTextFoodAmound.getText()
+							.toString());
+				} catch (Exception e) {
+					insertedAmound = 0;
+				}
+
+				if (insertedAmound > 999) {
+					Toast.makeText(
+							this,
+							getResources().getString(
+									R.string.value_cant_be_more_then_ninety_nine),
+							Toast.LENGTH_SHORT).show();
+					editTextFoodAmound.setText(editTextFoodAmound.getText()
+							.subSequence(1, editTextFoodAmound.getText().length()));
+				} else if (editTextFoodAmound.getText().toString().length() > 5) {
+					Toast.makeText(
+							this,
+							getResources().getString(
+									R.string.cant_add_more_then_five_digits),
+							Toast.LENGTH_SHORT).show();
+					editTextFoodAmound.setText(editTextFoodAmound.getText()
+							.subSequence(1, editTextFoodAmound.getText().length()));
+				} else {
+					fillTextViewCalculated();
+				}
 	}
 
 	private void checkStandardAmound() {
@@ -273,42 +330,6 @@ public class ShowAddFoodToSelection extends Activity {
 		spinnerFoodUnits.setAdapter(adapter);
 		adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 
-	}
-
-	// this is called every time a user presses a key
-	@Override
-	public boolean dispatchKeyEvent(KeyEvent event) {
-		// check if the user try's to add more then 999 as value
-		// this is becaus if we try to add 999999 the application crash!
-		int insertedAmound;
-
-		try {
-			insertedAmound = Integer.parseInt(editTextFoodAmound.getText()
-					.toString());
-		} catch (Exception e) {
-			insertedAmound = 0;
-		}
-
-		if (insertedAmound > 999) {
-			Toast.makeText(
-					this,
-					getResources().getString(
-							R.string.value_cant_be_more_then_ninety_nine),
-					Toast.LENGTH_SHORT).show();
-			editTextFoodAmound.setText(editTextFoodAmound.getText()
-					.subSequence(1, editTextFoodAmound.getText().length()));
-		} else if (editTextFoodAmound.getText().toString().length() > 5) {
-			Toast.makeText(
-					this,
-					getResources().getString(
-							R.string.cant_add_more_then_five_digits),
-					Toast.LENGTH_SHORT).show();
-			editTextFoodAmound.setText(editTextFoodAmound.getText()
-					.subSequence(1, editTextFoodAmound.getText().length()));
-		} else {
-			fillTextViewCalculated();
-		}
-		return super.dispatchKeyEvent(event);
 	}
 
 	// when pressed on the button Back

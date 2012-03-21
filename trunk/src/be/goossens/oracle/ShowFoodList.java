@@ -28,10 +28,14 @@ public class ShowFoodList extends ListActivity {
 
 	private CustomArrayAdapterFoodList fooditemlist;
 
-	//This is used to know if we need to show the pop up to delete selected food
-	//without this boolean the pop up would spawn every time we come back to this activity
+	// This is used to know if we need to show the pop up to delete selected
+	// food
+	// without this boolean the pop up would spawn every time we come back to
+	// this activity
 	private boolean startUp;
-	
+
+	private static final int MANAGE_OWN_FOOD_ID = 1;
+
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -61,15 +65,19 @@ public class ShowFoodList extends ListActivity {
 		});
 
 		if (fooditemlist == null) {
-			fooditemlist = new CustomArrayAdapterFoodList(this,
-					R.layout.row_food,20);
-			fooditemlist.initializeFoodItemList(null);
-			setListAdapter(fooditemlist);
+			updateListAdapter();
 		} else {
 			setListAdapter(fooditemlist);
 			setSelection(fooditemlist.getFirstMatchingItem(editTextSearch
 					.getText()));
 		}
+	}
+ 
+	private void updateListAdapter() {
+		fooditemlist = new CustomArrayAdapterFoodList(this, R.layout.row_food,
+				20);
+		fooditemlist.initializeFoodItemList(null);
+		setListAdapter(fooditemlist);
 	}
 
 	private void updateTitle() {
@@ -104,7 +112,7 @@ public class ShowFoodList extends ListActivity {
 		// to press delete search box every time he adds a selection
 		editTextSearch.setText("");
 		updateTitle();
-		if(startUp)
+		if (startUp)
 			checkToShowPopUpToDeleteSelectedFood();
 	}
 
@@ -117,7 +125,6 @@ public class ShowFoodList extends ListActivity {
 				public void onClick(DialogInterface dialog, int which) {
 					switch (which) {
 					case DialogInterface.BUTTON_POSITIVE:
- 						startUp = false;
 						Cursor cSelectedFood = dbHelper.fetchAllSelectedFood();
 						cSelectedFood.moveToFirst();
 						do {
@@ -125,9 +132,6 @@ public class ShowFoodList extends ListActivity {
 									.getColumnIndexOrThrow(DbAdapter.DATABASE_SELECTEDFOOD_ID)));
 						} while (cSelectedFood.moveToNext());
 						updateTitle();
-						break;
-					case DialogInterface.BUTTON_NEGATIVE:
-						startUp = false;
 						break;
 					}
 				}
@@ -142,6 +146,7 @@ public class ShowFoodList extends ListActivity {
 					.setNegativeButton(getResources().getString(R.string.no),
 							dialogClickListener).show();
 		}
+		startUp = false;
 	}
 
 	// Menu
@@ -151,18 +156,15 @@ public class ShowFoodList extends ListActivity {
 		inflater.inflate(R.menu.mainmenu, menu);
 		return true;
 	}
-
+ 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
-		// if we press in the menu on selections
-		case R.id.menu_selected_food:
-			goToPageSelectedFood();
-			break;
 		// if we press in the menu on update own food
 		case R.id.menu_update_own_food:
 			Intent i = new Intent(this, ShowManageOwnFood.class);
-			startActivity(i);
+			startActivityForResult(i, MANAGE_OWN_FOOD_ID);
+			// startActivity(i);
 			break;
 		// if we press in the menu on preferences
 		case R.id.menu_preferences:
@@ -171,6 +173,18 @@ public class ShowFoodList extends ListActivity {
 			break;
 		}
 		return true;
+	}
+
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		switch (requestCode) {
+		case MANAGE_OWN_FOOD_ID:
+			updateListAdapter();
+			break;
+		default:
+			break;
+		}
+		super.onActivityResult(requestCode, resultCode, data);
 	}
 
 	public void onClickShowSelectedFood(View view) {
@@ -192,10 +206,6 @@ public class ShowFoodList extends ListActivity {
 		Intent i = new Intent(this, ShowSelectedFood.class);
 		startActivity(i);
 	}
-
-	/*
-	 * private void refresh() { updateTitle(); fillListView(); }
-	 */
 
 	@Override
 	protected void onPause() {

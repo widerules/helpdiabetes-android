@@ -25,6 +25,33 @@ public class DbAdapter extends SQLiteOpenHelper {
 	private SQLiteDatabase mDb;
 	private final Context mCtx;
 
+	// meal type
+	private static final String DATABASE_MEALTYPE_TABLE = "MealType";
+	public static final String DATABASE_MEALTYPE_ID = "_id";
+	public static final String DATABASE_MEALTYPE_MEALTYPEID = "MealTypeID";
+	public static final String DATABASE_MEALTYPE_MEALTYPENAME = "MealTypeName";
+	public static final String DATABASE_MEALTYPE_STARTTIME = "StartTime";
+	public static final String DATABASE_MEALTYPE_ENDTIME = "EndTime";
+	public static final String DATABASE_MEALTYPE_PRESCRIPTIONRATIO = "PrescriptionRatio";
+	public static final String DATABASE_MEALTYPE_USERID = "UserID";
+	public static final String DATABASE_MEALTYPE_STARTDATE = "StartDate";
+	public static final String DATABASE_MEALTYPE_ENDDATE = "EndDate";
+	
+	
+	// food template
+	private static final String DATABASE_FOODTEMPLATE_TABLE = "FoodTemplate";
+	public static final String DATABASE_FOODTEMPLATE_ID = "_id";
+	public static final String DATABASE_FOODTEMPLATE_FOODTEMPLATEID = "FoodTemplateID";
+	public static final String DATABASE_FOODTEMPLATE_MEALTYPEID = "MealTypeID";
+	public static final String DATABASE_FOODTEMPLATE_USERID = "UserID";
+	public static final String DATABASE_FOODTEMPLATE_Visible = "Visible";
+	
+	// template_food
+	private static final String DATABASE_TEMPLATEFOOD_TABLE = "template_food";
+	public static final String DATABASE_TEMPLATEFOOD_ID = "_id";
+	public static final String DATABASE_TEMPLATEFOOD_FOODTEMPLATEID = "FoodTemplateID";
+	public static final String DATABASE_TEMPLATEFOOD_FOODID  ="FoodID";	
+	
 	// settings
 	private static final String DATABASE_SETTINGS_TABLE = "settings";
 	public static final String DATABASE_SETTINGS_ID = "_id";
@@ -138,8 +165,8 @@ public class DbAdapter extends SQLiteOpenHelper {
 		} catch (SQLiteException e) {
 			// The database does not exists
 		}
-		return checkDB != null ? true : false;
-		// return false;
+		//return checkDB != null ? true : false;
+		return false;
 	}
 
 	public void open() throws SQLException {
@@ -148,6 +175,41 @@ public class DbAdapter extends SQLiteOpenHelper {
 					SQLiteDatabase.OPEN_READWRITE);
 	}
 
+	// Meal Type Functions
+	// create
+	public long createMealType(long mealtypeid, String mealtypename){
+		ContentValues initialValues = new ContentValues();
+		initialValues.put(DATABASE_MEALTYPE_MEALTYPEID, mealtypeid);
+		initialValues.put(DATABASE_MEALTYPE_MEALTYPENAME,mealtypename);
+		initialValues.put(DATABASE_MEALTYPE_STARTTIME,"00:00");
+		initialValues.put(DATABASE_MEALTYPE_ENDTIME,"00:00");
+		initialValues.put(DATABASE_MEALTYPE_PRESCRIPTIONRATIO,"0");
+		initialValues.put(DATABASE_MEALTYPE_USERID,"0");
+		initialValues.put(DATABASE_MEALTYPE_STARTDATE,"0");
+		initialValues.put(DATABASE_MEALTYPE_ENDDATE,"0");
+		return mDb.insert(DATABASE_MEALTYPE_TABLE, null, initialValues);
+	}
+	
+	// FoodTemplate Functions
+	// create
+	public long createFoodTemplate(long foodtemplateid, long mealtypeid){
+		ContentValues initialValues = new ContentValues();
+		initialValues.put(DATABASE_FOODTEMPLATE_FOODTEMPLATEID, foodtemplateid);
+		initialValues.put(DATABASE_FOODTEMPLATE_MEALTYPEID, mealtypeid);
+		initialValues.put(DATABASE_FOODTEMPLATE_USERID,0);
+		initialValues.put(DATABASE_FOODTEMPLATE_Visible,1);
+		return mDb.insert(DATABASE_FOODTEMPLATE_TABLE, null, initialValues);
+	}
+	
+	// TEMPLATE_FOOD Functions
+	//create
+	public long createTemplateFood(long foodtemplateid, long foodid){
+		ContentValues initialValues = new ContentValues();
+		initialValues.put(DATABASE_TEMPLATEFOOD_FOODTEMPLATEID, foodtemplateid);
+		initialValues.put(DATABASE_TEMPLATEFOOD_FOODID, foodid);
+		return mDb.insert(DATABASE_TEMPLATEFOOD_TABLE, null, initialValues);
+	}
+	
 	// SETTINGS Functions 
 	// create settings
 	public long createSettings() {
@@ -329,7 +391,7 @@ public class DbAdapter extends SQLiteOpenHelper {
 		return mDb.query(DATABASE_FOOD_TABLE, new String[] { DATABASE_FOOD_ID,
 				DATABASE_FOOD_NAME, DATABASE_FOOD_ISFAVORITE,
 				DATABASE_FOOD_VISIBLE, DATABASE_FOOD_PLATFORM }, null, null,
-				DATABASE_FOOD_NAME, null, null);
+		 		DATABASE_FOOD_NAME, null, null);
 	}
 
 	// get a food by id

@@ -53,7 +53,6 @@ public class ShowPreferencesInsulineRatio extends Activity {
 		// call finish becaus this activity is finished ( so when we press the
 		// back button on our phone we go to the list of food and not to the
 		// other preference )
-		dbHelper.close();
 		finish();
 		Intent i = new Intent(this, ShowPreferencesMealTimes.class);
 		startActivity(i);
@@ -61,7 +60,6 @@ public class ShowPreferencesInsulineRatio extends Activity {
 
 	// on click back button
 	public void onClickBack(View view) {
-		dbHelper.close();
 		finish();
 	}
 
@@ -104,5 +102,11 @@ public class ShowPreferencesInsulineRatio extends Activity {
 		Toast.makeText(this, getResources().getString(R.string.saved),
 				Toast.LENGTH_LONG).show();
 		fillData();
+	}
+
+	@Override
+	protected void onPause() {
+		dbHelper.close();
+		super.onPause();
 	}
 }
