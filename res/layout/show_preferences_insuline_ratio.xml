@@ -57,8 +57,7 @@
                     android:layout_width="0dip"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:inputType="numberDecimal"
-                    android:text="@string/pref_standard_insuline_ratio" >
+                    android:inputType="numberDecimal" >
 
                     <requestFocus />
                 </EditText>
@@ -80,8 +79,7 @@
                     android:layout_width="0dip"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:inputType="numberDecimal"
-                    android:text="@string/pref_standard_insuline_ratio" >
+                    android:inputType="numberDecimal" >
                 </EditText>
             </TableRow>
 
@@ -101,8 +99,7 @@
                     android:layout_width="0dip"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:inputType="numberDecimal"
-                    android:text="@string/pref_standard_insuline_ratio" />
+                    android:inputType="numberDecimal" />
             </TableRow>
 
             <TableRow
@@ -121,8 +118,7 @@
                     android:layout_width="0dip"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:inputType="numberDecimal"
-                    android:text="@string/pref_standard_insuline_ratio" />
+                    android:inputType="numberDecimal" />
             </TableRow>
         </TableLayout>
 

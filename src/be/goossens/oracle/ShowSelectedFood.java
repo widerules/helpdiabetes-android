@@ -1,6 +1,11 @@
 package be.goossens.oracle;
 
+/*
+ * This class shows the selected food
+ * */
+
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 import android.app.ListActivity;
@@ -14,6 +19,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView.AdapterContextMenuInfo;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class ShowSelectedFood extends ListActivity {
 	private DbAdapter dbHelper;
@@ -25,7 +31,7 @@ public class ShowSelectedFood extends ListActivity {
 
 	// Need this id to update all the values afther we updated a selectedFood
 	private static final int update_selectedFood_id = 0;
-
+	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -34,8 +40,13 @@ public class ShowSelectedFood extends ListActivity {
 		dbHelper = new DbAdapter(this);
 		dbHelper.open();
 
+		//get the time
+		//Calendar c = Calendar.getInstance();
+		//int hours = c.get(Calendar.HOUR_OF_DAY);
+		//int minutes = c.get(Calendar.MINUTE);
+		
 		listOfSelectedFood = new ArrayList<DBSelectedFood>();
-		// refreshData got 2 methods to show al the data on the screen
+		// refreshData got 2 methods to show all the data on the screen
 		refreshData();
 		registerForContextMenu(getListView());
 	}
@@ -68,6 +79,7 @@ public class ShowSelectedFood extends ListActivity {
 					selectedFoodCursor.getFloat(selectedFoodCursor
 							.getColumnIndexOrThrow(DbAdapter.DATABASE_SELECTEDFOOD_STANDARDAMOUNT))));
 		}
+		selectedFoodCursor.close();
 		return list;
 	}
 
