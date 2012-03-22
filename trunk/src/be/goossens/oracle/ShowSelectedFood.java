@@ -5,10 +5,11 @@ package be.goossens.oracle;
  * */
 
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.List;
 
+import android.app.AlertDialog;
 import android.app.ListActivity;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
@@ -18,6 +19,8 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView.AdapterContextMenuInfo;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -31,55 +34,55 @@ public class ShowSelectedFood extends ListActivity {
 
 	// Need this id to update all the values afther we updated a selectedFood
 	private static final int update_selectedFood_id = 0;
-	
+
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.show_selected_food);
-
 		dbHelper = new DbAdapter(this);
-		dbHelper.open();
-
-		//get the time
-		//Calendar c = Calendar.getInstance();
-		//int hours = c.get(Calendar.HOUR_OF_DAY);
-		//int minutes = c.get(Calendar.MINUTE);
-		
 		listOfSelectedFood = new ArrayList<DBSelectedFood>();
-		// refreshData got 2 methods to show all the data on the screen
-		refreshData();
 		registerForContextMenu(getListView());
 	}
 
 	// converts the cursor with all selected food to a arrayList<DBSelectedFood>
 	// and returns the arraylist
 	private ArrayList<DBSelectedFood> getSelectedFood() {
-		Cursor selectedFoodCursor = dbHelper.fetchAllSelectedFood();
-		startManagingCursor(selectedFoodCursor);
 		ArrayList<DBSelectedFood> list = new ArrayList<DBSelectedFood>();
-		while (selectedFoodCursor.moveToNext()) {
-			list.add(new DBSelectedFood(
-					selectedFoodCursor
-							.getString(selectedFoodCursor
-									.getColumnIndexOrThrow(DbAdapter.DATABASE_SELECTEDFOOD_ID)),
-					selectedFoodCursor.getFloat(selectedFoodCursor
-							.getColumnIndexOrThrow(DbAdapter.DATABASE_SELECTEDFOOD_AMOUNT)),
-					selectedFoodCursor.getString(selectedFoodCursor
-							.getColumnIndexOrThrow(DbAdapter.DATABASE_SELECTEDFOOD_FOODNAME)),
-					selectedFoodCursor.getFloat(selectedFoodCursor
-							.getColumnIndexOrThrow(DbAdapter.DATABASE_SELECTEDFOOD_KCAL)),
-					selectedFoodCursor.getString(selectedFoodCursor
-							.getColumnIndexOrThrow(DbAdapter.DATABASE_SELECTEDFOOD_UNITNAME)),
-					selectedFoodCursor.getFloat(selectedFoodCursor
-							.getColumnIndexOrThrow(DbAdapter.DATABASE_SELECTEDFOOD_CARBS)),
-					selectedFoodCursor.getFloat(selectedFoodCursor
-							.getColumnIndexOrThrow(DbAdapter.DATABASE_SELECTEDFOOD_PROTEIN)),
-					selectedFoodCursor.getFloat(selectedFoodCursor
-							.getColumnIndexOrThrow(DbAdapter.DATABASE_SELECTEDFOOD_FAT)),
-					selectedFoodCursor.getFloat(selectedFoodCursor
-							.getColumnIndexOrThrow(DbAdapter.DATABASE_SELECTEDFOOD_STANDARDAMOUNT))));
+
+		Cursor cSelectedFood = dbHelper.fetchAllSelectedFood();
+		if (cSelectedFood.getCount() > 0) {
+			cSelectedFood.moveToFirst();
+
+			do {
+				Cursor cUnit = dbHelper
+						.fetchFoodUnit(cSelectedFood.getLong(cSelectedFood
+								.getColumnIndexOrThrow(DbAdapter.DATABASE_SELECTEDFOOD_UNITID)));
+				cUnit.moveToFirst();
+
+				Cursor cFood = dbHelper
+						.fetchFood(cUnit.getLong(cUnit
+								.getColumnIndexOrThrow(DbAdapter.DATABASE_FOODUNIT_FOODID)));
+				cFood.moveToFirst();
+
+				list.add(new DBSelectedFood(
+						cSelectedFood
+								.getLong(cSelectedFood
+										.getColumnIndexOrThrow(DbAdapter.DATABASE_SELECTEDFOOD_ID)),
+						cSelectedFood.getLong(cSelectedFood
+								.getColumnIndexOrThrow(DbAdapter.DATABASE_SELECTEDFOOD_AMOUNT)),
+						cSelectedFood.getLong(cSelectedFood
+								.getColumnIndexOrThrow(DbAdapter.DATABASE_SELECTEDFOOD_UNITID)),
+						cFood.getString(cFood
+								.getColumnIndexOrThrow(DbAdapter.DATABASE_FOOD_NAME)),
+						cUnit.getString(cUnit
+								.getColumnIndexOrThrow(DbAdapter.DATABASE_FOODUNIT_NAME))));
+
+				cFood.close();
+				cUnit.close();
+			} while (cSelectedFood.moveToNext());
+
+			cSelectedFood.close();
 		}
-		selectedFoodCursor.close();
 		return list;
 	}
 
@@ -92,54 +95,66 @@ public class ShowSelectedFood extends ListActivity {
 		float totalProtein = 0;
 		float totalFat = 0;
 
-		Cursor allSelectedFood = dbHelper.fetchAllSelectedFood();
-		startManagingCursor(allSelectedFood);
-		while (allSelectedFood.moveToNext()) {
-			float subKcal,subCarbs,subProtein,subFat;
-			
-			// add the calculated kcal to the total
-			subKcal = allSelectedFood
-					.getFloat(allSelectedFood
-							.getColumnIndexOrThrow(DbAdapter.DATABASE_SELECTEDFOOD_AMOUNT))
-					* allSelectedFood
-							.getFloat(allSelectedFood
-									.getColumnIndexOrThrow(DbAdapter.DATABASE_SELECTEDFOOD_KCAL));
+		Cursor cSelectedFood = dbHelper.fetchAllSelectedFood();
+		if (cSelectedFood.getCount() > 0) {
+			startManagingCursor(cSelectedFood);
+			cSelectedFood.moveToFirst();
 
-			// add the calculated carbs to the total
-			subCarbs = allSelectedFood
-					.getFloat(allSelectedFood
-							.getColumnIndexOrThrow(DbAdapter.DATABASE_SELECTEDFOOD_AMOUNT))
-					* allSelectedFood
-							.getFloat(allSelectedFood
-									.getColumnIndexOrThrow(DbAdapter.DATABASE_SELECTEDFOOD_CARBS));
+			do {
+				float subKcal, subCarbs, subProtein, subFat;
+				Cursor cUnit = dbHelper
+						.fetchFoodUnit(cSelectedFood.getLong(cSelectedFood
+								.getColumnIndexOrThrow(DbAdapter.DATABASE_SELECTEDFOOD_UNITID)));
+				cUnit.moveToFirst();
 
-			// add the calculated protein to the total
-			subProtein = allSelectedFood
-					.getFloat(allSelectedFood
-							.getColumnIndexOrThrow(DbAdapter.DATABASE_SELECTEDFOOD_AMOUNT))
-					* allSelectedFood
-							.getFloat(allSelectedFood
-									.getColumnIndexOrThrow(DbAdapter.DATABASE_SELECTEDFOOD_PROTEIN));
+				// add the calculated kcal to the total
+				subKcal = cUnit
+						.getFloat(cUnit
+								.getColumnIndexOrThrow(DbAdapter.DATABASE_FOODUNIT_KCAL))
+						* cSelectedFood
+								.getFloat(cSelectedFood
+										.getColumnIndexOrThrow(DbAdapter.DATABASE_SELECTEDFOOD_AMOUNT));
+				// add the calculated carbs to the total
+				subCarbs = cUnit
+						.getFloat(cUnit
+								.getColumnIndexOrThrow(DbAdapter.DATABASE_FOODUNIT_CARBS))
+						* cSelectedFood
+								.getFloat(cSelectedFood
+										.getColumnIndexOrThrow(DbAdapter.DATABASE_SELECTEDFOOD_AMOUNT));
+				// add the calculated protein to the total
+				subProtein = cUnit
+						.getFloat(cUnit
+								.getColumnIndexOrThrow(DbAdapter.DATABASE_FOODUNIT_PROTEIN))
+						* cSelectedFood
+								.getFloat(cSelectedFood
+										.getColumnIndexOrThrow(DbAdapter.DATABASE_SELECTEDFOOD_AMOUNT));
+				// add the calculated fat to the total
+				subFat = cUnit
+						.getFloat(cUnit
+								.getColumnIndexOrThrow(DbAdapter.DATABASE_FOODUNIT_FAT))
+						* cSelectedFood
+								.getFloat(cSelectedFood
+										.getColumnIndexOrThrow(DbAdapter.DATABASE_SELECTEDFOOD_AMOUNT));
 
-			subFat = allSelectedFood
-					.getFloat(allSelectedFood
-							.getColumnIndexOrThrow(DbAdapter.DATABASE_SELECTEDFOOD_AMOUNT))
-					* allSelectedFood
-							.getFloat(allSelectedFood
-									.getColumnIndexOrThrow(DbAdapter.DATABASE_SELECTEDFOOD_FAT));
-			
-			//Update when the unit is 100 gram we do /100
-			if(allSelectedFood.getInt(allSelectedFood.getColumnIndexOrThrow(DbAdapter.DATABASE_SELECTEDFOOD_STANDARDAMOUNT)) == 100){
-				subKcal = subKcal / 100;
-				subCarbs= subCarbs / 100;
-				subProtein= subProtein / 100;
-				subFat = subFat / 100;
-			}
-			totalKcal += subKcal;
-			totalCarbs += subCarbs;
-			totalProtein += subProtein;
-			totalFat += subFat;
+				// Update when the unit standardamound == 100
+				if (cUnit
+						.getInt(cUnit
+								.getColumnIndexOrThrow(DbAdapter.DATABASE_FOODUNIT_STANDARDAMOUNT)) == 100) {
+					subKcal = subKcal / 100;
+					subCarbs = subCarbs / 100;
+					subProtein = subProtein / 100;
+					subFat = subFat / 100;
+				}
+				totalKcal += subKcal;
+				totalCarbs += subCarbs;
+				totalProtein += subProtein;
+				totalFat += subFat;
+
+				cUnit.close();
+			} while (cSelectedFood.moveToNext());
 		}
+		cSelectedFood.close();
+
 		tvTotal.setText(getResources().getString(R.string.total) + ": \n" + " "
 				+ totalKcal + " "
 				+ getResources().getString(R.string.amound_of_kcal) + " \n"
@@ -178,17 +193,23 @@ public class ShowSelectedFood extends ListActivity {
 		// go back to the select page
 		case EDIT_ID:
 			Cursor cSelectedFood = dbHelper.fetchSelectedFood(info.id);
+			cSelectedFood.moveToFirst();
 			Intent i = new Intent(this, ShowAddFoodToSelection.class);
-			i.putExtra(
-					DbAdapter.DATABASE_FOOD_ID,
-					cSelectedFood.getLong(cSelectedFood
-							.getColumnIndexOrThrow(DbAdapter.DATABASE_SELECTEDFOOD_FOODID)));
+
+			// get the food
+			Cursor cUnit = dbHelper
+					.fetchFoodUnit(cSelectedFood.getLong(cSelectedFood
+							.getColumnIndexOrThrow(DbAdapter.DATABASE_SELECTEDFOOD_UNITID)));
+			cUnit.moveToFirst();
+			i.putExtra(DbAdapter.DATABASE_FOOD_ID, cUnit.getLong(cUnit
+					.getColumnIndexOrThrow(DbAdapter.DATABASE_FOODUNIT_FOODID)));
 			// cant put paramer dbadapter.database_selectedfood_id instead of
 			// selectedfoodid becaus in the parameter the value is _id and
 			// food_id its paramter is _id to!
 			i.putExtra("selectedfoodid", info.id);
+			cUnit.close();
+			cSelectedFood.close();
 			startActivityForResult(i, update_selectedFood_id);
-			// startActivity(i);
 			break;
 		}
 		return super.onContextItemSelected(item);
@@ -196,9 +217,15 @@ public class ShowSelectedFood extends ListActivity {
 
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		// without this dbHelper.open the app wil crash when it comes back from
+		// ShowAddFoodToSelection
+		dbHelper.open();
 		switch (requestCode) {
 		// if we come back from our update screen refresh all the values
 		case update_selectedFood_id:
+			refreshData();
+			break;
+		default:
 			refreshData();
 			break;
 		}
@@ -207,14 +234,19 @@ public class ShowSelectedFood extends ListActivity {
 	// to fill the listview with data
 	private void fillData() {
 		listOfSelectedFood = getSelectedFood();
-		CustomBaseAdapterSelectedFood adapter = new CustomBaseAdapterSelectedFood(
-				this, listOfSelectedFood);
-		setListAdapter(adapter);
+		if (listOfSelectedFood.size() > 0) {
+			CustomBaseAdapterSelectedFood adapter = new CustomBaseAdapterSelectedFood(
+					this, listOfSelectedFood);
+			setListAdapter(adapter);
+		} else {
+			// if we delete all items
+			// we need to clear the listview
+			setListAdapter(null);
+		}
 	}
 
 	// when we click on the button return
 	public void onClickBack(View view) {
-		dbHelper.close();
 		setResult(RESULT_OK);
 		finish();
 	}
@@ -230,9 +262,121 @@ public class ShowSelectedFood extends ListActivity {
 		refreshData();
 	}
 
-	// this method wil refresh al the data on the screen
+	// this method will refresh all the data on the screen
 	public void refreshData() {
 		calculateValues();
 		fillData();
+		calculateTemplates();
+	}
+
+	private void calculateTemplates() {
+		Button buttonLoadTemplate = (Button) findViewById(R.id.buttonShowSelectedFoodButtonLoadTemplate);
+
+		Cursor cFoodTemplates = dbHelper.fetchAllFoodTemplates();
+
+		buttonLoadTemplate.setText(""
+				+ getResources().getString(R.string.Load_template) + " ("
+				+ cFoodTemplates.getCount() + ")");
+
+		cFoodTemplates.close();
+	}
+
+	// this method is called when the user press on save as template
+	public void onClickSaveAsTemplate(View view) {
+		/*
+		 * First we check if we have more then 1 selectedFood in the table It
+		 * would be stupid to add only 1 selected food to a template
+		 */
+		if (dbHelper.fetchAllSelectedFood().getCount() > 1) {
+			final EditText input = new EditText(this);
+			// Show a dialog with a inputbox to insert the template name
+			new AlertDialog.Builder(this)
+					.setTitle(getResources().getString(R.string.template_name))
+					.setView(input)
+					.setPositiveButton(getResources().getString(R.string.save),
+							new DialogInterface.OnClickListener() {
+								public void onClick(DialogInterface dialog,
+										int which) {
+									// on click positive button
+									// if inputbox text is longer then ""
+									if (input.getText().length() > 0) {
+										createNewTemplate(input.getText()
+												.toString());
+									} else {
+										showToast(getResources()
+												.getString(
+														R.string.template_name_cant_be_empty));
+									}
+								}
+							})
+					.setNegativeButton(
+							getResources().getString(R.string.cancel),
+							new DialogInterface.OnClickListener() {
+								public void onClick(DialogInterface dialog,
+										int which) {
+									// on click negative button do nothing
+								}
+							}).show();
+		} else {
+			Toast.makeText(
+					this,
+					getResources().getString(
+							R.string.add_food_to_template_error),
+					Toast.LENGTH_LONG).show();
+		}
+	}
+
+	private void showToast(String text) {
+		Toast.makeText(this, text, Toast.LENGTH_LONG).show();
+	}
+
+	private void createNewTemplate(String templateName) {
+		// Add the selected food to a template
+		// We create a new mealType
+		Long mealTypeID = dbHelper.createMealType("testOneMealType");
+		// Then we add a FoodTemplate with the MealTypeID
+		Long foodTemplateID = dbHelper.createFoodTemplate(mealTypeID,
+				templateName);
+		// then for every selected food row we create a template_food
+		Cursor cSelectedFood = dbHelper.fetchAllSelectedFood();
+		cSelectedFood.moveToFirst();
+
+		do {
+			Cursor cUnit = dbHelper
+					.fetchFoodUnit(cSelectedFood.getLong(cSelectedFood
+							.getColumnIndexOrThrow(DbAdapter.DATABASE_SELECTEDFOOD_UNITID)));
+			cUnit.moveToFirst();
+			dbHelper.createTemplateFood(foodTemplateID, cUnit.getLong(cUnit
+					.getColumnIndexOrThrow(DbAdapter.DATABASE_FOODUNIT_FOODID)));
+			dbHelper.deleteSelectedFood(cSelectedFood.getLong(cSelectedFood
+					.getColumnIndexOrThrow(DbAdapter.DATABASE_SELECTEDFOOD_ID)));
+			cUnit.close();
+		} while (cSelectedFood.moveToNext());
+
+		cSelectedFood.close();
+
+		refreshData();
+	}
+
+	public void onClickLoadTemplate(View view) {
+		if (dbHelper.fetchAllFoodTemplates().getCount() > 0) {
+			Intent i = new Intent(this, ShowFoodTemplates.class);
+			startActivity(i);
+		} else {
+			showToast(getResources().getString(R.string.template_load_empty));
+		}
+	}
+
+	@Override
+	protected void onResume() {
+		super.onResume();
+		dbHelper.open();
+		refreshData();
+	}
+
+	@Override
+	protected void onPause() {
+		super.onPause();
+		dbHelper.close();
 	}
 }

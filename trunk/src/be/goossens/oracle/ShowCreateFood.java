@@ -111,7 +111,11 @@ public class ShowCreateFood extends Activity {
 				return false;
 			}
 
-			try {
+			/*
+			 *Carbs, prot, kcal, fat can be 0 
+			 * */
+			
+			/*try {
 				float unitKcal = Float.parseFloat(editTextUnitKcal.getText()
 						.toString());
 				if (unitKcal <= 0) {
@@ -177,7 +181,7 @@ public class ShowCreateFood extends Activity {
 						getResources().getString(R.string.fat_is_required),
 						Toast.LENGTH_LONG).show();
 				return false;
-			}
+			}*/
 
 			// if everything went OK we return true
 			return true;

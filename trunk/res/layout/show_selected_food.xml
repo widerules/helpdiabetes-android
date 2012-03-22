@@ -27,7 +27,15 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="right"
-            android:text="@string/save_as_template" />
+            android:text="@string/save_as_template"
+            android:onClick="onClickSaveAsTemplate" />
+
+        <Button
+            android:id="@+id/buttonShowSelectedFoodButtonLoadTemplate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/Load_template"
+            android:onClick="onClickLoadTemplate" />
 
     </LinearLayout>
 

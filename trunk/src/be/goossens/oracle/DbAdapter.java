@@ -28,7 +28,6 @@ public class DbAdapter extends SQLiteOpenHelper {
 	// meal type
 	private static final String DATABASE_MEALTYPE_TABLE = "MealType";
 	public static final String DATABASE_MEALTYPE_ID = "_id";
-	public static final String DATABASE_MEALTYPE_MEALTYPEID = "MealTypeID";
 	public static final String DATABASE_MEALTYPE_MEALTYPENAME = "MealTypeName";
 	public static final String DATABASE_MEALTYPE_STARTTIME = "StartTime";
 	public static final String DATABASE_MEALTYPE_ENDTIME = "EndTime";
@@ -36,22 +35,22 @@ public class DbAdapter extends SQLiteOpenHelper {
 	public static final String DATABASE_MEALTYPE_USERID = "UserID";
 	public static final String DATABASE_MEALTYPE_STARTDATE = "StartDate";
 	public static final String DATABASE_MEALTYPE_ENDDATE = "EndDate";
-	
-	
+	public static final String DATABASE_MEALTYPE_MEALCATEGORY_ID = "MealCategoryID";
+
 	// food template
 	private static final String DATABASE_FOODTEMPLATE_TABLE = "FoodTemplate";
 	public static final String DATABASE_FOODTEMPLATE_ID = "_id";
-	public static final String DATABASE_FOODTEMPLATE_FOODTEMPLATEID = "FoodTemplateID";
 	public static final String DATABASE_FOODTEMPLATE_MEALTYPEID = "MealTypeID";
 	public static final String DATABASE_FOODTEMPLATE_USERID = "UserID";
-	public static final String DATABASE_FOODTEMPLATE_Visible = "Visible";
-	
+	public static final String DATABASE_FOODTEMPLATE_VISIBLE = "Visible";
+	public static final String DATABASE_FOODTEMPLATE_FOODTEMPLATENAME = "FoodTemplateName";
+
 	// template_food
 	private static final String DATABASE_TEMPLATEFOOD_TABLE = "template_food";
 	public static final String DATABASE_TEMPLATEFOOD_ID = "_id";
 	public static final String DATABASE_TEMPLATEFOOD_FOODTEMPLATEID = "FoodTemplateID";
-	public static final String DATABASE_TEMPLATEFOOD_FOODID  ="FoodID";	
-	
+	public static final String DATABASE_TEMPLATEFOOD_FOODID = "FoodID";
+
 	// settings
 	private static final String DATABASE_SETTINGS_TABLE = "settings";
 	public static final String DATABASE_SETTINGS_ID = "_id";
@@ -68,14 +67,6 @@ public class DbAdapter extends SQLiteOpenHelper {
 	private static final String DATABASE_SELECTEDFOOD_TABLE = "selectedfood";
 	public static final String DATABASE_SELECTEDFOOD_ID = "_id";
 	public static final String DATABASE_SELECTEDFOOD_AMOUNT = "amount";
-	public static final String DATABASE_SELECTEDFOOD_FOODNAME = "foodname";
-	public static final String DATABASE_SELECTEDFOOD_UNITNAME = "unitname";
-	public static final String DATABASE_SELECTEDFOOD_KCAL = "kcal";
-	public static final String DATABASE_SELECTEDFOOD_PROTEIN = "protein";
-	public static final String DATABASE_SELECTEDFOOD_CARBS = "carbs";
-	public static final String DATABASE_SELECTEDFOOD_FAT = "fat";
-	public static final String DATABASE_SELECTEDFOOD_STANDARDAMOUNT = "standardamount";
-	public static final String DATABASE_SELECTEDFOOD_FOODID = "foodid";
 	public static final String DATABASE_SELECTEDFOOD_UNITID = "unitid";
 
 	// Food
@@ -165,52 +156,93 @@ public class DbAdapter extends SQLiteOpenHelper {
 		} catch (SQLiteException e) {
 			// The database does not exists
 		}
-		//return checkDB != null ? true : false;
-		return false;
+		return checkDB != null ? true : false;
+		// return false;
 	}
 
 	public void open() throws SQLException {
-			String myPath = DB_PATH + DB_NAME;
-			mDb = SQLiteDatabase.openDatabase(myPath, null,
-					SQLiteDatabase.OPEN_READWRITE);
+		String myPath = DB_PATH + DB_NAME;
+		mDb = SQLiteDatabase.openDatabase(myPath, null,
+				SQLiteDatabase.OPEN_READWRITE);
 	}
 
 	// Meal Type Functions
 	// create
-	public long createMealType(long mealtypeid, String mealtypename){
+	public long createMealType(String mealtypename) {
 		ContentValues initialValues = new ContentValues();
-		initialValues.put(DATABASE_MEALTYPE_MEALTYPEID, mealtypeid);
-		initialValues.put(DATABASE_MEALTYPE_MEALTYPENAME,mealtypename);
-		initialValues.put(DATABASE_MEALTYPE_STARTTIME,"00:00");
-		initialValues.put(DATABASE_MEALTYPE_ENDTIME,"00:00");
-		initialValues.put(DATABASE_MEALTYPE_PRESCRIPTIONRATIO,"0");
-		initialValues.put(DATABASE_MEALTYPE_USERID,"0");
-		initialValues.put(DATABASE_MEALTYPE_STARTDATE,"0");
-		initialValues.put(DATABASE_MEALTYPE_ENDDATE,"0");
+		initialValues.put(DATABASE_MEALTYPE_MEALTYPENAME, mealtypename);
+		initialValues.put(DATABASE_MEALTYPE_STARTTIME, "00:00");
+		initialValues.put(DATABASE_MEALTYPE_ENDTIME, "00:00");
+		initialValues.put(DATABASE_MEALTYPE_PRESCRIPTIONRATIO, "0");
+		initialValues.put(DATABASE_MEALTYPE_USERID, "0");
+		initialValues.put(DATABASE_MEALTYPE_STARTDATE, "0");
+		initialValues.put(DATABASE_MEALTYPE_ENDDATE, "0");
+		initialValues.put(DATABASE_MEALTYPE_MEALCATEGORY_ID, "0");
 		return mDb.insert(DATABASE_MEALTYPE_TABLE, null, initialValues);
 	}
-	
+
+	// get all mealtypes
+	public Cursor fetchAllMealTypes() {
+		return mDb.query(DATABASE_MEALTYPE_TABLE, new String[] {
+				DATABASE_MEALTYPE_ID, DATABASE_MEALTYPE_MEALTYPENAME,
+				DATABASE_MEALTYPE_STARTTIME, DATABASE_MEALTYPE_ENDTIME,
+				DATABASE_MEALTYPE_PRESCRIPTIONRATIO,
+				DATABASE_MEALTYPE_MEALCATEGORY_ID, DATABASE_MEALTYPE_USERID,
+				DATABASE_MEALTYPE_STARTDATE, DATABASE_MEALTYPE_ENDDATE }, null,
+				null, null, null, null);
+	}
+
 	// FoodTemplate Functions
 	// create
-	public long createFoodTemplate(long foodtemplateid, long mealtypeid){
+	public long createFoodTemplate(long mealtypeid, String name) {
 		ContentValues initialValues = new ContentValues();
-		initialValues.put(DATABASE_FOODTEMPLATE_FOODTEMPLATEID, foodtemplateid);
 		initialValues.put(DATABASE_FOODTEMPLATE_MEALTYPEID, mealtypeid);
-		initialValues.put(DATABASE_FOODTEMPLATE_USERID,0);
-		initialValues.put(DATABASE_FOODTEMPLATE_Visible,1);
+		initialValues.put(DATABASE_FOODTEMPLATE_USERID, 0);
+		initialValues.put(DATABASE_FOODTEMPLATE_VISIBLE, 1);
+		initialValues.put(DATABASE_FOODTEMPLATE_FOODTEMPLATENAME, name);
 		return mDb.insert(DATABASE_FOODTEMPLATE_TABLE, null, initialValues);
 	}
-	
+
+	// get all foodTemplates
+	public Cursor fetchAllFoodTemplates() {
+		return mDb.query(DATABASE_FOODTEMPLATE_TABLE, new String[] {
+				DATABASE_FOODTEMPLATE_ID, DATABASE_FOODTEMPLATE_MEALTYPEID,
+				DATABASE_FOODTEMPLATE_USERID, DATABASE_FOODTEMPLATE_VISIBLE,
+				DATABASE_FOODTEMPLATE_FOODTEMPLATENAME }, null, null, null,
+				null, null);
+	}
+
+	// Delete foodTemplate
+	public boolean deleteFoodTemplate(long foodTemplate) {
+		return mDb.delete(DATABASE_FOODTEMPLATE_TABLE, DATABASE_FOODTEMPLATE_ID
+				+ "=" + foodTemplate, null) > 0;
+	}
+
 	// TEMPLATE_FOOD Functions
-	//create
-	public long createTemplateFood(long foodtemplateid, long foodid){
+	// create
+	public long createTemplateFood(long foodtemplateid, long foodid) {
 		ContentValues initialValues = new ContentValues();
 		initialValues.put(DATABASE_TEMPLATEFOOD_FOODTEMPLATEID, foodtemplateid);
 		initialValues.put(DATABASE_TEMPLATEFOOD_FOODID, foodid);
 		return mDb.insert(DATABASE_TEMPLATEFOOD_TABLE, null, initialValues);
 	}
-	
-	// SETTINGS Functions 
+
+	// get template foods by foodTemplateID
+	public Cursor fetchTemplateFoodsByFoodTemplateID(long foodTemplateID) {
+		return mDb.query(DATABASE_TEMPLATEFOOD_TABLE, new String[] {
+				DATABASE_TEMPLATEFOOD_ID, DATABASE_TEMPLATEFOOD_FOODTEMPLATEID,
+				DATABASE_TEMPLATEFOOD_FOODID },
+				DATABASE_TEMPLATEFOOD_FOODTEMPLATEID + "=" + foodTemplateID,
+				null, null, null, null);
+	}
+
+	// Delete template food
+	public boolean deleteTemplateFoodByFoodTemplateID(long foodTemplateID) {
+		return mDb.delete(DATABASE_TEMPLATEFOOD_TABLE, DATABASE_TEMPLATEFOOD_FOODTEMPLATEID
+				+ "=" + foodTemplateID, null) > 0;
+	}
+
+	// SETTINGS Functions
 	// create settings
 	public long createSettings() {
 		ContentValues initialValues = new ContentValues();
@@ -266,19 +298,9 @@ public class DbAdapter extends SQLiteOpenHelper {
 	}
 
 	// SELECTED FOOD Functions
-	public long createSelectedFood(String foodname, String unitname,
-			float kcal, float amound, float standardAmound, float protein,
-			float carbs, float fat, float foodId, float unitId) {
+	public long createSelectedFood(float amound, long unitId) {
 		ContentValues initialValues = new ContentValues();
-		initialValues.put(DATABASE_SELECTEDFOOD_FOODNAME, foodname);
-		initialValues.put(DATABASE_SELECTEDFOOD_UNITNAME, unitname);
 		initialValues.put(DATABASE_SELECTEDFOOD_AMOUNT, amound);
-		initialValues.put(DATABASE_SELECTEDFOOD_KCAL, kcal);
-		initialValues.put(DATABASE_SELECTEDFOOD_STANDARDAMOUNT, standardAmound);
-		initialValues.put(DATABASE_SELECTEDFOOD_PROTEIN, protein);
-		initialValues.put(DATABASE_SELECTEDFOOD_CARBS, carbs);
-		initialValues.put(DATABASE_SELECTEDFOOD_FAT, fat);
-		initialValues.put(DATABASE_SELECTEDFOOD_FOODID, foodId);
 		initialValues.put(DATABASE_SELECTEDFOOD_UNITID, unitId);
 		return mDb.insert(DATABASE_SELECTEDFOOD_TABLE, null, initialValues);
 	}
@@ -287,11 +309,6 @@ public class DbAdapter extends SQLiteOpenHelper {
 	public Cursor fetchAllSelectedFood() {
 		return mDb.query(DATABASE_SELECTEDFOOD_TABLE, new String[] {
 				DATABASE_SELECTEDFOOD_ID, DATABASE_SELECTEDFOOD_AMOUNT,
-				DATABASE_SELECTEDFOOD_FOODNAME, DATABASE_SELECTEDFOOD_KCAL,
-				DATABASE_SELECTEDFOOD_UNITNAME,
-				DATABASE_SELECTEDFOOD_STANDARDAMOUNT,
-				DATABASE_SELECTEDFOOD_PROTEIN, DATABASE_SELECTEDFOOD_CARBS,
-				DATABASE_SELECTEDFOOD_FAT, DATABASE_SELECTEDFOOD_FOODID,
 				DATABASE_SELECTEDFOOD_UNITID }, null, null, null, null, null);
 	}
 
@@ -300,11 +317,6 @@ public class DbAdapter extends SQLiteOpenHelper {
 			throws SQLException {
 		Cursor mCursor = mDb.query(DATABASE_SELECTEDFOOD_TABLE, new String[] {
 				DATABASE_SELECTEDFOOD_ID, DATABASE_SELECTEDFOOD_AMOUNT,
-				DATABASE_SELECTEDFOOD_FOODNAME, DATABASE_SELECTEDFOOD_KCAL,
-				DATABASE_SELECTEDFOOD_UNITNAME,
-				DATABASE_SELECTEDFOOD_STANDARDAMOUNT,
-				DATABASE_SELECTEDFOOD_PROTEIN, DATABASE_SELECTEDFOOD_CARBS,
-				DATABASE_SELECTEDFOOD_FAT, DATABASE_SELECTEDFOOD_FOODID,
 				DATABASE_SELECTEDFOOD_UNITID }, DATABASE_SELECTEDFOOD_UNITID
 				+ "=" + foodUnitId, null, null, null, null);
 		if (mCursor != null) {
@@ -317,30 +329,8 @@ public class DbAdapter extends SQLiteOpenHelper {
 	public Cursor fetchSelectedFood(Long id) throws SQLException {
 		Cursor mCursor = mDb.query(DATABASE_SELECTEDFOOD_TABLE, new String[] {
 				DATABASE_SELECTEDFOOD_ID, DATABASE_SELECTEDFOOD_AMOUNT,
-				DATABASE_SELECTEDFOOD_FOODNAME, DATABASE_SELECTEDFOOD_KCAL,
-				DATABASE_SELECTEDFOOD_UNITNAME,
-				DATABASE_SELECTEDFOOD_STANDARDAMOUNT,
-				DATABASE_SELECTEDFOOD_PROTEIN, DATABASE_SELECTEDFOOD_CARBS,
-				DATABASE_SELECTEDFOOD_FAT, DATABASE_SELECTEDFOOD_FOODID,
 				DATABASE_SELECTEDFOOD_UNITID }, DATABASE_SELECTEDFOOD_ID + "="
 				+ id, null, null, null, null);
-		if (mCursor != null) {
-			mCursor.moveToFirst();
-		}
-		return mCursor;
-	}
-
-	// get a single selected food by Foodid
-	public Cursor fetchSelectedFoodByFoodId(Long foodId) throws SQLException {
-		Cursor mCursor = mDb.query(DATABASE_SELECTEDFOOD_TABLE, new String[] {
-				DATABASE_SELECTEDFOOD_ID, DATABASE_SELECTEDFOOD_AMOUNT,
-				DATABASE_SELECTEDFOOD_FOODNAME, DATABASE_SELECTEDFOOD_KCAL,
-				DATABASE_SELECTEDFOOD_UNITNAME,
-				DATABASE_SELECTEDFOOD_STANDARDAMOUNT,
-				DATABASE_SELECTEDFOOD_PROTEIN, DATABASE_SELECTEDFOOD_CARBS,
-				DATABASE_SELECTEDFOOD_FAT, DATABASE_SELECTEDFOOD_FOODID,
-				DATABASE_SELECTEDFOOD_UNITID }, DATABASE_SELECTEDFOOD_FOODID
-				+ "=" + foodId, null, null, null, null);
 		if (mCursor != null) {
 			mCursor.moveToFirst();
 		}
@@ -354,19 +344,9 @@ public class DbAdapter extends SQLiteOpenHelper {
 	}
 
 	// Update selected food
-	public boolean updateSelectedFood(long id, String foodname,
-			String unitname, float kcal, float amound, float standardAmound,
-			float protein, float carbs, float fat, float foodId, float unitId) {
+	public boolean updateSelectedFood(long id, float amound, long unitId) {
 		ContentValues initialValues = new ContentValues();
-		initialValues.put(DATABASE_SELECTEDFOOD_FOODNAME, foodname);
-		initialValues.put(DATABASE_SELECTEDFOOD_UNITNAME, unitname);
 		initialValues.put(DATABASE_SELECTEDFOOD_AMOUNT, amound);
-		initialValues.put(DATABASE_SELECTEDFOOD_KCAL, kcal);
-		initialValues.put(DATABASE_SELECTEDFOOD_STANDARDAMOUNT, standardAmound);
-		initialValues.put(DATABASE_SELECTEDFOOD_PROTEIN, protein);
-		initialValues.put(DATABASE_SELECTEDFOOD_CARBS, carbs);
-		initialValues.put(DATABASE_SELECTEDFOOD_FAT, fat);
-		initialValues.put(DATABASE_SELECTEDFOOD_FOODID, foodId);
 		initialValues.put(DATABASE_SELECTEDFOOD_UNITID, unitId);
 		return mDb.update(DATABASE_SELECTEDFOOD_TABLE, initialValues,
 				DATABASE_SELECTEDFOOD_ID + "=" + id, null) > 0;
@@ -391,7 +371,7 @@ public class DbAdapter extends SQLiteOpenHelper {
 		return mDb.query(DATABASE_FOOD_TABLE, new String[] { DATABASE_FOOD_ID,
 				DATABASE_FOOD_NAME, DATABASE_FOOD_ISFAVORITE,
 				DATABASE_FOOD_VISIBLE, DATABASE_FOOD_PLATFORM }, null, null,
-		 		DATABASE_FOOD_NAME, null, null);
+				DATABASE_FOOD_NAME, null, null);
 	}
 
 	// get a food by id

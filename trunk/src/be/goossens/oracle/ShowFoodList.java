@@ -12,9 +12,9 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
-import android.widget.Toast;
 
 public class ShowFoodList extends ListActivity {
 	// dbHelper to get the food list out the database
@@ -72,7 +72,7 @@ public class ShowFoodList extends ListActivity {
 					.getText()));
 		}
 	}
- 
+
 	private void updateListAdapter() {
 		fooditemlist = new CustomArrayAdapterFoodList(this, R.layout.row_food,
 				20);
@@ -80,12 +80,15 @@ public class ShowFoodList extends ListActivity {
 		setListAdapter(fooditemlist);
 	}
 
-	private void updateTitle() {
+	private void updateButton() {
 		Cursor selectedFood = dbHelper.fetchAllSelectedFood();
 		startManagingCursor(selectedFood);
-		setTitle(getResources().getString(R.string.app_name) + " ("
+		/*setTitle(getResources().getString(R.string.app_name) + " ("
 				+ selectedFood.getCount() + " "
 				+ getResources().getString(R.string.items_selected) + ")");
+		*/
+		Button buttonSelections = (Button) findViewById(R.id.buttonShowFoodListShowSelectedFood);
+		buttonSelections.setText(getResources().getString(R.string.show_selected_food) + " (" + selectedFood.getCount()  + ")");
 		selectedFood.close();
 	}
 
@@ -111,7 +114,7 @@ public class ShowFoodList extends ListActivity {
 		// every time we resume make the search box empty so the user dont have
 		// to press delete search box every time he adds a selection
 		editTextSearch.setText("");
-		updateTitle();
+		updateButton();
 		if (startUp)
 			checkToShowPopUpToDeleteSelectedFood();
 	}
@@ -131,7 +134,7 @@ public class ShowFoodList extends ListActivity {
 							dbHelper.deleteSelectedFood(cSelectedFood.getLong(cSelectedFood
 									.getColumnIndexOrThrow(DbAdapter.DATABASE_SELECTEDFOOD_ID)));
 						} while (cSelectedFood.moveToNext());
-						updateTitle();
+						updateButton();
 						break;
 					}
 				}
@@ -156,7 +159,7 @@ public class ShowFoodList extends ListActivity {
 		inflater.inflate(R.menu.mainmenu, menu);
 		return true;
 	}
- 
+
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
@@ -188,18 +191,7 @@ public class ShowFoodList extends ListActivity {
 	}
 
 	public void onClickShowSelectedFood(View view) {
-		Cursor selectedFood = dbHelper.fetchAllSelectedFood();
-		startManagingCursor(selectedFood);
-		int count = selectedFood.getCount();
-		selectedFood.close();
-		if (count > 0) {
-			goToPageSelectedFood();
-		} else {
-			Toast.makeText(this,
-					getResources().getString(R.string.selections_are_empty),
-					Toast.LENGTH_SHORT).show();
-		}
-
+		goToPageSelectedFood();
 	}
 
 	public void goToPageSelectedFood() {

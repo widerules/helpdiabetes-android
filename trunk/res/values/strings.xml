@@ -49,8 +49,16 @@
     <string name="do_you_want_to_delete_the_selections">Wilt u de selecties leeg maken?</string>
     <string name="yes">Ja</string>
     <string name="no">Nee</string>
+    <string name="add_food_to_template_error">U moet minimum 2 etenswaren geselecteerd hebben</string>
     
+    
+    <string name="template_name">Template naam</string>
     <string name="save_as_template">Opslaan als template</string>
+    <string name="Load_template">Template laden</string>
+    <string name="template_load_empty">Er zijn geen templates</string>
+    <string name="template_name_cant_be_empty">Template naam mag niet leeg zijn</string>
+    <string name="save">Opslaan</string>
+    <string name="cancel">Annuleren</string>
     
    	<!-- Preference category strings -->
     <string name="pref_insuline_ratio">Insuline ratio aanpassen</string>

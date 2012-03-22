@@ -70,7 +70,7 @@ public class ShowManageOwnFood extends ListActivity {
 			} else {
 				// else we can delete it
 				deleteFoodAndFoodUnits(info.id);
-				//and refresh the list
+				// and refresh the list
 				fillData();
 			}
 			break;
@@ -97,13 +97,32 @@ public class ShowManageOwnFood extends ListActivity {
 	}
 
 	private boolean checkIfTheFoodIsInUse(long foodId) {
-		return dbHelper.fetchSelectedFoodByFoodId(foodId).getCount() > 0;
+		// first get all selectedFood
+		int count = 0;
+		Cursor cSelectedFood = dbHelper.fetchAllSelectedFood();
+		cSelectedFood.moveToFirst();
+
+		do {
+			//get the foodUnit from the selectedFood
+			Cursor cFoodUnit = dbHelper.fetchFoodUnit(cSelectedFood.getLong(cSelectedFood.getColumnIndexOrThrow(DbAdapter.DATABASE_SELECTEDFOOD_UNITID)));
+			cFoodUnit.moveToFirst();
+			//get the food with the unitId
+			Cursor cFood = dbHelper.fetchFood(cFoodUnit.getLong(cFoodUnit.getColumnIndexOrThrow(DbAdapter.DATABASE_FOODUNIT_FOODID)));
+			cFood.moveToFirst();
+			count += cFood.getCount();
+			cFood.close();
+			cFoodUnit.close();
+		} while (cSelectedFood.moveToFirst());
+
+		cSelectedFood.close();
+		// return dbHelper.fetchSelectedFoodByFoodId(foodId).getCount() > 0;
+		return count > 0;
 	}
 
 	// if we press on create new food
 	public void onClickCreateNewFood(View view) {
-		//Go to new page to create new food
-		Intent i = new Intent(this,ShowCreateFood.class);
+		// Go to new page to create new food
+		Intent i = new Intent(this, ShowCreateFood.class);
 		startActivity(i);
 	}
 }

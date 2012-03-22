@@ -4,11 +4,6 @@
     android:layout_height="fill_parent"
     android:orientation="vertical" >
 
-    <LinearLayout
-        android:id="@+id/linearLayout3"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content" >
-
         <TextView
             android:id="@+id/textViewSelectedFood"
             android:layout_width="wrap_content"
@@ -18,8 +13,7 @@
             android:id="@+id/textViewSelectedFoodValues"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
-    </LinearLayout>
-
+  
     <LinearLayout
         android:id="@+id/linearLayout1"
         android:layout_width="fill_parent"
