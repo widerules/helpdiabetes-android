@@ -28,7 +28,7 @@ public class CustomBaseAdapterSelectedFood extends BaseAdapter implements OnClic
 	}
 
 	public long getItemId(int arg0) {
-		return Long.parseLong(listSelectedFood.get(arg0).getId().toString());
+		return listSelectedFood.get(arg0).getId();
 	}
 
 	public View getView(int position, View convertView, ViewGroup viewGroup) {

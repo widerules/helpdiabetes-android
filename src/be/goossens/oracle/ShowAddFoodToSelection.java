@@ -353,52 +353,14 @@ public class ShowAddFoodToSelection extends Activity {
 			// check if we need to udpate or add new selectedFood
 			if (getIntent().getExtras().getLong("selectedfoodid") != 0) {
 				// update a selectedFood
-				dbHelper.updateSelectedFood(
-						getIntent().getExtras().getLong("selectedfoodid"),
-						foodCursor.getString(foodCursor
-								.getColumnIndexOrThrow(DbAdapter.DATABASE_FOOD_NAME)),
-						selectedFoodUnitCursor.getString(selectedFoodUnitCursor
-								.getColumnIndexOrThrow(DbAdapter.DATABASE_FOODUNIT_NAME)),
-						selectedFoodUnitCursor.getFloat(selectedFoodUnitCursor
-								.getColumnIndexOrThrow(DbAdapter.DATABASE_FOODUNIT_KCAL)),
-						Float.parseFloat(editTextFoodAmound.getText()
-								.toString()),
-						selectedFoodUnitCursor.getFloat(selectedFoodUnitCursor
-								.getColumnIndexOrThrow(DbAdapter.DATABASE_FOODUNIT_STANDARDAMOUNT)),
-						selectedFoodUnitCursor.getFloat(selectedFoodUnitCursor
-								.getColumnIndexOrThrow(DbAdapter.DATABASE_FOODUNIT_PROTEIN)),
-						selectedFoodUnitCursor.getFloat(selectedFoodUnitCursor
-								.getColumnIndexOrThrow(DbAdapter.DATABASE_FOODUNIT_CARBS)),
-						selectedFoodUnitCursor.getFloat(selectedFoodUnitCursor
-								.getColumnIndexOrThrow(DbAdapter.DATABASE_FOODUNIT_FAT)),
-						foodCursor.getLong(foodCursor
-								.getColumnIndexOrThrow(DbAdapter.DATABASE_FOOD_ID)),
-						selectedFoodUnitCursor.getFloat(selectedFoodUnitCursor
+				dbHelper.updateSelectedFood(getIntent().getExtras().getLong("selectedfoodid"), Float.parseFloat(editTextFoodAmound.getText()
+						.toString()), selectedFoodUnitCursor.getLong(selectedFoodUnitCursor
 								.getColumnIndexOrThrow(DbAdapter.DATABASE_FOODUNIT_ID)));
 			} else {
 				// create a new selectedFood
 				if (amound > 0) {
-					dbHelper.createSelectedFood(
-							foodCursor
-									.getString(foodCursor
-											.getColumnIndexOrThrow(DbAdapter.DATABASE_FOOD_NAME)),
-							selectedFoodUnitCursor.getString(selectedFoodUnitCursor
-									.getColumnIndexOrThrow(DbAdapter.DATABASE_FOODUNIT_NAME)),
-							selectedFoodUnitCursor.getFloat(selectedFoodUnitCursor
-									.getColumnIndexOrThrow(DbAdapter.DATABASE_FOODUNIT_KCAL)),
-							Float.parseFloat(editTextFoodAmound.getText()
-									.toString()),
-							selectedFoodUnitCursor.getFloat(selectedFoodUnitCursor
-									.getColumnIndexOrThrow(DbAdapter.DATABASE_FOODUNIT_STANDARDAMOUNT)),
-							selectedFoodUnitCursor.getFloat(selectedFoodUnitCursor
-									.getColumnIndexOrThrow(DbAdapter.DATABASE_FOODUNIT_PROTEIN)),
-							selectedFoodUnitCursor.getFloat(selectedFoodUnitCursor
-									.getColumnIndexOrThrow(DbAdapter.DATABASE_FOODUNIT_CARBS)),
-							selectedFoodUnitCursor.getFloat(selectedFoodUnitCursor
-									.getColumnIndexOrThrow(DbAdapter.DATABASE_FOODUNIT_FAT)),
-							foodCursor.getLong(foodCursor
-									.getColumnIndexOrThrow(DbAdapter.DATABASE_FOOD_ID)),
-							selectedFoodUnitCursor.getFloat(selectedFoodUnitCursor
+					dbHelper.createSelectedFood(Float.parseFloat(editTextFoodAmound.getText()
+							.toString()), selectedFoodUnitCursor.getLong(selectedFoodUnitCursor
 									.getColumnIndexOrThrow(DbAdapter.DATABASE_FOODUNIT_ID)));
 				} else {
 					returnMessageFoodAintAddedValueCantBeZero();

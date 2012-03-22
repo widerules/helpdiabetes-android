@@ -33,6 +33,8 @@
         <activity android:name=".ShowCreateUnit"></activity>
         <activity android:name=".ShowPreferencesInsulineRatio"></activity>
         <activity android:name=".ShowPreferencesMealTimes"></activity>
+        <activity android:name=".ShowFoodTemplates"></activity>
+        <activity android:name=".ShowUpdateTemplateValues"></activity>
     </application>
 
 </manifest>
