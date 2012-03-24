@@ -10,6 +10,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView.AdapterContextMenuInfo;
+import android.widget.ListView;
 import android.widget.SimpleCursorAdapter;
 import android.widget.Toast;
 
@@ -24,19 +25,30 @@ public class ShowManageOwnFood extends ListActivity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.show_manage_own_food);
 		dbHelper = new DbAdapter(this);
-		dbHelper.open();
-		// fill the listview with own created food
-		fillData();
 		registerForContextMenu(getListView());
 	}
 
+	@Override
+	protected void onResume() {
+		super.onResume();
+		dbHelper.open();
+		// fill the listview with own created food
+		fillData();
+	}
+
+	@Override
+	protected void onPause() {
+		super.onPause();
+		dbHelper.close();
+	}
+
 	private void fillData() {
-		Cursor foodCursor = dbHelper.fetchAllOwnCreatedFood();
-		startManagingCursor(foodCursor);
+		Cursor cFood = dbHelper.fetchAllOwnCreatedFood();
+		startManagingCursor(cFood);
 		String[] name = new String[] { DbAdapter.DATABASE_FOOD_NAME };
 		int[] id = new int[] { android.R.id.text1 };
 		SimpleCursorAdapter adapter = new SimpleCursorAdapter(this,
-				android.R.layout.simple_list_item_1, foodCursor, name, id);
+				android.R.layout.simple_list_item_1, cFood, name, id);
 		setListAdapter(adapter);
 	}
 
@@ -44,8 +56,16 @@ public class ShowManageOwnFood extends ListActivity {
 	public void onCreateContextMenu(ContextMenu menu, View v,
 			ContextMenuInfo menuInfo) {
 		super.onCreateContextMenu(menu, v, menuInfo);
-		menu.add(0, UPDATE_ID, 0, R.string.menu_edit);
+		menu.add(0, UPDATE_ID, 0, R.string.update);
 		menu.add(0, DELETE_ID, 0, R.string.menu_delete);
+	}
+
+	@Override
+	protected void onListItemClick(ListView l, View v, int position, long id) {
+		super.onListItemClick(l, v, position, id);
+		Intent i = new Intent(this, ShowUpdateOwnFood.class);
+		i.putExtra(DbAdapter.DATABASE_FOOD_ID, id);
+		startActivity(i);
 	}
 
 	@Override
@@ -92,30 +112,49 @@ public class ShowManageOwnFood extends ListActivity {
 						.getColumnIndexOrThrow(DbAdapter.DATABASE_FOODUNIT_ID)));
 			}
 		}
+		cFoodUnit.close();
 		// Then we delete the food self
 		dbHelper.deleteFood(id);
 	}
 
+	// Check if the food is in use
 	private boolean checkIfTheFoodIsInUse(long foodId) {
-		// first get all selectedFood
 		int count = 0;
+		// first get all selectedFood to see if the food is in use in the
+		// selectedFood table
 		Cursor cSelectedFood = dbHelper.fetchAllSelectedFood();
-		cSelectedFood.moveToFirst();
+		if (cSelectedFood.getCount() > 0) {
+			cSelectedFood.moveToFirst();
 
-		do {
-			//get the foodUnit from the selectedFood
-			Cursor cFoodUnit = dbHelper.fetchFoodUnit(cSelectedFood.getLong(cSelectedFood.getColumnIndexOrThrow(DbAdapter.DATABASE_SELECTEDFOOD_UNITID)));
-			cFoodUnit.moveToFirst();
-			//get the food with the unitId
-			Cursor cFood = dbHelper.fetchFood(cFoodUnit.getLong(cFoodUnit.getColumnIndexOrThrow(DbAdapter.DATABASE_FOODUNIT_FOODID)));
-			cFood.moveToFirst();
-			count += cFood.getCount();
-			cFood.close();
-			cFoodUnit.close();
-		} while (cSelectedFood.moveToFirst());
+			do {
+				// get the foodUnit from the selectedFood
+				Cursor cFoodUnit = dbHelper
+						.fetchFoodUnit(cSelectedFood.getLong(cSelectedFood
+								.getColumnIndexOrThrow(DbAdapter.DATABASE_SELECTEDFOOD_UNITID)));
+				cFoodUnit.moveToFirst();
+				if (cFoodUnit.getCount() > 0)
+					count++;
+				cFoodUnit.close();
+			} while (cSelectedFood.moveToNext() && count == 0);
 
-		cSelectedFood.close();
-		// return dbHelper.fetchSelectedFoodByFoodId(foodId).getCount() > 0;
+			cSelectedFood.close();
+		}
+		if (count == 0) {
+			// Then see if the food is in use in the template_food table
+			Cursor cTemplateFood = dbHelper.fetchAllTemplateFoods();
+			if (cTemplateFood.getCount() > 0) {
+				cTemplateFood.moveToFirst();
+				// see if the foodId is the same
+				do {
+					// check if foodID is the same
+					if (foodId == cTemplateFood
+							.getLong(cTemplateFood
+									.getColumnIndexOrThrow(DbAdapter.DATABASE_TEMPLATEFOOD_FOODID)))
+						count++;
+				} while (cTemplateFood.moveToNext() && count == 0);
+				cTemplateFood.close();
+			}
+		}
 		return count > 0;
 	}
 

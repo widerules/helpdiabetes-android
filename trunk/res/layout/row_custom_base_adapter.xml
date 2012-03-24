@@ -6,7 +6,7 @@
     android:orientation="vertical" >
 
     <TextView
-        android:id="@+id/textViewSelectedFoodValues"
+        android:id="@+id/textViewCustomBaseAdapter"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content" >
     </TextView>

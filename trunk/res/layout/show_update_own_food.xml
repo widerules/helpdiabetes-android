@@ -8,7 +8,7 @@
         android:id="@+id/linearLayout1"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content" >
-
+
         <TextView
             android:id="@+id/textView1"
             android:layout_width="wrap_content"
@@ -23,23 +23,22 @@
 
             <requestFocus />
         </EditText>
-
     </LinearLayout>
-
+
     <Button
         android:id="@+id/button1"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:text="@string/save_food_name"
-        android:onClick="onClickSaveFoodName" />
-
+        android:onClick="onClickSaveFoodName"
+        android:text="@string/save_food_name" />
+
     <Button
         android:id="@+id/button2"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:text="@string/add_unit"
-        android:onClick="onClickAddUnit" />
-
+        android:onClick="onClickAddUnit"
+        android:text="@string/add_unit" />
+
     <TextView
         android:id="@+id/textView2"
         android:layout_width="wrap_content"
@@ -51,5 +50,12 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content" >
     </ListView>
-    
-</LinearLayout>
+
+    <Button
+        android:id="@+id/button3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/delete"
+        android:onClick="onClickDelete" />
+
+</LinearLayout>

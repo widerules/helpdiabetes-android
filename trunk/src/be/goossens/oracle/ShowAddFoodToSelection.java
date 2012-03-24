@@ -38,26 +38,28 @@ public class ShowAddFoodToSelection extends Activity {
 	// editTextFoodAMound
 	private boolean first;
 
+	// The button to delete the food from selection when we come from
+	// ShowSelectedFood page
+	private Button buttonDeleteSelectedFood;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.show_add_food);
 
 		dbHelper = new DbAdapter(this);
-		dbHelper.open();
-
 		first = false;
 
-		// Get the selected food
-		foodCursor = dbHelper.fetchFood(getIntent().getExtras().getLong(
-				DbAdapter.DATABASE_FOOD_ID));
-		startManagingCursor(foodCursor);
 		textViewSelectedFood = (TextView) findViewById(R.id.textViewSelectedFood);
 		textViewSelectedFoodValues = (TextView) findViewById(R.id.textViewSelectedFoodValues);
 		textViewCalculated = (TextView) findViewById(R.id.textViewCalculated);
 		editTextFoodAmound = (EditText) findViewById(R.id.editTextFoodAmount);
 		spinnerFoodUnits = (Spinner) findViewById(R.id.spinnerFoodUnit);
 		buttonAddOrUpdate = (Button) findViewById(R.id.buttonAddOrUpdate);
+		buttonDeleteSelectedFood = (Button) findViewById(R.id.buttonShowAddFoodDelete);
+
+		// Hide the button to delete the food from selectedFood
+		buttonDeleteSelectedFood.setVisibility(View.GONE);
 
 		// update the textViews when the spinner selected item changes
 		spinnerFoodUnits
@@ -77,6 +79,39 @@ public class ShowAddFoodToSelection extends Activity {
 
 					}
 				});
+
+		/*
+		 * Set a listener on the editTextFoodAmound so values can be updated
+		 * when the amound changes
+		 */
+		editTextFoodAmound.addTextChangedListener(new TextWatcher() {
+
+			public void onTextChanged(CharSequence s, int start, int before,
+					int count) {
+				onKeyPress();
+			}
+
+			public void beforeTextChanged(CharSequence s, int start, int count,
+					int after) {
+
+			}
+
+			public void afterTextChanged(Editable s) {
+
+			}
+		});
+	}
+
+	@Override
+	protected void onResume() {
+		super.onResume();
+
+		dbHelper.open();
+
+		// Get the selected food
+		foodCursor = dbHelper.fetchFood(getIntent().getExtras().getLong(
+				DbAdapter.DATABASE_FOOD_ID));
+		startManagingCursor(foodCursor);
 
 		fillData();
 
@@ -101,66 +136,58 @@ public class ShowAddFoodToSelection extends Activity {
 			setSelectedFoodUnitItemInSpinnerSelected(cSelectedFood
 					.getInt(cSelectedFood
 							.getColumnIndexOrThrow(DbAdapter.DATABASE_SELECTEDFOOD_UNITID)));
+
+			// Show the button to delete the food from selection
+			buttonDeleteSelectedFood.setVisibility(View.VISIBLE);
 		}
-		
+
 		fillTextViewSelectedFood();
 		fillTextViewCalculated();
-		
-		/*
-		 * Set a listener on the editTextFoodAmound so values can be updated
-		 * when the amound changes
-		 * */
-		editTextFoodAmound.addTextChangedListener(new TextWatcher() {
-			
-			public void onTextChanged(CharSequence s, int start, int before, int count) {
-				onKeyPress();
-			}
-			
-			public void beforeTextChanged(CharSequence s, int start, int count,
-					int after) {
-				
-			}
-			
-			public void afterTextChanged(Editable s) {
-				
-			}
-		});
+
 	}
-	
+
+	// When we click on the button delete
+	public void onClickDeleteFoodFromSelection(View view) {
+		dbHelper.deleteSelectedFood(getIntent().getExtras().getLong(
+				"selectedfoodid"));
+		finish();
+	}
+
 	/*
-	 * This function will always be executed when a user changes the value of the amound
-	 * */
+	 * This function will always be executed when a user changes the value of
+	 * the amound
+	 */
 	private void onKeyPress() {
 		// check if the user try's to add more then 999 as value
-				// this is becaus if we try to add 999999 the application crash!
-				int insertedAmound;
+		// this is becaus if we try to add 999999 the application crash!
+		int insertedAmound;
 
-				try {
-					insertedAmound = Integer.parseInt(editTextFoodAmound.getText()
-							.toString());
-				} catch (Exception e) {
-					insertedAmound = 0;
-				}
+		try {
+			insertedAmound = Integer.parseInt(editTextFoodAmound.getText()
+					.toString());
+		} catch (Exception e) {
+			insertedAmound = 0;
+		}
 
-				if (insertedAmound > 999) {
-					Toast.makeText(
-							this,
-							getResources().getString(
-									R.string.value_cant_be_more_then_ninety_nine),
-							Toast.LENGTH_SHORT).show();
-					editTextFoodAmound.setText(editTextFoodAmound.getText()
-							.subSequence(1, editTextFoodAmound.getText().length()));
-				} else if (editTextFoodAmound.getText().toString().length() > 5) {
-					Toast.makeText(
-							this,
-							getResources().getString(
-									R.string.cant_add_more_then_five_digits),
-							Toast.LENGTH_SHORT).show();
-					editTextFoodAmound.setText(editTextFoodAmound.getText()
-							.subSequence(1, editTextFoodAmound.getText().length()));
-				} else {
-					fillTextViewCalculated();
-				}
+		if (insertedAmound > 999) {
+			Toast.makeText(
+					this,
+					getResources().getString(
+							R.string.value_cant_be_more_then_ninety_nine),
+					Toast.LENGTH_SHORT).show();
+			editTextFoodAmound.setText(editTextFoodAmound.getText()
+					.subSequence(1, editTextFoodAmound.getText().length()));
+		} else if (editTextFoodAmound.getText().toString().length() > 5) {
+			Toast.makeText(
+					this,
+					getResources().getString(
+							R.string.cant_add_more_then_five_digits),
+					Toast.LENGTH_SHORT).show();
+			editTextFoodAmound.setText(editTextFoodAmound.getText()
+					.subSequence(1, editTextFoodAmound.getText().length()));
+		} else {
+			fillTextViewCalculated();
+		}
 	}
 
 	private void checkStandardAmound() {
@@ -353,14 +380,19 @@ public class ShowAddFoodToSelection extends Activity {
 			// check if we need to udpate or add new selectedFood
 			if (getIntent().getExtras().getLong("selectedfoodid") != 0) {
 				// update a selectedFood
-				dbHelper.updateSelectedFood(getIntent().getExtras().getLong("selectedfoodid"), Float.parseFloat(editTextFoodAmound.getText()
-						.toString()), selectedFoodUnitCursor.getLong(selectedFoodUnitCursor
+				dbHelper.updateSelectedFood(
+						getIntent().getExtras().getLong("selectedfoodid"),
+						Float.parseFloat(editTextFoodAmound.getText()
+								.toString()),
+						selectedFoodUnitCursor.getLong(selectedFoodUnitCursor
 								.getColumnIndexOrThrow(DbAdapter.DATABASE_FOODUNIT_ID)));
 			} else {
 				// create a new selectedFood
 				if (amound > 0) {
-					dbHelper.createSelectedFood(Float.parseFloat(editTextFoodAmound.getText()
-							.toString()), selectedFoodUnitCursor.getLong(selectedFoodUnitCursor
+					dbHelper.createSelectedFood(
+							Float.parseFloat(editTextFoodAmound.getText()
+									.toString()),
+							selectedFoodUnitCursor.getLong(selectedFoodUnitCursor
 									.getColumnIndexOrThrow(DbAdapter.DATABASE_FOODUNIT_ID)));
 				} else {
 					returnMessageFoodAintAddedValueCantBeZero();

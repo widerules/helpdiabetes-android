@@ -6,7 +6,7 @@
     <LinearLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
+        android:layout_height="wrap_content"
         android:orientation="vertical" >
 
         <TableLayout
@@ -135,6 +135,13 @@
                 android:layout_height="wrap_content"
                 android:onClick="onClickAdd"
                 android:text="@string/add" />
+
+            <Button
+                android:id="@+id/buttonShowCreateUnitDelete"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/delete"
+                android:onClick="onClickDelete" />
 
             <Button
                 android:id="@+id/button2"
