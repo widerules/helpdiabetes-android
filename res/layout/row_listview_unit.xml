@@ -10,10 +10,7 @@
     <TextView
         android:id="@+id/textViewRowListviewUnit"
         android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:textSize="16sp"
-        android:textStyle="bold"
-        android:typeface="sans" >
+        android:layout_height="wrap_content" >
     </TextView>
 
 </LinearLayout>

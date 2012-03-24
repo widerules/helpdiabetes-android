@@ -25,6 +25,9 @@ public class ShowCreateUnit extends Activity {
 	private EditText editTextFat;
 	private Button buttonAddOrUpdate;
 
+	// Button to delete unit
+	private Button buttonDelete;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -40,6 +43,9 @@ public class ShowCreateUnit extends Activity {
 		editTextCarbs = (EditText) findViewById(R.id.editTextShowCreateUnitFoodUnitCarbs);
 		editTextFat = (EditText) findViewById(R.id.editTextShowCreateUnitFoodUnitFat);
 		buttonAddOrUpdate = (Button) findViewById(R.id.buttonShowCreateUnitAddOrUpdate);
+		buttonDelete = (Button) findViewById(R.id.buttonShowCreateUnitDelete);
+
+		buttonDelete.setVisibility(View.GONE);
 
 		// if we are trying to update a unit
 		if (getIntent().getExtras().getLong("unitId") != 0) {
@@ -66,8 +72,29 @@ public class ShowCreateUnit extends Activity {
 					.getColumnIndexOrThrow(DbAdapter.DATABASE_FOODUNIT_CARBS)));
 			editTextFat.setText(cUnit.getString(cUnit
 					.getColumnIndexOrThrow(DbAdapter.DATABASE_FOODUNIT_FAT)));
-
+			checkForButtonDelete();
 		}
+	}
+
+	// This method will check if we may delete the unit ( its its not in use )
+	// Then we display the button delete
+	private void checkForButtonDelete() {
+		Cursor cFoodUnit = dbHelper.fetchFoodUnit(getIntent().getExtras()
+				.getLong("unitId"));
+		// check if foodUnit is in use in selectedFood
+		if (dbHelper.fetchSelectedFoodByFoodUnitId(
+				getIntent().getExtras().getLong("unitId")).getCount() <= 0) {
+			// if foodUnit is not in use, check if the food has more then 1
+			// foodUnit
+			if (dbHelper
+					.fetchFoodUnitByFoodId(
+							cFoodUnit.getLong(cFoodUnit
+									.getColumnIndexOrThrow(DbAdapter.DATABASE_FOODUNIT_FOODID)))
+					.getCount() > 1) {
+				buttonDelete.setVisibility(View.VISIBLE);
+			}
+		}
+
 	}
 
 	public void onClickAdd(View view) {
@@ -227,6 +254,12 @@ public class ShowCreateUnit extends Activity {
 
 	public void onClickBack(View view) {
 		setResult(RESULT_OK);
+		finish();
+	}
+
+	// If we press the button delete
+	public void onClickDelete(View view) {
+		dbHelper.deleteFoodUnit(getIntent().getExtras().getLong("unitId"));
 		finish();
 	}
 

@@ -208,7 +208,7 @@ public class DbAdapter extends SQLiteOpenHelper {
 		return mDb.query(DATABASE_FOODTEMPLATE_TABLE, new String[] {
 				DATABASE_FOODTEMPLATE_ID, DATABASE_FOODTEMPLATE_MEALTYPEID,
 				DATABASE_FOODTEMPLATE_USERID, DATABASE_FOODTEMPLATE_VISIBLE,
-				DATABASE_FOODTEMPLATE_FOODTEMPLATENAME }, null, null, null,
+				DATABASE_FOODTEMPLATE_FOODTEMPLATENAME }, null, null, DATABASE_FOODTEMPLATE_FOODTEMPLATENAME,
 				null, null);
 	}
 
@@ -227,12 +227,30 @@ public class DbAdapter extends SQLiteOpenHelper {
 		return mDb.insert(DATABASE_TEMPLATEFOOD_TABLE, null, initialValues);
 	}
 
+	// get all template foods
+	public Cursor fetchAllTemplateFoods() {
+		return mDb.query(DATABASE_TEMPLATEFOOD_TABLE, new String[] {
+				DATABASE_TEMPLATEFOOD_ID, DATABASE_TEMPLATEFOOD_FOODTEMPLATEID,
+				DATABASE_TEMPLATEFOOD_FOODID },
+				null,
+				null, null, null, null);
+	}
+	
 	// get template foods by foodTemplateID
 	public Cursor fetchTemplateFoodsByFoodTemplateID(long foodTemplateID) {
 		return mDb.query(DATABASE_TEMPLATEFOOD_TABLE, new String[] {
 				DATABASE_TEMPLATEFOOD_ID, DATABASE_TEMPLATEFOOD_FOODTEMPLATEID,
 				DATABASE_TEMPLATEFOOD_FOODID },
 				DATABASE_TEMPLATEFOOD_FOODTEMPLATEID + "=" + foodTemplateID,
+				null, null, null, null);
+	}
+	
+	// get template foods by foodId
+	public Cursor fetchTemplateFoodsByFoodID(long foodID) {
+		return mDb.query(DATABASE_TEMPLATEFOOD_TABLE, new String[] {
+				DATABASE_TEMPLATEFOOD_ID, DATABASE_TEMPLATEFOOD_FOODTEMPLATEID,
+				DATABASE_TEMPLATEFOOD_FOODID },
+				DATABASE_TEMPLATEFOOD_FOODID + "=" + foodID,
 				null, null, null, null);
 	}
 

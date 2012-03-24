@@ -21,6 +21,7 @@ import android.view.View;
 import android.widget.AdapterView.AdapterContextMenuInfo;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -86,6 +87,29 @@ public class ShowSelectedFood extends ListActivity {
 		return list;
 	}
 
+	@Override
+	protected void onListItemClick(ListView l, View v, int position, long id) {
+		super.onListItemClick(l, v, position, id);
+		Cursor cSelectedFood = dbHelper.fetchSelectedFood(id);
+		cSelectedFood.moveToFirst();
+		Intent i = new Intent(this, ShowAddFoodToSelection.class);
+
+		// get the food
+		Cursor cUnit = dbHelper
+				.fetchFoodUnit(cSelectedFood.getLong(cSelectedFood
+						.getColumnIndexOrThrow(DbAdapter.DATABASE_SELECTEDFOOD_UNITID)));
+		cUnit.moveToFirst();
+		i.putExtra(DbAdapter.DATABASE_FOOD_ID, cUnit.getLong(cUnit
+				.getColumnIndexOrThrow(DbAdapter.DATABASE_FOODUNIT_FOODID)));
+		// cant put paramer dbadapter.database_selectedfood_id instead of
+		// selectedfoodid becaus in the parameter the value is _id and
+		// food_id its paramter is _id to!
+		i.putExtra("selectedfoodid", id);
+		cUnit.close();
+		cSelectedFood.close();
+		startActivityForResult(i, update_selectedFood_id);
+	}
+	
 	// Show on top Total: amound calories
 	private void calculateValues() {
 		TextView tvTotal = (TextView) findViewById(R.id.textViewShowTotal);
@@ -173,7 +197,7 @@ public class ShowSelectedFood extends ListActivity {
 	public void onCreateContextMenu(ContextMenu menu, View v,
 			ContextMenuInfo menuInfo) {
 		super.onCreateContextMenu(menu, v, menuInfo);
-		menu.add(0, EDIT_ID, 0, R.string.menu_edit);
+		menu.add(0, EDIT_ID, 0, R.string.update);
 		menu.add(0, DELETE_ID, 0, R.string.menu_delete);
 	}
 

@@ -11,7 +11,6 @@
     <string name="delete_all">Wis alles</string>
     <string name="show_selected_food">Selecties</string>
     <string name="back">Terug</string>
-    <string name="menu_edit">Aanpassen</string>
     <string name="amound_of_kcal">kilocalories</string>
     <string name="amound_of_carbs">koolhydraten</string>
     <string name="amound_of_protein">eiwit</string>
@@ -20,15 +19,15 @@
     <string name="items_selected">items geselecteerd</string>
     <string name="multiplie">X</string>
     <string name="cant_add_more_then_five_digits">U kan niet meer dan 5 digits ingeven!</string>
-    <string name="cant_delete_food_caus_food_is_in_use">Dit eten kan niet verwijderd worden (Het word nog gebruikt in een selectie)!</string>
-    <string name="cant_delete_food_unit_caus_food_unit_is_in_use">Deze hoeveelheid kan niet verwijderd worden (Hij word nog gebruikt in een selectie)!</string>
+    <string name="cant_delete_food_caus_food_is_in_use">Dit eten kan niet verwijderd worden (Het word nog gebruikt)!</string>
+    <string name="cant_delete_food_unit_caus_food_unit_is_in_use">Deze hoeveelheid kan niet verwijderd worden (Hij word nog gebruikt)!</string>
     <string name="cant_delete_food_unit_caus_food_unit_is_last_one">Deze hoeveelheid kan niet verwijderd worden (Het is de laatste van dit eten)!</string>
     <string name="value_cant_be_more_then_ninety_nine">De waarde mag niet meer dan 999 zijn!</string>
     <string name="selected_food_aint_added">Geselecteerd eten niet toegevoegd</string>
     <string name="value_amount_cant_be_zero">waarde aantal mag niet 0 zijn</string>
     <string name="settings">Instellingen</string>
     <string name="update_own_food">Eigen eten updaten</string>
-    <string name="create_new_food">Nieuw eten maken</string>
+    <string name="create_new_food">eten</string>
     <string name="food_name">Naam eten</string>
     <string name="gram">gram</string>
     <string name="hundred">100</string>
@@ -50,7 +49,7 @@
     <string name="yes">Ja</string>
     <string name="no">Nee</string>
     <string name="add_food_to_template_error">U moet minimum 2 etenswaren geselecteerd hebben</string>
-    
+    <string name="delete">verwijder</string>
     
     <string name="template_name">Template naam</string>
     <string name="save_as_template">Opslaan als template</string>

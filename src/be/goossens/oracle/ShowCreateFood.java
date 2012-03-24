@@ -23,7 +23,6 @@ public class ShowCreateFood extends Activity {
 		setContentView(R.layout.show_create_food);
 
 		dbHelper = new DbAdapter(this);
-		dbHelper.open();
 
 		editTextfoodName = (EditText) findViewById(R.id.editTextFoodName);
 		editTextUnitStandardAmound = (EditText) findViewById(R.id.editTextFoodUnitStandardAmound);
@@ -34,6 +33,18 @@ public class ShowCreateFood extends Activity {
 		editTextUnitFat = (EditText) findViewById(R.id.editTextFoodUnitFat);
 	}
 
+	@Override
+	protected void onResume() {
+		super.onResume();
+		dbHelper.open();
+	}
+	
+	@Override
+	protected void onPause() {
+		super.onPause();
+		dbHelper.close();
+	}
+	
 	public void onClickAdd(View view) {
 		if (checkAllFieldsGotSomeValue()) {
 			long foodId = dbHelper.createFood(editTextfoodName.getText()
@@ -92,7 +103,7 @@ public class ShowCreateFood extends Activity {
 			// or '0.'
 			try {
 				float unitStandardAmound = Float
-						.parseFloat(editTextUnitStandardAmound.getText()
+						.parseFloat(editTextUnitStandardAmound.getText() 
 								.toString());
 				if (unitStandardAmound <= 0) {
 					Toast.makeText(
@@ -110,86 +121,12 @@ public class ShowCreateFood extends Activity {
 						Toast.LENGTH_LONG).show();
 				return false;
 			}
-
-			/*
-			 *Carbs, prot, kcal, fat can be 0 
-			 * */
-			
-			/*try {
-				float unitKcal = Float.parseFloat(editTextUnitKcal.getText()
-						.toString());
-				if (unitKcal <= 0) {
-					Toast.makeText(
-							this,
-							getResources().getString(R.string.kcal_is_required),
-							Toast.LENGTH_LONG).show();
-					return false;
-				}
-			} catch (Exception e) {
-				Toast.makeText(this,
-						getResources().getString(R.string.kcal_is_required),
-						Toast.LENGTH_LONG).show();
-				return false;
-			}
-
-			try {
-				float unitProt = Float.parseFloat(editTextUnitProt.getText()
-						.toString());
-				if (unitProt <= 0) {
-					Toast.makeText(
-							this,
-							getResources().getString(R.string.prot_is_required),
-							Toast.LENGTH_LONG).show();
-					return false;
-				}
-			} catch (Exception e) {
-				Toast.makeText(this,
-						getResources().getString(R.string.prot_is_required),
-						Toast.LENGTH_LONG).show();
-				return false;
-			}
-
-			try {
-				float unitCarb = Float.parseFloat(editTextUnitCarbs.getText()
-						.toString());
-				if (unitCarb <= 0) {
-					Toast.makeText(
-							this,
-							getResources()
-									.getString(R.string.carbs_is_required),
-							Toast.LENGTH_LONG).show();
-					return false;
-				}
-			} catch (Exception e) {
-				Toast.makeText(this,
-						getResources().getString(R.string.carbs_is_required),
-						Toast.LENGTH_LONG).show();
-				return false;
-			}
-
-			try {
-				float unitFat = Float.parseFloat(editTextUnitFat.getText()
-						.toString());
-				if (unitFat <= 0) {
-					Toast.makeText(this,
-							getResources().getString(R.string.fat_is_required),
-							Toast.LENGTH_LONG).show();
-					return false;
-				}
-			} catch (Exception e) {
-				Toast.makeText(this,
-						getResources().getString(R.string.fat_is_required),
-						Toast.LENGTH_LONG).show();
-				return false;
-			}*/
-
 			// if everything went OK we return true
 			return true;
 		}
 	}
 
 	public void onClickBack(View view) {
-		setResult(RESULT_OK);
 		finish();
 	}
 }

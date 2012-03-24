@@ -36,6 +36,8 @@ public class ShowFoodList extends ListActivity {
 
 	private static final int MANAGE_OWN_FOOD_ID = 1;
 
+	private static final int CREATE_OWN_FOOD = 2;
+
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -73,6 +75,12 @@ public class ShowFoodList extends ListActivity {
 		}
 	}
 
+	public void onClickCreateNewFood(View view) {
+		// Go to new page to create new food
+		Intent i = new Intent(this, ShowCreateFood.class);
+		startActivityForResult(i, CREATE_OWN_FOOD);
+	}
+
 	private void updateListAdapter() {
 		fooditemlist = new CustomArrayAdapterFoodList(this, R.layout.row_food,
 				20);
@@ -83,12 +91,15 @@ public class ShowFoodList extends ListActivity {
 	private void updateButton() {
 		Cursor selectedFood = dbHelper.fetchAllSelectedFood();
 		startManagingCursor(selectedFood);
-		/*setTitle(getResources().getString(R.string.app_name) + " ("
-				+ selectedFood.getCount() + " "
-				+ getResources().getString(R.string.items_selected) + ")");
-		*/
+		/*
+		 * setTitle(getResources().getString(R.string.app_name) + " (" +
+		 * selectedFood.getCount() + " " +
+		 * getResources().getString(R.string.items_selected) + ")");
+		 */
 		Button buttonSelections = (Button) findViewById(R.id.buttonShowFoodListShowSelectedFood);
-		buttonSelections.setText(getResources().getString(R.string.show_selected_food) + " (" + selectedFood.getCount()  + ")");
+		buttonSelections.setText(getResources().getString(
+				R.string.show_selected_food)
+				+ " (" + selectedFood.getCount() + ")");
 		selectedFood.close();
 	}
 
@@ -97,11 +108,6 @@ public class ShowFoodList extends ListActivity {
 	protected void onListItemClick(ListView l, View v, int position, long id) {
 		super.onListItemClick(l, v, position, id);
 		Intent i = new Intent(this, ShowAddFoodToSelection.class);
-
-		// Toast.makeText(this, "SelectedFoodName = " +
-		// fooditemlist.getFoodItem(position).getName() + " and id = " +
-		// fooditemlist.getFoodItem(position).getId(),
-		// Toast.LENGTH_LONG).show();
 		i.putExtra(DbAdapter.DATABASE_FOOD_ID,
 				Long.parseLong("" + fooditemlist.getFoodItem(position).getId()));
 		startActivity(i);
@@ -184,6 +190,9 @@ public class ShowFoodList extends ListActivity {
 		case MANAGE_OWN_FOOD_ID:
 			updateListAdapter();
 			break;
+		case CREATE_OWN_FOOD:
+			if (resultCode == RESULT_OK)
+				updateListAdapter();
 		default:
 			break;
 		}

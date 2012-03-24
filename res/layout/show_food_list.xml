@@ -26,13 +26,28 @@
         </EditText>
     </LinearLayout>
 
-    <Button
-        android:id="@+id/buttonShowFoodListShowSelectedFood"
+    <LinearLayout
+        android:id="@+id/linearLayout2"
         android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:onClick="onClickShowSelectedFood"
-        android:text="@string/show_selected_food" />
+        android:layout_height="wrap_content" >
+
+        <Button
+            android:id="@+id/buttonShowFoodListShowCreateFood"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:drawableLeft="@android:drawable/ic_input_add"
+            android:gravity="left|center_vertical"
+            android:onClick="onClickCreateNewFood"
+            android:text="@string/create_new_food" />
+
+        <Button
+            android:id="@+id/buttonShowFoodListShowSelectedFood"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:onClick="onClickShowSelectedFood"
+            android:text="@string/show_selected_food" />
+
+    </LinearLayout>
 
     <ListView
         android:id="@+android:id/list"
