@@ -1,16 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-
+    <!-- General -->
     <string name="app_name">HelpDiabetes</string>
-    <string name="search">Zoeken: </string>
-    <string name="creating_data">Aanmaken gegevens</string>
-    <string name="please_waite">Even geduld</string>
     <string name="add">Toevoegen</string>
     <string name="update">Aanpassen</string>
     <string name="menu_delete">Verwijderen</string>
     <string name="delete_all">Wis alles</string>
-    <string name="show_selected_food">Selecties</string>
     <string name="back">Terug</string>
+    <string name="yes">Ja</string>
+    <string name="no">Nee</string>
+    
+    <!-- ShowSelectedFood -->
+    <string name="showSelectedFoodPopupAddAmountToTemplate">Wilt u de aantallen mee bewaren?</string>
+    
+    <!-- ShowFoodList -->
+    <string name="showFoodListButtonSelections">Selecties</string>
+    
+    <!-- Not sorted yet -->
+    <string name="search">Zoeken: </string>
+    <string name="creating_data">Aanmaken gegevens</string>
+    <string name="please_waite">Even geduld</string>
     <string name="amound_of_kcal">kilocalories</string>
     <string name="amound_of_carbs">koolhydraten</string>
     <string name="amound_of_protein">eiwit</string>
@@ -30,6 +39,8 @@
     <string name="create_new_food">eten</string>
     <string name="food_name">Naam eten</string>
     <string name="gram">gram</string>
+    <string name="part">stuk</string>
+    <string name="one">1</string>
     <string name="hundred">100</string>
     <string name="food_name_is_required">Naam eten mag niet leeg zijn</string>
     <string name="save_food_name">Eten naam wijzigen</string>
@@ -46,11 +57,8 @@
     <string name="saved">Opgeslagen</string>
     <string name="getting_food">Eten ophalen</string>
     <string name="do_you_want_to_delete_the_selections">Wilt u de selecties leeg maken?</string>
-    <string name="yes">Ja</string>
-    <string name="no">Nee</string>
     <string name="add_food_to_template_error">U moet minimum 2 etenswaren geselecteerd hebben</string>
     <string name="delete">verwijder</string>
-    
     <string name="template_name">Template naam</string>
     <string name="save_as_template">Opslaan als template</string>
     <string name="Load_template">Template laden</string>
@@ -62,6 +70,7 @@
    	<!-- Preference category strings -->
     <string name="pref_insuline_ratio">Insuline ratio aanpassen</string>
 	<string name="pref_meal_times">Maaltijd tijden aanpassen</string>
+	
 	<!-- Preference editText strings -->
 	<string name="pref_breakfastratio_title">Ontbijt</string>
 	<string name="pref_lunchratio_title">Middag</string>
