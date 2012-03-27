@@ -36,10 +36,14 @@ public class ShowSelectedFood extends ListActivity {
 	// Need this id to update all the values afther we updated a selectedFood
 	private static final int update_selectedFood_id = 0;
 
+	private boolean saveFoodAmount;
+	private String templateName;
+
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.show_selected_food);
+		saveFoodAmount = false;
 		dbHelper = new DbAdapter(this);
 		listOfSelectedFood = new ArrayList<DBSelectedFood>();
 		registerForContextMenu(getListView());
@@ -90,26 +94,9 @@ public class ShowSelectedFood extends ListActivity {
 	@Override
 	protected void onListItemClick(ListView l, View v, int position, long id) {
 		super.onListItemClick(l, v, position, id);
-		Cursor cSelectedFood = dbHelper.fetchSelectedFood(id);
-		cSelectedFood.moveToFirst();
-		Intent i = new Intent(this, ShowAddFoodToSelection.class);
-
-		// get the food
-		Cursor cUnit = dbHelper
-				.fetchFoodUnit(cSelectedFood.getLong(cSelectedFood
-						.getColumnIndexOrThrow(DbAdapter.DATABASE_SELECTEDFOOD_UNITID)));
-		cUnit.moveToFirst();
-		i.putExtra(DbAdapter.DATABASE_FOOD_ID, cUnit.getLong(cUnit
-				.getColumnIndexOrThrow(DbAdapter.DATABASE_FOODUNIT_FOODID)));
-		// cant put paramer dbadapter.database_selectedfood_id instead of
-		// selectedfoodid becaus in the parameter the value is _id and
-		// food_id its paramter is _id to!
-		i.putExtra("selectedfoodid", id);
-		cUnit.close();
-		cSelectedFood.close();
-		startActivityForResult(i, update_selectedFood_id);
+		startActivityUpdateSelectedFood(id);
 	}
-	
+
 	// Show on top Total: amound calories
 	private void calculateValues() {
 		TextView tvTotal = (TextView) findViewById(R.id.textViewShowTotal);
@@ -216,29 +203,32 @@ public class ShowSelectedFood extends ListActivity {
 		// if pressed edit
 		// go back to the select page
 		case EDIT_ID:
-			Cursor cSelectedFood = dbHelper.fetchSelectedFood(info.id);
-			cSelectedFood.moveToFirst();
-			Intent i = new Intent(this, ShowAddFoodToSelection.class);
-
-			// get the food
-			Cursor cUnit = dbHelper
-					.fetchFoodUnit(cSelectedFood.getLong(cSelectedFood
-							.getColumnIndexOrThrow(DbAdapter.DATABASE_SELECTEDFOOD_UNITID)));
-			cUnit.moveToFirst();
-			i.putExtra(DbAdapter.DATABASE_FOOD_ID, cUnit.getLong(cUnit
-					.getColumnIndexOrThrow(DbAdapter.DATABASE_FOODUNIT_FOODID)));
-			// cant put paramer dbadapter.database_selectedfood_id instead of
-			// selectedfoodid becaus in the parameter the value is _id and
-			// food_id its paramter is _id to!
-			i.putExtra("selectedfoodid", info.id);
-			cUnit.close();
-			cSelectedFood.close();
-			startActivityForResult(i, update_selectedFood_id);
+			startActivityUpdateSelectedFood(info.id);
 			break;
 		}
 		return super.onContextItemSelected(item);
 	}
 
+	private void startActivityUpdateSelectedFood(long selectedFoodId){
+		Cursor cSelectedFood = dbHelper.fetchSelectedFood(selectedFoodId);
+		cSelectedFood.moveToFirst();
+		Intent i = new Intent(this, ShowAddFoodToSelection.class);
+
+		// get the food
+		Cursor cUnit = dbHelper
+				.fetchFoodUnit(cSelectedFood.getLong(cSelectedFood
+						.getColumnIndexOrThrow(DbAdapter.DATABASE_SELECTEDFOOD_UNITID)));
+		cUnit.moveToFirst();
+		i.putExtra(DataParser.fromWhereWeCome,
+				DataParser.weComeFRomShowSelectedFood);
+		i.putExtra(DataParser.idFood, cUnit.getLong(cUnit
+				.getColumnIndexOrThrow(DbAdapter.DATABASE_FOODUNIT_FOODID)));
+		i.putExtra(DataParser.idSelectedFood, selectedFoodId);
+		cUnit.close();
+		cSelectedFood.close();
+		startActivityForResult(i, update_selectedFood_id);
+	}
+	
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		// without this dbHelper.open the app wil crash when it comes back from
@@ -324,8 +314,11 @@ public class ShowSelectedFood extends ListActivity {
 									// on click positive button
 									// if inputbox text is longer then ""
 									if (input.getText().length() > 0) {
-										createNewTemplate(input.getText()
-												.toString());
+										// Show dialog to ask if we need to save
+										// food amount
+										templateName = input.getText()
+												.toString();
+										showDialogSaveFoodAmount();
 									} else {
 										showToast(getResources()
 												.getString(
@@ -354,7 +347,33 @@ public class ShowSelectedFood extends ListActivity {
 		Toast.makeText(this, text, Toast.LENGTH_LONG).show();
 	}
 
-	private void createNewTemplate(String templateName) {
+	private void showDialogSaveFoodAmount() {
+		DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
+
+			public void onClick(DialogInterface dialog, int which) {
+				switch (which) {
+				case DialogInterface.BUTTON_POSITIVE:
+					saveFoodAmount = true;
+					break;
+				default:
+					saveFoodAmount = false;
+					break;
+				}
+				createNewTemplate();
+			}
+		};
+
+		AlertDialog.Builder builder = new AlertDialog.Builder(this);
+		builder.setMessage(
+				getResources().getString(
+						R.string.showSelectedFoodPopupAddAmountToTemplate))
+				.setPositiveButton(getResources().getString(R.string.yes),
+						dialogClickListener)
+				.setNegativeButton(getResources().getString(R.string.no),
+						dialogClickListener).show();
+	}
+
+	private void createNewTemplate() {
 		// Add the selected food to a template
 		// We create a new mealType
 		Long mealTypeID = dbHelper.createMealType("testOneMealType");
@@ -366,15 +385,17 @@ public class ShowSelectedFood extends ListActivity {
 		cSelectedFood.moveToFirst();
 
 		do {
-			Cursor cUnit = dbHelper
-					.fetchFoodUnit(cSelectedFood.getLong(cSelectedFood
-							.getColumnIndexOrThrow(DbAdapter.DATABASE_SELECTEDFOOD_UNITID)));
-			cUnit.moveToFirst();
-			dbHelper.createTemplateFood(foodTemplateID, cUnit.getLong(cUnit
-					.getColumnIndexOrThrow(DbAdapter.DATABASE_FOODUNIT_FOODID)));
-			dbHelper.deleteSelectedFood(cSelectedFood.getLong(cSelectedFood
-					.getColumnIndexOrThrow(DbAdapter.DATABASE_SELECTEDFOOD_ID)));
-			cUnit.close();
+			float amount = 0f;
+			if (saveFoodAmount)
+				amount = cSelectedFood
+						.getFloat(cSelectedFood
+								.getColumnIndexOrThrow(DbAdapter.DATABASE_SELECTEDFOOD_AMOUNT));
+
+			dbHelper.createTemplateFood(
+					foodTemplateID,
+					cSelectedFood.getLong(cSelectedFood.getColumnIndexOrThrow(DbAdapter.DATABASE_SELECTEDFOOD_UNITID)),
+					amount);
+
 		} while (cSelectedFood.moveToNext());
 
 		cSelectedFood.close();

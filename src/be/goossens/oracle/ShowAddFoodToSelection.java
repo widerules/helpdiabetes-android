@@ -1,8 +1,8 @@
 package be.goossens.oracle;
 
 /*
- * This class is uses to add food to the selected food list.
- * This class is also used to update a selected food.
+ * This class is uses to add food to the selected food list or update a selected food.
+ * This class gets a parameter from its intent with the foodID
  */
 
 import android.app.Activity;
@@ -34,13 +34,13 @@ public class ShowAddFoodToSelection extends Activity {
 	private Cursor foodCursor;
 	private SimpleCursorAdapter adapter;
 
-	// use this boolean so if we come from update we dont set standardamound in
-	// editTextFoodAMound
-	private boolean first;
-
 	// The button to delete the food from selection when we come from
 	// ShowSelectedFood page
 	private Button buttonDeleteSelectedFood;
+
+	// this boolean is needed to not set "" or standardamount in the
+	// editTextFoodAmound on start if we come from showSelectedFood
+	private boolean setStandardAmount;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -48,7 +48,8 @@ public class ShowAddFoodToSelection extends Activity {
 		setContentView(R.layout.show_add_food);
 
 		dbHelper = new DbAdapter(this);
-		first = false;
+
+		setStandardAmount = true;
 
 		textViewSelectedFood = (TextView) findViewById(R.id.textViewSelectedFood);
 		textViewSelectedFoodValues = (TextView) findViewById(R.id.textViewSelectedFoodValues);
@@ -66,13 +67,15 @@ public class ShowAddFoodToSelection extends Activity {
 				.setOnItemSelectedListener(new OnItemSelectedListener() {
 					public void onItemSelected(AdapterView<?> arg0, View arg1,
 							int arg2, long arg3) {
-						if (!first)
+						if (setStandardAmount) {
 							checkStandardAmound();
-						fillTextViewSelectedFood();
-						fillTextViewCalculated();
+							fillTextViewSelectedFood();
+							fillTextViewCalculated();
+						}
 
-						if (first)
-							first = !first;
+						// switch standardamount if its false
+						if (!setStandardAmount)
+							setStandardAmount = true;
 					}
 
 					public void onNothingSelected(AdapterView<?> arg0) {
@@ -110,46 +113,68 @@ public class ShowAddFoodToSelection extends Activity {
 
 		// Get the selected food
 		foodCursor = dbHelper.fetchFood(getIntent().getExtras().getLong(
-				DbAdapter.DATABASE_FOOD_ID));
+				DataParser.idFood));
 		startManagingCursor(foodCursor);
 
 		fillData();
 
 		checkStandardAmound();
 
-		// after we filled the data in the spinner we have to check if we need
-		// to update or create a selectedFood
-		if (getIntent().getExtras().getLong("selectedfoodid") != 0) {
-			first = true;
+		/*
+		 * If we come from showSelectedFood we have to: 1. fill in the spinner
+		 * with the right unit 2. set the right amount 3. Show the button to
+		 * delete the food 4. set the text on the button from add to update
+		 */
+		if (getIntent().getExtras().getString(DataParser.fromWhereWeCome)
+				.equals(DataParser.weComeFRomShowSelectedFood)) {
 			Cursor cSelectedFood = dbHelper.fetchSelectedFood(getIntent()
-					.getExtras().getLong("selectedfoodid"));
+					.getExtras().getLong(DataParser.idSelectedFood));
 			startManagingCursor(cSelectedFood);
-			// set text on button
-			buttonAddOrUpdate
-					.setText(getResources().getString(R.string.update));
-			// set the amount we have in selectedFood
+			// 1. fill in the spinner with the right unit
+			setSelectedFoodUnitItemInSpinnerSelected(cSelectedFood
+					.getInt(cSelectedFood
+							.getColumnIndexOrThrow(DbAdapter.DATABASE_SELECTEDFOOD_UNITID)));
+			// 2. set the right amount
 			editTextFoodAmound
 					.setText(""
 							+ cSelectedFood.getFloat(cSelectedFood
 									.getColumnIndexOrThrow(DbAdapter.DATABASE_SELECTEDFOOD_AMOUNT)));
-			// set the selected item in the spinner = the unit from selectedFood
-			setSelectedFoodUnitItemInSpinnerSelected(cSelectedFood
-					.getInt(cSelectedFood
-							.getColumnIndexOrThrow(DbAdapter.DATABASE_SELECTEDFOOD_UNITID)));
-
-			// Show the button to delete the food from selection
+			// 3. show the button to delete the food
 			buttonDeleteSelectedFood.setVisibility(View.VISIBLE);
+			// 4. set the text "update" on the button
+			buttonAddOrUpdate
+					.setText(getResources().getString(R.string.update));
+			// 5. setStandardAmount = false so that we see our food amount and
+			// not "" or standardamount
+			setStandardAmount = false;
+			cSelectedFood.close();
+		} else if (getIntent().getExtras()
+				.getString(DataParser.fromWhereWeCome)
+				.equals(DataParser.weComeFromShowFoodTemplates)) {
+			// if we come from the page to load a template
+			// 1. fill the spinner with the right unit
+			setSelectedFoodUnitItemInSpinnerSelected(getIntent().getExtras()
+					.getInt(DataParser.idUnit));
+			// 2. set the righ amount in the editText
+			if (getIntent().getExtras().getFloat(DataParser.foodAmount) > 0) {
+				editTextFoodAmound
+						.setText(""
+								+ getIntent().getExtras().getFloat(
+										DataParser.foodAmount));
+			}
+			// setStandardAmound = false so that we see our food amound and not
+			// "" or standardAmount
+			setStandardAmount = false;
 		}
 
 		fillTextViewSelectedFood();
 		fillTextViewCalculated();
-
 	}
 
 	// When we click on the button delete
 	public void onClickDeleteFoodFromSelection(View view) {
 		dbHelper.deleteSelectedFood(getIntent().getExtras().getLong(
-				"selectedfoodid"));
+				DataParser.idSelectedFood));
 		finish();
 	}
 
@@ -190,6 +215,10 @@ public class ShowAddFoodToSelection extends Activity {
 		}
 	}
 
+	/*
+	 * This function wil set the amount = standardamount when standardamount !=
+	 * 100 Else it wil set "" as amount
+	 */
 	private void checkStandardAmound() {
 		Cursor cUnit = dbHelper.fetchFoodUnit(spinnerFoodUnits
 				.getSelectedItemId());
@@ -206,24 +235,24 @@ public class ShowAddFoodToSelection extends Activity {
 		cUnit.close();
 	}
 
-	private void setSelectedFoodUnitItemInSpinnerSelected(int selectedFoodUnitId) {
+	private void setSelectedFoodUnitItemInSpinnerSelected(int unitId) {
 		int position = 0;
 		Cursor cursorTemp = dbHelper.fetchFoodUnitByFoodId(getIntent()
-				.getExtras().getLong(DbAdapter.DATABASE_FOOD_ID));
+				.getExtras().getLong(DataParser.idFood));
 		startManagingCursor(cursorTemp);
 		cursorTemp.moveToFirst();
 		startManagingCursor(cursorTemp);
 
 		// check the first one ( if the id is the same of the units )
 		if (cursorTemp.getInt(cursorTemp
-				.getColumnIndexOrThrow(DbAdapter.DATABASE_FOODUNIT_ID)) == selectedFoodUnitId) {
+				.getColumnIndexOrThrow(DbAdapter.DATABASE_FOODUNIT_ID)) == unitId) {
 			position = cursorTemp.getPosition();
 		}
 
 		// move next and keep checking if the id is the same
 		while (cursorTemp.moveToNext()) {
 			if (cursorTemp.getInt(cursorTemp
-					.getColumnIndexOrThrow(DbAdapter.DATABASE_FOODUNIT_ID)) == selectedFoodUnitId) {
+					.getColumnIndexOrThrow(DbAdapter.DATABASE_FOODUNIT_ID)) == unitId) {
 				position = cursorTemp.getPosition();
 			}
 		}
@@ -350,7 +379,7 @@ public class ShowAddFoodToSelection extends Activity {
 		adapter = new SimpleCursorAdapter(this,
 				android.R.layout.simple_spinner_item,
 				dbHelper.fetchFoodUnitByFoodId(getIntent().getExtras().getLong(
-						DbAdapter.DATABASE_FOOD_ID)),
+						DataParser.idFood)),
 				new String[] { DbAdapter.DATABASE_FOODUNIT_NAME },
 				new int[] { android.R.id.text1 });
 
@@ -367,56 +396,41 @@ public class ShowAddFoodToSelection extends Activity {
 
 	// when pressed on button Add
 	public void onClickButtonAddFood(View view) {
-		// first try to get the amound as a float
-		try {
-			float amound = Float.parseFloat(editTextFoodAmound.getText()
-					.toString());
+		Cursor cSelectedFoodUnit = dbHelper.fetchFoodUnit(spinnerFoodUnits
+				.getSelectedItemId());
 
-			Cursor selectedFoodUnitCursor = dbHelper
-					.fetchFoodUnit(spinnerFoodUnits.getSelectedItemId());
+		startManagingCursor(cSelectedFoodUnit);
 
-			startManagingCursor(selectedFoodUnitCursor);
-
-			// check if we need to udpate or add new selectedFood
-			if (getIntent().getExtras().getLong("selectedfoodid") != 0) {
-				// update a selectedFood
-				dbHelper.updateSelectedFood(
-						getIntent().getExtras().getLong("selectedfoodid"),
-						Float.parseFloat(editTextFoodAmound.getText()
-								.toString()),
-						selectedFoodUnitCursor.getLong(selectedFoodUnitCursor
-								.getColumnIndexOrThrow(DbAdapter.DATABASE_FOODUNIT_ID)));
-			} else {
-				// create a new selectedFood
-				if (amound > 0) {
-					dbHelper.createSelectedFood(
-							Float.parseFloat(editTextFoodAmound.getText()
-									.toString()),
-							selectedFoodUnitCursor.getLong(selectedFoodUnitCursor
-									.getColumnIndexOrThrow(DbAdapter.DATABASE_FOODUNIT_ID)));
-				} else {
-					returnMessageFoodAintAddedValueCantBeZero();
-				}
-				selectedFoodUnitCursor.close();
+		// check if we need to udpate or add new selectedFood
+		// if we come from showSelectedFood we have to update the selectedFood
+		if (getIntent().getExtras().getString(DataParser.fromWhereWeCome)
+				.equals(DataParser.weComeFRomShowSelectedFood)) {
+			// update a selectedFood
+			dbHelper.updateSelectedFood(
+					getIntent().getExtras().getLong(DataParser.idSelectedFood),
+					Float.parseFloat(editTextFoodAmound.getText().toString()),
+					cSelectedFoodUnit.getLong(cSelectedFoodUnit
+							.getColumnIndexOrThrow(DbAdapter.DATABASE_FOODUNIT_ID)));
+			cSelectedFoodUnit.close();
+		} else {
+			float amount = 0f;
+			try{
+				//when the editTextFoodAmound = ""; this wil go to the catch part
+				amount = Float.parseFloat(editTextFoodAmound.getText().toString());
+			}catch(Exception e){
+				amount = 0f;
 			}
-		} catch (Exception e) {
-			// if we cant get the amound as a float return message
-			returnMessageFoodAintAddedValueCantBeZero();
+			// create a new selectedFood
+			dbHelper.createSelectedFood(
+					amount,
+					cSelectedFoodUnit.getLong(cSelectedFoodUnit
+							.getColumnIndexOrThrow(DbAdapter.DATABASE_FOODUNIT_ID)));
+
+			cSelectedFoodUnit.close();
 		}
+
 		setResult(RESULT_OK);
 		finish();
-	}
-
-	// when the amount is 0 and the user press on Add ( this popup will be show
-	// )
-	public void returnMessageFoodAintAddedValueCantBeZero() {
-		Toast.makeText(
-				this,
-				getResources().getString(R.string.selected_food_aint_added)
-						+ "\n "
-						+ getResources().getString(
-								R.string.value_amount_cant_be_zero),
-				Toast.LENGTH_LONG).show();
 	}
 
 	@Override

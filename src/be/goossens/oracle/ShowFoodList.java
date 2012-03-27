@@ -23,15 +23,13 @@ public class ShowFoodList extends ListActivity {
 	// editTextSearch is the search box above the listview
 	private EditText editTextSearch;
 
-	// private Cursor cFoodCursor;
-	// private SimpleCursorAdapter scaFood;
-
 	private CustomArrayAdapterFoodList fooditemlist;
 
-	// This is used to know if we need to show the pop up to delete selected
-	// food
-	// without this boolean the pop up would spawn every time we come back to
-	// this activity
+	/*
+	 * This is used to know if we need to show the pop up to delete selected
+	 * food without this boolean the pop up would spawn every time we come back
+	 * to this activity
+	 */
 	private boolean startUp;
 
 	private static final int MANAGE_OWN_FOOD_ID = 1;
@@ -91,14 +89,10 @@ public class ShowFoodList extends ListActivity {
 	private void updateButton() {
 		Cursor selectedFood = dbHelper.fetchAllSelectedFood();
 		startManagingCursor(selectedFood);
-		/*
-		 * setTitle(getResources().getString(R.string.app_name) + " (" +
-		 * selectedFood.getCount() + " " +
-		 * getResources().getString(R.string.items_selected) + ")");
-		 */
+		
 		Button buttonSelections = (Button) findViewById(R.id.buttonShowFoodListShowSelectedFood);
 		buttonSelections.setText(getResources().getString(
-				R.string.show_selected_food)
+				R.string.showFoodListButtonSelections)
 				+ " (" + selectedFood.getCount() + ")");
 		selectedFood.close();
 	}
@@ -108,7 +102,8 @@ public class ShowFoodList extends ListActivity {
 	protected void onListItemClick(ListView l, View v, int position, long id) {
 		super.onListItemClick(l, v, position, id);
 		Intent i = new Intent(this, ShowAddFoodToSelection.class);
-		i.putExtra(DbAdapter.DATABASE_FOOD_ID,
+		i.putExtra(DataParser.fromWhereWeCome, DataParser.weComeFromShowFoodList);
+		i.putExtra(DataParser.idFood,
 				Long.parseLong("" + fooditemlist.getFoodItem(position).getId()));
 		startActivity(i);
 	}

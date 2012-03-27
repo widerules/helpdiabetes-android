@@ -49,7 +49,8 @@ public class DbAdapter extends SQLiteOpenHelper {
 	private static final String DATABASE_TEMPLATEFOOD_TABLE = "template_food";
 	public static final String DATABASE_TEMPLATEFOOD_ID = "_id";
 	public static final String DATABASE_TEMPLATEFOOD_FOODTEMPLATEID = "FoodTemplateID";
-	public static final String DATABASE_TEMPLATEFOOD_FOODID = "FoodID";
+	public static final String DATABASE_TEMPLATEFOOD_UNITID = "UnitID";
+	public static final String DATABASE_TEMPLATEFOOD_AMOUNT = "amount";
 
 	// settings
 	private static final String DATABASE_SETTINGS_TABLE = "settings";
@@ -208,8 +209,8 @@ public class DbAdapter extends SQLiteOpenHelper {
 		return mDb.query(DATABASE_FOODTEMPLATE_TABLE, new String[] {
 				DATABASE_FOODTEMPLATE_ID, DATABASE_FOODTEMPLATE_MEALTYPEID,
 				DATABASE_FOODTEMPLATE_USERID, DATABASE_FOODTEMPLATE_VISIBLE,
-				DATABASE_FOODTEMPLATE_FOODTEMPLATENAME }, null, null, DATABASE_FOODTEMPLATE_FOODTEMPLATENAME,
-				null, null);
+				DATABASE_FOODTEMPLATE_FOODTEMPLATENAME }, null, null,
+				DATABASE_FOODTEMPLATE_FOODTEMPLATENAME, null, null);
 	}
 
 	// Delete foodTemplate
@@ -220,10 +221,12 @@ public class DbAdapter extends SQLiteOpenHelper {
 
 	// TEMPLATE_FOOD Functions
 	// create
-	public long createTemplateFood(long foodtemplateid, long foodid) {
+	public long createTemplateFood(long foodtemplateid, long unitid,
+			float amount) {
 		ContentValues initialValues = new ContentValues();
 		initialValues.put(DATABASE_TEMPLATEFOOD_FOODTEMPLATEID, foodtemplateid);
-		initialValues.put(DATABASE_TEMPLATEFOOD_FOODID, foodid);
+		initialValues.put(DATABASE_TEMPLATEFOOD_UNITID, unitid);
+		initialValues.put(DATABASE_TEMPLATEFOOD_AMOUNT, amount);
 		return mDb.insert(DATABASE_TEMPLATEFOOD_TABLE, null, initialValues);
 	}
 
@@ -231,33 +234,33 @@ public class DbAdapter extends SQLiteOpenHelper {
 	public Cursor fetchAllTemplateFoods() {
 		return mDb.query(DATABASE_TEMPLATEFOOD_TABLE, new String[] {
 				DATABASE_TEMPLATEFOOD_ID, DATABASE_TEMPLATEFOOD_FOODTEMPLATEID,
-				DATABASE_TEMPLATEFOOD_FOODID },
-				null,
-				null, null, null, null);
+				DATABASE_TEMPLATEFOOD_UNITID, DATABASE_TEMPLATEFOOD_AMOUNT },
+				null, null, null, null, null);
 	}
-	
+
 	// get template foods by foodTemplateID
 	public Cursor fetchTemplateFoodsByFoodTemplateID(long foodTemplateID) {
 		return mDb.query(DATABASE_TEMPLATEFOOD_TABLE, new String[] {
 				DATABASE_TEMPLATEFOOD_ID, DATABASE_TEMPLATEFOOD_FOODTEMPLATEID,
-				DATABASE_TEMPLATEFOOD_FOODID },
+				DATABASE_TEMPLATEFOOD_UNITID, DATABASE_TEMPLATEFOOD_AMOUNT },
 				DATABASE_TEMPLATEFOOD_FOODTEMPLATEID + "=" + foodTemplateID,
 				null, null, null, null);
 	}
-	
-	// get template foods by foodId
-	public Cursor fetchTemplateFoodsByFoodID(long foodID) {
+
+	// get template foods by unitID
+	public Cursor fetchTemplateFoodsByUnitID(long unitID) {
 		return mDb.query(DATABASE_TEMPLATEFOOD_TABLE, new String[] {
 				DATABASE_TEMPLATEFOOD_ID, DATABASE_TEMPLATEFOOD_FOODTEMPLATEID,
-				DATABASE_TEMPLATEFOOD_FOODID },
-				DATABASE_TEMPLATEFOOD_FOODID + "=" + foodID,
-				null, null, null, null);
+				DATABASE_TEMPLATEFOOD_UNITID, DATABASE_TEMPLATEFOOD_AMOUNT },
+				DATABASE_TEMPLATEFOOD_UNITID + "=" + unitID, null, null, null,
+				null);
 	}
 
 	// Delete template food
 	public boolean deleteTemplateFoodByFoodTemplateID(long foodTemplateID) {
-		return mDb.delete(DATABASE_TEMPLATEFOOD_TABLE, DATABASE_TEMPLATEFOOD_FOODTEMPLATEID
-				+ "=" + foodTemplateID, null) > 0;
+		return mDb.delete(DATABASE_TEMPLATEFOOD_TABLE,
+				DATABASE_TEMPLATEFOOD_FOODTEMPLATEID + "=" + foodTemplateID,
+				null) > 0;
 	}
 
 	// SETTINGS Functions

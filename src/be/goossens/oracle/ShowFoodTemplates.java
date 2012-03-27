@@ -87,18 +87,20 @@ public class ShowFoodTemplates extends ListActivity {
 		// First put all the food in the selectedFood table
 		Cursor cTemplateFood = dbHelper.fetchTemplateFoodsByFoodTemplateID(id);
 		cTemplateFood.moveToFirst();
-
+		Cursor cUnit = null;
 		do {
 			// start a new activity for every food row in the template
 			Intent i = new Intent(this, ShowAddFoodToSelection.class);
-			i.putExtra(
-					DbAdapter.DATABASE_FOOD_ID,
-					cTemplateFood.getLong(cTemplateFood
-							.getColumnIndexOrThrow(DbAdapter.DATABASE_TEMPLATEFOOD_FOODID)));
+			i.putExtra(DataParser.fromWhereWeCome, DataParser.weComeFromShowFoodTemplates);
+			
+			cUnit = dbHelper.fetchFoodUnit(cTemplateFood.getLong(cTemplateFood.getColumnIndexOrThrow(DbAdapter.DATABASE_TEMPLATEFOOD_UNITID)));
+			cUnit.moveToFirst();
+			i.putExtra(DataParser.idFood,cUnit.getLong(cUnit.getColumnIndexOrThrow(DbAdapter.DATABASE_FOODUNIT_FOODID)));
+			i.putExtra(DataParser.idUnit, cUnit.getInt(cUnit.getColumnIndexOrThrow(DbAdapter.DATABASE_FOODUNIT_ID)));
+			i.putExtra(DataParser.foodAmount, cTemplateFood.getFloat(cTemplateFood.getColumnIndexOrThrow(DbAdapter.DATABASE_TEMPLATEFOOD_AMOUNT)));
 			startActivity(i);
-
 		} while (cTemplateFood.moveToNext());
-
+		cUnit.close();
 		cTemplateFood.close();
 		// Then go back to the selected food page
 		finish();
@@ -110,6 +112,7 @@ public class ShowFoodTemplates extends ListActivity {
 		ArrayList<DBFoodTemplate> list = new ArrayList<DBFoodTemplate>();
 		Cursor cFoodTemplates = dbHelper.fetchAllFoodTemplates();
 		cFoodTemplates.moveToFirst();
+		
 		do {
 
 			// first create a arrayList with the food
@@ -120,15 +123,18 @@ public class ShowFoodTemplates extends ListActivity {
 							.getColumnIndexOrThrow(DbAdapter.DATABASE_FOODTEMPLATE_ID)));
 			cTemplateFood.moveToFirst();
 			do {
+				Cursor cUnit = dbHelper.fetchFoodUnit(cTemplateFood.getLong(cTemplateFood.getColumnIndexOrThrow(DbAdapter.DATABASE_TEMPLATEFOOD_UNITID)));
+				
+				cUnit.moveToFirst();
 				Cursor cFood = dbHelper
-						.fetchFood(cTemplateFood.getLong(cTemplateFood
-								.getColumnIndexOrThrow(DbAdapter.DATABASE_TEMPLATEFOOD_FOODID)));
+						.fetchFood(cUnit.getLong(cUnit.getColumnIndexOrThrow(DbAdapter.DATABASE_FOODUNIT_FOODID)));
 				cFood.moveToFirst();
 				foods.add(new DBFood(
 						cFood.getInt(cFood
 								.getColumnIndexOrThrow(DbAdapter.DATABASE_FOOD_ID)),
 						cFood.getString(cFood
 								.getColumnIndexOrThrow(DbAdapter.DATABASE_FOOD_NAME))));
+				cUnit.close();
 				cFood.close();
 			} while (cTemplateFood.moveToNext());
 			cTemplateFood.close();

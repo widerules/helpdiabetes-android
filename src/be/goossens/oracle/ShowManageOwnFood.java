@@ -132,25 +132,38 @@ public class ShowManageOwnFood extends ListActivity {
 						.fetchFoodUnit(cSelectedFood.getLong(cSelectedFood
 								.getColumnIndexOrThrow(DbAdapter.DATABASE_SELECTEDFOOD_UNITID)));
 				cFoodUnit.moveToFirst();
-				if (cFoodUnit.getCount() > 0)
-					count++;
+				if (cFoodUnit.getCount() > 0) {
+					if (cFoodUnit
+							.getLong(cFoodUnit
+									.getColumnIndexOrThrow(DbAdapter.DATABASE_FOODUNIT_FOODID)) == foodId)
+						count++;
+				}
 				cFoodUnit.close();
 			} while (cSelectedFood.moveToNext() && count == 0);
 
 			cSelectedFood.close();
 		}
 		if (count == 0) {
-			// Then see if the food is in use in the template_food table
+			// if the food still isnt in the selectedFood table see if its in a
+			// template
+			// get all templates
 			Cursor cTemplateFood = dbHelper.fetchAllTemplateFoods();
 			if (cTemplateFood.getCount() > 0) {
 				cTemplateFood.moveToFirst();
 				// see if the foodId is the same
 				do {
+					// get the foodUnit from the foodTemplate
+					Cursor cFoodUnit = dbHelper
+							.fetchFoodUnit(cTemplateFood.getLong(cTemplateFood
+									.getColumnIndexOrThrow(DbAdapter.DATABASE_TEMPLATEFOOD_UNITID)));
+					cFoodUnit.moveToFirst();
 					// check if foodID is the same
-					if (foodId == cTemplateFood
-							.getLong(cTemplateFood
-									.getColumnIndexOrThrow(DbAdapter.DATABASE_TEMPLATEFOOD_FOODID)))
-						count++;
+					if (cFoodUnit.getCount() > 0)
+						if (cFoodUnit
+								.getLong(cFoodUnit
+										.getColumnIndexOrThrow(DbAdapter.DATABASE_FOODUNIT_FOODID)) == foodId)
+							count++;
+					cFoodUnit.close();
 				} while (cTemplateFood.moveToNext() && count == 0);
 				cTemplateFood.close();
 			}
