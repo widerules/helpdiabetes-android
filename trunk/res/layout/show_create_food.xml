@@ -40,7 +40,7 @@
                 android:id="@+id/tableRow8"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" >
-
+
                 <TextView
                     android:id="@+id/textView7"
                     android:layout_width="wrap_content"
@@ -51,7 +51,6 @@
                     android:id="@+id/spinnerShowCreateFoodUnit"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content" />
-                
             </TableRow>
 
             <TableRow
@@ -62,9 +61,8 @@
                 <TextView
                     android:id="@+id/textView2"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                     />
-
+                    android:layout_height="wrap_content" />
+
                 <EditText
                     android:id="@+id/editTextFoodUnitStandardAmound"
                     android:layout_width="wrap_content"
@@ -75,7 +73,7 @@
 
                     <requestFocus />
                 </EditText>
-
+
                 <EditText
                     android:id="@+id/editTextFoodUnitName"
                     android:layout_width="wrap_content"
@@ -83,27 +81,7 @@
                     android:layout_weight="1"
                     android:inputType="text"
                     android:text="@string/part" >
-
                 </EditText>
-            </TableRow>
-
-            <TableRow
-                android:id="@+id/tableRow5"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content" >
-
-                <TextView
-                    android:id="@+id/textView3"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/amound_of_kcal" />
-
-                <EditText
-                    android:id="@+id/editTextFoodUnitKcal"
-                    android:layout_width="0dip"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:inputType="numberDecimal" />
             </TableRow>
 
             <TableRow
@@ -157,6 +135,25 @@
 
                 <EditText
                     android:id="@+id/editTextFoodUnitFat"
+                    android:layout_width="0dip"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:inputType="numberDecimal" />
+            </TableRow>
+
+            <TableRow
+                android:id="@+id/tableRow5"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" >
+
+                <TextView
+                    android:id="@+id/textView3"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/amound_of_kcal" />
+
+                <EditText
+                    android:id="@+id/editTextFoodUnitKcal"
                     android:layout_width="0dip"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
