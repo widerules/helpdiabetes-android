@@ -12,9 +12,15 @@
     
     <!-- ShowSelectedFood -->
     <string name="showSelectedFoodPopupAddAmountToTemplate">Wilt u de aantallen mee bewaren?</string>
+    <string name="useInsulineRatio">Insuline ratio gebruiken?</string>
     
     <!-- ShowFoodList -->
     <string name="showFoodListButtonSelections">Selecties</string>
+    
+    <!-- ShowCreateUnit & ShowCreateFood -->
+    <!-- These values are used to equal to ShowCreateFoodSpinnerResource.xml -->
+    <string name="gram">gram</string>
+    <string name="ml">ml</string>
     
     <!-- Not sorted yet -->
     <string name="search">Zoeken: </string>
@@ -38,7 +44,6 @@
     <string name="update_own_food">Eigen eten updaten</string>
     <string name="create_new_food">eten</string>
     <string name="food_name">Naam eten</string>
-    <string name="gram">gram</string>
     <string name="part">stuk</string>
     <string name="one">1</string>
     <string name="hundred">100</string>
@@ -67,23 +72,24 @@
     <string name="save">Opslaan</string>
     <string name="cancel">Annuleren</string>
     
-   	<!-- Preference category strings -->
+   	<!-- Settings strings -->
     <string name="pref_insuline_ratio">Insuline ratio aanpassen</string>
 	<string name="pref_meal_times">Maaltijd tijden aanpassen</string>
+	<string name="pref_value_order">Waarde volgorde aanpassen</string>
+	<string name="pref_text_size">Tekst grootte van lijst met eten aanpassen</string>
 	
-	<!-- Preference editText strings -->
+	<!-- Settings meal time -->
 	<string name="pref_breakfastratio_title">Ontbijt</string>
 	<string name="pref_lunchratio_title">Middag</string>
 	<string name="pref_snackratio_title">Vieruurtje</string>
 	<string name="pref_dinnerratio_title">Avondmaal</string>
-	<string name="to">tot</string>
-    <string name="starts_at"> begint om</string>
-    <string name="time_seperator">:</string>
+    <string name="starts_at">begint om</string>
     
-    <string name="pref_error_hour_and_minutes">De uren moeten liggen tussen 0 en 24 \n de minuten tussen 0 en 59!</string>
+    <!-- Settings value order -->
+    <string name="up">omhoog</string>
+    <string name="down">omlaag</string>
     
-    <string name="pref_time_breakfast">Ontbijt</string>
-    <string name="pref_time_lunch">Middag</string>
-    <string name="pref_time_snack">Vieruurtje</string>
-    <string name="pref_time_dinner">Avondmaal</string>
+    <!-- Error when we try to input less then 0.1 or more then 3 in the insuline ratio -->
+    <string name="pref_error_insuline_ratio_out_of_boundries">De ratios moeten liggen tussen 0.1 en 3!</string>
+
 </resources>

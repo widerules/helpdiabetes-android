@@ -9,30 +9,26 @@
         android:layout_height="wrap_content"
         android:orientation="vertical" >
 
+        <TextView
+            android:id="@+id/textView1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/settings"
+            android:textAppearance="?android:attr/textAppearanceMedium" />
+
+        <TextView
+            android:id="@+id/textView3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/pref_insuline_ratio" />
+
         <TableLayout
             android:id="@+id/tableLayout1"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content" >
 
             <TableRow
-                android:id="@+id/tableRow8"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content" >
-
-                <TextView
-                    android:id="@+id/textView7"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/unit" />
-
-                <Spinner
-                    android:id="@+id/spinnerShowCreateUnit"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
-            </TableRow>
-
-            <TableRow
-                android:id="@+id/tableRowShowCreateUnitSpecialFoodUnit"
+                android:id="@+id/tableRow1"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" >
 
@@ -40,26 +36,16 @@
                     android:id="@+id/textView2"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:inputType="numberDecimal" />
+                    android:text="@string/pref_breakfastratio_title" />
 
                 <EditText
-                    android:id="@+id/editTextShowCreateUnitFoodUnitStandardAmound"
-                    android:layout_width="wrap_content"
+                    android:id="@+id/editTextShowPreferencesBreakfastRatio"
+                    android:layout_width="0dip"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:inputType="numberDecimal"
-                    android:text="@string/one" >
+                    android:inputType="numberDecimal" >
 
                     <requestFocus />
-                </EditText>
-
-                <EditText
-                    android:id="@+id/editTextShowCreateUnitFoodUnitName"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:inputType="text"
-                    android:text="@string/part" >
                 </EditText>
             </TableRow>
 
@@ -69,36 +55,18 @@
                 android:layout_height="wrap_content" >
 
                 <TextView
-                    android:id="@+id/textView5"
+                    android:id="@+id/textView3"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/amound_of_carbs" />
+                    android:text="@string/pref_lunchratio_title" />
 
                 <EditText
-                    android:id="@+id/editTextShowCreateUnitFoodUnitCarbs"
+                    android:id="@+id/editTextShowPreferencesLunchRatio"
                     android:layout_width="0dip"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:inputType="numberDecimal" />
-            </TableRow>
-
-            <TableRow
-                android:id="@+id/tableRow1"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content" >
-
-                <TextView
-                    android:id="@+id/textView4"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/amound_of_protein" />
-
-                <EditText
-                    android:id="@+id/editTextShowCreateUnitFoodUnitProt"
-                    android:layout_width="0dip"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:inputType="numberDecimal" />
+                    android:inputType="numberDecimal" >
+                </EditText>
             </TableRow>
 
             <TableRow
@@ -107,13 +75,13 @@
                 android:layout_height="wrap_content" >
 
                 <TextView
-                    android:id="@+id/textView6"
+                    android:id="@+id/textView4"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/amound_of_fat" />
+                    android:text="@string/pref_snackratio_title" />
 
                 <EditText
-                    android:id="@+id/editTextShowCreateUnitFoodUnitFat"
+                    android:id="@+id/editTextShowPreferencesSnackRatio"
                     android:layout_width="0dip"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
@@ -121,18 +89,18 @@
             </TableRow>
 
             <TableRow
-                android:id="@+id/tableRow5"
+                android:id="@+id/tableRow4"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" >
 
                 <TextView
-                    android:id="@+id/textView3"
+                    android:id="@+id/textView5"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/amound_of_kcal" />
+                    android:text="@string/pref_dinnerratio_title" />
 
                 <EditText
-                    android:id="@+id/editTextShowCreateUnitFoodUnitKcal"
+                    android:id="@+id/editTextShowPreferencesDinnerRatio"
                     android:layout_width="0dip"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
@@ -146,26 +114,18 @@
             android:layout_height="wrap_content" >
 
             <Button
-                android:id="@+id/buttonShowCreateUnitAddOrUpdate"
+                android:id="@+id/button1"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:onClick="onClickAdd"
-                android:text="@string/add" />
+                android:onClick="onClickUpdate"
+                android:text="@string/update" />
 
             <Button
-                android:id="@+id/buttonShowCreateUnitDelete"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:onClick="onClickDelete"
-                android:text="@string/delete" />
-
-            <Button
-                android:id="@+id/button2"
+                android:id="@+id/button3"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:onClick="onClickBack"
                 android:text="@string/back" />
         </LinearLayout>
     </LinearLayout>
-
 </ScrollView>

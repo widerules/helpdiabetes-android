@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- 
+    This file is needed to get the required values from the setting table in the database
+    
+    Every string in here can be found in the database settings.name
+    
+     -->
+    
+    <!-- Insuline ratio setting names -->
+    <string name="insuline_ratio_breakfast">insulineRatioBreakfast</string>
+    <string name="insuline_ratio_lunch">insulineRatioLunch</string>
+    <string name="insuline_ratio_dinner">insulineRatioDinner</string>
+    <string name="insuline_ratio_snack">insulineRatioSnack</string>
+    
+    <!-- Meal time setting names -->
+    <string name="meal_time_breakfast">mealTimeBreakfast</string>
+    <string name="meal_time_lunch">mealTimeLunch</string>
+    <string name="meal_time_snack">mealTimeSnack</string>
+    <string name="meal_time_dinner">mealTimeDinner</string>
+    
+    <!-- Value order settings -->
+    <string name="value_order_carb">valueOrderCarb</string>
+    <string name="value_order_prot">valueOrderProt</string>
+    <string name="value_order_fat">valueOrderFat</string>
+    <string name="value_order_kcal">valueOrderKcal</string>
+</resources>
