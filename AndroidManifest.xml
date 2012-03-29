@@ -9,32 +9,36 @@
     <application
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name" >
-        <activity
-            android:name=".ShowFoodList"
-            android:configChanges="orientation|keyboardHidden"
-            android:label="@string/app_name" >
+        <activity android:name=".Show.ShowAddFoodToSelection" >
+        </activity>
+        <activity android:name=".Show.ShowCreateFood" >
+        </activity>
+        <activity android:name=".Show.ShowCreateUnit" >
+        </activity>
+        <activity android:name=".Show.ShowFoodList" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
- 
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".ShowCreateData" >
+        <activity android:name=".Show.ShowFoodTemplates" >
         </activity>
-        <activity android:name=".ShowAddFoodToSelection" >
+        <activity android:name=".Show.ShowManageOwnFood" >
         </activity>
-        <activity android:name=".ShowSelectedFood" >
+        <activity android:name=".Show.ShowSelectedFood" >
         </activity>
-        <activity android:name=".Preferences" >
+        <activity android:name=".Show.Settings.ShowSettings" >
         </activity>
-        <activity android:name=".ShowManageOwnFood"></activity>
-        <activity android:name=".ShowCreateFood"></activity>
-        <activity android:name=".ShowUpdateOwnFood"></activity>
-        <activity android:name=".ShowCreateUnit"></activity>
-        <activity android:name=".ShowPreferencesInsulineRatio"></activity>
-        <activity android:name=".ShowPreferencesMealTimes"></activity>
-        <activity android:name=".ShowFoodTemplates"></activity>
-        <activity android:name=".ShowUpdateTemplateValues"></activity>
+        <activity android:name=".Show.Settings.ShowSettingsInsulineRatio" >
+        </activity>
+        <activity android:name=".Show.Settings.ShowSettingsMealTimes" >
+        </activity>
+        <activity android:name=".Show.Settings.ShowSettingsUpdateMealTime" >
+        </activity>
+        <activity android:name=".Show.ShowUpdateOwnFood" >
+        </activity>
+        <activity android:name=".Show.Settings.ShowSettingsValueOrder"></activity>
     </application>
 
 </manifest>
