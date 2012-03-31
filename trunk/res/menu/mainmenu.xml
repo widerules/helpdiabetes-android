@@ -8,5 +8,6 @@
         android:id="@+id/menu_preferences"
         android:title="@string/settings">
     </item>
+    <item android:id="@+id/menu_exercise_events" android:title="@string/exercise_events"></item>
 
 </menu>

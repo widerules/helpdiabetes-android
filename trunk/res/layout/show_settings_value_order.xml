@@ -10,6 +10,12 @@
         android:layout_height="wrap_content"
         android:text="@string/settings"
         android:textAppearance="?android:attr/textAppearanceMedium"  />
+
+    <TextView
+        android:id="@+id/textView2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/pref_value_order" />
 
     <LinearLayout
         android:id="@+id/linearLayout1"
