@@ -69,13 +69,13 @@
                 android:layout_height="wrap_content" >
 
                 <TextView
-                    android:id="@+id/textView5"
+                    android:id="@+id/textViewShowCreateUnit1"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/amound_of_carbs" />
+                    />
 
                 <EditText
-                    android:id="@+id/editTextShowCreateUnitFoodUnitCarbs"
+                    android:id="@+id/editTextShowCreateUnit1"
                     android:layout_width="0dip"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
@@ -88,13 +88,12 @@
                 android:layout_height="wrap_content" >
 
                 <TextView
-                    android:id="@+id/textView4"
+                    android:id="@+id/textViewShowCreateUnit2"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/amound_of_protein" />
+                    android:layout_height="wrap_content" />
 
                 <EditText
-                    android:id="@+id/editTextShowCreateUnitFoodUnitProt"
+                    android:id="@+id/editTextShowCreateUnit2"
                     android:layout_width="0dip"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
@@ -107,13 +106,12 @@
                 android:layout_height="wrap_content" >
 
                 <TextView
-                    android:id="@+id/textView6"
+                    android:id="@+id/textViewShowCreateUnit3"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/amound_of_fat" />
+                    android:layout_height="wrap_content" />
 
                 <EditText
-                    android:id="@+id/editTextShowCreateUnitFoodUnitFat"
+                    android:id="@+id/editTextShowCreateUnit3"
                     android:layout_width="0dip"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
@@ -126,13 +124,12 @@
                 android:layout_height="wrap_content" >
 
                 <TextView
-                    android:id="@+id/textView3"
+                    android:id="@+id/textViewShowCreateUnit4"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/amound_of_kcal" />
+                    android:layout_height="wrap_content" />
 
                 <EditText
-                    android:id="@+id/editTextShowCreateUnitFoodUnitKcal"
+                    android:id="@+id/editTextShowCreateUnit4"
                     android:layout_width="0dip"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"

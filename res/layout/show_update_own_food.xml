@@ -25,17 +25,12 @@
         </EditText>
     </LinearLayout>
 
-    <Button
-        android:id="@+id/button1"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:onClick="onClickSaveFoodName"
-        android:text="@string/save_food_name" />
-
-    <Button
+     <Button
         android:id="@+id/button2"
-        android:layout_width="fill_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:drawableLeft="@android:drawable/ic_input_add"
+        android:gravity="left|center_vertical"
         android:onClick="onClickAddUnit"
         android:text="@string/add_unit" />
 
@@ -48,7 +43,8 @@
     <ListView
         android:id="@+android:id/list"
         android:layout_width="fill_parent"
-        android:layout_height="wrap_content" >
+        android:layout_height="wrap_content"
+        android:layout_weight="1.0" >
     </ListView>
 
     <Button

@@ -24,4 +24,7 @@
     <string name="value_order_prot">valueOrderProt</string>
     <string name="value_order_fat">valueOrderFat</string>
     <string name="value_order_kcal">valueOrderKcal</string>
+    
+    <!-- Font size settings -->
+    <string name="font_size">fontSize</string>
 </resources>
