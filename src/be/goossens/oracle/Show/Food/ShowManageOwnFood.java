@@ -1,7 +1,8 @@
-package be.goossens.oracle.Show;
+package be.goossens.oracle.Show.Food;
 
-import be.goossens.oracle.R;
-import be.goossens.oracle.Rest.DbAdapter;
+import java.util.ArrayList;
+import java.util.List;
+
 import android.app.ListActivity;
 import android.content.Intent;
 import android.database.Cursor;
@@ -13,8 +14,11 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView.AdapterContextMenuInfo;
 import android.widget.ListView;
-import android.widget.SimpleCursorAdapter;
 import android.widget.Toast;
+import be.goossens.oracle.R;
+import be.goossens.oracle.Custom.CustomArrayAdapterDBFood;
+import be.goossens.oracle.Objects.DBFood;
+import be.goossens.oracle.Rest.DbAdapter;
 
 public class ShowManageOwnFood extends ListActivity {
 	private DbAdapter dbHelper;
@@ -22,11 +26,14 @@ public class ShowManageOwnFood extends ListActivity {
 	private static final int UPDATE_ID = Menu.FIRST;
 	private static final int DELETE_ID = Menu.FIRST + 1;
 
+	private List<DBFood> listFood;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.show_manage_own_food);
 		dbHelper = new DbAdapter(this);
+
 		registerForContextMenu(getListView());
 	}
 
@@ -34,8 +41,26 @@ public class ShowManageOwnFood extends ListActivity {
 	protected void onResume() {
 		super.onResume();
 		dbHelper.open();
+		// fill the list of food
+		fillListOfFood();
 		// fill the listview with own created food
 		fillData();
+	}
+
+	private void fillListOfFood() {
+		listFood = new ArrayList<DBFood>();
+		Cursor cFood = dbHelper.fetchAllOwnCreatedFood();
+		if (cFood.getCount() > 0) {
+			cFood.moveToFirst();
+			do {
+				listFood.add(new DBFood(
+						cFood.getInt(cFood
+								.getColumnIndexOrThrow(DbAdapter.DATABASE_FOOD_ID)),
+						cFood.getString(cFood
+								.getColumnIndexOrThrow(DbAdapter.DATABASE_FOOD_NAME))));
+			} while (cFood.moveToNext());
+		}
+		cFood.close();
 	}
 
 	@Override
@@ -45,13 +70,17 @@ public class ShowManageOwnFood extends ListActivity {
 	}
 
 	private void fillData() {
-		Cursor cFood = dbHelper.fetchAllOwnCreatedFood();
-		startManagingCursor(cFood);
-		String[] name = new String[] { DbAdapter.DATABASE_FOOD_NAME };
-		int[] id = new int[] { android.R.id.text1 };
-		SimpleCursorAdapter adapter = new SimpleCursorAdapter(this,
-				android.R.layout.simple_list_item_1, cFood, name, id);
+		Cursor cSetting = dbHelper.fetchSettingByName(getResources().getString(
+				R.string.font_size));
+		cSetting.moveToFirst();
+		CustomArrayAdapterDBFood adapter = new CustomArrayAdapterDBFood(
+				this,
+				R.layout.row_custom_array_adapter,
+				listFood,
+				cSetting.getInt(cSetting
+						.getColumnIndexOrThrow(DbAdapter.DATABASE_SETTINGS_VALUE)));
 		setListAdapter(adapter);
+		cSetting.close();
 	}
 
 	@Override
@@ -66,7 +95,8 @@ public class ShowManageOwnFood extends ListActivity {
 	protected void onListItemClick(ListView l, View v, int position, long id) {
 		super.onListItemClick(l, v, position, id);
 		Intent i = new Intent(this, ShowUpdateOwnFood.class);
-		i.putExtra(DbAdapter.DATABASE_FOOD_ID, id);
+		i.putExtra(DbAdapter.DATABASE_FOOD_ID,
+				Long.parseLong("" + listFood.get(position).getId()));
 		startActivity(i);
 	}
 

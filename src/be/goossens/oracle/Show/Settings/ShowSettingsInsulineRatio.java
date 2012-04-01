@@ -7,7 +7,6 @@ import android.database.Cursor;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
-import android.widget.Toast;
 
 public class ShowSettingsInsulineRatio extends Activity {
 	private DbAdapter dbHelper;
@@ -29,10 +28,10 @@ public class ShowSettingsInsulineRatio extends Activity {
 
 	public void fillData() {
 
-		float breakfastRatio = 1;
-		float lunchRatio = 1;
-		float snackRatio = 1;
-		float dinnerRatio = 1;
+		float breakfastRatio = 0;
+		float lunchRatio = 0;
+		float snackRatio = 0;
+		float dinnerRatio = 0;
 
 		Cursor cSettingInsulineRatioBreakfast = dbHelper
 				.fetchSettingByName(getResources().getString(
@@ -72,7 +71,6 @@ public class ShowSettingsInsulineRatio extends Activity {
 
 	// on click update
 	public void onClickUpdate(View view) {
-		if (checkValues()) {
 			float breakfastRatio = 0;
 			float lunchRatio = 0;
 			float snackRatio = 0;
@@ -116,57 +114,8 @@ public class ShowSettingsInsulineRatio extends Activity {
 			dbHelper.updateSettingsByName(getResources().getString(R.string.insuline_ratio_dinner), "" + dinnerRatio);
 			
 			finish();
-		} else {
-			Toast.makeText(
-					this,
-					getResources()
-							.getString(
-									R.string.pref_error_insuline_ratio_out_of_boundries),
-					Toast.LENGTH_LONG).show();
-		}
 	}
-
-	private boolean checkValues() {
-		float breakfastRatio = 0;
-		float lunchRatio = 0;
-		float snackRatio = 0;
-		float dinnerRatio = 0;
-
-		try {
-			breakfastRatio = Float.parseFloat(insulineRatioBreakfast.getText()
-					.toString());
-		} catch (Exception e) {
-			breakfastRatio = 0;
-		}
-		try {
-			lunchRatio = Float.parseFloat(insulineRatioLunch.getText()
-					.toString());
-		} catch (Exception e) {
-			lunchRatio = 0;
-		}
-		try {
-			snackRatio = Float.parseFloat(insulineRatioSnack.getText()
-					.toString());
-		} catch (Exception e) {
-			snackRatio = 0;
-		}
-		try {
-			dinnerRatio = Float.parseFloat(insulineRatioDinner.getText()
-					.toString());
-		} catch (Exception e) {
-			dinnerRatio = 0;
-		}
-
-		// if al ratios are between 0.1 and 3 we return true else we return
-		// false
-		if (breakfastRatio <= 3 && lunchRatio <= 3 && snackRatio <= 3
-				&& dinnerRatio <= 3 && breakfastRatio >= 0.1
-				&& lunchRatio >= 0.1 && snackRatio >= 0.1 && dinnerRatio >= 0.1)
-			return true;
-		else
-			return false;
-	}
-
+	
 	@Override
 	protected void onPause() {
 		dbHelper.close();

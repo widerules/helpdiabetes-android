@@ -1,4 +1,4 @@
-package be.goossens.oracle.Show;
+package be.goossens.oracle.Show.Food;
 
 import java.util.ArrayList;
 
@@ -11,6 +11,8 @@ import android.app.ListActivity;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
 import android.view.Menu;
@@ -35,8 +37,23 @@ public class ShowUpdateOwnFood extends ListActivity {
 		setContentView(R.layout.show_update_own_food);
 
 		dbHelper = new DbAdapter(this);
-		foodId = getIntent().getExtras().getLong(DbAdapter.DATABASE_FOOD_ID);
+		
 		editTextFoodName = (EditText) findViewById(R.id.editTextShowUpdateOwnFoodFoodName);
+
+		editTextFoodName.addTextChangedListener(new TextWatcher() {
+
+			public void onTextChanged(CharSequence s, int start, int before,
+					int count) {
+				saveFoodName();
+			}
+
+			public void beforeTextChanged(CharSequence s, int start, int count,
+					int after) {
+			}
+
+			public void afterTextChanged(Editable s) {
+			}
+		});
 
 		// fillData();
 		registerForContextMenu(getListView());
@@ -64,32 +81,24 @@ public class ShowUpdateOwnFood extends ListActivity {
 	private void fillData() {
 		// set the text on the editTextFoodName
 		Cursor cFood = dbHelper.fetchFood(foodId);
-		startManagingCursor(cFood);
+		cFood.moveToFirst();
 		editTextFoodName.setText(cFood.getString(cFood
 				.getColumnIndexOrThrow(DbAdapter.DATABASE_FOOD_NAME)));
-		cFood.close();
+		cFood.close(); 
 		// fill the listview with all the units
+		Cursor cSetting = dbHelper.fetchSettingByName(getResources().getString(R.string.font_size));
+		cSetting.moveToFirst();
 		CustomBaseAdapterUnit adapter = new CustomBaseAdapterUnit(this,
-				getFoodUnitsFromSelectedFood());
+				getFoodUnitsFromSelectedFood(),cSetting.getInt(cSetting.getColumnIndexOrThrow(DbAdapter.DATABASE_SETTINGS_VALUE)));
 		setListAdapter(adapter);
+		cSetting.close();
 	}
 
-	// On click save food name
-	public void onClickSaveFoodName(View view) {
-		// update food name
+	// write the foodname to the database
+	public void saveFoodName() {
 		if (editTextFoodName.getText().length() > 0) {
 			dbHelper.updateFoodName(foodId, editTextFoodName.getText()
 					.toString());
-			Toast.makeText(
-					this,
-					getResources().getString(
-							R.string.food_name_succesfull_updated),
-					Toast.LENGTH_LONG).show();
-		} else {
-			// return message food name cant be empty
-			Toast.makeText(this,
-					getResources().getString(R.string.food_name_is_required),
-					Toast.LENGTH_LONG).show();
 		}
 	}
 
@@ -104,6 +113,7 @@ public class ShowUpdateOwnFood extends ListActivity {
 	@Override
 	protected void onResume() {
 		dbHelper.open();
+		foodId = getIntent().getExtras().getLong(DbAdapter.DATABASE_FOOD_ID); 
 		fillData();
 		super.onResume();
 	}
@@ -196,58 +206,58 @@ public class ShowUpdateOwnFood extends ListActivity {
 	}
 
 	// Check if the food is in use
-		private boolean checkIfTheFoodIsInUse(long foodId) {
-			int count = 0;
-			// first get all selectedFood to see if the food is in use in the
-			// selectedFood table
-			Cursor cSelectedFood = dbHelper.fetchAllSelectedFood();
-			if (cSelectedFood.getCount() > 0) {
-				cSelectedFood.moveToFirst();
+	private boolean checkIfTheFoodIsInUse(long foodId) {
+		int count = 0;
+		// first get all selectedFood to see if the food is in use in the
+		// selectedFood table
+		Cursor cSelectedFood = dbHelper.fetchAllSelectedFood();
+		if (cSelectedFood.getCount() > 0) {
+			cSelectedFood.moveToFirst();
 
+			do {
+				// get the foodUnit from the selectedFood
+				Cursor cFoodUnit = dbHelper
+						.fetchFoodUnit(cSelectedFood.getLong(cSelectedFood
+								.getColumnIndexOrThrow(DbAdapter.DATABASE_SELECTEDFOOD_UNITID)));
+				cFoodUnit.moveToFirst();
+				if (cFoodUnit.getCount() > 0) {
+					if (cFoodUnit
+							.getLong(cFoodUnit
+									.getColumnIndexOrThrow(DbAdapter.DATABASE_FOODUNIT_FOODID)) == foodId)
+						count++;
+				}
+				cFoodUnit.close();
+			} while (cSelectedFood.moveToNext() && count == 0);
+
+			cSelectedFood.close();
+		}
+		if (count == 0) {
+			// if the food still isnt in the selectedFood table see if its in a
+			// template
+			// get all templates
+			Cursor cTemplateFood = dbHelper.fetchAllTemplateFoods();
+			if (cTemplateFood.getCount() > 0) {
+				cTemplateFood.moveToFirst();
+				// see if the foodId is the same
 				do {
-					// get the foodUnit from the selectedFood
+					// get the foodUnit from the foodTemplate
 					Cursor cFoodUnit = dbHelper
-							.fetchFoodUnit(cSelectedFood.getLong(cSelectedFood
-									.getColumnIndexOrThrow(DbAdapter.DATABASE_SELECTEDFOOD_UNITID)));
+							.fetchFoodUnit(cTemplateFood.getLong(cTemplateFood
+									.getColumnIndexOrThrow(DbAdapter.DATABASE_TEMPLATEFOOD_UNITID)));
 					cFoodUnit.moveToFirst();
-					if (cFoodUnit.getCount() > 0) {
+					// check if foodID is the same
+					if (cFoodUnit.getCount() > 0)
 						if (cFoodUnit
 								.getLong(cFoodUnit
 										.getColumnIndexOrThrow(DbAdapter.DATABASE_FOODUNIT_FOODID)) == foodId)
 							count++;
-					}
 					cFoodUnit.close();
-				} while (cSelectedFood.moveToNext() && count == 0);
-
-				cSelectedFood.close();
+				} while (cTemplateFood.moveToNext() && count == 0);
+				cTemplateFood.close();
 			}
-			if (count == 0) {
-				// if the food still isnt in the selectedFood table see if its in a
-				// template
-				// get all templates
-				Cursor cTemplateFood = dbHelper.fetchAllTemplateFoods();
-				if (cTemplateFood.getCount() > 0) {
-					cTemplateFood.moveToFirst();
-					// see if the foodId is the same
-					do {
-						// get the foodUnit from the foodTemplate
-						Cursor cFoodUnit = dbHelper
-								.fetchFoodUnit(cTemplateFood.getLong(cTemplateFood
-										.getColumnIndexOrThrow(DbAdapter.DATABASE_TEMPLATEFOOD_UNITID)));
-						cFoodUnit.moveToFirst();
-						// check if foodID is the same
-						if (cFoodUnit.getCount() > 0)
-							if (cFoodUnit
-									.getLong(cFoodUnit
-											.getColumnIndexOrThrow(DbAdapter.DATABASE_FOODUNIT_FOODID)) == foodId)
-								count++;
-						cFoodUnit.close();
-					} while (cTemplateFood.moveToNext() && count == 0);
-					cTemplateFood.close();
-				}
-			}
-			return count > 0;
 		}
+		return count > 0;
+	}
 
 	// Delete the foodUnits and the food
 	private void deleteFoodAndFoodUnits(long id) {
