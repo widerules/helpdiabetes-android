@@ -1,4 +1,4 @@
-package be.goossens.oracle.Show;
+package be.goossens.oracle.Show.Food;
 
 import java.util.ArrayList;
 
@@ -78,11 +78,14 @@ public class ShowFoodTemplates extends ListActivity {
 		return super.onContextItemSelected(item);
 	}
 
-	private void fillData() {
+	private void fillData() {  
 		if (dbHelper.fetchAllFoodTemplates().getCount() > 0) {
+			Cursor cSettings = dbHelper.fetchSettingByName(getResources().getString(R.string.font_size));
+			cSettings.moveToFirst();
 			CustomBaseAdapter adapter = new CustomBaseAdapter(this,
-					getFoodTemplates());
+					getFoodTemplates(),cSettings.getInt(cSettings.getColumnIndexOrThrow(DbAdapter.DATABASE_SETTINGS_VALUE)));
 			setListAdapter(adapter);
+			cSettings.close();
 		} else {
 			setListAdapter(null);
 		}

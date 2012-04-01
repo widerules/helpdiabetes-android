@@ -1,4 +1,4 @@
-package be.goossens.oracle.Show;
+package be.goossens.oracle.Show.Food;
 
 /*
  * This class is uses to add food to the selected food list or update a selected food.
@@ -39,20 +39,7 @@ public class ShowAddFoodToSelection extends Activity {
 
 	// The table textview
 	private TextView textViewRowOneFieldOne, textViewRowOneFieldTwo,
-			textViewRowOneFieldThree/*
-									 * , textViewRowTwoFieldOne,
-									 * textViewRowTwoFieldTwo,
-									 * textViewRowTwoFieldThree,
-									 * textViewRowThreeFieldOne,
-									 * textViewRowThreeFieldTwo,
-									 * textViewRowThreeFieldThree,
-									 * textViewRowFourFieldOne,
-									 * textViewRowFourFieldTwo,
-									 * textViewRowFourFieldThree,
-									 * textViewRowFiveFieldOne,
-									 * textViewRowFiveFieldTwo,
-									 * textViewRowFiveFieldThree
-									 */;
+			textViewRowOneFieldThree;
 
 	// To store the selected food in
 	private Cursor foodCursor;
@@ -125,35 +112,6 @@ public class ShowAddFoodToSelection extends Activity {
 		textViewRowOneFieldTwo = (TextView) findViewById(R.id.textViewShowAddFoodRowOneFieldTwo);
 		textViewRowOneFieldThree = (TextView) findViewById(R.id.textViewShowAddFoodRowOneFieldThree);
 
-		/*
-		 * textViewRowTwoFieldOne = (TextView)
-		 * findViewById(R.id.textViewShowAddFoodRowTwoFieldOne);
-		 * textViewRowTwoFieldTwo = (TextView)
-		 * findViewById(R.id.textViewShowAddFoodRowTwoFieldTwo);
-		 * textViewRowTwoFieldThree = (TextView)
-		 * findViewById(R.id.textViewShowAddFoodRowTwoFieldThree);
-		 * 
-		 * textViewRowThreeFieldOne = (TextView)
-		 * findViewById(R.id.textViewShowAddFoodRowThreeFieldOne);
-		 * textViewRowThreeFieldTwo = (TextView)
-		 * findViewById(R.id.textViewShowAddFoodRowThreeFieldTwo);
-		 * textViewRowThreeFieldThree = (TextView)
-		 * findViewById(R.id.textViewShowAddFoodRowThreeFieldThree);
-		 * 
-		 * textViewRowFourFieldOne = (TextView)
-		 * findViewById(R.id.textViewShowAddFoodRowFourFieldOne);
-		 * textViewRowFourFieldTwo = (TextView)
-		 * findViewById(R.id.textViewShowAddFoodRowFourFieldTwo);
-		 * textViewRowFourFieldThree = (TextView)
-		 * findViewById(R.id.textViewShowAddFoodRowFourFieldThree);
-		 * 
-		 * textViewRowFiveFieldOne = (TextView)
-		 * findViewById(R.id.textViewShowAddFoodRowFiveFieldOne);
-		 * textViewRowFiveFieldTwo = (TextView)
-		 * findViewById(R.id.textViewShowAddFoodRowFiveFieldTwo);
-		 * textViewRowFiveFieldThree = (TextView)
-		 * findViewById(R.id.textViewShowAddFoodRowFiveFieldThree);
-		 */
 		// Hide the button to delete the food from selectedFood
 		buttonDeleteSelectedFood.setVisibility(View.GONE);
 

@@ -9,7 +9,6 @@ import android.database.Cursor;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.RadioButton;
-import android.widget.Toast;
 import be.goossens.oracle.R;
 import be.goossens.oracle.Objects.DBValueOrder;
 import be.goossens.oracle.Rest.DbAdapter;

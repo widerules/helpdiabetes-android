@@ -1,4 +1,4 @@
-package be.goossens.oracle.Show;
+package be.goossens.oracle.Show.Food;
 
 /*
  * This class shows the selected food
@@ -28,10 +28,8 @@ import android.view.ContextMenu.ContextMenuInfo;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.widget.AdapterView.AdapterContextMenuInfo;
 import android.widget.Button;
-import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -51,9 +49,7 @@ public class ShowSelectedFood extends ListActivity {
 	private boolean saveFoodAmount;
 	private String templateName;
 
-	private boolean bInsulineRatio;
 	private float fInsulineRatio;
-	private CheckBox cbInsulineRatio;
 
 	private List<DBValueOrder> listValueOrders;
 
@@ -63,36 +59,11 @@ public class ShowSelectedFood extends ListActivity {
 		setContentView(R.layout.show_selected_food);
 		saveFoodAmount = false;
 		// only take insuline ratio in calculation when this boolean is true
-		bInsulineRatio = true;
 		fInsulineRatio = 0f;
 		dbHelper = new DbAdapter(this);
 
-		cbInsulineRatio = (CheckBox) findViewById(R.id.checkBoxShowSelectedFoodInsulineRatio);
-
-		cbInsulineRatio.setOnClickListener(new OnClickListener() {
-
-			public void onClick(View v) {
-				onClickCheckBox();
-			}
-		});
-
 		listOfSelectedFood = new ArrayList<DBSelectedFood>();
 		registerForContextMenu(getListView());
-	}
-
-	// Only show the checkbox insuline ratio when the fInsulineRatio != 1.0
-	private void checkHideCheckBox() {
-		if (fInsulineRatio != 1) {
-			cbInsulineRatio.setVisibility(View.VISIBLE);
-		} else {
-			cbInsulineRatio.setVisibility(View.GONE);
-		}
-	}
-
-	// When we click on the checkbox recalculate the values
-	private void onClickCheckBox() {
-		bInsulineRatio = cbInsulineRatio.isChecked();
-		calculateValues();
 	}
 
 	// converts the cursor with all selected food to a arrayList<DBSelectedFood>
@@ -151,6 +122,7 @@ public class ShowSelectedFood extends ListActivity {
 		float totalCarbs = 0;
 		float totalProtein = 0;
 		float totalFat = 0;
+		float insuline = 0;
 
 		Cursor cSelectedFood = dbHelper.fetchAllSelectedFood();
 		if (cSelectedFood.getCount() > 0) {
@@ -212,95 +184,79 @@ public class ShowSelectedFood extends ListActivity {
 		}
 		cSelectedFood.close();
 
-		// Take the insuline ratio in calculation
-		if (bInsulineRatio) {
-			// only take insuline ratio in calculation when the boolean is true
+		// insuline ratio
+		// Get all the needed settings
+		Cursor cSettingsBreakfastTime = dbHelper
+				.fetchSettingByName(getResources().getString(
+						R.string.meal_time_breakfast));
+		cSettingsBreakfastTime.moveToFirst();
+		Cursor cSettingsLunchTime = dbHelper.fetchSettingByName(getResources()
+				.getString(R.string.meal_time_lunch));
+		cSettingsLunchTime.moveToFirst();
+		Cursor cSettingsSnackTime = dbHelper.fetchSettingByName(getResources()
+				.getString(R.string.meal_time_snack));
+		cSettingsSnackTime.moveToFirst();
+		Cursor cSettingsDinnerTime = dbHelper.fetchSettingByName(getResources()
+				.getString(R.string.meal_time_dinner));
+		cSettingsDinnerTime.moveToFirst();
 
-			// Get all the needed settings
-			Cursor cSettingsBreakfastTime = dbHelper
-					.fetchSettingByName(getResources().getString(
-							R.string.meal_time_breakfast));
-			cSettingsBreakfastTime.moveToFirst();
-			Cursor cSettingsLunchTime = dbHelper
-					.fetchSettingByName(getResources().getString(
-							R.string.meal_time_lunch));
-			cSettingsLunchTime.moveToFirst();
-			Cursor cSettingsSnackTime = dbHelper
-					.fetchSettingByName(getResources().getString(
-							R.string.meal_time_snack));
-			cSettingsSnackTime.moveToFirst();
-			Cursor cSettingsDinnerTime = dbHelper
-					.fetchSettingByName(getResources().getString(
-							R.string.meal_time_dinner));
-			cSettingsDinnerTime.moveToFirst();
+		// Make all the needed variables
+		Date currentTime = new Date();
+		Date dateBreakfastTime = new Date();
+		Date dateLunchTime = new Date();
+		Date dateSnackTime = new Date();
+		Date dateDinnerTime = new Date();
 
-			// Make all the needed variables
-			Date currentTime = new Date();
-			Date dateBreakfastTime = new Date();
-			Date dateLunchTime = new Date();
-			Date dateSnackTime = new Date();
-			Date dateDinnerTime = new Date();
+		// Set all the needed variables
+		dateBreakfastTime = transformStringToDate(cSettingsBreakfastTime
+				.getString(cSettingsBreakfastTime
+						.getColumnIndexOrThrow(DbAdapter.DATABASE_SETTINGS_VALUE)));
+		dateLunchTime = transformStringToDate(cSettingsLunchTime
+				.getString(cSettingsLunchTime
+						.getColumnIndexOrThrow(DbAdapter.DATABASE_SETTINGS_VALUE)));
+		dateSnackTime = transformStringToDate(cSettingsSnackTime
+				.getString(cSettingsSnackTime
+						.getColumnIndexOrThrow(DbAdapter.DATABASE_SETTINGS_VALUE)));
+		dateDinnerTime = transformStringToDate(cSettingsDinnerTime
+				.getString(cSettingsDinnerTime
+						.getColumnIndexOrThrow(DbAdapter.DATABASE_SETTINGS_VALUE)));
 
-			// Set all the needed variables
-			dateBreakfastTime = transformStringToDate(cSettingsBreakfastTime
-					.getString(cSettingsBreakfastTime
-							.getColumnIndexOrThrow(DbAdapter.DATABASE_SETTINGS_VALUE)));
-			dateLunchTime = transformStringToDate(cSettingsLunchTime
-					.getString(cSettingsLunchTime
-							.getColumnIndexOrThrow(DbAdapter.DATABASE_SETTINGS_VALUE)));
-			dateSnackTime = transformStringToDate(cSettingsSnackTime
-					.getString(cSettingsSnackTime
-							.getColumnIndexOrThrow(DbAdapter.DATABASE_SETTINGS_VALUE)));
-			dateDinnerTime = transformStringToDate(cSettingsDinnerTime
-					.getString(cSettingsDinnerTime
-							.getColumnIndexOrThrow(DbAdapter.DATABASE_SETTINGS_VALUE)));
+		Cursor cInsulineRatio = null;
 
-			Cursor cInsulineRatio = null;
-
-			// see if it is breakfast time
-			// If current time is after breakfast time but before lunch time,
-			// then its breakfast time!
-			if (currentTime.after(dateBreakfastTime)
-					&& currentTime.before(dateLunchTime)) {
-				cInsulineRatio = dbHelper.fetchSettingByName(getResources()
-						.getString(R.string.insuline_ratio_breakfast));
-			} else if (currentTime.after(dateLunchTime)
-					&& currentTime.before(dateSnackTime)) {
-				cInsulineRatio = dbHelper.fetchSettingByName(getResources()
-						.getString(R.string.insuline_ratio_lunch));
-			} else if (currentTime.after(dateSnackTime)
-					&& currentTime.before(dateDinnerTime)) {
-				cInsulineRatio = dbHelper.fetchSettingByName(getResources()
-						.getString(R.string.insuline_ratio_snack));
-			} else {
-				cInsulineRatio = dbHelper.fetchSettingByName(getResources()
-						.getString(R.string.insuline_ratio_dinner));
-			}
-
-			cInsulineRatio.moveToFirst();
-			fInsulineRatio = cInsulineRatio.getFloat(cInsulineRatio
-					.getColumnIndexOrThrow(DbAdapter.DATABASE_SETTINGS_VALUE));
-
-			// do insuline ratio x totalValues
-			totalCarbs = totalCarbs * fInsulineRatio;
-			totalProtein = totalProtein * fInsulineRatio;
-			totalFat = totalFat * fInsulineRatio;
-			totalKcal = totalKcal * fInsulineRatio;
-
-			// close all cursors
-			cSettingsDinnerTime.close();
-			cSettingsSnackTime.close();
-			cSettingsLunchTime.close();
-			cSettingsBreakfastTime.close();
-			cInsulineRatio.close();
-
-			// check if we need to show the checkbox
-			checkHideCheckBox();
-			// set the text on the checkbox with the right insuline ratio
-			cbInsulineRatio.setText(getResources().getString(
-					R.string.useInsulineRatio)
-					+ " (" + fInsulineRatio + ")");
+		// see if it is breakfast time
+		// If current time is after breakfast time but before lunch time,
+		// then its breakfast time!
+		if (currentTime.after(dateBreakfastTime)
+				&& currentTime.before(dateLunchTime)) {
+			cInsulineRatio = dbHelper.fetchSettingByName(getResources()
+					.getString(R.string.insuline_ratio_breakfast));
+		} else if (currentTime.after(dateLunchTime)
+				&& currentTime.before(dateSnackTime)) {
+			cInsulineRatio = dbHelper.fetchSettingByName(getResources()
+					.getString(R.string.insuline_ratio_lunch));
+		} else if (currentTime.after(dateSnackTime)
+				&& currentTime.before(dateDinnerTime)) {
+			cInsulineRatio = dbHelper.fetchSettingByName(getResources()
+					.getString(R.string.insuline_ratio_snack));
+		} else {
+			cInsulineRatio = dbHelper.fetchSettingByName(getResources()
+					.getString(R.string.insuline_ratio_dinner));
 		}
+
+		cInsulineRatio.moveToFirst();
+		fInsulineRatio = cInsulineRatio.getFloat(cInsulineRatio
+				.getColumnIndexOrThrow(DbAdapter.DATABASE_SETTINGS_VALUE));
+
+		// close all cursors
+		cSettingsDinnerTime.close();
+		cSettingsSnackTime.close();
+		cSettingsLunchTime.close();
+		cSettingsBreakfastTime.close();
+		cInsulineRatio.close();
+
+		// set the right insuline if fInsulineRatio != 0
+		if (fInsulineRatio != 0)
+			insuline = totalCarbs / fInsulineRatio;
 
 		// Round the calculated floats
 		float p = (float) Math.pow(10, 2);
@@ -309,29 +265,52 @@ public class ShowSelectedFood extends ListActivity {
 		totalFat = Math.round(totalFat * p) / p;
 		totalKcal = Math.round(totalKcal * p) / p;
 
+		// Round insuline 1 decimal
+		p = (float) Math.pow(10,1);
+		insuline = Math.round(insuline * p) / p;
+		
 		// set the text on the textview in the right order
 		String tvText = getResources().getString(R.string.total) + ": \n ";
 
 		for (DBValueOrder obj : listValueOrders) {
 			if (obj.getSettingName().equals(
 					getResources().getString(R.string.value_order_carb))) {
-				//add the carbs to the total
-				tvText += totalCarbs + " " + getResources().getString(R.string.amound_of_carbs) + " \n ";
+				// add the carbs to the total
+				tvText += totalCarbs + " "
+						+ getResources().getString(R.string.amound_of_carbs)
+						+ " \n ";
 			} else if (obj.getSettingName().equals(
 					getResources().getString(R.string.value_order_prot))) {
-				//add the prot to the total
-				tvText += totalProtein + " " + getResources().getString(R.string.amound_of_protein) + " \n ";
+				// add the prot to the total
+				tvText += totalProtein + " "
+						+ getResources().getString(R.string.amound_of_protein)
+						+ " \n ";
 			} else if (obj.getSettingName().equals(
 					getResources().getString(R.string.value_order_fat))) {
-				//add the fat to the total
-				tvText += totalFat + " " + getResources().getString(R.string.amound_of_fat) + " \n ";
+				// add the fat to the total
+				tvText += totalFat + " "
+						+ getResources().getString(R.string.amound_of_fat)
+						+ " \n ";
 			} else if (obj.getSettingName().equals(
 					getResources().getString(R.string.value_order_kcal))) {
-				//add the kcal to the total
-				tvText += totalKcal + " " + getResources().getString(R.string.amound_of_kcal) + " \n ";
+				// add the kcal to the total
+				tvText += totalKcal + " "
+						+ getResources().getString(R.string.amound_of_kcal)
+						+ " \n ";
 			}
 		}
-		
+
+		// add insuline ratio to the string when the radio != 0
+		if (fInsulineRatio != 0) {
+			tvText += insuline
+					+ " "
+					+ getResources().getString(
+							R.string.showSelectedFoodUnitsInsuline) + " \n ";
+			tvText += getResources().getString(
+					R.string.showSelectedFoodUInsulineRatio)
+					+ " " + fInsulineRatio;
+		}
+
 		tvTotal.setText(tvText);
 	}
 
@@ -415,9 +394,11 @@ public class ShowSelectedFood extends ListActivity {
 	private void fillData() {
 		listOfSelectedFood = getSelectedFood();
 		if (listOfSelectedFood.size() > 0) {
-			CustomBaseAdapterSelectedFood adapter = new CustomBaseAdapterSelectedFood(
-					this, listOfSelectedFood);
+			Cursor cSettings = dbHelper.fetchSettingByName(getResources().getString(R.string.font_size));
+			cSettings.moveToFirst();
+			CustomBaseAdapterSelectedFood adapter = new CustomBaseAdapterSelectedFood(this, listOfSelectedFood,cSettings.getInt(cSettings.getColumnIndexOrThrow(DbAdapter.DATABASE_SETTINGS_VALUE)));
 			setListAdapter(adapter);
+			cSettings.close();
 		} else {
 			// if we delete all items
 			// we need to clear the listview

@@ -6,7 +6,6 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
-import android.widget.Toast;
 import be.goossens.oracle.R;
 
 public class ShowSettings extends ListActivity {
@@ -43,6 +42,9 @@ public class ShowSettings extends ListActivity {
 			break;
 		case 2:
 			i = new Intent(this, ShowSettingsValueOrder.class);
+			break;
+		case 3:
+			i = new Intent(this, ShowSettingsFontSizeLists.class);
 			break;
 		}
 		startActivity(i);

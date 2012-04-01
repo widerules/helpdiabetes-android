@@ -1,9 +1,10 @@
-package be.goossens.oracle.Show;
+package be.goossens.oracle.Show.Food;
 
 import be.goossens.oracle.R;
 import be.goossens.oracle.Custom.CustomArrayAdapterFoodList;
 import be.goossens.oracle.Rest.DataParser;
 import be.goossens.oracle.Rest.DbAdapter;
+import be.goossens.oracle.Show.Exercise.ShowExerciseEvents;
 import be.goossens.oracle.Show.Settings.ShowSettings;
 import android.app.AlertDialog;
 import android.app.ListActivity;
@@ -38,8 +39,8 @@ public class ShowFoodList extends ListActivity {
 	private boolean startUp;
 
 	private static final int MANAGE_OWN_FOOD_ID = 1;
-
 	private static final int CREATE_OWN_FOOD = 2;
+	private static final int SETTING_SCREEN = 3;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -85,8 +86,12 @@ public class ShowFoodList extends ListActivity {
 	}
 
 	private void updateListAdapter() {
+		dbHelper.open();
+		Cursor cSettings = dbHelper.fetchSettingByName(getResources().getString(R.string.font_size));
+		cSettings.moveToFirst();
 		fooditemlist = new CustomArrayAdapterFoodList(this, R.layout.row_food,
-				20);
+				20,cSettings.getInt(cSettings.getColumnIndexOrThrow(DbAdapter.DATABASE_SETTINGS_VALUE)));
+		cSettings.close();
 		fooditemlist.initializeFoodItemList(null);
 		setListAdapter(fooditemlist);
 	}
@@ -118,6 +123,7 @@ public class ShowFoodList extends ListActivity {
 	protected void onResume() {
 		super.onResume();
 		dbHelper.open();
+		
 		// every time we resume make the search box empty so the user dont have
 		// to press delete search box every time he adds a selection
 		editTextSearch.setText("");
@@ -169,17 +175,23 @@ public class ShowFoodList extends ListActivity {
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
+		Intent i  = null;
 		switch (item.getItemId()) {
 		// if we press in the menu on update own food
 		case R.id.menu_update_own_food:
-			Intent i = new Intent(this, ShowManageOwnFood.class);
+			i = new Intent(this, ShowManageOwnFood.class);
 			startActivityForResult(i, MANAGE_OWN_FOOD_ID);
 			// startActivity(i);
 			break;
 		// if we press in the menu on preferences
 		case R.id.menu_preferences:
-			Intent o = new Intent(this, ShowSettings.class);
-			startActivity(o);
+			i = new Intent(this, ShowSettings.class);
+			startActivityForResult(i, SETTING_SCREEN);
+			break;
+		// if we press in the menu on exercise events
+		case R.id.menu_exercise_events:
+			i = new Intent(this,ShowExerciseEvents.class);
+			startActivity(i);
 			break;
 		}
 		return true;
@@ -194,11 +206,15 @@ public class ShowFoodList extends ListActivity {
 		case CREATE_OWN_FOOD:
 			if (resultCode == RESULT_OK)
 				updateListAdapter();
+		case SETTING_SCREEN:
+			updateListAdapter();
 		default:
 			break;
 		}
 		super.onActivityResult(requestCode, resultCode, data);
 	}
+
+
 
 	public void onClickShowSelectedFood(View view) {
 		goToPageSelectedFood();
