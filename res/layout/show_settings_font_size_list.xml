@@ -9,9 +9,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/settings" />
-
+
     <TextView
-        android:id="@+id/textView3"
+        android:id="@+id/textView1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/pref_text_size" />
@@ -22,33 +22,24 @@
         android:layout_height="wrap_content" >
 
         <TextView
-            android:id="@+id/textView1"
+            android:id="@+id/textViewShowSettingsFontSizeListTextSize"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/fontSize" />
-
-        <EditText
-            android:id="@+id/editTextShowSettingsFontSizeList"
-            android:layout_width="90dp"
-            android:layout_height="wrap_content"
-            android:inputType="number" >
-
-            <requestFocus />
-        </EditText>
 
         <Button
             android:id="@+id/button1"
             android:layout_width="70dp"
             android:layout_height="wrap_content"
-            android:text="@string/fontSizeUp"
-            android:onClick="onClickFontUp" />
+            android:onClick="onClickFontUp"
+            android:text="@string/fontSizeUp" />
 
         <Button
             android:id="@+id/button2"
             android:layout_width="70dp"
             android:layout_height="wrap_content"
-            android:text="@string/fontSizeDown"
-            android:onClick="onClickFontDown" />
+            android:onClick="onClickFontDown"
+            android:text="@string/fontSizeDown" />
     </LinearLayout>
 
     <ListView
@@ -57,12 +48,12 @@
         android:layout_height="wrap_content"
         android:layout_weight="1.0" >
     </ListView>
-
+
     <Button
         android:id="@+id/button3"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/back"
-        android:onClick="onClickBack" />
+        android:onClick="onClickBack"
+        android:text="@string/back" />
 
 </LinearLayout>

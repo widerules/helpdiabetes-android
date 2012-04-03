@@ -9,39 +9,36 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/settings"
-        android:textAppearance="?android:attr/textAppearanceMedium"  />
+        android:textAppearance="?android:attr/textAppearanceMedium" />
 
     <TextView
         android:id="@+id/textViewShowSettingsUpdateMealTime"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-         />
+        android:layout_height="wrap_content" />
 
     <TimePicker
         android:id="@+id/timePickerShowSettingsUpdateMealTime"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content" 
-        />
+        android:layout_height="wrap_content" />
 
     <LinearLayout
         android:id="@+id/linearLayout1"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content" >
-
+
         <Button
             android:id="@+id/button1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/save"
-            android:onClick="onClickSave" />
-
+            android:onClick="onClickSave"
+            android:text="@string/save" />
+
         <Button
             android:id="@+id/button2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/back"
-            android:onClick="onClickBack" />
-
+            android:onClick="onClickBack"
+            android:text="@string/back" />
     </LinearLayout>
 
 </LinearLayout>

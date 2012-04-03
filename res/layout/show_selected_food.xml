@@ -3,6 +3,14 @@
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     android:orientation="vertical" >
+
+    <TextView
+        android:id="@+id/textViewTotalTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/total"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:textColor="@color/colorFood" />
 
     <TextView
         android:id="@+id/textViewShowTotal"
@@ -21,22 +29,21 @@
         android:id="@+id/linearLayout2"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content" >
-
+
         <Button
             android:id="@+id/button3"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="right"
-            android:text="@string/save_as_template"
-            android:onClick="onClickSaveAsTemplate" />
+            android:onClick="onClickSaveAsTemplate"
+            android:text="@string/save_as_template" />
 
         <Button
             android:id="@+id/buttonShowSelectedFoodButtonLoadTemplate"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/Load_template"
-            android:onClick="onClickLoadTemplate" />
-
+            android:onClick="onClickLoadTemplate"
+            android:text="@string/Load_template" />
     </LinearLayout>
 
     <LinearLayout
