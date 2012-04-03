@@ -25,7 +25,7 @@
         </EditText>
     </LinearLayout>
 
-     <Button
+    <Button
         android:id="@+id/button2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -46,12 +46,12 @@
         android:layout_height="wrap_content"
         android:layout_weight="1.0" >
     </ListView>
-
+
     <Button
         android:id="@+id/button3"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/delete"
-        android:onClick="onClickDelete" />
+        android:onClick="onClickDelete"
+        android:text="@string/delete" />
 
-</LinearLayout>
+</LinearLayout>

@@ -3,20 +3,28 @@
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     android:orientation="vertical" >
-
+    
     <Button
         android:id="@+id/button1"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:drawableLeft="@android:drawable/ic_input_add"
         android:gravity="left|center_vertical"
-        android:onClick="onClickAddExerciseEvent"
-        android:text="@string/add_exercise_events" />
+        android:onClick="onClickAddExerciseType"
+        android:text="@string/add_exercise_type" />
 
-    <ListView
+   <ListView
         android:id="@+android:id/list"
         android:layout_width="fill_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:layout_weight="1.0" >
     </ListView>
-    
+
+   <Button
+       android:id="@+id/button2"
+       android:layout_width="wrap_content"
+       android:layout_height="wrap_content"
+       android:text="@string/back"
+       android:onClick="onClickBack" />
+
 </LinearLayout>

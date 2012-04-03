@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!-- This array list is used in the showSettings class -->
+<!-- This array has to be translated but you CANT add more items to it / delete items from it / change position of the items -->
 
-	<!-- This array list is used in the showSettings class -->
-	<!-- This array has to be translated but you CANT add more items to it / delete items from it / change position of the items -->
-	
-	
 <resources>
+
     <string-array name="settings_array">
         <item>Maaltijd tijden aanpassen</item>
         <item>Insuline ratio aanpassen</item>
         <item>Volgorde hoeveelheden aanpassen</item>
         <item>Tekst grootte lijsten aanpassen</item>
     </string-array>
+
 </resources>

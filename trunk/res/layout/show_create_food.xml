@@ -57,18 +57,20 @@
                 android:id="@+id/tableRowSpecialFoodUnit"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" >
-
+
                 <TextView
                     android:id="@+id/textView2"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="right" />
 
                 <EditText
                     android:id="@+id/editTextFoodUnitStandardAmound"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:inputType="numberDecimal"
+                    android:digits="1234567890."
+                    android:inputType="phone"
                     android:text="@string/one" >
 
                     <requestFocus />
@@ -88,19 +90,20 @@
                 android:id="@+id/tableRow2"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" >
-
+
                 <TextView
                     android:id="@+id/textViewShowCreateFood1"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    />
+                    android:layout_gravity="right" />
 
                 <EditText
                     android:id="@+id/editTextShowCreateFood1"
                     android:layout_width="0dip"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:inputType="numberDecimal" />
+                    android:digits="1234567890."
+                    android:inputType="phone" />
             </TableRow>
 
             <TableRow
@@ -118,7 +121,8 @@
                     android:layout_width="0dip"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:inputType="numberDecimal" />
+                    android:digits="1234567890."
+                    android:inputType="phone" />
             </TableRow>
 
             <TableRow
@@ -136,7 +140,8 @@
                     android:layout_width="0dip"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:inputType="numberDecimal" />
+                    android:digits="1234567890."
+                    android:inputType="phone" />
             </TableRow>
 
             <TableRow
@@ -154,7 +159,8 @@
                     android:layout_width="0dip"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:inputType="numberDecimal" />
+                    android:digits="1234567890."
+                    android:inputType="phone" />
             </TableRow>
         </TableLayout>
 

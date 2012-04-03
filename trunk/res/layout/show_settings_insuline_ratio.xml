@@ -43,9 +43,8 @@
                     android:layout_width="0dip"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:inputType="numberDecimal" >
-
-                    <requestFocus />
+                    android:digits="1234567890."
+                    android:inputType="phone" >
                 </EditText>
             </TableRow>
 
@@ -65,7 +64,8 @@
                     android:layout_width="0dip"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:inputType="numberDecimal" >
+                    android:digits="1234567890."
+                    android:inputType="phone" >
                 </EditText>
             </TableRow>
 
@@ -85,7 +85,8 @@
                     android:layout_width="0dip"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:inputType="numberDecimal" />
+                    android:digits="1234567890."
+                    android:inputType="phone" />
             </TableRow>
 
             <TableRow
@@ -104,7 +105,8 @@
                     android:layout_width="0dip"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:inputType="numberDecimal" />
+                    android:digits="1234567890."
+                    android:inputType="phone" />
             </TableRow>
         </TableLayout>
 
@@ -128,4 +130,5 @@
                 android:text="@string/back" />
         </LinearLayout>
     </LinearLayout>
+
 </ScrollView>

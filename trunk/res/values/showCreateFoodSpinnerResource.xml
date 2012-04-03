@@ -2,9 +2,11 @@
 <!-- This array list need to stay in the right order, also no other object can be added to this array or the code will crash -->
 <!-- This array list is used in the create food and create unit page. this arraylist will fill the spinner for unit standardamount and name -->
 <resources>
-	<string-array name="standard_food_units">
-	    <item>100 gram</item>
-	    <item>100 ml</item>
-	    <item>zelf definieëren</item>
-	</string-array>    
+
+    <string-array name="standard_food_units">
+        <item>100 gram</item>
+        <item>100 ml</item>
+        <item>zelf definieëren</item>
+    </string-array>
+
 </resources>

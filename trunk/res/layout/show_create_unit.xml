@@ -47,7 +47,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:inputType="numberDecimal"
+                    android:digits="1234567890."
+                    android:inputType="phone"
                     android:text="@string/one" >
 
                     <requestFocus />
@@ -71,15 +72,15 @@
                 <TextView
                     android:id="@+id/textViewShowCreateUnit1"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    />
+                    android:layout_height="wrap_content" />
 
                 <EditText
                     android:id="@+id/editTextShowCreateUnit1"
                     android:layout_width="0dip"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:inputType="numberDecimal" />
+                    android:digits="1234567890."
+                    android:inputType="phone" />
             </TableRow>
 
             <TableRow
@@ -97,7 +98,8 @@
                     android:layout_width="0dip"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:inputType="numberDecimal" />
+                    android:digits="1234567890."
+                    android:inputType="phone" />
             </TableRow>
 
             <TableRow
@@ -115,7 +117,8 @@
                     android:layout_width="0dip"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:inputType="numberDecimal" />
+                    android:digits="1234567890."
+                    android:inputType="phone" />
             </TableRow>
 
             <TableRow
@@ -133,7 +136,8 @@
                     android:layout_width="0dip"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:inputType="numberDecimal" />
+                    android:digits="1234567890."
+                    android:inputType="phone" />
             </TableRow>
         </TableLayout>
 

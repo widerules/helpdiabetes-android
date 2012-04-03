@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+
     <!-- General -->
     <string name="app_name">HelpDiabetes</string>
     <string name="add">Toevoegen</string>
@@ -9,31 +10,42 @@
     <string name="back">Terug</string>
     <string name="yes">Ja</string>
     <string name="no">Nee</string>
+
+    <!-- ShowHome -->
+    <string name="showHomeWelcome">Wat wilt u doen?</string>
+    
+    <!-- ShowTracking -->
+    <string name="showTracking">Rapporten</string>
     
     <!-- ShowSelectedFood -->
     <string name="showSelectedFoodPopupAddAmountToTemplate">Wilt u de aantallen mee bewaren?</string>
     <string name="showSelectedFoodUnitsInsuline">eenheden insuline</string>
     <string name="showSelectedFoodUInsulineRatio">Insuline ratio</string>
-    
+
     <!-- ShowFoodList -->
     <string name="showFoodListButtonSelections">Selecties</string>
-     
+
     <!-- ShowCreateUnit & ShowCreateFood -->
     <!-- These values are used to equal to ShowCreateFoodSpinnerResource.xml -->
     <string name="gram">gram</string>
     <string name="ml">ml</string>
-     
-    
+
     <!-- ShowExerciseEvents -->
     <string name="exercise_events">Sport activiteiten</string>
-    
-    <!-- ShowAddExerciseEvents -->
     <string name="add_exercise_events">Sport activiteit toevoegen</string>
+    <string name="add_exercise_type">Sport type toevoegen</string>
+    <string name="menu_update_exercise_type">Sport types updaten</string>
+
+    <!-- ShowAddExerciseEvents -->
     <string name="description">Beschrijving</string>
     <string name="start_time">Begin tijd</string>
     <string name="end_time">Eind tijd</string>
     <string name="exercise_type">Sport type</string>
+	<string name="description_cant_be_empty">Beschrijving mag niet leeg zijn</string>
     
+    <!-- ShowAddExerciseType -->
+    <string name="exercise_type_cant_be_empty">Sport type mag niet leeg zijn</string>
+
     <!-- Not sorted yet -->
     <string name="search">Zoeken: </string>
     <string name="creating_data">Aanmaken gegevens</string>
@@ -42,7 +54,7 @@
     <string name="amound_of_carbs">koolhydraten</string>
     <string name="amound_of_protein">eiwit</string>
     <string name="amound_of_fat">vet</string>
-    <string name="total">Totaal</string>
+    <string name="total">Totaal:</string>
     <string name="items_selected">items geselecteerd</string>
     <string name="multiplie">X</string>
     <string name="cant_add_more_then_five_digits">U kan niet meer dan 5 digits ingeven!</string>
@@ -77,33 +89,34 @@
     <string name="add_food_to_template_error">U moet minimum 2 etenswaren geselecteerd hebben</string>
     <string name="delete">verwijder</string>
     <string name="template_name">Template naam</string>
-    <string name="save_as_template">Opslaan als template</string>
-    <string name="Load_template">Template laden</string>
+    <string name="save_as_template">bewaar template</string>
+    <string name="Load_template">laad template</string>
     <string name="template_load_empty">Er zijn geen templates</string>
     <string name="template_name_cant_be_empty">Template naam mag niet leeg zijn</string>
     <string name="save">Opslaan</string>
     <string name="cancel">Annuleren</string>
-    
-   	<!-- Settings strings -->
+
+    <!-- Settings strings -->
     <string name="pref_insuline_ratio">Insuline ratio aanpassen</string>
-	<string name="pref_meal_times">Maaltijd tijden aanpassen</string>
-	<string name="pref_value_order">Volgorde hoeveelheden aanpassen</string>
-	<string name="pref_text_size">Tekst grootte van lijsten aanpassen</string>
-	
-	<!-- Settings meal time -->
-	<string name="pref_breakfastratio_title">Ontbijt</string>
-	<string name="pref_lunchratio_title">Middag</string>
-	<string name="pref_snackratio_title">Vieruurtje</string>
-	<string name="pref_dinnerratio_title">Avondmaal</string>
+    <string name="pref_meal_times">Maaltijd tijden aanpassen</string>
+    <string name="pref_value_order">Volgorde hoeveelheden aanpassen</string>
+    <string name="pref_text_size">Tekst grootte van lijsten aanpassen</string>
+
+    <!-- Settings meal time -->
+    <string name="pref_breakfastratio_title">Ontbijt</string>
+    <string name="pref_lunchratio_title">Middag</string>
+    <string name="pref_snackratio_title">Vieruurtje</string>
+    <string name="pref_dinnerratio_title">Avondmaal</string>
     <string name="starts_at">begint om</string>
-    
+
     <!-- Settings value order -->
     <string name="up">omhoog</string>
     <string name="down">omlaag</string>
-    
+
     <!-- Settings font size list -->
     <string name="fontSizeUp">+</string>
     <string name="fontSizeDown">-</string>
     <string name="fontSize">Tekst grootte</string>
     <string name="example">voorbeeld</string>
+
 </resources>

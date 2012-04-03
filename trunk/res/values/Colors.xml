@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorSport">#00FF00</color>
+    <color name="colorGlucose">#FF0000</color>
+    <color name="colorInsuline">#FFFF00</color>
+    <color name="colorFood">#00FFFF</color>
+    <color name="colorTracking">#FFF</color>
+    
+</resources>
