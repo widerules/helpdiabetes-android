@@ -115,11 +115,7 @@ public class ShowSettingsUpdateMealTime extends Activity {
 						+ middle + tp.getCurrentMinute());
 	}
 
-	// on click on the back button
-	public void onClickBack(View view) {
-		finish();
-	}
-
+	
 	@Override
 	protected void onPause() {
 		super.onPause();

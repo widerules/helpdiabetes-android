@@ -57,7 +57,7 @@
                 android:id="@+id/tableRowSpecialFoodUnit"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" >
-
+
                 <TextView
                     android:id="@+id/textView2"
                     android:layout_width="wrap_content"
@@ -90,7 +90,7 @@
                 android:id="@+id/tableRow2"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" >
-
+
                 <TextView
                     android:id="@+id/textViewShowCreateFood1"
                     android:layout_width="wrap_content"
@@ -175,13 +175,6 @@
                 android:layout_height="wrap_content"
                 android:onClick="onClickAdd"
                 android:text="@string/add" />
-
-            <Button
-                android:id="@+id/button2"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:onClick="onClickBack"
-                android:text="@string/back" />
         </LinearLayout>
     </LinearLayout>
 

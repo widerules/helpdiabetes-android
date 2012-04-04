@@ -1,26 +1,29 @@
 package be.goossens.oracle.Show.Food;
 
-import be.goossens.oracle.R;
-import be.goossens.oracle.Custom.CustomArrayAdapterFoodList;
-import be.goossens.oracle.Rest.DataParser;
-import be.goossens.oracle.Rest.DbAdapter;
-import be.goossens.oracle.Show.Exercise.ShowExerciseEvents;
-import be.goossens.oracle.Show.Settings.ShowSettings;
 import android.app.AlertDialog;
 import android.app.ListActivity;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.Toast;
+import be.goossens.oracle.R;
+import be.goossens.oracle.ActivityGroup.ActivityGroupMeal;
+import be.goossens.oracle.Custom.CustomArrayAdapterFoodList;
+import be.goossens.oracle.Rest.DataParser;
+import be.goossens.oracle.Rest.DbAdapter;
 
 public class ShowFoodList extends ListActivity {
 	// dbHelper to get the food list out the database
@@ -51,7 +54,6 @@ public class ShowFoodList extends ListActivity {
 
 		editTextSearch = (EditText) findViewById(R.id.editTextSearch);
 		dbHelper = new DbAdapter(this);
-		dbHelper.createDatabase();
 
 		// This is used to update the listview when the text in the search boxs
 		// changes
@@ -81,16 +83,25 @@ public class ShowFoodList extends ListActivity {
 
 	public void onClickCreateNewFood(View view) {
 		// Go to new page to create new food
-		Intent i = new Intent(this, ShowCreateFood.class);
-		startActivityForResult(i, CREATE_OWN_FOOD);
+		Intent i = new Intent(this, ShowCreateFood.class)
+				.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+		View v = ActivityGroupMeal.group.getLocalActivityManager()
+				.startActivity(DataParser.activityIDMeal, i).getDecorView();
+		ActivityGroupMeal.group.setContentView(v);
+		// startActivityForResult(i, CREATE_OWN_FOOD);
 	}
 
 	private void updateListAdapter() {
 		dbHelper.open();
-		Cursor cSettings = dbHelper.fetchSettingByName(getResources().getString(R.string.font_size));
+		Cursor cSettings = dbHelper.fetchSettingByName(getResources()
+				.getString(R.string.font_size));
 		cSettings.moveToFirst();
-		fooditemlist = new CustomArrayAdapterFoodList(this, R.layout.row_food,
-				20,cSettings.getInt(cSettings.getColumnIndexOrThrow(DbAdapter.DATABASE_SETTINGS_VALUE)));
+		fooditemlist = new CustomArrayAdapterFoodList(
+				this,
+				R.layout.row_food,
+				20,
+				cSettings.getInt(cSettings
+						.getColumnIndexOrThrow(DbAdapter.DATABASE_SETTINGS_VALUE)));
 		cSettings.close();
 		fooditemlist.initializeFoodItemList(null);
 		setListAdapter(fooditemlist);
@@ -111,19 +122,37 @@ public class ShowFoodList extends ListActivity {
 	@Override
 	protected void onListItemClick(ListView l, View v, int position, long id) {
 		super.onListItemClick(l, v, position, id);
-		Intent i = new Intent(this, ShowAddFoodToSelection.class);
-		i.putExtra(DataParser.fromWhereWeCome,
-				DataParser.weComeFromShowFoodList);
-		i.putExtra(DataParser.idFood,
-				Long.parseLong("" + fooditemlist.getFoodItem(position).getId()));
-		startActivity(i);
+
+		// hide the virtual keyboard
+		keyboardDissapear();
+
+		Intent i = new Intent(this, ShowAddFoodToSelection.class)
+				.putExtra(DataParser.fromWhereWeCome,
+						DataParser.weComeFromShowFoodList)
+				.putExtra(
+						DataParser.idFood,
+						Long.parseLong(""
+								+ fooditemlist.getFoodItem(position).getId()))
+				.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+
+		View view = ActivityGroupMeal.group.getLocalActivityManager()
+				.startActivity(DataParser.activityIDMeal, i).getDecorView();
+		ActivityGroupMeal.group.setContentView(view);
+	}
+
+	// let the keyboard dissapear
+	private void keyboardDissapear() {
+		InputMethodManager inputManager = (InputMethodManager) this
+				.getSystemService(Context.INPUT_METHOD_SERVICE);
+		inputManager.hideSoftInputFromWindow(this.getCurrentFocus()
+				.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
 	}
 
 	@Override
 	protected void onResume() {
 		super.onResume();
 		dbHelper.open();
-		
+
 		// every time we resume make the search box empty so the user dont have
 		// to press delete search box every time he adds a selection
 		editTextSearch.setText("");
@@ -153,7 +182,8 @@ public class ShowFoodList extends ListActivity {
 				}
 			};
 
-			AlertDialog.Builder builder = new AlertDialog.Builder(this);
+			AlertDialog.Builder builder = new AlertDialog.Builder(
+					ActivityGroupMeal.group);
 			builder.setMessage(
 					getResources().getString(
 							R.string.do_you_want_to_delete_the_selections))
@@ -169,53 +199,23 @@ public class ShowFoodList extends ListActivity {
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		MenuInflater inflater = getMenuInflater();
-		inflater.inflate(R.menu.mainmenu, menu);
+		inflater.inflate(R.menu.food_event_menu, menu);
 		return true;
 	}
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
-		Intent i  = null;
+		Intent i = null;
 		switch (item.getItemId()) {
 		// if we press in the menu on update own food
-		case R.id.menu_update_own_food:
+		case R.id.menuManageOwnFood:
 			i = new Intent(this, ShowManageOwnFood.class);
 			startActivityForResult(i, MANAGE_OWN_FOOD_ID);
-			// startActivity(i);
-			break;
-		// if we press in the menu on preferences
-		case R.id.menu_preferences:
-			i = new Intent(this, ShowSettings.class);
-			startActivityForResult(i, SETTING_SCREEN);
-			break;
-		// if we press in the menu on exercise events
-		case R.id.menu_exercise_events:
-			i = new Intent(this,ShowExerciseEvents.class);
-			startActivity(i);
 			break;
 		}
 		return true;
 	}
-
-	@Override
-	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-		switch (requestCode) {
-		case MANAGE_OWN_FOOD_ID:
-			updateListAdapter();
-			break;
-		case CREATE_OWN_FOOD:
-			if (resultCode == RESULT_OK)
-				updateListAdapter();
-		case SETTING_SCREEN:
-			updateListAdapter();
-		default:
-			break;
-		}
-		super.onActivityResult(requestCode, resultCode, data);
-	}
-
-
-
+	
 	public void onClickShowSelectedFood(View view) {
 		goToPageSelectedFood();
 	}
@@ -239,5 +239,13 @@ public class ShowFoodList extends ListActivity {
 	public void triggerSearching() {
 		setSelection(fooditemlist
 				.getFirstMatchingItem(editTextSearch.getText()));
+	}
+
+	@Override
+	public boolean onKeyDown(int keyCode, KeyEvent event) {
+		if (event.getKeyCode() == KeyEvent.KEYCODE_BACK) {
+			return false;
+		}
+		return super.onKeyDown(keyCode, event);
 	}
 }

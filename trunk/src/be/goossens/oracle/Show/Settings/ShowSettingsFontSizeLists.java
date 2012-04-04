@@ -5,10 +5,8 @@ import java.util.ArrayList;
 import android.app.ListActivity;
 import android.database.Cursor;
 import android.os.Bundle;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.view.View;
-import android.widget.EditText;
+import android.widget.TextView;
 import be.goossens.oracle.R;
 import be.goossens.oracle.Custom.CustomArrayAdapter;
 import be.goossens.oracle.Rest.DbAdapter;
@@ -16,32 +14,18 @@ import be.goossens.oracle.Rest.DbAdapter;
 public class ShowSettingsFontSizeLists extends ListActivity {
 
 	private DbAdapter dbHelper;
-	private EditText etFontSize;
+	private TextView tvFontSize;
 	private ArrayList<String> list;
+	private int fontSize;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.show_settings_font_size_list);
 		dbHelper = new DbAdapter(this);
-
 		list = getList();
-
-		etFontSize = (EditText) findViewById(R.id.editTextShowSettingsFontSizeList);
-
-		etFontSize.addTextChangedListener(new TextWatcher() {
-			public void onTextChanged(CharSequence s, int start, int before,
-					int count) {
-				saveSize();
-			}
-
-			public void beforeTextChanged(CharSequence s, int start, int count,
-					int after) {
-			}
-
-			public void afterTextChanged(Editable s) {
-			}
-		});
+		tvFontSize = (TextView) findViewById(R.id.textViewShowSettingsFontSizeListTextSize);
+		fontSize = 0;
 	}
 
 	@Override
@@ -53,26 +37,14 @@ public class ShowSettingsFontSizeLists extends ListActivity {
 	}
 
 	private void saveSize() {
-		int fontSize = 0;
-		try {
-			fontSize = Integer.parseInt(etFontSize.getText().toString());
-			dbHelper.updateSettingsByName(
-					getResources().getString(R.string.font_size), "" + fontSize);
-			updateList();
-		} catch (Exception e) {
-		}
+		dbHelper.updateSettingsByName(
+				getResources().getString(R.string.font_size), "" + fontSize);
 	}
 
 	private void updateList() {
-		int fontSize = 0;
-		try {
-			fontSize = Integer.parseInt(etFontSize.getText().toString());
-		} catch (Exception e) {
-			fontSize = 0;
-		}
 		CustomArrayAdapter adapter = new CustomArrayAdapter(this,
 				R.layout.row_custom_array_adapter, list, fontSize);
-		setListAdapter(adapter);	 
+		setListAdapter(adapter);
 	}
 
 	private ArrayList<String> getList() {
@@ -88,30 +60,35 @@ public class ShowSettingsFontSizeLists extends ListActivity {
 		Cursor cSetting = dbHelper.fetchSettingByName(getResources().getString(
 				R.string.font_size));
 		cSetting.moveToFirst();
-		etFontSize.setText(cSetting.getString(cSetting
-				.getColumnIndexOrThrow(DbAdapter.DATABASE_SETTINGS_VALUE)));
+		fontSize = cSetting.getInt(cSetting
+				.getColumnIndexOrThrow(DbAdapter.DATABASE_SETTINGS_VALUE));
 		cSetting.close();
+		tvFontSize.setText(getResources().getString(R.string.fontSize)
+				+ " " + fontSize);
 	}
 
-	private void changeFontSize(int number){
-		int fontSize = 0;
-		try {
-			fontSize = Integer.parseInt(etFontSize.getText().toString());
-		} catch (Exception e){
-			fontSize = 0;
-		} 
+	private void changeFontSize(int number) {
 		fontSize += number;
-		if(fontSize < 0)
-			fontSize = 0;
-		etFontSize.setText("" + fontSize);
+		
+		if (fontSize < 3)
+			fontSize = 3; 
+		else if (fontSize > 50)
+			fontSize = 50;
+
+		tvFontSize.setText(getResources().getString(R.string.fontSize)
+				+ " " + fontSize);
 	}
-	
+
 	public void onClickFontUp(View view) {
 		changeFontSize(1);
+		saveSize();
+		updateList();
 	}
 
 	public void onClickFontDown(View view) {
 		changeFontSize(-1);
+		saveSize();
+		updateList();
 	}
 
 	@Override
@@ -119,9 +96,7 @@ public class ShowSettingsFontSizeLists extends ListActivity {
 		super.onPause();
 		dbHelper.close();
 	}
-	
-	public void onClickBack(View view){
-		finish();
-	}
+
+
 
 }

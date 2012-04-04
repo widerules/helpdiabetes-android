@@ -7,7 +7,6 @@
     <string name="update">Aanpassen</string>
     <string name="menu_delete">Verwijderen</string>
     <string name="delete_all">Wis alles</string>
-    <string name="back">Terug</string>
     <string name="yes">Ja</string>
     <string name="no">Nee</string>
 
@@ -16,6 +15,7 @@
     
     <!-- ShowTracking -->
     <string name="showTracking">Rapporten</string>
+    <string name="noTrackingValues">Er zijn nog geen rapporten</string>
     
     <!-- ShowSelectedFood -->
     <string name="showSelectedFoodPopupAddAmountToTemplate">Wilt u de aantallen mee bewaren?</string>

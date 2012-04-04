@@ -15,20 +15,17 @@ public class FoodComparator implements Comparator<DBFoodComparable> {
 	public int compare(DBFoodComparable foodOne, DBFoodComparable foodTwo) {
 		String foodNameOne = removeAccents(foodOne.getName());
 		String foodNameTwo = removeAccents(foodTwo.getName());
-
-		return foodNameOne.compareTo(foodNameTwo);
+ 
+		return foodNameOne.toLowerCase().compareTo(foodNameTwo.toLowerCase());
 	}
-	
-	
-	
-	
-	
+
 	/*
-	 * Special thanks to a guy posted on stackoverflow 
-	 * http://stackoverflow.com/questions/3211974/transforming-some-special-caracters-e-e-into-e
+	 * Special thanks to a guy posted on stackoverflow
+	 * http://stackoverflow.com/questions
+	 * /3211974/transforming-some-special-caracters-e-e-into-e
 	 * 
 	 * I used his code for removing special characters
-	 * */
+	 */
 	private static final String PLAIN_ASCII = "AaEeIiOoUu" // grave
 			+ "AaEeIiOoUuYy" // acute
 			+ "AaEeIiOoUuYy" // circumflex

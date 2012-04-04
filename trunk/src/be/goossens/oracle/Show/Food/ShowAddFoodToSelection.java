@@ -12,8 +12,8 @@ import java.util.List;
 import android.app.Activity;
 import android.database.Cursor;
 import android.os.Bundle;
-import android.text.Editable;
-import android.text.TextWatcher;
+import android.view.KeyEvent;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemSelectedListener;
@@ -24,6 +24,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 import be.goossens.oracle.R;
+import be.goossens.oracle.ActivityGroup.ActivityGroupMeal;
 import be.goossens.oracle.Objects.DBValueOrder;
 import be.goossens.oracle.Rest.DataParser;
 import be.goossens.oracle.Rest.DbAdapter;
@@ -53,6 +54,12 @@ public class ShowAddFoodToSelection extends Activity {
 	// editTextFoodAmound on start if we come from showSelectedFood
 	private boolean setStandardAmount;
 
+	// this boolean is needed to check it the user presses the first time on a
+	// key in the amount field.
+	// if so we first delete whats in the amount feel ( this way the user dont
+	// have to delete it iself )
+	private boolean firstKeyPress;
+
 	private List<DBValueOrder> listValueOrders;
 	private List<TextView> listTextViewColumnOne;
 	private List<TextView> listTextViewColumnTwo;
@@ -61,11 +68,14 @@ public class ShowAddFoodToSelection extends Activity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		//View contentView = LayoutInflater.from(getParent()).inflate(R.layout.show_add_food, null);
+		//setContentView(contentView);
 		setContentView(R.layout.show_add_food);
-
+		
 		dbHelper = new DbAdapter(this);
 
 		setStandardAmount = true;
+		firstKeyPress = true;
 
 		listTextViewColumnOne = new ArrayList<TextView>();
 		listTextViewColumnTwo = new ArrayList<TextView>();
@@ -124,6 +134,7 @@ public class ShowAddFoodToSelection extends Activity {
 							checkStandardAmound();
 							fillTextViewSelectedFood();
 							fillTextViewCalculated();
+							firstKeyPress = true;
 						}
 
 						// switch standardamount if its false
@@ -135,27 +146,20 @@ public class ShowAddFoodToSelection extends Activity {
 
 					}
 				});
+	}
 
-		/*
-		 * Set a listener on the editTextFoodAmound so values can be updated
-		 * when the amound changes
-		 */
-		editTextFoodAmound.addTextChangedListener(new TextWatcher() {
-
-			public void onTextChanged(CharSequence s, int start, int before,
-					int count) {
-				onKeyPress();
-			}
-
-			public void beforeTextChanged(CharSequence s, int start, int count,
-					int after) {
-
-			}
-
-			public void afterTextChanged(Editable s) {
-
-			}
-		});
+	// This will handle the editTextFoodAmunt
+	// we cant handle this text with a editText.setOnTextListener becaus then we
+	// would create a infinity loop with
+	// editTextFoodAmound.setText("");
+	@Override
+	public boolean dispatchKeyEvent(KeyEvent event) {
+		if (firstKeyPress) {
+			firstKeyPress = false;
+			editTextFoodAmound.setText("");
+		}
+		onKeyPress();
+		return super.dispatchKeyEvent(event);
 	}
 
 	@Override
@@ -394,33 +398,65 @@ public class ShowAddFoodToSelection extends Activity {
 			for (int i = 0; i < listValueOrders.size(); i++) {
 				listTextViewColumnOne.get(i).setText(
 						listValueOrders.get(i).getValueName());
-				
-				//display the carb
-				if(listValueOrders.get(i).getSettingName().equals(getResources().getString(R.string.value_order_carb))){
-					listTextViewColumnTwo.get(i).setText(cUnit.getString(cUnit.getColumnIndexOrThrow(DbAdapter.DATABASE_FOODUNIT_CARBS)));
+
+				// display the carb
+				if (listValueOrders
+						.get(i)
+						.getSettingName()
+						.equals(getResources().getString(
+								R.string.value_order_carb))) {
+					listTextViewColumnTwo
+							.get(i)
+							.setText(
+									cUnit.getString(cUnit
+											.getColumnIndexOrThrow(DbAdapter.DATABASE_FOODUNIT_CARBS)));
 					listTextViewColumnThree.get(i).setText("" + calcCarbs);
 				}
-				
-				//display the prot
-				if(listValueOrders.get(i).getSettingName().equals(getResources().getString(R.string.value_order_prot))){
-					listTextViewColumnTwo.get(i).setText(cUnit.getString(cUnit.getColumnIndexOrThrow(DbAdapter.DATABASE_FOODUNIT_PROTEIN)));
+
+				// display the prot
+				if (listValueOrders
+						.get(i)
+						.getSettingName()
+						.equals(getResources().getString(
+								R.string.value_order_prot))) {
+					listTextViewColumnTwo
+							.get(i)
+							.setText(
+									cUnit.getString(cUnit
+											.getColumnIndexOrThrow(DbAdapter.DATABASE_FOODUNIT_PROTEIN)));
 					listTextViewColumnThree.get(i).setText("" + calcProtein);
 				}
-				
-				//display the fat
-				if(listValueOrders.get(i).getSettingName().equals(getResources().getString(R.string.value_order_fat))){
-					listTextViewColumnTwo.get(i).setText(cUnit.getString(cUnit.getColumnIndexOrThrow(DbAdapter.DATABASE_FOODUNIT_FAT)));
+
+				// display the fat
+				if (listValueOrders
+						.get(i)
+						.getSettingName()
+						.equals(getResources().getString(
+								R.string.value_order_fat))) {
+					listTextViewColumnTwo
+							.get(i)
+							.setText(
+									cUnit.getString(cUnit
+											.getColumnIndexOrThrow(DbAdapter.DATABASE_FOODUNIT_FAT)));
 					listTextViewColumnThree.get(i).setText("" + calcFat);
 				}
-				
-				//display the kcal
-				if(listValueOrders.get(i).getSettingName().equals(getResources().getString(R.string.value_order_kcal))){
-					listTextViewColumnTwo.get(i).setText(cUnit.getString(cUnit.getColumnIndexOrThrow(DbAdapter.DATABASE_FOODUNIT_KCAL)));
+
+				// display the kcal
+				if (listValueOrders
+						.get(i)
+						.getSettingName()
+						.equals(getResources().getString(
+								R.string.value_order_kcal))) {
+					listTextViewColumnTwo
+							.get(i)
+							.setText(
+									cUnit.getString(cUnit
+											.getColumnIndexOrThrow(DbAdapter.DATABASE_FOODUNIT_KCAL)));
 					listTextViewColumnThree.get(i).setText("" + calcKcal);
 				}
-				
+
 			}
-			
+
 			cUnit.close();
 		} catch (Exception e) {
 		}
@@ -434,23 +470,18 @@ public class ShowAddFoodToSelection extends Activity {
 	}
 
 	private void fillData() {
-
+		
 		adapter = new SimpleCursorAdapter(this,
-				android.R.layout.simple_spinner_item,
+				android.R.layout.simple_spinner_item, 
 				dbHelper.fetchFoodUnitByFoodId(getIntent().getExtras().getLong(
 						DataParser.idFood)),
 				new String[] { DbAdapter.DATABASE_FOODUNIT_NAME },
 				new int[] { android.R.id.text1 });
 
 		spinnerFoodUnits.setAdapter(adapter);
-		adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+				
+		//adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 
-	}
-
-	// when pressed on the button Back
-	public void onClickBack(View view) {
-		setResult(RESULT_OK);
-		finish();
 	}
 
 	// when pressed on button Add
@@ -459,7 +490,7 @@ public class ShowAddFoodToSelection extends Activity {
 				.getSelectedItemId());
 
 		startManagingCursor(cSelectedFoodUnit);
-
+ 
 		// check if we need to udpate or add new selectedFood
 		// if we come from showSelectedFood we have to update the selectedFood
 		if (getIntent().getExtras().getString(DataParser.fromWhereWeCome)
@@ -490,8 +521,7 @@ public class ShowAddFoodToSelection extends Activity {
 			cSelectedFoodUnit.close();
 		}
 
-		setResult(RESULT_OK);
-		finish();
+		ActivityGroupMeal.group.back();
 	}
 
 	@Override
@@ -573,5 +603,13 @@ public class ShowAddFoodToSelection extends Activity {
 		// Sort the list on order
 		ValueOrderComparator comparator = new ValueOrderComparator();
 		Collections.sort(listValueOrders, comparator);
+	}
+
+	@Override
+	public boolean onKeyDown(int keyCode, KeyEvent event) {
+		if (event.getKeyCode() == KeyEvent.KEYCODE_BACK) {
+			return false;
+		}
+		return super.onKeyDown(keyCode, event);
 	}
 }

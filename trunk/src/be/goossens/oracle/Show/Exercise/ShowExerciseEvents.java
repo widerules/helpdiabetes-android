@@ -8,10 +8,15 @@ import android.app.ListActivity;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
+import android.widget.ListView;
 import be.goossens.oracle.R;
 import be.goossens.oracle.Custom.CustomArrayAdapterDBExerciseEvent;
 import be.goossens.oracle.Objects.DBExerciseEvent;
+import be.goossens.oracle.Rest.DataParser;
 import be.goossens.oracle.Rest.DbAdapter;
 
 public class ShowExerciseEvents extends ListActivity {
@@ -27,9 +32,19 @@ public class ShowExerciseEvents extends ListActivity {
 		dbHelper = new DbAdapter(this);
 	}
 
-	// on click button exersive event
+	@Override
+	protected void onListItemClick(ListView l, View v, int position, long id) {
+		Intent i = new Intent(this, ShowAddExerciseEvent.class);
+		i.putExtra(DataParser.whatToDo, DataParser.doUpdateExerciseEvent);
+		i.putExtra(DataParser.idExerciseEvent, listExerciseEvents.get((int)id).getId());
+		startActivityForResult(i, request_code_add_exercise_event);
+		super.onListItemClick(l, v, position, id);
+	}
+
+	// on click button exercise event
 	public void onClickAddExerciseEvent(View view) {
 		Intent i = new Intent(this, ShowAddExerciseEvent.class);
+		i.putExtra(DataParser.whatToDo, DataParser.doCreateExerciseEvent);
 		startActivityForResult(i, request_code_add_exercise_event);
 	}
 
@@ -40,7 +55,7 @@ public class ShowExerciseEvents extends ListActivity {
 		case request_code_add_exercise_event:
 			if (resultCode == RESULT_OK)
 				refresh();
-			break; 
+			break;
 		}
 		super.onActivityResult(requestCode, resultCode, data);
 	}
@@ -110,6 +125,27 @@ public class ShowExerciseEvents extends ListActivity {
 	protected void onPause() {
 		super.onPause();
 		dbHelper.close();
+	}
+
+	// create menu
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		MenuInflater inflater = getMenuInflater();
+		inflater.inflate(R.menu.exercise_event_menu, menu);
+		return super.onCreateOptionsMenu(menu);
+	}
+
+	// on menu item selected
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		Intent i = null;
+		switch (item.getItemId()) {
+		case R.id.menuManageSportTypes:
+			i = new Intent(this, ShowExerciseTypes.class);
+			startActivity(i);
+			break;
+		}
+		return true;
 	}
 
 }

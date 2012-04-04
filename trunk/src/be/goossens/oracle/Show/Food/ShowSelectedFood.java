@@ -270,31 +270,31 @@ public class ShowSelectedFood extends ListActivity {
 		insuline = Math.round(insuline * p) / p;
 		
 		// set the text on the textview in the right order
-		String tvText = getResources().getString(R.string.total) + ": \n ";
+		String tvText = "";
 
 		for (DBValueOrder obj : listValueOrders) {
 			if (obj.getSettingName().equals(
 					getResources().getString(R.string.value_order_carb))) {
 				// add the carbs to the total
-				tvText += totalCarbs + " "
+				tvText += " \t\t " + totalCarbs + " "
 						+ getResources().getString(R.string.amound_of_carbs)
 						+ " \n ";
 			} else if (obj.getSettingName().equals(
 					getResources().getString(R.string.value_order_prot))) {
 				// add the prot to the total
-				tvText += totalProtein + " "
+				tvText += " \t\t " + totalProtein + " "
 						+ getResources().getString(R.string.amound_of_protein)
 						+ " \n ";
 			} else if (obj.getSettingName().equals(
 					getResources().getString(R.string.value_order_fat))) {
 				// add the fat to the total
-				tvText += totalFat + " "
+				tvText += " \t\t " + totalFat + " "
 						+ getResources().getString(R.string.amound_of_fat)
 						+ " \n ";
 			} else if (obj.getSettingName().equals(
 					getResources().getString(R.string.value_order_kcal))) {
 				// add the kcal to the total
-				tvText += totalKcal + " "
+				tvText += " \t\t " + totalKcal + " "
 						+ getResources().getString(R.string.amound_of_kcal)
 						+ " \n ";
 			}
@@ -406,11 +406,7 @@ public class ShowSelectedFood extends ListActivity {
 		}
 	}
 
-	// when we click on the button return
-	public void onClickBack(View view) {
-		setResult(RESULT_OK);
-		finish();
-	}
+	
 
 	// when we click on the button delete all
 	public void onClickDeleteAll(View view) {

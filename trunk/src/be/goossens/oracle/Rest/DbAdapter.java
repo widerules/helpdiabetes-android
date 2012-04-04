@@ -4,6 +4,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.Date;
 
 import android.content.ContentValues;
 import android.content.Context;
@@ -24,6 +25,23 @@ public class DbAdapter extends SQLiteOpenHelper {
 	private static final int DATABASE_VERSION = 1;
 	private SQLiteDatabase mDb;
 	private final Context mCtx;
+
+	// ExerciseType
+	private static final String DATABASE_EXERCISETYPE_TABLE = "ExerciseType";
+	public static final String DATABASE_EXERCISETYPE_ID = "_id";
+	public static final String DATABASE_EXERCISETYPE_NAME = "Name";
+	public static final String DATABASE_EXERCISETYPE_DESCRIPTION = "Description";
+	public static final String DATABASE_EXERCISETYPE_VISIBLE = "Visible";
+
+	// ExerciseEvent
+	private static final String DATABASE_EXERCISEEVENT_TABLE = "ExerciseEvent";
+	public static final String DATABASE_EXERCISEEVENT_ID = "_id";
+	public static final String DATABASE_EXERCISEEVENT_DESCRIPTION = "Description";
+	public static final String DATABASE_EXERCISEEVENT_STARTTIME = "StartTime";
+	public static final String DATABASE_EXERCISEEVENT_STOPTIME = "StopTime";
+	public static final String DATABASE_EXERCISEEVENT_TIMESTAMP = "TimeStamp";
+	public static final String DATABASE_EXERCISEEVENT_EXERCISETYPEID = "ExerciseTypeID";
+	public static final String DATABASE_EXERCISEEVENT_USERID = "UserID";
 
 	// meal type
 	private static final String DATABASE_MEALTYPE_TABLE = "MealType";
@@ -58,7 +76,7 @@ public class DbAdapter extends SQLiteOpenHelper {
 	public static final String DATABASE_SETTINGS_NAME = "Name";
 	public static final String DATABASE_SETTINGS_VALUE = "Value";
 	public static final String DATABASE_SETTINGS_USERID = "UserID";
-	
+
 	// SelectedFood
 	private static final String DATABASE_SELECTEDFOOD_TABLE = "selectedfood";
 	public static final String DATABASE_SELECTEDFOOD_ID = "_id";
@@ -161,7 +179,110 @@ public class DbAdapter extends SQLiteOpenHelper {
 		mDb = SQLiteDatabase.openDatabase(myPath, null,
 				SQLiteDatabase.OPEN_READWRITE);
 	}
- 
+
+	// Exercise Type Functions
+	// create
+	public long createExerciseType(String name, String description) {
+		ContentValues initialValues = new ContentValues();
+		initialValues.put(DATABASE_EXERCISETYPE_NAME, name);
+		initialValues.put(DATABASE_EXERCISETYPE_DESCRIPTION, description);
+		initialValues.put(DATABASE_EXERCISETYPE_VISIBLE, "0");
+		return mDb.insert(DATABASE_EXERCISETYPE_TABLE, null, initialValues);
+	}
+
+	// get all exercise types
+	public Cursor fetchAllExerciseTypes() {
+		return mDb.query(DATABASE_EXERCISETYPE_TABLE, new String[] {
+				DATABASE_EXERCISETYPE_ID, DATABASE_EXERCISETYPE_NAME,
+				DATABASE_EXERCISETYPE_DESCRIPTION,
+				DATABASE_EXERCISETYPE_VISIBLE }, null, null, null, null, null);
+	}
+
+	// get exercise type by ID
+	public Cursor fetchExerciseTypeByID(long id) {
+		return mDb.query(DATABASE_EXERCISETYPE_TABLE, new String[] {
+				DATABASE_EXERCISETYPE_ID, DATABASE_EXERCISETYPE_NAME,
+				DATABASE_EXERCISETYPE_DESCRIPTION,
+				DATABASE_EXERCISETYPE_VISIBLE }, DATABASE_EXERCISETYPE_ID + "="
+				+ id, null, null, null, null);
+	}
+
+	// update exercise type by ID
+	public boolean updateExerciseTypeByID(long id, String name,
+			String description) {
+		ContentValues initialValues = new ContentValues();
+		initialValues.put(DATABASE_EXERCISETYPE_NAME, name);
+		initialValues.put(DATABASE_EXERCISETYPE_DESCRIPTION, description);
+		return mDb.update(DATABASE_EXERCISETYPE_TABLE, initialValues,
+				DATABASE_EXERCISETYPE_ID + "=" + id, null) > 0;
+	}
+
+	// delete exercise type by ID
+	public boolean deleteExerciseTypeByID(long id) {
+		return mDb.delete(DATABASE_EXERCISETYPE_TABLE, DATABASE_EXERCISETYPE_ID
+				+ "=" + id, null) > 0;
+	}
+
+	// Exercise Event Funtions
+	// create
+	public long createExerciseEvent(String description, String startTime,
+			String stopTime, Date timeStamp, long exerciseTypeID) {
+		ContentValues initialValues = new ContentValues();
+		initialValues.put(DATABASE_EXERCISEEVENT_DESCRIPTION, description);
+		initialValues.put(DATABASE_EXERCISEEVENT_STARTTIME,
+				startTime.toString());
+		initialValues.put(DATABASE_EXERCISEEVENT_STOPTIME, stopTime.toString());
+		initialValues.put(DATABASE_EXERCISEEVENT_TIMESTAMP,
+				timeStamp.toString());
+		initialValues
+				.put(DATABASE_EXERCISEEVENT_EXERCISETYPEID, exerciseTypeID);
+		initialValues.put(DATABASE_EXERCISEEVENT_USERID, "0");
+		return mDb.insert(DATABASE_EXERCISEEVENT_TABLE, null, initialValues);
+	}
+
+	// get all exercise events
+	public Cursor fetchAllExerciseEvents() {
+		return mDb.query(DATABASE_EXERCISEEVENT_TABLE, new String[] {
+				DATABASE_EXERCISEEVENT_ID, DATABASE_EXERCISEEVENT_DESCRIPTION,
+				DATABASE_EXERCISEEVENT_STARTTIME,
+				DATABASE_EXERCISEEVENT_STOPTIME,
+				DATABASE_EXERCISEEVENT_TIMESTAMP,
+				DATABASE_EXERCISEEVENT_EXERCISETYPEID,
+				DATABASE_EXERCISEEVENT_USERID }, null, null, null, null, null);
+	}
+
+	// get exercise event by ID
+	public Cursor fetchExerciseEventByID(long id) {
+		return mDb.query(DATABASE_EXERCISEEVENT_TABLE, new String[] {
+				DATABASE_EXERCISEEVENT_ID, DATABASE_EXERCISEEVENT_DESCRIPTION,
+				DATABASE_EXERCISEEVENT_STARTTIME,
+				DATABASE_EXERCISEEVENT_STOPTIME,
+				DATABASE_EXERCISEEVENT_TIMESTAMP,
+				DATABASE_EXERCISEEVENT_EXERCISETYPEID,
+				DATABASE_EXERCISEEVENT_USERID }, DATABASE_EXERCISEEVENT_ID
+				+ "=" + id, null, null, null, null);
+	}
+
+	// update exercise event by ID
+	public boolean updateExerciseEventByID(long id, String description,
+			String startTime, String stopTime, long exerciseTypeID) {
+		ContentValues initialValues = new ContentValues();
+		initialValues.put(DATABASE_EXERCISEEVENT_DESCRIPTION, description);
+		initialValues.put(DATABASE_EXERCISEEVENT_STARTTIME,
+				startTime.toString());
+		initialValues.put(DATABASE_EXERCISEEVENT_STOPTIME, stopTime.toString());
+		initialValues
+				.put(DATABASE_EXERCISEEVENT_EXERCISETYPEID, exerciseTypeID);
+		return mDb.update(DATABASE_EXERCISEEVENT_TABLE, initialValues,
+				DATABASE_EXERCISEEVENT_ID + "=" + id, null) > 0;
+	}
+
+	// delete exercise event by ID
+	public boolean deleteExerciseEventByID(long id) {
+		return mDb.delete(DATABASE_EXERCISEEVENT_TABLE, DATABASE_EXERCISEEVENT_ID
+				+ "=" + id, null) > 0;
+	}
+
 	// Meal Type Functions
 	// create
 	public long createMealType(String mealtypename) {
@@ -260,36 +381,39 @@ public class DbAdapter extends SQLiteOpenHelper {
 
 	// SETTINGS Functions
 	// create settings
-	public long createSettings(String name,String value) {
+	public long createSettings(String name, String value) {
 		ContentValues initialValues = new ContentValues();
 		initialValues.put(DATABASE_SETTINGS_NAME, name);
-		initialValues.put(DATABASE_SETTINGS_VALUE,value);
-		initialValues.put(DATABASE_SETTINGS_USERID,"0");
+		initialValues.put(DATABASE_SETTINGS_VALUE, value);
+		initialValues.put(DATABASE_SETTINGS_USERID, "0");
 		return mDb.insert(DATABASE_SETTINGS_TABLE, null, initialValues);
 	}
 
 	// get all settings
 	public Cursor fetchAllSettings() {
 		return mDb.query(DATABASE_SETTINGS_TABLE, new String[] {
-				DATABASE_SETTINGS_ID,
-				DATABASE_SETTINGS_NAME,DATABASE_SETTINGS_USERID,DATABASE_SETTINGS_VALUE }, null, null, null, null,
-				null);
+				DATABASE_SETTINGS_ID, DATABASE_SETTINGS_NAME,
+				DATABASE_SETTINGS_USERID, DATABASE_SETTINGS_VALUE }, null,
+				null, null, null, null);
 	}
 
 	// get setting by name
-	public Cursor fetchSettingByName(String name){
+	public Cursor fetchSettingByName(String name) {
 		return mDb.query(DATABASE_SETTINGS_TABLE, new String[] {
-				DATABASE_SETTINGS_ID,
-				DATABASE_SETTINGS_NAME,DATABASE_SETTINGS_USERID,DATABASE_SETTINGS_VALUE }, DATABASE_SETTINGS_NAME + "='" + name +"'", null, null, null, null);
+				DATABASE_SETTINGS_ID, DATABASE_SETTINGS_NAME,
+				DATABASE_SETTINGS_USERID, DATABASE_SETTINGS_VALUE },
+				DATABASE_SETTINGS_NAME + "='" + name + "'", null, null, null,
+				null);
 	}
-	
-	//update settings by name
-	public boolean updateSettingsByName(String name, String value){
+
+	// update settings by name
+	public boolean updateSettingsByName(String name, String value) {
 		ContentValues initialValues = new ContentValues();
-		initialValues.put(DATABASE_SETTINGS_VALUE,value);
-		return mDb.update(DATABASE_SETTINGS_TABLE, initialValues, DATABASE_SETTINGS_NAME + "='" + name + "'", null) > 0;
+		initialValues.put(DATABASE_SETTINGS_VALUE, value);
+		return mDb.update(DATABASE_SETTINGS_TABLE, initialValues,
+				DATABASE_SETTINGS_NAME + "='" + name + "'", null) > 0;
 	}
-	
+
 	// SELECTED FOOD Functions
 	public long createSelectedFood(float amound, long unitId) {
 		ContentValues initialValues = new ContentValues();
@@ -417,7 +541,8 @@ public class DbAdapter extends SQLiteOpenHelper {
 
 	// FoodUnit Fuctions
 	// add FoodUnit
-	public long createFoodUnit(Long foodId, String name, float standardAmount,float carbs,float prot,float fat,float kcal) {
+	public long createFoodUnit(Long foodId, String name, float standardAmount,
+			float carbs, float prot, float fat, float kcal) {
 		ContentValues initialValues = new ContentValues();
 		initialValues.put(DATABASE_FOODUNIT_FOODID, foodId);
 		initialValues.put(DATABASE_FOODUNIT_NAME, name);
@@ -437,8 +562,8 @@ public class DbAdapter extends SQLiteOpenHelper {
 				DATABASE_FOODUNIT_NAME, DATABASE_FOODUNIT_DESCRIPTION,
 				DATABASE_FOODUNIT_STANDARDAMOUNT, DATABASE_FOODUNIT_CARBS,
 				DATABASE_FOODUNIT_PROTEIN, DATABASE_FOODUNIT_FAT,
-				DATABASE_FOODUNIT_KCAL, DATABASE_FOODUNIT_VISIBLE }, null, null,
-				null, null, null, null);
+				DATABASE_FOODUNIT_KCAL, DATABASE_FOODUNIT_VISIBLE }, null,
+				null, null, null, null, null);
 		if (mCursor != null) {
 			mCursor.moveToFirst();
 		}
@@ -467,8 +592,9 @@ public class DbAdapter extends SQLiteOpenHelper {
 				DATABASE_FOODUNIT_NAME, DATABASE_FOODUNIT_DESCRIPTION,
 				DATABASE_FOODUNIT_STANDARDAMOUNT, DATABASE_FOODUNIT_CARBS,
 				DATABASE_FOODUNIT_PROTEIN, DATABASE_FOODUNIT_FAT,
-				DATABASE_FOODUNIT_KCAL, DATABASE_FOODUNIT_VISIBLE }, DATABASE_FOODUNIT_FOODID
-				+ "=" + foodId, null, null, null, null, null);
+				DATABASE_FOODUNIT_KCAL, DATABASE_FOODUNIT_VISIBLE },
+				DATABASE_FOODUNIT_FOODID + "=" + foodId, null, null, null,
+				null, null);
 
 		if (mCursor != null) {
 			mCursor.moveToFirst();
@@ -484,7 +610,7 @@ public class DbAdapter extends SQLiteOpenHelper {
 
 	// Update foodUnit
 	public boolean updateFoodUnit(Long unitId, String name,
-			float standardAmount, float carbs,float prot,float fat,float kcal) {
+			float standardAmount, float carbs, float prot, float fat, float kcal) {
 		ContentValues initialValues = new ContentValues();
 		initialValues.put(DATABASE_FOODUNIT_NAME, name);
 		initialValues.put(DATABASE_FOODUNIT_DESCRIPTION, "");

@@ -147,10 +147,7 @@ public class ShowSettingsMealTimes extends ListActivity {
 		setListAdapter(adapter);
 	} 
 
-	// on click back button
-	public void onClickBack(View view) {
-		finish();
-	}
+	
 
 	@Override
 	protected void onPause() {
