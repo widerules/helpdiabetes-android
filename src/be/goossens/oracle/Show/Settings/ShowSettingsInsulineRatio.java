@@ -12,7 +12,7 @@ public class ShowSettingsInsulineRatio extends Activity {
 	private DbAdapter dbHelper;
 	private EditText insulineRatioBreakfast, insulineRatioLunch,
 			insulineRatioSnack, insulineRatioDinner;
-
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -64,10 +64,7 @@ public class ShowSettingsInsulineRatio extends Activity {
 		cSettingInsulineRatioBreakfast.close();
 	}
 
-	// on click back button
-	public void onClickBack(View view) {
-		finish();
-	}
+	
 
 	// on click update
 	public void onClickUpdate(View view) {
@@ -112,7 +109,7 @@ public class ShowSettingsInsulineRatio extends Activity {
 			dbHelper.updateSettingsByName(getResources().getString(R.string.insuline_ratio_lunch), "" + lunchRatio);
 			dbHelper.updateSettingsByName(getResources().getString(R.string.insuline_ratio_snack), "" + snackRatio);
 			dbHelper.updateSettingsByName(getResources().getString(R.string.insuline_ratio_dinner), "" + dinnerRatio);
-			
+			 
 			finish();
 	}
 	

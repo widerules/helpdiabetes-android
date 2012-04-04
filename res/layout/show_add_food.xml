@@ -186,13 +186,6 @@
                 android:layout_height="wrap_content"
                 android:onClick="onClickDeleteFoodFromSelection"
                 android:text="@string/delete" />
-
-            <Button
-                android:id="@+id/button2"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:onClick="onClickBack"
-                android:text="@string/back" />
         </LinearLayout>
     </LinearLayout>
 

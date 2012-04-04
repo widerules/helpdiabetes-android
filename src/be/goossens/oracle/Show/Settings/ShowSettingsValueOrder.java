@@ -208,8 +208,5 @@ public class ShowSettingsValueOrder extends Activity {
 		dbHelper.close();
 	}
 	
-	//when the user pressed on the back button
-	public void onClickBack(View view){
-		finish();
-	}
+	
 }

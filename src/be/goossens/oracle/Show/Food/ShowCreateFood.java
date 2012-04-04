@@ -7,6 +7,7 @@ import java.util.List;
 import android.app.Activity;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.view.KeyEvent;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemSelectedListener;
@@ -25,7 +26,7 @@ public class ShowCreateFood extends Activity {
 	private EditText editTextfoodName;
 	private EditText editTextUnitStandardAmound;
 	private EditText editTextUnitName;
-
+ 
 	private List<TextView> tvList;
 	private List<EditText> etList;
 
@@ -235,10 +236,6 @@ public class ShowCreateFood extends Activity {
 		return true;
 	}
 
-	public void onClickBack(View view) {
-		finish();
-	}
-
 	// This method will fill the list of DBValueOrders with the right values
 	private void fillListValueOrders() {
 		// make the list empty
@@ -272,7 +269,7 @@ public class ShowCreateFood extends Activity {
 										.getColumnIndexOrThrow(DbAdapter.DATABASE_SETTINGS_VALUE)),
 						cSettingValueOrderProt.getString(cSettingValueOrderProt
 								.getColumnIndexOrThrow(DbAdapter.DATABASE_SETTINGS_NAME)),
-						getResources().getString(R.string.amound_of_protein)));
+		 				getResources().getString(R.string.amound_of_protein)));
 
 		listValueOrders
 				.add(new DBValueOrder(
@@ -310,5 +307,13 @@ public class ShowCreateFood extends Activity {
 		// Sort the list on order
 		ValueOrderComparator comparator = new ValueOrderComparator();
 		Collections.sort(listValueOrders, comparator);
+	}
+	
+	@Override
+	public boolean onKeyDown(int keyCode, KeyEvent event) {
+		if (event.getKeyCode() == KeyEvent.KEYCODE_BACK) {
+			return false;
+		}
+		return super.onKeyDown(keyCode, event);
 	}
 }

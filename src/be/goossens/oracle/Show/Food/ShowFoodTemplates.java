@@ -3,7 +3,7 @@ package be.goossens.oracle.Show.Food;
 import java.util.ArrayList;
 
 import be.goossens.oracle.R;
-import be.goossens.oracle.Custom.CustomBaseAdapter;
+import be.goossens.oracle.Custom.CustomBaseAdapterFoodTemplates;
 import be.goossens.oracle.Objects.DBFood;
 import be.goossens.oracle.Objects.DBFoodTemplate;
 import be.goossens.oracle.Rest.DataParser;
@@ -61,7 +61,7 @@ public class ShowFoodTemplates extends ListActivity {
 
 		switch (item.getItemId()) {
 		case DELETE_ID:
-			// delete all the template foods
+      		// delete all the template foods
 			dbHelper.deleteTemplateFoodByFoodTemplateID(info.id);
 			// delete all the food teplates
 			dbHelper.deleteFoodTemplate(info.id);
@@ -82,7 +82,7 @@ public class ShowFoodTemplates extends ListActivity {
 		if (dbHelper.fetchAllFoodTemplates().getCount() > 0) {
 			Cursor cSettings = dbHelper.fetchSettingByName(getResources().getString(R.string.font_size));
 			cSettings.moveToFirst();
-			CustomBaseAdapter adapter = new CustomBaseAdapter(this,
+			CustomBaseAdapterFoodTemplates adapter = new CustomBaseAdapterFoodTemplates(this,
 					getFoodTemplates(),cSettings.getInt(cSettings.getColumnIndexOrThrow(DbAdapter.DATABASE_SETTINGS_VALUE)));
 			setListAdapter(adapter);
 			cSettings.close();

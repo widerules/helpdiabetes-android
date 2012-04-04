@@ -368,11 +368,6 @@ public class ShowCreateUnit extends Activity {
 		return true;
 	}
 
-	public void onClickBack(View view) {
-		setResult(RESULT_OK);
-		finish();
-	}
-
 	// If we press the button delete
 	public void onClickDelete(View view) {
 		dbHelper.deleteFoodUnit(getIntent().getExtras().getLong("unitId"));

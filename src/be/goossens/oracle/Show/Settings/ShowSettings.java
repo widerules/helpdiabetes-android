@@ -50,8 +50,5 @@ public class ShowSettings extends ListActivity {
 		startActivity(i);
 	}
 
-	// if we click on the back button
-	public void onClickBack(View view) {
-		finish();
-	}
+	
 }
