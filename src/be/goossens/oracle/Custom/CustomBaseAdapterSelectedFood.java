@@ -16,10 +16,12 @@ import android.widget.TextView;
 public class CustomBaseAdapterSelectedFood extends BaseAdapter implements OnClickListener {
 	private Context context;
 	private List<DBSelectedFood> listSelectedFood;
-	  
-	public CustomBaseAdapterSelectedFood(Context context, List<DBSelectedFood> listSelectedFood){
+	private int fontSize;
+	
+	public CustomBaseAdapterSelectedFood(Context context, List<DBSelectedFood> listSelectedFood, int fontSize){
 		this.context = context;
 		this.listSelectedFood = listSelectedFood;
+		this.fontSize = fontSize;
 	}
 	
 	public int getCount() {
@@ -43,7 +45,7 @@ public class CustomBaseAdapterSelectedFood extends BaseAdapter implements OnClic
 
 		TextView tvSelectedFoodName = (TextView) convertView.findViewById(R.id.textViewSelectedFoodValues);
 		tvSelectedFoodName.setText(entry.getFoodName() + " (" + entry.getAmound()  + " " + entry.getUnitName() + ")");
-				
+		tvSelectedFoodName.setTextSize(fontSize);
 		return convertView;
 	}
 	

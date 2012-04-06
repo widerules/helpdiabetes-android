@@ -14,13 +14,15 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/settings"
-            android:textAppearance="?android:attr/textAppearanceMedium" />
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textColor="@color/ColorText" />
 
         <TextView
             android:id="@+id/textView3"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/pref_insuline_ratio" />
+            android:text="@string/pref_insuline_ratio"
+            android:textColor="@color/ColorText" />
 
         <TableLayout
             android:id="@+id/tableLayout1"
@@ -36,7 +38,8 @@
                     android:id="@+id/textView2"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/pref_breakfastratio_title" />
+                    android:text="@string/pref_breakfastratio_title"
+                    android:textColor="@color/ColorText" />
 
                 <EditText
                     android:id="@+id/editTextShowPreferencesBreakfastRatio"
@@ -57,7 +60,8 @@
                     android:id="@+id/textView3"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/pref_lunchratio_title" />
+                    android:text="@string/pref_lunchratio_title"
+                    android:textColor="@color/ColorText" />
 
                 <EditText
                     android:id="@+id/editTextShowPreferencesLunchRatio"
@@ -78,7 +82,8 @@
                     android:id="@+id/textView4"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/pref_snackratio_title" />
+                    android:text="@string/pref_snackratio_title"
+                    android:textColor="@color/ColorText" />
 
                 <EditText
                     android:id="@+id/editTextShowPreferencesSnackRatio"
@@ -98,7 +103,8 @@
                     android:id="@+id/textView5"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/pref_dinnerratio_title" />
+                    android:text="@string/pref_dinnerratio_title"
+                    android:textColor="@color/ColorText" />
 
                 <EditText
                     android:id="@+id/editTextShowPreferencesDinnerRatio"
@@ -121,9 +127,6 @@
                 android:layout_height="wrap_content"
                 android:onClick="onClickUpdate"
                 android:text="@string/update" />
-
-           
-
         </LinearLayout>
     </LinearLayout>
 

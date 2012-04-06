@@ -9,14 +9,6 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
-import be.goossens.oracle.R;
-import be.goossens.oracle.Custom.CustomBaseAdapterSelectedFood;
-import be.goossens.oracle.Objects.DBSelectedFood;
-import be.goossens.oracle.Objects.DBValueOrder;
-import be.goossens.oracle.Rest.DataParser;
-import be.goossens.oracle.Rest.DbAdapter;
-import be.goossens.oracle.Rest.ValueOrderComparator;
-
 import android.app.AlertDialog;
 import android.app.ListActivity;
 import android.content.DialogInterface;
@@ -25,15 +17,26 @@ import android.database.Cursor;
 import android.os.Bundle;
 import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
+import android.view.KeyEvent;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.widget.AdapterView.AdapterContextMenuInfo;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
+import be.goossens.oracle.R;
+import be.goossens.oracle.ActivityGroup.ActivityGroupMeal;
+import be.goossens.oracle.Custom.CustomBaseAdapterSelectedFood;
+import be.goossens.oracle.Objects.DBSelectedFood;
+import be.goossens.oracle.Objects.DBValueOrder;
+import be.goossens.oracle.Rest.DataParser;
+import be.goossens.oracle.Rest.DbAdapter;
+import be.goossens.oracle.Rest.ValueOrderComparator;
 
 public class ShowSelectedFood extends ListActivity {
 	private DbAdapter dbHelper;
@@ -53,10 +56,20 @@ public class ShowSelectedFood extends ListActivity {
 
 	private List<DBValueOrder> listValueOrders;
 
+	private Button btDelete,btSaveTemplate,btLoadTemplate;
+	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.show_selected_food);
+		
+		View contentView = LayoutInflater.from(getParent()).inflate(
+				R.layout.show_selected_food, null);
+		setContentView(contentView);
+		
+		btDelete = (Button)findViewById(R.id.buttonDelete);
+		btSaveTemplate = (Button)findViewById(R.id.buttonSaveAsTemplate);
+		btLoadTemplate = (Button)findViewById(R.id.buttonShowSelectedFoodButtonLoadTemplate);
+		
 		saveFoodAmount = false;
 		// only take insuline ratio in calculation when this boolean is true
 		fInsulineRatio = 0f;
@@ -64,6 +77,24 @@ public class ShowSelectedFood extends ListActivity {
 
 		listOfSelectedFood = new ArrayList<DBSelectedFood>();
 		registerForContextMenu(getListView());
+		
+		btDelete.setOnClickListener(new OnClickListener() {
+			public void onClick(View v) {
+				onClickDeleteAll(v);
+			}
+		});
+		
+		btSaveTemplate.setOnClickListener(new OnClickListener() {
+			public void onClick(View v) {
+				onClickSaveAsTemplate(v);
+			}
+		});
+		
+		btLoadTemplate.setOnClickListener(new OnClickListener() {
+			public void onClick(View v) {
+				onClickLoadTemplate(v);
+			}
+		});
 	}
 
 	// converts the cursor with all selected food to a arrayList<DBSelectedFood>
@@ -110,7 +141,6 @@ public class ShowSelectedFood extends ListActivity {
 
 	@Override
 	protected void onListItemClick(ListView l, View v, int position, long id) {
-		super.onListItemClick(l, v, position, id);
 		startActivityUpdateSelectedFood(id);
 	}
 
@@ -266,9 +296,9 @@ public class ShowSelectedFood extends ListActivity {
 		totalKcal = Math.round(totalKcal * p) / p;
 
 		// Round insuline 1 decimal
-		p = (float) Math.pow(10,1);
+		p = (float) Math.pow(10, 1);
 		insuline = Math.round(insuline * p) / p;
-		
+
 		// set the text on the textview in the right order
 		String tvText = "";
 
@@ -357,21 +387,28 @@ public class ShowSelectedFood extends ListActivity {
 	private void startActivityUpdateSelectedFood(long selectedFoodId) {
 		Cursor cSelectedFood = dbHelper.fetchSelectedFood(selectedFoodId);
 		cSelectedFood.moveToFirst();
-		Intent i = new Intent(this, ShowAddFoodToSelection.class);
 
 		// get the food
 		Cursor cUnit = dbHelper
 				.fetchFoodUnit(cSelectedFood.getLong(cSelectedFood
 						.getColumnIndexOrThrow(DbAdapter.DATABASE_SELECTEDFOOD_UNITID)));
 		cUnit.moveToFirst();
-		i.putExtra(DataParser.fromWhereWeCome,
-				DataParser.weComeFRomShowSelectedFood);
-		i.putExtra(DataParser.idFood, cUnit.getLong(cUnit
-				.getColumnIndexOrThrow(DbAdapter.DATABASE_FOODUNIT_FOODID)));
-		i.putExtra(DataParser.idSelectedFood, selectedFoodId);
+		Intent i = new Intent(this, ShowAddFoodToSelection.class)
+				.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+				.putExtra(DataParser.fromWhereWeCome,
+						DataParser.weComeFRomShowSelectedFood)
+				.putExtra(
+						DataParser.idFood,
+						cUnit.getLong(cUnit
+								.getColumnIndexOrThrow(DbAdapter.DATABASE_FOODUNIT_FOODID)))
+				.putExtra(DataParser.idSelectedFood, selectedFoodId);
+
+		View v = ActivityGroupMeal.group.getLocalActivityManager()
+				.startActivity(DataParser.activityIDMeal, i).getDecorView();
+		ActivityGroupMeal.group.setContentView(v);
+
 		cUnit.close();
 		cSelectedFood.close();
-		startActivityForResult(i, update_selectedFood_id);
 	}
 
 	@Override
@@ -394,9 +431,14 @@ public class ShowSelectedFood extends ListActivity {
 	private void fillData() {
 		listOfSelectedFood = getSelectedFood();
 		if (listOfSelectedFood.size() > 0) {
-			Cursor cSettings = dbHelper.fetchSettingByName(getResources().getString(R.string.font_size));
+			Cursor cSettings = dbHelper.fetchSettingByName(getResources()
+					.getString(R.string.font_size));
 			cSettings.moveToFirst();
-			CustomBaseAdapterSelectedFood adapter = new CustomBaseAdapterSelectedFood(this, listOfSelectedFood,cSettings.getInt(cSettings.getColumnIndexOrThrow(DbAdapter.DATABASE_SETTINGS_VALUE)));
+			CustomBaseAdapterSelectedFood adapter = new CustomBaseAdapterSelectedFood(
+					this,
+					listOfSelectedFood,
+					cSettings.getInt(cSettings
+							.getColumnIndexOrThrow(DbAdapter.DATABASE_SETTINGS_VALUE)));
 			setListAdapter(adapter);
 			cSettings.close();
 		} else {
@@ -405,8 +447,6 @@ public class ShowSelectedFood extends ListActivity {
 			setListAdapter(null);
 		}
 	}
-
-	
 
 	// when we click on the button delete all
 	public void onClickDeleteAll(View view) {
@@ -417,6 +457,8 @@ public class ShowSelectedFood extends ListActivity {
 					.getColumnIndexOrThrow(DbAdapter.DATABASE_SELECTEDFOOD_ID)));
 		}
 		refreshData();
+		//update the button if showFoodList selections
+		ActivityGroupMeal.group.refreshShowFoodListButtonSelections();
 	}
 
 	// this method will refresh all the data on the screen
@@ -447,7 +489,7 @@ public class ShowSelectedFood extends ListActivity {
 		if (dbHelper.fetchAllSelectedFood().getCount() > 1) {
 			final EditText input = new EditText(this);
 			// Show a dialog with a inputbox to insert the template name
-			new AlertDialog.Builder(this)
+			new AlertDialog.Builder(ActivityGroupMeal.group)
 					.setTitle(getResources().getString(R.string.template_name))
 					.setView(input)
 					.setPositiveButton(getResources().getString(R.string.save),
@@ -506,7 +548,8 @@ public class ShowSelectedFood extends ListActivity {
 			}
 		};
 
-		AlertDialog.Builder builder = new AlertDialog.Builder(this);
+		AlertDialog.Builder builder = new AlertDialog.Builder(
+				ActivityGroupMeal.group);
 		builder.setMessage(
 				getResources().getString(
 						R.string.showSelectedFoodPopupAddAmountToTemplate))
@@ -549,15 +592,18 @@ public class ShowSelectedFood extends ListActivity {
 
 	public void onClickLoadTemplate(View view) {
 		if (dbHelper.fetchAllFoodTemplates().getCount() > 0) {
-			Intent i = new Intent(this, ShowFoodTemplates.class);
-			startActivity(i);
+			Intent i = new Intent(this, ShowFoodTemplates.class)
+					.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+			View v = ActivityGroupMeal.group.getLocalActivityManager()
+					.startActivity(DataParser.activityIDMeal, i).getDecorView();
+			ActivityGroupMeal.group.setContentView(v);
 		} else {
 			showToast(getResources().getString(R.string.template_load_empty));
 		}
 	}
 
 	@Override
-	protected void onResume() {
+	public void onResume() {
 		super.onResume();
 		dbHelper.open();
 		fillListValueOrders();
@@ -641,5 +687,13 @@ public class ShowSelectedFood extends ListActivity {
 		// Sort the list on order
 		ValueOrderComparator comparator = new ValueOrderComparator();
 		Collections.sort(listValueOrders, comparator);
+	}
+ 
+	@Override
+	public boolean onKeyDown(int keyCode, KeyEvent event) {
+		if (event.getKeyCode() == KeyEvent.KEYCODE_BACK) {
+			return false;
+		}
+		return super.onKeyDown(keyCode, event);
 	}
 }

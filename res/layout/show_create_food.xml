@@ -9,6 +9,11 @@
         android:layout_height="wrap_content"
         android:orientation="vertical" >
 
+         <TextView
+            android:id="@+id/textView99"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content" />
+        
         <TableLayout
             android:id="@+id/tableLayout1"
             android:layout_width="fill_parent"
@@ -23,7 +28,8 @@
                     android:id="@+id/textView1"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/food_name" />
+                    android:text="@string/food_name"
+                    android:textColor="@color/ColorText"/>
 
                 <EditText
                     android:id="@+id/editTextFoodName"
@@ -45,7 +51,8 @@
                     android:id="@+id/textView7"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/unit" />
+                    android:text="@string/unit"
+                    android:textColor="@color/ColorText" />
 
                 <Spinner
                     android:id="@+id/spinnerShowCreateFoodUnit"
@@ -56,13 +63,15 @@
             <TableRow
                 android:id="@+id/tableRowSpecialFoodUnit"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content" >
+                android:layout_height="wrap_content"
+                android:visibility="gone" >
 
                 <TextView
                     android:id="@+id/textView2"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="right" />
+                    android:layout_gravity="right"
+                    android:textColor="@color/ColorText" />
 
                 <EditText
                     android:id="@+id/editTextFoodUnitStandardAmound"
@@ -95,7 +104,8 @@
                     android:id="@+id/textViewShowCreateFood1"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="right" />
+                    android:layout_gravity="right"
+                    android:textColor="@color/ColorText" />
 
                 <EditText
                     android:id="@+id/editTextShowCreateFood1"
@@ -114,7 +124,8 @@
                 <TextView
                     android:id="@+id/textViewShowCreateFood2"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/ColorText" />
 
                 <EditText
                     android:id="@+id/editTextShowCreateFood2"
@@ -133,7 +144,8 @@
                 <TextView
                     android:id="@+id/textViewShowCreateFood3"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/ColorText" />
 
                 <EditText
                     android:id="@+id/editTextShowCreateFood3"
@@ -152,7 +164,8 @@
                 <TextView
                     android:id="@+id/textViewShowCreateFood4"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/ColorText" />
 
                 <EditText
                     android:id="@+id/editTextShowCreateFood4"
@@ -170,10 +183,9 @@
             android:layout_height="wrap_content" >
 
             <Button
-                android:id="@+id/button1"
+                android:id="@+id/buttonAdd"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:onClick="onClickAdd"
                 android:text="@string/add" />
         </LinearLayout>
     </LinearLayout>

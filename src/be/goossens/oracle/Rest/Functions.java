@@ -6,15 +6,17 @@ package be.goossens.oracle.Rest;
 
 import java.util.Date;
 
+import android.widget.Toast;
+
 public class Functions {
 
-	//This method will get a string in the format of HH:mm out the database
+	//This method will get a string in the format of daymonthyear (31121990) out the database
 	//and returns a real date object
-	public Date parseStringToDate(String date) {
-		Date value = new Date();
-		int indexOfSeperator = date.indexOf(":");
-		value.setHours(Integer.parseInt(date.substring(0, indexOfSeperator)));
-		value.setMinutes(Integer.parseInt(date.substring(indexOfSeperator + 1)));
+	public Date parseStringTimeStampToDate(String date) {
+		Date value = new Date(); 
+		value.setDate(Integer.parseInt(date.substring(0,2)));
+		value.setMonth(Integer.parseInt(date.substring(2,4)));
+		value.setYear(Integer.parseInt(date.substring(4,8)));
 		return value;
 	}
 	

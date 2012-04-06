@@ -19,10 +19,12 @@ import android.widget.TextView;
 public class CustomBaseAdapterUnit extends BaseAdapter {
 	private Context context;
 	private List<DBFoodUnit> list;
-		
-	public CustomBaseAdapterUnit(Context context, List<DBFoodUnit> list) {
+	private int fontSize;
+	
+	public CustomBaseAdapterUnit(Context context, List<DBFoodUnit> list, int fontSize) {
 		this.context = context;
 		this.list = list;
+		this.fontSize = fontSize;
 	}
 
 	public int getCount() {
@@ -45,6 +47,7 @@ public class CustomBaseAdapterUnit extends BaseAdapter {
 		}
 		TextView tvUnit = (TextView) arg1.findViewById(R.id.textViewRowListviewUnit);
 		tvUnit.setText("" + entry.getStandardamound() + " " + entry.getName());
+		tvUnit.setTextSize(fontSize); 
 		return arg1;
 	}
 

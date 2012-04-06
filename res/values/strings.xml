@@ -33,19 +33,27 @@
     <!-- ShowExerciseEvents -->
     <string name="exercise_events">Sport activiteiten</string>
     <string name="add_exercise_events">Sport activiteit toevoegen</string>
-    <string name="add_exercise_type">Sport type toevoegen</string>
-    <string name="menu_update_exercise_type">Sport types updaten</string>
+    <string name="add_exercise_type">Intensiteit toevoegen</string>
+    <string name="menu_update_exercise_type">Intensiteiten updaten</string>
 
     <!-- ShowAddExerciseEvents -->
     <string name="description">Beschrijving</string>
     <string name="start_time">Begin tijd</string>
-    <string name="end_time">Eind tijd</string>
-    <string name="exercise_type">Sport type</string>
+    <string name="end_time">Duur</string>
+    <string name="exercise_type">Intensiteit</string>
 	<string name="description_cant_be_empty">Beschrijving mag niet leeg zijn</string>
-    
+	<string name="time_up"> + </string>
+    <string name="time_down"> - </string>
+	
+	
     <!-- ShowAddExerciseType -->
-    <string name="exercise_type_cant_be_empty">Sport type mag niet leeg zijn</string>
-
+    <string name="exercise_type_cant_be_empty">Intensiteit mag niet leeg zijn</string>
+	<string name="date">Datum</string>
+    
+    
+    <!-- Layout -->
+    <string name="endOfListView">></string>
+    
     <!-- Not sorted yet -->
     <string name="search">Zoeken: </string>
     <string name="creating_data">Aanmaken gegevens</string>

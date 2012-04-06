@@ -8,7 +8,8 @@
     <TextView
         android:id="@+id/textViewSelectedFoodValues"
         android:layout_width="fill_parent"
-        android:layout_height="wrap_content" >
+        android:layout_height="wrap_content"
+        android:textColor="@color/ColorText" >
     </TextView>
 
 </LinearLayout>

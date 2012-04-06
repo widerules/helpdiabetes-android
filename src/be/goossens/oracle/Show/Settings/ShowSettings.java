@@ -1,12 +1,15 @@
 package be.goossens.oracle.Show.Settings;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import android.app.ListActivity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import be.goossens.oracle.R;
+import be.goossens.oracle.Custom.CustomArrayAdapterCharSequenceSettings;
 
 public class ShowSettings extends ListActivity {
 
@@ -23,10 +26,23 @@ public class ShowSettings extends ListActivity {
 	}
 
 	private void fillListView() {
-		ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(
-				this, R.array.settings_array,
-				android.R.layout.simple_list_item_1);
+		CustomArrayAdapterCharSequenceSettings adapter = new CustomArrayAdapterCharSequenceSettings(
+				this, R.layout.row_custom_array_adapter_charsequence_settings, getCharSequenceList());
+
+		/*
+		 * ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(
+		 * this, R.array.settings_array, android.R.layout.simple_list_item_1);
+		 */
 		setListAdapter(adapter);
+	}
+
+	private List<CharSequence> getCharSequenceList() {
+		List<CharSequence> value = new ArrayList<CharSequence>();
+		String[] arr = getResources().getStringArray(R.array.settings_array);
+		for(int i = 0; i < arr.length ; i++){
+			value.add(arr[i]);
+		}
+		return value;
 	}
 
 	@Override
@@ -50,5 +66,4 @@ public class ShowSettings extends ListActivity {
 		startActivity(i);
 	}
 
-	
 }

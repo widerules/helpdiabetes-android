@@ -2,11 +2,6 @@ package be.goossens.oracle.Show.Food;
 
 import java.util.ArrayList;
 
-import be.goossens.oracle.R;
-import be.goossens.oracle.Custom.CustomBaseAdapterUnit;
-import be.goossens.oracle.Objects.DBFoodUnit;
-import be.goossens.oracle.Rest.DbAdapter;
-
 import android.app.ListActivity;
 import android.content.Intent;
 import android.database.Cursor;
@@ -15,18 +10,29 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
+import android.view.KeyEvent;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.widget.AdapterView.AdapterContextMenuInfo;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Toast;
+import be.goossens.oracle.R;
+import be.goossens.oracle.ActivityGroup.ActivityGroupMeal;
+import be.goossens.oracle.Custom.CustomBaseAdapterUnit;
+import be.goossens.oracle.Objects.DBFoodUnit;
+import be.goossens.oracle.Rest.DataParser;
+import be.goossens.oracle.Rest.DbAdapter;
 
 public class ShowUpdateOwnFood extends ListActivity {
 	private DbAdapter dbHelper;
 	private EditText editTextFoodName;
 	private long foodId;
+	private Button btDeleteFood, btAdd;
 
 	private static final int EDIT_ID = Menu.FIRST;
 	private static final int DELETE_ID = Menu.FIRST + 1;
@@ -34,11 +40,17 @@ public class ShowUpdateOwnFood extends ListActivity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.show_update_own_food);
+
+		View contentView = LayoutInflater.from(getParent()).inflate(
+				R.layout.show_update_own_food, null);
+		setContentView(contentView);
 
 		dbHelper = new DbAdapter(this);
-		
+
 		editTextFoodName = (EditText) findViewById(R.id.editTextShowUpdateOwnFoodFoodName);
+
+		btDeleteFood = (Button) findViewById(R.id.buttonDelete);
+		btAdd = (Button) findViewById(R.id.buttonAdd);
 
 		editTextFoodName.addTextChangedListener(new TextWatcher() {
 
@@ -52,6 +64,18 @@ public class ShowUpdateOwnFood extends ListActivity {
 			}
 
 			public void afterTextChanged(Editable s) {
+			}
+		});
+
+		btDeleteFood.setOnClickListener(new OnClickListener() {
+			public void onClick(View v) {
+				onClickDelete(v);
+			}
+		});
+
+		btAdd.setOnClickListener(new OnClickListener() {
+			public void onClick(View v) {
+				onClickAddUnit(v);
 			}
 		});
 
@@ -84,12 +108,16 @@ public class ShowUpdateOwnFood extends ListActivity {
 		cFood.moveToFirst();
 		editTextFoodName.setText(cFood.getString(cFood
 				.getColumnIndexOrThrow(DbAdapter.DATABASE_FOOD_NAME)));
-		cFood.close(); 
+		cFood.close();
 		// fill the listview with all the units
-		Cursor cSetting = dbHelper.fetchSettingByName(getResources().getString(R.string.font_size));
+		Cursor cSetting = dbHelper.fetchSettingByName(getResources().getString(
+				R.string.font_size));
 		cSetting.moveToFirst();
-		CustomBaseAdapterUnit adapter = new CustomBaseAdapterUnit(this,
-				getFoodUnitsFromSelectedFood(),cSetting.getInt(cSetting.getColumnIndexOrThrow(DbAdapter.DATABASE_SETTINGS_VALUE)));
+		CustomBaseAdapterUnit adapter = new CustomBaseAdapterUnit(
+				this,
+				getFoodUnitsFromSelectedFood(),
+				cSetting.getInt(cSetting
+						.getColumnIndexOrThrow(DbAdapter.DATABASE_SETTINGS_VALUE)));
 		setListAdapter(adapter);
 		cSetting.close();
 	}
@@ -104,18 +132,30 @@ public class ShowUpdateOwnFood extends ListActivity {
 
 	// on click add unit
 	public void onClickAddUnit(View view) {
-		// Go to the unit add page
-		Intent i = new Intent(this, ShowCreateUnit.class);
-		i.putExtra(DbAdapter.DATABASE_FOOD_ID, foodId);
-		startActivity(i);
+		Intent i = new Intent(this, ShowCreateUnit.class).addFlags(
+				Intent.FLAG_ACTIVITY_CLEAR_TOP).putExtra(
+				DbAdapter.DATABASE_FOOD_ID, foodId);
+		View v = ActivityGroupMeal.group.getLocalActivityManager()
+				.startActivity(DataParser.activityIDMeal, i).getDecorView();
+		ActivityGroupMeal.group.setContentView(v);
 	}
 
 	@Override
-	protected void onResume() {
-		dbHelper.open();
-		foodId = getIntent().getExtras().getLong(DbAdapter.DATABASE_FOOD_ID); 
-		fillData();
-		super.onResume();
+	public void onResume() {  
+		try {
+			dbHelper.open();
+
+			foodId = getIntent().getExtras()
+					.getLong(DbAdapter.DATABASE_FOOD_ID);
+
+			if (checkIfTheFoodIsInUse(foodId))
+				btDeleteFood.setVisibility(View.GONE);
+
+			fillData();
+			super.onResume();
+		} catch (Exception e) {
+			ActivityGroupMeal.group.back();
+		}
 	}
 
 	@Override
@@ -126,10 +166,11 @@ public class ShowUpdateOwnFood extends ListActivity {
 
 	@Override
 	protected void onListItemClick(ListView l, View v, int position, long id) {
-		super.onListItemClick(l, v, position, id);
-		Intent i = new Intent(this, ShowCreateUnit.class);
-		i.putExtra("unitId", id);
-		startActivity(i);
+		Intent i = new Intent(this, ShowCreateUnit.class).addFlags(
+				Intent.FLAG_ACTIVITY_CLEAR_TOP).putExtra("unitId", id);
+		View view = ActivityGroupMeal.group.getLocalActivityManager()
+				.startActivity(DataParser.activityIDMeal, i).getDecorView();
+		ActivityGroupMeal.group.setContentView(view);
 	}
 
 	@Override
@@ -201,7 +242,10 @@ public class ShowUpdateOwnFood extends ListActivity {
 			// else we can delete it
 			deleteFoodAndFoodUnits(foodId);
 			// and go back to foodlist
-			finish();
+			ActivityGroupMeal.group.back();
+			ActivityGroupMeal.group.refreshShowManageOwnFood(1);
+			// refresh the list of food in show food list
+			ActivityGroupMeal.group.refreshShowFoodList();
 		}
 	}
 
@@ -279,4 +323,15 @@ public class ShowUpdateOwnFood extends ListActivity {
 		dbHelper.deleteFood(id);
 	}
 
+	@Override
+	public boolean onKeyDown(int keyCode, KeyEvent event) {
+		if (event.getKeyCode() == KeyEvent.KEYCODE_BACK) {
+			// Do this in the onclick back becaus we need to refresh the page
+			// when we update the food name
+			ActivityGroupMeal.group.back();
+			ActivityGroupMeal.group.refreshShowManageOwnFood(1);
+			return true;
+		}
+		return super.onKeyDown(keyCode, event);
+	}
 }

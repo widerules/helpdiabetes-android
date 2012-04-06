@@ -3,18 +3,19 @@ package be.goossens.oracle.Show.Food;
 import java.util.ArrayList;
 
 import be.goossens.oracle.R;
+import be.goossens.oracle.ActivityGroup.ActivityGroupMeal;
 import be.goossens.oracle.Custom.CustomBaseAdapterFoodTemplates;
 import be.goossens.oracle.Objects.DBFood;
 import be.goossens.oracle.Objects.DBFoodTemplate;
-import be.goossens.oracle.Rest.DataParser;
 import be.goossens.oracle.Rest.DbAdapter;
 
 import android.app.ListActivity;
-import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
+import android.view.KeyEvent;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -29,7 +30,11 @@ public class ShowFoodTemplates extends ListActivity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.show_food_templates);
+		
+		View contentView = LayoutInflater.from(getParent()).inflate(
+				R.layout.show_food_templates, null);
+		setContentView(contentView);
+		
 		dbHelper = new DbAdapter(this);
 		registerForContextMenu(getListView());
 	}
@@ -61,7 +66,7 @@ public class ShowFoodTemplates extends ListActivity {
 
 		switch (item.getItemId()) {
 		case DELETE_ID:
-      		// delete all the template foods
+			// delete all the template foods
 			dbHelper.deleteTemplateFoodByFoodTemplateID(info.id);
 			// delete all the food teplates
 			dbHelper.deleteFoodTemplate(info.id);
@@ -71,19 +76,25 @@ public class ShowFoodTemplates extends ListActivity {
 				// refresh the data
 				fillData();
 			} else {
-				finish();
+				ActivityGroupMeal.group.back();
+				// refresh the page selectedFood
+				ActivityGroupMeal.group.refreshShowSelectedFood(1);
 			}
 			break;
 		}
 		return super.onContextItemSelected(item);
 	}
 
-	private void fillData() {  
+	private void fillData() {
 		if (dbHelper.fetchAllFoodTemplates().getCount() > 0) {
-			Cursor cSettings = dbHelper.fetchSettingByName(getResources().getString(R.string.font_size));
+			Cursor cSettings = dbHelper.fetchSettingByName(getResources()
+					.getString(R.string.font_size));
 			cSettings.moveToFirst();
-			CustomBaseAdapterFoodTemplates adapter = new CustomBaseAdapterFoodTemplates(this,
-					getFoodTemplates(),cSettings.getInt(cSettings.getColumnIndexOrThrow(DbAdapter.DATABASE_SETTINGS_VALUE)));
+			CustomBaseAdapterFoodTemplates adapter = new CustomBaseAdapterFoodTemplates(
+					this,
+					getFoodTemplates(),
+					cSettings.getInt(cSettings
+							.getColumnIndexOrThrow(DbAdapter.DATABASE_SETTINGS_VALUE)));
 			setListAdapter(adapter);
 			cSettings.close();
 		} else {
@@ -99,21 +110,25 @@ public class ShowFoodTemplates extends ListActivity {
 		cTemplateFood.moveToFirst();
 		Cursor cUnit = null;
 		do {
-			// start a new activity for every food row in the template
-			Intent i = new Intent(this, ShowAddFoodToSelection.class);
-			i.putExtra(DataParser.fromWhereWeCome, DataParser.weComeFromShowFoodTemplates);
-			
-			cUnit = dbHelper.fetchFoodUnit(cTemplateFood.getLong(cTemplateFood.getColumnIndexOrThrow(DbAdapter.DATABASE_TEMPLATEFOOD_UNITID)));
+			cUnit = dbHelper
+					.fetchFoodUnit(cTemplateFood.getLong(cTemplateFood
+							.getColumnIndexOrThrow(DbAdapter.DATABASE_TEMPLATEFOOD_UNITID)));
 			cUnit.moveToFirst();
-			i.putExtra(DataParser.idFood,cUnit.getLong(cUnit.getColumnIndexOrThrow(DbAdapter.DATABASE_FOODUNIT_FOODID)));
-			i.putExtra(DataParser.idUnit, cUnit.getInt(cUnit.getColumnIndexOrThrow(DbAdapter.DATABASE_FOODUNIT_ID)));
-			i.putExtra(DataParser.foodAmount, cTemplateFood.getFloat(cTemplateFood.getColumnIndexOrThrow(DbAdapter.DATABASE_TEMPLATEFOOD_AMOUNT)));
-			startActivity(i);
+			dbHelper.createSelectedFood(
+					cTemplateFood
+							.getFloat(cTemplateFood
+									.getColumnIndexOrThrow(DbAdapter.DATABASE_TEMPLATEFOOD_AMOUNT)),
+					cUnit.getLong(cUnit
+							.getColumnIndexOrThrow(DbAdapter.DATABASE_FOODUNIT_ID)));
 		} while (cTemplateFood.moveToNext());
 		cUnit.close();
 		cTemplateFood.close();
-		// Then go back to the selected food page
-		finish();
+		ActivityGroupMeal.group.back();
+		// update the list in show selected food
+		ActivityGroupMeal.group.refreshShowSelectedFood(1);
+
+		// update the button from show food list
+		ActivityGroupMeal.group.refreshShowFoodListButtonSelections();
 	}
 
 	// converts the cursor with all food templates to a arrayList
@@ -122,7 +137,7 @@ public class ShowFoodTemplates extends ListActivity {
 		ArrayList<DBFoodTemplate> list = new ArrayList<DBFoodTemplate>();
 		Cursor cFoodTemplates = dbHelper.fetchAllFoodTemplates();
 		cFoodTemplates.moveToFirst();
-		
+
 		do {
 
 			// first create a arrayList with the food
@@ -133,11 +148,14 @@ public class ShowFoodTemplates extends ListActivity {
 							.getColumnIndexOrThrow(DbAdapter.DATABASE_FOODTEMPLATE_ID)));
 			cTemplateFood.moveToFirst();
 			do {
-				Cursor cUnit = dbHelper.fetchFoodUnit(cTemplateFood.getLong(cTemplateFood.getColumnIndexOrThrow(DbAdapter.DATABASE_TEMPLATEFOOD_UNITID)));
-				
+				Cursor cUnit = dbHelper
+						.fetchFoodUnit(cTemplateFood.getLong(cTemplateFood
+								.getColumnIndexOrThrow(DbAdapter.DATABASE_TEMPLATEFOOD_UNITID)));
+
 				cUnit.moveToFirst();
 				Cursor cFood = dbHelper
-						.fetchFood(cUnit.getLong(cUnit.getColumnIndexOrThrow(DbAdapter.DATABASE_FOODUNIT_FOODID)));
+						.fetchFood(cUnit.getLong(cUnit
+								.getColumnIndexOrThrow(DbAdapter.DATABASE_FOODUNIT_FOODID)));
 				cFood.moveToFirst();
 				foods.add(new DBFood(
 						cFood.getInt(cFood
@@ -165,6 +183,14 @@ public class ShowFoodTemplates extends ListActivity {
 		} while (cFoodTemplates.moveToNext());
 		cFoodTemplates.close();
 		return list;
+	}
+
+	@Override
+	public boolean onKeyDown(int keyCode, KeyEvent event) {
+		if (event.getKeyCode() == KeyEvent.KEYCODE_BACK) {
+			return false;
+		}
+		return super.onKeyDown(keyCode, event);
 	}
 
 }

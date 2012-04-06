@@ -12,7 +12,10 @@ import java.util.List;
 import android.app.Activity;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.view.KeyEvent;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ArrayAdapter;
@@ -23,6 +26,7 @@ import android.widget.TableRow;
 import android.widget.TextView;
 import android.widget.Toast;
 import be.goossens.oracle.R;
+import be.goossens.oracle.ActivityGroup.ActivityGroupMeal;
 import be.goossens.oracle.Objects.DBValueOrder;
 import be.goossens.oracle.Rest.DbAdapter;
 import be.goossens.oracle.Rest.ValueOrderComparator;
@@ -34,6 +38,7 @@ public class ShowCreateUnit extends Activity {
 	private EditText editTextStandardAmound;
 	private EditText editTextName;
 	private Button buttonAddOrUpdate;
+	private Button buttonDelete;
 
 	private Spinner spinnerUnit;
 	private TableRow tableRowSpecialUnit;
@@ -42,13 +47,14 @@ public class ShowCreateUnit extends Activity {
 	private List<EditText> etList;
 	private List<DBValueOrder> listValueOrders;
 
-	// Button to delete unit
-	private Button buttonDelete;
-
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.show_create_unit);
+
+		View contentView = LayoutInflater.from(getParent()).inflate(
+				R.layout.show_create_unit, null);
+		setContentView(contentView);
+
 		dbHelper = new DbAdapter(this);
 		foodId = getIntent().getExtras().getLong(DbAdapter.DATABASE_FOOD_ID);
 
@@ -87,16 +93,32 @@ public class ShowCreateUnit extends Activity {
 
 		buttonDelete.setVisibility(View.GONE);
 
+		buttonAddOrUpdate.setOnClickListener(new OnClickListener() {
+			public void onClick(View v) {
+				onClickAdd(v);
+			}
+		});
+
+		buttonDelete.setOnClickListener(new OnClickListener() {
+			public void onClick(View v) {
+				onClickDelete(v);
+			}
+		});
+
 	}
 
 	@Override
 	protected void onResume() {
-		super.onResume();
-		dbHelper.open();
-		fillListValueOrders();
-		fillTextViews();
-		fillSpinner();
-		checkUpdateUnit();
+		try {
+			super.onResume();
+			dbHelper.open();
+			fillListValueOrders();
+			fillTextViews();
+			fillSpinner();
+			checkUpdateUnit();
+		} catch (Exception e) {
+			ActivityGroupMeal.group.back();
+		}
 	}
 
 	@Override
@@ -317,8 +339,8 @@ public class ShowCreateUnit extends Activity {
 				dbHelper.createFoodUnit(foodId, unitName, standardAmound, carb,
 						prot, fat, kcal);
 			}
-			setResult(RESULT_OK);
-			finish();
+			ActivityGroupMeal.group.back();
+			ActivityGroupMeal.group.refreshShowUpdateOwnFood(1);
 		}
 	}
 
@@ -371,7 +393,8 @@ public class ShowCreateUnit extends Activity {
 	// If we press the button delete
 	public void onClickDelete(View view) {
 		dbHelper.deleteFoodUnit(getIntent().getExtras().getLong("unitId"));
-		finish();
+		ActivityGroupMeal.group.back();
+		ActivityGroupMeal.group.refreshShowUpdateOwnFood(1);
 	}
 
 	// This method will fill the list of DBValueOrders with the right values
@@ -445,6 +468,14 @@ public class ShowCreateUnit extends Activity {
 		// Sort the list on order
 		ValueOrderComparator comparator = new ValueOrderComparator();
 		Collections.sort(listValueOrders, comparator);
+	}
+
+	@Override
+	public boolean onKeyDown(int keyCode, KeyEvent event) {
+		if (event.getKeyCode() == KeyEvent.KEYCODE_BACK) {
+			return false;
+		}
+		return super.onKeyDown(keyCode, event);
 	}
 
 }

@@ -4,6 +4,11 @@
     android:layout_height="fill_parent"
     android:orientation="vertical" >
 
+      <TextView
+        android:id="@+id/textView99"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content" />
+    
     <LinearLayout
         android:id="@+id/linearLayout1"
         android:layout_width="fill_parent"
@@ -13,32 +18,31 @@
             android:id="@+id/textView1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/food_name" />
+            android:text="@string/food_name"
+            android:textColor="@color/ColorText" />
 
         <EditText
             android:id="@+id/editTextShowUpdateOwnFoodFoodName"
             android:layout_width="0dip"
             android:layout_height="wrap_content"
             android:layout_weight="1" >
-
-            <requestFocus />
         </EditText>
     </LinearLayout>
 
     <Button
-        android:id="@+id/button2"
+        android:id="@+id/buttonAdd"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:drawableLeft="@android:drawable/ic_input_add"
         android:gravity="left|center_vertical"
-        android:onClick="onClickAddUnit"
         android:text="@string/add_unit" />
 
     <TextView
         android:id="@+id/textView2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/units" />
+        android:text="@string/units"
+        android:textColor="@color/ColorText" />
 
     <ListView
         android:id="@+android:id/list"
@@ -48,10 +52,9 @@
     </ListView>
 
     <Button
-        android:id="@+id/button3"
+        android:id="@+id/buttonDelete"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:onClick="onClickDelete"
         android:text="@string/delete" />
 
 </LinearLayout>

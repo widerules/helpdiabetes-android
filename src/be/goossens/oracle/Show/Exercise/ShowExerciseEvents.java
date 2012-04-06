@@ -36,7 +36,8 @@ public class ShowExerciseEvents extends ListActivity {
 	protected void onListItemClick(ListView l, View v, int position, long id) {
 		Intent i = new Intent(this, ShowAddExerciseEvent.class);
 		i.putExtra(DataParser.whatToDo, DataParser.doUpdateExerciseEvent);
-		i.putExtra(DataParser.idExerciseEvent, listExerciseEvents.get((int)id).getId());
+		i.putExtra(DataParser.idExerciseEvent, listExerciseEvents.get((int) id)
+				.getId());
 		startActivityForResult(i, request_code_add_exercise_event);
 		super.onListItemClick(l, v, position, id);
 	}
@@ -79,8 +80,6 @@ public class ShowExerciseEvents extends ListActivity {
 		if (cExerciseEvent.getCount() > 0) {
 			cExerciseEvent.moveToFirst();
 			do {
-				Date startTime = new Date();
-				Date endTime = new Date();
 				Date timeStamp = new Date();
 
 				listExerciseEvents
@@ -90,8 +89,10 @@ public class ShowExerciseEvents extends ListActivity {
 												.getColumnIndexOrThrow(DbAdapter.DATABASE_EXERCISEEVENT_ID)),
 								cExerciseEvent.getString(cExerciseEvent
 										.getColumnIndexOrThrow(DbAdapter.DATABASE_EXERCISEEVENT_DESCRIPTION)),
-								startTime,
-								endTime,
+								cExerciseEvent.getInt(cExerciseEvent
+										.getColumnIndexOrThrow(DbAdapter.DATABASE_EXERCISEEVENT_STARTTIME)),
+								cExerciseEvent.getInt(cExerciseEvent
+										.getColumnIndexOrThrow(DbAdapter.DATABASE_EXERCISEEVENT_STOPTIME)),
 								timeStamp,
 								cExerciseEvent.getLong(cExerciseEvent
 										.getColumnIndexOrThrow(DbAdapter.DATABASE_EXERCISEEVENT_EXERCISETYPEID)),

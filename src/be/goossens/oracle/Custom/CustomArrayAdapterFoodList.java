@@ -8,13 +8,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import be.goossens.oracle.R;
-import be.goossens.oracle.Objects.DBFoodComparable;
-import be.goossens.oracle.Rest.DbAdapter;
-import be.goossens.oracle.Rest.ExcelCharacter;
-import be.goossens.oracle.Rest.FoodComparator;
-import be.goossens.oracle.Show.ShowFoodList;
-
 import android.content.Context;
 import android.database.Cursor;
 import android.os.Bundle;
@@ -24,9 +17,15 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
+import be.goossens.oracle.R;
+import be.goossens.oracle.Objects.DBFoodComparable;
+import be.goossens.oracle.Rest.DbAdapter;
+import be.goossens.oracle.Rest.ExcelCharacter;
+import be.goossens.oracle.Rest.FoodComparator;
+import be.goossens.oracle.Show.Food.ShowFoodList;
 
 public class CustomArrayAdapterFoodList extends ArrayAdapter<String> {
-  
+
 	private List<DBFoodComparable> foodItemList = null;
 	private String previousSearchString = null;
 	private int[] firstIndex;
@@ -34,9 +33,10 @@ public class CustomArrayAdapterFoodList extends ArrayAdapter<String> {
 	private Context callingContext;
 	private Thread backgroundThread;
 	private final Handler callingThreadHanlder = new Handler();
-	
+	private int fontSize;
+
 	public CustomArrayAdapterFoodList(Context context, int textViewResourceId,
-			int maximuSearchStringLength) {
+			int maximuSearchStringLength, int fontSize) {
 		super(context, textViewResourceId, new ArrayList<String>());
 		callingContext = context;
 		foodItemList = new ArrayList<DBFoodComparable>();
@@ -45,6 +45,7 @@ public class CustomArrayAdapterFoodList extends ArrayAdapter<String> {
 		firstIndex[0] = 0;
 		lastIndex[0] = 0;
 		previousSearchString = null;
+		this.fontSize = fontSize;
 	}
 
 	public DBFoodComparable getFoodItem(int position) {
@@ -199,9 +200,13 @@ public class CustomArrayAdapterFoodList extends ArrayAdapter<String> {
 			v = vi.inflate(R.layout.row_food, null);
 		}
 		TextView tt = (TextView) v.findViewById(R.id.row_food_text);
+		TextView ttTwo = (TextView) v.findViewById(R.id.text2);
 		if (tt != null) {
 			tt.setText((String) getItem(position));
+			tt.setTextSize(fontSize);
 		}
+		ttTwo.setTextSize(fontSize);
+
 		return v;
 	}
 
@@ -220,7 +225,7 @@ public class CustomArrayAdapterFoodList extends ArrayAdapter<String> {
 		backgroundThread = new Thread(new Runnable() {
 
 			public void run() {
- 				thisList.initialize();
+				thisList.initialize();
 			}
 		});
 		backgroundThread.start();
@@ -228,10 +233,10 @@ public class CustomArrayAdapterFoodList extends ArrayAdapter<String> {
 
 	private void initialize() {
 		foodItemList = new ArrayList<DBFoodComparable>();
-		
+
 		DbAdapter dbHelper = new DbAdapter(callingContext);
 		dbHelper.open();
-		
+
 		Cursor cFoodList = dbHelper.fetchAllFood();
 		cFoodList.moveToFirst();
 		do {
@@ -248,17 +253,17 @@ public class CustomArrayAdapterFoodList extends ArrayAdapter<String> {
 							.getColumnIndexOrThrow(DbAdapter.DATABASE_FOOD_NAME)));
 			foodItemList.add(newFood);
 		} while (cFoodList.moveToNext());
-		
+
 		cFoodList.close();
 		dbHelper.close();
 
 		/*
-		 * Use the food comparator to sort the list of food on foodName and sort them like in excel
-		 * meaning 'jä' comes on same hight as 'ja'.
-		 * */
+		 * Use the food comparator to sort the list of food on foodName and sort
+		 * them like in excel meaning 'jï¿½' comes on same hight as 'ja'.
+		 */
 		FoodComparator comparator = new FoodComparator();
-		Collections.sort(foodItemList,comparator);
-		
+		Collections.sort(foodItemList, comparator);
+
 		if (callingContext != null) {
 			final Runnable runInUIThread = new Runnable() {
 

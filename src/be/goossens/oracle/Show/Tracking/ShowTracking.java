@@ -35,6 +35,7 @@ public class ShowTracking extends ListActivity {
 	protected void onResume() {
 		super.onResume();
 		dbHelper.open();
+
 		fillListView();
 	}
 
@@ -67,8 +68,17 @@ public class ShowTracking extends ListActivity {
 	// This method will fill the listTracking with all the data from the db
 	private void setListTracking() {
 		listTracking = new ArrayList<DBTracking>();
+
+		/*
+		 * select distinct timestamp from (select distinct
+		 * to_char(timestamp,'dd-mon-yyyy') from table UNION select distinct
+		 * to_char(timestamp,'dd-mon-yyyy') from table2 UNION select distinct
+		 * to_char(timestamp,'dd-mon-yyyy') from table3 )
+		 */  
+
 		Functions functions = new Functions();
-		// fill the list with all the exercise events
+		// fill the list with all the
+		// exercise events
 		Cursor cExerciseEvents = dbHelper.fetchAllExerciseEvents();
 		if (cExerciseEvents.getCount() > 0) {
 			cExerciseEvents.moveToFirst();
@@ -81,16 +91,12 @@ public class ShowTracking extends ListActivity {
 														.getColumnIndexOrThrow(DbAdapter.DATABASE_EXERCISEEVENT_ID)),
 										cExerciseEvents.getString(cExerciseEvents
 												.getColumnIndexOrThrow(DbAdapter.DATABASE_EXERCISEEVENT_DESCRIPTION)),
+										cExerciseEvents.getInt(cExerciseEvents
+												.getColumnIndexOrThrow(DbAdapter.DATABASE_EXERCISEEVENT_STARTTIME)),
+										cExerciseEvents.getInt(cExerciseEvents
+												.getColumnIndexOrThrow(DbAdapter.DATABASE_EXERCISEEVENT_STOPTIME)),
 										functions
-												.parseStringToDate(cExerciseEvents
-														.getString(cExerciseEvents
-																.getColumnIndexOrThrow(DbAdapter.DATABASE_EXERCISEEVENT_STARTTIME))),
-										functions
-												.parseStringToDate(cExerciseEvents
-														.getString(cExerciseEvents
-																.getColumnIndexOrThrow(DbAdapter.DATABASE_EXERCISEEVENT_STOPTIME))),
-										functions
-												.parseRealTimestampStringToDate(cExerciseEvents
+												.parseStringTimeStampToDate(cExerciseEvents
 														.getString(cExerciseEvents
 																.getColumnIndexOrThrow(DbAdapter.DATABASE_EXERCISEEVENT_TIMESTAMP))),
 										cExerciseEvents.getLong(cExerciseEvents
@@ -98,12 +104,13 @@ public class ShowTracking extends ListActivity {
 										cExerciseEvents.getLong(cExerciseEvents
 												.getColumnIndexOrThrow(DbAdapter.DATABASE_EXERCISEEVENT_USERID))),
 								functions
-										.parseRealTimestampStringToDate(cExerciseEvents.getString(cExerciseEvents
+										.parseStringTimeStampToDate(cExerciseEvents.getString(cExerciseEvents
 												.getColumnIndexOrThrow(DbAdapter.DATABASE_EXERCISEEVENT_TIMESTAMP))),
 								""));
 			} while (cExerciseEvents.moveToNext());
 		}
 		cExerciseEvents.close();
+
 	}
 
 	@Override
@@ -113,8 +120,7 @@ public class ShowTracking extends ListActivity {
 					this,
 					""
 							+ listTracking.get(position).getExerciseEvent()
-									.getDescription(), Toast.LENGTH_LONG)
-					.show();
+									.getTimeStamp(), Toast.LENGTH_LONG).show();
 		}
 	}
 

@@ -43,5 +43,5 @@ public class DataParser {
 	public static final String activityIDGlucose = "showGlucose";
 	public static final String activityIDMedicine = "showMedicine";
 	public static final String activityIDExercise = "showExercise";
-
+	public static final String activityIDSettings = "showSettings";
 }
