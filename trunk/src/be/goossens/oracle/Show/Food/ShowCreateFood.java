@@ -8,16 +8,20 @@ import android.app.Activity;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.view.KeyEvent;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemSelectedListener;
-import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TableRow;
 import android.widget.TextView;
 import android.widget.Toast;
 import be.goossens.oracle.R;
+import be.goossens.oracle.ActivityGroup.ActivityGroupMeal;
+import be.goossens.oracle.Custom.CustomArrayAdapterCharSequenceShowCreateFood;
 import be.goossens.oracle.Objects.DBValueOrder;
 import be.goossens.oracle.Rest.DbAdapter;
 import be.goossens.oracle.Rest.ValueOrderComparator;
@@ -26,7 +30,8 @@ public class ShowCreateFood extends Activity {
 	private EditText editTextfoodName;
 	private EditText editTextUnitStandardAmound;
 	private EditText editTextUnitName;
- 
+	private Button btAdd;
+
 	private List<TextView> tvList;
 	private List<EditText> etList;
 
@@ -40,7 +45,10 @@ public class ShowCreateFood extends Activity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.show_create_food);
+
+		View contentView = LayoutInflater.from(getParent()).inflate(
+				R.layout.show_create_food, null);
+		setContentView(contentView);
 
 		dbHelper = new DbAdapter(this);
 
@@ -52,6 +60,7 @@ public class ShowCreateFood extends Activity {
 		editTextfoodName = (EditText) findViewById(R.id.editTextFoodName);
 		editTextUnitStandardAmound = (EditText) findViewById(R.id.editTextFoodUnitStandardAmound);
 		editTextUnitName = (EditText) findViewById(R.id.editTextFoodUnitName);
+		btAdd = (Button) findViewById(R.id.buttonAdd);
 
 		tvList.add((TextView) findViewById(R.id.textViewShowCreateFood1));
 		tvList.add((TextView) findViewById(R.id.textViewShowCreateFood2));
@@ -74,6 +83,12 @@ public class ShowCreateFood extends Activity {
 			public void onNothingSelected(AdapterView<?> arg0) {
 				// TODO Auto-generated method stub
 
+			}
+		});
+ 
+		btAdd.setOnClickListener(new OnClickListener() {
+			public void onClick(View v) {
+				onClickAdd(v);
 			}
 		});
 	}
@@ -108,11 +123,22 @@ public class ShowCreateFood extends Activity {
 	}
 
 	private void fillSpinner() {
-		ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(
-				this, R.array.standard_food_units,
-				android.R.layout.simple_spinner_item);
+		CustomArrayAdapterCharSequenceShowCreateFood adapter = new CustomArrayAdapterCharSequenceShowCreateFood(
+				this,
+				R.layout.custom_spinner_array_adapter_charsequence_show_create_food,
+				getArrayList());
 		spinnerUnit.setAdapter(adapter);
 		adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+	}
+
+	private List<CharSequence> getArrayList() {
+		List<CharSequence> value = new ArrayList<CharSequence>();
+		String[] arr = getResources().getStringArray(
+				R.array.standard_food_units);
+		for (int i = 0; i < arr.length; i++) {
+			value.add(arr[i]);
+		}
+		return value;
 	}
 
 	@Override
@@ -148,7 +174,7 @@ public class ShowCreateFood extends Activity {
 				unitName = editTextUnitName.getText().toString();
 			}
 
-			//fill the right unit values
+			// fill the right unit values
 			for (int i = 0; i < listValueOrders.size(); i++) {
 				if (listValueOrders
 						.get(i)
@@ -200,9 +226,12 @@ public class ShowCreateFood extends Activity {
 			dbHelper.createFoodUnit(foodId, unitName, standardAmound, carbs,
 					prot, fat, kcal);
 
-			setResult(RESULT_OK);
-			finish();
-
+			// Go back to the previous screen
+			ActivityGroupMeal.group.back();
+			// refresh the food list
+			ActivityGroupMeal.group.refreshShowFoodList();
+			// refresh manage own food
+			ActivityGroupMeal.group.refreshShowManageOwnFood(1);
 		}
 	}
 
@@ -269,7 +298,7 @@ public class ShowCreateFood extends Activity {
 										.getColumnIndexOrThrow(DbAdapter.DATABASE_SETTINGS_VALUE)),
 						cSettingValueOrderProt.getString(cSettingValueOrderProt
 								.getColumnIndexOrThrow(DbAdapter.DATABASE_SETTINGS_NAME)),
-		 				getResources().getString(R.string.amound_of_protein)));
+						getResources().getString(R.string.amound_of_protein)));
 
 		listValueOrders
 				.add(new DBValueOrder(
@@ -308,7 +337,7 @@ public class ShowCreateFood extends Activity {
 		ValueOrderComparator comparator = new ValueOrderComparator();
 		Collections.sort(listValueOrders, comparator);
 	}
-	
+
 	@Override
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
 		if (event.getKeyCode() == KeyEvent.KEYCODE_BACK) {

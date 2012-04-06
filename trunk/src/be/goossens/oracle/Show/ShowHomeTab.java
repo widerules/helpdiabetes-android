@@ -1,27 +1,32 @@
 package be.goossens.oracle.Show;
 
 import android.app.TabActivity;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.KeyEvent;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.ImageView;
 import android.widget.TabHost;
-import android.widget.Toast;
+import android.widget.TabHost.TabContentFactory;
 import android.widget.TabHost.TabSpec;
+import android.widget.TextView;
+import android.widget.Toast;
 import be.goossens.oracle.R;
 import be.goossens.oracle.ActivityGroup.ActivityGroupExercise;
+import be.goossens.oracle.ActivityGroup.ActivityGroupGlucose;
 import be.goossens.oracle.ActivityGroup.ActivityGroupMeal;
+import be.goossens.oracle.ActivityGroup.ActivityGroupMedicine;
 import be.goossens.oracle.ActivityGroup.ActivityGroupTracking;
 import be.goossens.oracle.Rest.DataParser;
 import be.goossens.oracle.Rest.DbAdapter;
-import be.goossens.oracle.Show.Tracking.ShowTracking;
+import be.goossens.oracle.Show.Settings.ShowSettings;
 
 public class ShowHomeTab extends TabActivity {
 	private DbAdapter dbHelper;
-
-	private TabSpec spec1, spec2, spec3, spec4, spec5;
 	private TabHost tabHost;
-	
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -31,50 +36,64 @@ public class ShowHomeTab extends TabActivity {
 
 		tabHost = getTabHost();
 
-		spec1 = tabHost.newTabSpec("Tab tracking");
-		spec1.setIndicator("", getResources()
-				.getDrawable(R.drawable.notracking));
-		Intent in1 = new Intent(this, ActivityGroupTracking.class);
-		spec1.setContent(in1);
-
-		spec2 = tabHost.newTabSpec("Tab meal");
-		spec2.setIndicator("", getResources().getDrawable(R.drawable.nomeal));
-		Intent in2 = new Intent(this, ActivityGroupMeal.class);
-		spec2.setContent(in2);
-
-		spec3 = tabHost.newTabSpec("Tab exercise");
-		spec3.setIndicator("", getResources()
-				.getDrawable(R.drawable.noexercise));
-		Intent in3 = new Intent(this, ActivityGroupExercise.class);
-		spec3.setContent(in3);
-
-		spec4 = tabHost.newTabSpec("Tab glucose");
-		spec4.setIndicator("", getResources().getDrawable(R.drawable.noglucose));
-		Intent in4 = new Intent(this, ShowTracking.class);
-		spec4.setContent(in1);
-
-		spec5 = tabHost.newTabSpec("Tab medicine");
-		spec5.setIndicator("",
-				getResources().getDrawable(R.drawable.nomedicines));
-		Intent in5 = new Intent(this, ShowTracking.class);
-		spec5.setContent(in1);
-
-		tabHost.addTab(spec1);
-		tabHost.addTab(spec2);
-		tabHost.addTab(spec3);
-		tabHost.addTab(spec4);
-		tabHost.addTab(spec5);
+		Intent in = new Intent(this, ActivityGroupMeal.class);
+		setupTab(new TextView(this), DataParser.activityIDMeal,
+				R.drawable.ic_tab_meal, in);
+		in = new Intent(this, ActivityGroupTracking.class);
+		setupTab(new TextView(this), DataParser.activityIDTracking,
+				R.drawable.ic_tab_tracking, in);
+		in = new Intent(this, ActivityGroupExercise.class);
+		setupTab(new TextView(this), DataParser.activityIDExercise,
+				R.drawable.ic_tab_exercise, in);
+		in = new Intent(this, ActivityGroupGlucose.class);
+		setupTab(new TextView(this), DataParser.activityIDGlucose,
+				R.drawable.ic_tab_glucose, in);
+		in = new Intent(this, ActivityGroupMedicine.class);
+		setupTab(new TextView(this), DataParser.activityIDMedicine,
+				R.drawable.ic_tab_medicine, in);
+		in = new Intent(this, ShowSettings.class);
+		setupTab(new TextView(this), DataParser.activityIDSettings,
+				R.drawable.ic_tab_settings, in);
 	}
 
-	public void goToTab(int number){
-		tabHost.setCurrentTab(number);
+	private void setupTab(final View view, final String tag, final int image,
+			Intent in) {
+
+		View tabview = createTabView(tabHost.getContext(), image);
+
+		TabSpec spec = tabHost.newTabSpec(tag).setIndicator(tabview)
+				.setContent(new TabContentFactory() {
+					public View createTabContent(String tag) {
+						return view;
+					}
+				}).setContent(in);
+		tabHost.addTab(spec);
 	}
-	
-	@Override
-	public boolean onKeyDown(int keyCode, KeyEvent event) {
-		if (keyCode == KeyEvent.KEYCODE_BACK) {
-			return false;
+
+	public void goToTab(String tag) {
+		tabHost.setCurrentTabByTag(tag);
+		keyboardDissapear();
+	}
+
+	// let the keyboard dissapear
+	private void keyboardDissapear() {
+		try {
+			InputMethodManager inputManager = (InputMethodManager) this
+					.getSystemService(Context.INPUT_METHOD_SERVICE);
+			inputManager.hideSoftInputFromWindow(this.getCurrentFocus()
+					.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
+		} catch (Exception e) {
 		}
-		return true;
 	}
+
+	private static View createTabView(final Context context, final int image) {
+
+		View view = LayoutInflater.from(context)
+				.inflate(R.layout.tabs_bg, null);
+		ImageView iv = (ImageView) view.findViewById(R.id.imageViewTabs);
+		iv.setImageResource(image);
+		return view;
+
+	}
+
 }

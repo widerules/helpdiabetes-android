@@ -5,10 +5,10 @@
 <resources>
 
     <string-array name="settings_array">
-        <item>Maaltijd tijden aanpassen</item>
-        <item>Insuline ratio aanpassen</item>
-        <item>Volgorde hoeveelheden aanpassen</item>
-        <item>Tekst grootte lijsten aanpassen</item>
+        <item>Maaltijd tijden</item>
+        <item>Insuline ratio</item>
+        <item>Volgorde hoeveelheden</item>
+        <item>Tekst grootte lijsten</item>
     </string-array>
 
 </resources>

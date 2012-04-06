@@ -9,15 +9,21 @@ import android.database.Cursor;
 import android.os.Bundle;
 import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
+import android.view.KeyEvent;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.widget.AdapterView.AdapterContextMenuInfo;
+import android.widget.Button;
 import android.widget.ListView;
 import android.widget.Toast;
 import be.goossens.oracle.R;
+import be.goossens.oracle.ActivityGroup.ActivityGroupMeal;
 import be.goossens.oracle.Custom.CustomArrayAdapterDBFood;
 import be.goossens.oracle.Objects.DBFood;
+import be.goossens.oracle.Rest.DataParser;
 import be.goossens.oracle.Rest.DbAdapter;
 
 public class ShowManageOwnFood extends ListActivity {
@@ -28,17 +34,31 @@ public class ShowManageOwnFood extends ListActivity {
 
 	private List<DBFood> listFood;
 
+	private Button btCreateNewFood;
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.show_manage_own_food);
+		
+		View contentView = LayoutInflater.from(getParent()).inflate(
+				R.layout.show_manage_own_food, null);
+		setContentView(contentView);
+		
 		dbHelper = new DbAdapter(this);
-
+ 
+		btCreateNewFood = (Button)findViewById(R.id.buttonCreateNewFood);
+		
+		btCreateNewFood.setOnClickListener(new OnClickListener() {
+			public void onClick(View v) {
+				onClickCreateNewFood(v);
+			}
+		});
+		
 		registerForContextMenu(getListView());
 	}
 
 	@Override
-	protected void onResume() {
+	public void onResume() {
 		super.onResume();
 		dbHelper.open();
 		// fill the list of food
@@ -93,11 +113,10 @@ public class ShowManageOwnFood extends ListActivity {
 
 	@Override
 	protected void onListItemClick(ListView l, View v, int position, long id) {
-		super.onListItemClick(l, v, position, id);
-		Intent i = new Intent(this, ShowUpdateOwnFood.class);
-		i.putExtra(DbAdapter.DATABASE_FOOD_ID,
-				Long.parseLong("" + listFood.get(position).getId()));
-		startActivity(i);
+		Intent i = new Intent(this, ShowUpdateOwnFood.class).addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+		i.putExtra(DbAdapter.DATABASE_FOOD_ID, Long.parseLong("" + listFood.get(position).getId()));
+		View view = ActivityGroupMeal.group.getLocalActivityManager().startActivity(DataParser.activityIDMeal, i).getDecorView();
+		ActivityGroupMeal.group.setContentView(view);
 	}
 
 	@Override
@@ -205,8 +224,16 @@ public class ShowManageOwnFood extends ListActivity {
 
 	// if we press on create new food
 	public void onClickCreateNewFood(View view) {
-		// Go to new page to create new food
-		Intent i = new Intent(this, ShowCreateFood.class);
-		startActivity(i);
+		Intent i = new Intent(this, ShowCreateFood.class).addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+		View v = ActivityGroupMeal.group.getLocalActivityManager().startActivity(DataParser.activityIDMeal, i).getDecorView();
+		ActivityGroupMeal.group.setContentView(v);
+	}
+	
+	@Override
+	public boolean onKeyDown(int keyCode, KeyEvent event) { 
+		if (event.getKeyCode() == KeyEvent.KEYCODE_BACK) {
+			return false;
+		} 
+		return super.onKeyDown(keyCode, event);
 	}
 }

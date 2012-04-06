@@ -9,12 +9,14 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/settings"
-        android:textAppearance="?android:attr/textAppearanceMedium" />
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:textColor="@color/ColorText" />
 
     <TextView
         android:id="@+id/textViewShowSettingsUpdateMealTime"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:textColor="@color/ColorText" />
 
     <TimePicker
         android:id="@+id/timePickerShowSettingsUpdateMealTime"

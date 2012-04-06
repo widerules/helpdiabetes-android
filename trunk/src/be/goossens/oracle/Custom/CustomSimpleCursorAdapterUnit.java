@@ -23,6 +23,7 @@ public class CustomSimpleCursorAdapterUnit extends SimpleCursorAdapter {
 			int[] to) {
 		super(context, layout, c, from, to);
 		this.context = context;
+	
 	}
 		
 	//Override the view to set a differend text on the spinner
@@ -36,7 +37,7 @@ public class CustomSimpleCursorAdapterUnit extends SimpleCursorAdapter {
 		TextView tvText = (TextView) convertView.findViewById(android.R.id.text1);
 		//set the text on the spinner unitName
 		tvText.setText(cursor.getString(cursor.getColumnIndexOrThrow(DbAdapter.DATABASE_FOODUNIT_NAME)));
-		
+	
 		return convertView;
 	}
 	

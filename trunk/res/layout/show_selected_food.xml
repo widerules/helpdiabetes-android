@@ -3,20 +3,26 @@
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     android:orientation="vertical" >
-
+
+    <TextView
+        android:id="@+id/textView99"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content" />
+
     <TextView
         android:id="@+id/textViewTotalTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/total"
         android:textAppearance="?android:attr/textAppearanceMedium"
-        android:textColor="@color/colorFood" />
+        android:textColor="@color/ColorText" />
 
     <TextView
         android:id="@+id/textViewShowTotal"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceMedium" />
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:textColor="@color/ColorText" />
 
     <ListView
         android:id="@+android:id/list"
@@ -31,18 +37,16 @@
         android:layout_height="wrap_content" >
 
         <Button
-            android:id="@+id/button3"
+            android:id="@+id/buttonSaveAsTemplate"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="right"
-            android:onClick="onClickSaveAsTemplate"
             android:text="@string/save_as_template" />
 
         <Button
             android:id="@+id/buttonShowSelectedFoodButtonLoadTemplate"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:onClick="onClickLoadTemplate"
             android:text="@string/Load_template" />
     </LinearLayout>
 
@@ -52,13 +56,10 @@
         android:layout_height="wrap_content" >
 
         <Button
-            android:id="@+id/button1"
+            android:id="@+id/buttonDelete"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:onClick="onClickDeleteAll"
             android:text="@string/delete_all" />
-
-        
     </LinearLayout>
 
 </LinearLayout>

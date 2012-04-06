@@ -9,13 +9,15 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/settings"
-        android:textAppearance="?android:attr/textAppearanceMedium" />
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:textColor="@color/ColorText" />
 
     <TextView
         android:id="@+id/textView2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/pref_value_order" />
+        android:text="@string/pref_value_order"
+        android:textColor="@color/ColorText" />
 
     <LinearLayout
         android:id="@+id/linearLayout1"
@@ -31,22 +33,26 @@
                 android:id="@+id/radio0"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:checked="true" />
+                android:checked="true"
+                android:textColor="@color/ColorText" />
 
             <RadioButton
                 android:id="@+id/radio1"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"
+                android:textColor="@color/ColorText" />
 
             <RadioButton
                 android:id="@+id/radio2"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"
+                android:textColor="@color/ColorText" />
 
             <RadioButton
                 android:id="@+id/radio3"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"
+                android:textColor="@color/ColorText" />
         </RadioGroup>
 
         <LinearLayout

@@ -6,14 +6,14 @@ public class DBExerciseEvent {
 
 	private long id;
 	private String description;
-	private Date startTime;
-	private Date endTime;
+	private int startTime;
+	private int endTime;
 	private Date timeStamp;
 	private long exerciseTypeID;
 	private long userID;
 
-	public DBExerciseEvent(long id, String description, Date startTime,
-			Date endTime, Date timeStamp, long exerciseTypeID, long userID) {
+	public DBExerciseEvent(long id, String description, int startTime,
+			int endTime, Date timeStamp, long exerciseTypeID, long userID) {
 		super();
 		this.id = id;
 		this.description = description;
@@ -40,19 +40,19 @@ public class DBExerciseEvent {
 		this.description = description;
 	}
 
-	public Date getStartTime() {
+	public int getStartTime() {
 		return startTime;
 	}
 
-	public void setStartTime(Date startTime) {
+	public void setStartTime(int startTime) {
 		this.startTime = startTime;
 	}
 
-	public Date getEndTime() {
+	public int getEndTime() {
 		return endTime;
 	}
 
-	public void setEndTime(Date endTime) {
+	public void setEndTime(int endTime) {
 		this.endTime = endTime;
 	}
 

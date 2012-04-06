@@ -8,13 +8,8 @@
     <TextView
         android:id="@+id/textViewCustomBaseAdapter"
         android:layout_width="fill_parent"
-        android:layout_height="wrap_content" >
-    </TextView>
-    
-    <TextView
-        android:id="@+id/textViewCustomBaseAdapterTwo"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content" >
+        android:layout_height="wrap_content"
+        android:textColor="@color/ColorText" >
     </TextView>
 
 </LinearLayout>

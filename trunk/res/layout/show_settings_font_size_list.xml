@@ -8,13 +8,15 @@
         android:id="@+id/textView2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/settings" />
+        android:text="@string/settings"
+        android:textColor="@color/ColorText" />
 
     <TextView
         android:id="@+id/textView1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/pref_text_size" />
+        android:text="@string/pref_text_size"
+        android:textColor="@color/ColorText" />
 
     <LinearLayout
         android:id="@+id/linearLayout1"
@@ -25,7 +27,8 @@
             android:id="@+id/textViewShowSettingsFontSizeListTextSize"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/fontSize" />
+            android:text="@string/fontSize"
+            android:textColor="@color/ColorText" />
 
         <Button
             android:id="@+id/button1"

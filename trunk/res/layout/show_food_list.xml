@@ -4,16 +4,15 @@
     android:layout_height="fill_parent"
     android:orientation="vertical" >
 
+    <TextView
+        android:id="@+id/textView99"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content" />
+
     <LinearLayout
         android:id="@+id/linearLayout1"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content" >
-
-        <TextView
-            android:id="@+id/textView1"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/search" />
 
         <EditText
             android:id="@+id/editTextSearch"
@@ -21,30 +20,18 @@
             android:layout_height="wrap_content"
             android:layout_weight="1.0"
             android:inputType="text" >
-
-            <requestFocus />
         </EditText>
-    </LinearLayout>
-
-    <LinearLayout
-        android:id="@+id/linearLayout2"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content" >
 
         <Button
             android:id="@+id/buttonShowFoodListShowCreateFood"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:drawableLeft="@android:drawable/ic_input_add"
-            android:gravity="left|center_vertical"
-            android:onClick="onClickCreateNewFood"
-            android:text="@string/create_new_food" />
+            android:drawableLeft="@android:drawable/ic_input_add" />
 
         <Button
             android:id="@+id/buttonShowFoodListShowSelectedFood"
-            android:layout_width="fill_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:onClick="onClickShowSelectedFood"
             android:text="@string/showFoodListButtonSelections" />
     </LinearLayout>
 
@@ -52,20 +39,17 @@
         android:id="@+android:id/list"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
+        android:cacheColorHint="#00000000"
         android:fastScrollEnabled="true" >
     </ListView>
 
     <TextView
         android:id="@+id/textView2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_gravity="center"
         android:text="@string/getting_food"
-        android:textAppearance="?android:attr/textAppearanceLarge" />
-
-    <ProgressBar
-        android:id="@+id/progressBar1"
-        style="?android:attr/progressBarStyleLarge"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:textColor="@color/ColorText" />
 
 </LinearLayout>

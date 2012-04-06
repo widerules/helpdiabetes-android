@@ -10,10 +10,14 @@ import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.KeyEvent;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
+import android.view.View.OnClickListener;
+import android.view.View.OnTouchListener;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
@@ -34,6 +38,8 @@ public class ShowFoodList extends ListActivity {
 
 	private CustomArrayAdapterFoodList fooditemlist;
 
+	private Button btCreateFood, btSelections;
+
 	/*
 	 * This is used to know if we need to show the pop up to delete selected
 	 * food without this boolean the pop up would spawn every time we come back
@@ -41,24 +47,24 @@ public class ShowFoodList extends ListActivity {
 	 */
 	private boolean startUp;
 
-	private static final int MANAGE_OWN_FOOD_ID = 1;
-	private static final int CREATE_OWN_FOOD = 2;
-	private static final int SETTING_SCREEN = 3;
-
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.show_food_list);
+
+		View contentView = LayoutInflater.from(getParent()).inflate(
+				R.layout.show_food_list, null);
+		setContentView(contentView);
+
 		startUp = true;
 		fooditemlist = null;
 
 		editTextSearch = (EditText) findViewById(R.id.editTextSearch);
+		btCreateFood = (Button) findViewById(R.id.buttonShowFoodListShowCreateFood);
+		btSelections = (Button) findViewById(R.id.buttonShowFoodListShowSelectedFood);
+
 		dbHelper = new DbAdapter(this);
 
-		// This is used to update the listview when the text in the search boxs
-		// changes
 		editTextSearch.addTextChangedListener(new TextWatcher() {
-
 			public void onTextChanged(CharSequence s, int start, int before,
 					int count) {
 				setSelection(fooditemlist.getFirstMatchingItem(s));
@@ -72,6 +78,18 @@ public class ShowFoodList extends ListActivity {
 			}
 		});
 
+		btCreateFood.setOnClickListener(new OnClickListener() {
+			public void onClick(View v) {
+				onClickCreateNewFood(v);
+			}
+		});
+
+		btSelections.setOnClickListener(new OnClickListener() {
+			public void onClick(View v) {
+				onClickShowSelectedFood(v);
+			}
+		});
+
 		if (fooditemlist == null) {
 			updateListAdapter();
 		} else {
@@ -80,7 +98,7 @@ public class ShowFoodList extends ListActivity {
 					.getText()));
 		}
 	}
-
+    
 	public void onClickCreateNewFood(View view) {
 		// Go to new page to create new food
 		Intent i = new Intent(this, ShowCreateFood.class)
@@ -88,7 +106,6 @@ public class ShowFoodList extends ListActivity {
 		View v = ActivityGroupMeal.group.getLocalActivityManager()
 				.startActivity(DataParser.activityIDMeal, i).getDecorView();
 		ActivityGroupMeal.group.setContentView(v);
-		// startActivityForResult(i, CREATE_OWN_FOOD);
 	}
 
 	private void updateListAdapter() {
@@ -107,7 +124,8 @@ public class ShowFoodList extends ListActivity {
 		setListAdapter(fooditemlist);
 	}
 
-	private void updateButton() {
+	public void updateButton() {
+		dbHelper.open();
 		Cursor selectedFood = dbHelper.fetchAllSelectedFood();
 		startManagingCursor(selectedFood);
 
@@ -149,16 +167,20 @@ public class ShowFoodList extends ListActivity {
 	}
 
 	@Override
-	protected void onResume() {
+	public void onResume() {
 		super.onResume();
 		dbHelper.open();
-
-		// every time we resume make the search box empty so the user dont have
-		// to press delete search box every time he adds a selection
-		editTextSearch.setText("");
+		updateListAdapter();
+		clearEditTextSearch();
 		updateButton();
 		if (startUp)
 			checkToShowPopUpToDeleteSelectedFood();
+	}
+
+	public void clearEditTextSearch() {
+		// every time we resume make the search box empty so the user dont have
+		// to press delete search box every time he adds a selection
+		editTextSearch.setText("");
 	}
 
 	private void checkToShowPopUpToDeleteSelectedFood() {
@@ -209,20 +231,26 @@ public class ShowFoodList extends ListActivity {
 		switch (item.getItemId()) {
 		// if we press in the menu on update own food
 		case R.id.menuManageOwnFood:
-			i = new Intent(this, ShowManageOwnFood.class);
-			startActivityForResult(i, MANAGE_OWN_FOOD_ID);
+			i = new Intent(this, ShowManageOwnFood.class)
+					.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+			View v = ActivityGroupMeal.group.getLocalActivityManager()
+					.startActivity(DataParser.activityIDMeal, i).getDecorView();
+			ActivityGroupMeal.group.setContentView(v);
 			break;
 		}
 		return true;
 	}
-	
+
 	public void onClickShowSelectedFood(View view) {
 		goToPageSelectedFood();
 	}
 
 	public void goToPageSelectedFood() {
-		Intent i = new Intent(this, ShowSelectedFood.class);
-		startActivity(i);
+		Intent i = new Intent(this, ShowSelectedFood.class)
+				.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+		View v = ActivityGroupMeal.group.getLocalActivityManager()
+				.startActivity(DataParser.activityIDMeal, i).getDecorView();
+		ActivityGroupMeal.group.setContentView(v);
 	}
 
 	@Override

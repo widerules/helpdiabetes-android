@@ -15,6 +15,7 @@ import android.os.Bundle;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.Button;
@@ -36,7 +37,7 @@ public class ShowAddFoodToSelection extends Activity {
 	private TextView textViewSelectedFood;
 	private EditText editTextFoodAmound;
 	private Spinner spinnerFoodUnits;
-	private Button buttonAddOrUpdate;
+	private Button buttonAddOrUpdate,buttonDeleteSelectedFood;
 
 	// The table textview
 	private TextView textViewRowOneFieldOne, textViewRowOneFieldTwo,
@@ -45,10 +46,6 @@ public class ShowAddFoodToSelection extends Activity {
 	// To store the selected food in
 	private Cursor foodCursor;
 	private SimpleCursorAdapter adapter;
-
-	// The button to delete the food from selection when we come from
-	// ShowSelectedFood page
-	private Button buttonDeleteSelectedFood;
 
 	// this boolean is needed to not set "" or standardamount in the
 	// editTextFoodAmound on start if we come from showSelectedFood
@@ -68,10 +65,11 @@ public class ShowAddFoodToSelection extends Activity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		//View contentView = LayoutInflater.from(getParent()).inflate(R.layout.show_add_food, null);
-		//setContentView(contentView);
-		setContentView(R.layout.show_add_food);
-		
+
+		View contentView = LayoutInflater.from(getParent()).inflate(
+				R.layout.show_add_food, null);
+		setContentView(contentView);
+
 		dbHelper = new DbAdapter(this);
 
 		setStandardAmount = true;
@@ -86,7 +84,7 @@ public class ShowAddFoodToSelection extends Activity {
 		spinnerFoodUnits = (Spinner) findViewById(R.id.spinnerFoodUnit);
 		buttonAddOrUpdate = (Button) findViewById(R.id.buttonAddOrUpdate);
 		buttonDeleteSelectedFood = (Button) findViewById(R.id.buttonShowAddFoodDelete);
-
+		
 		// fill the listTextViewColumn ONE
 		listTextViewColumnOne
 				.add((TextView) findViewById(R.id.textViewShowAddFoodRowTwoFieldOne));
@@ -146,6 +144,19 @@ public class ShowAddFoodToSelection extends Activity {
 
 					}
 				});
+
+		// set on click listener for buttonAddOrUpdate
+		buttonAddOrUpdate.setOnClickListener(new OnClickListener() {
+			public void onClick(View v) {
+				onClickButtonAddFood(v);
+			}
+		});
+		
+		buttonDeleteSelectedFood.setOnClickListener(new OnClickListener() {
+			public void onClick(View v) {
+				onClickDeleteFoodFromSelection(v);
+			}
+		});
 	}
 
 	// This will handle the editTextFoodAmunt
@@ -164,6 +175,9 @@ public class ShowAddFoodToSelection extends Activity {
 
 	@Override
 	protected void onResume() {
+		// clear the editTextSearch from showFoodList
+		ActivityGroupMeal.group.refreshShowFoodListEditTextSearch();
+
 		super.onResume();
 
 		dbHelper.open();
@@ -233,7 +247,8 @@ public class ShowAddFoodToSelection extends Activity {
 	public void onClickDeleteFoodFromSelection(View view) {
 		dbHelper.deleteSelectedFood(getIntent().getExtras().getLong(
 				DataParser.idSelectedFood));
-		finish();
+
+		ActivityGroupMeal.group.back();
 	}
 
 	/*
@@ -470,17 +485,17 @@ public class ShowAddFoodToSelection extends Activity {
 	}
 
 	private void fillData() {
-		
+
 		adapter = new SimpleCursorAdapter(this,
-				android.R.layout.simple_spinner_item, 
+				android.R.layout.simple_spinner_item,
 				dbHelper.fetchFoodUnitByFoodId(getIntent().getExtras().getLong(
 						DataParser.idFood)),
 				new String[] { DbAdapter.DATABASE_FOODUNIT_NAME },
 				new int[] { android.R.id.text1 });
 
 		spinnerFoodUnits.setAdapter(adapter);
-				
-		//adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+
+		adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 
 	}
 
@@ -490,7 +505,7 @@ public class ShowAddFoodToSelection extends Activity {
 				.getSelectedItemId());
 
 		startManagingCursor(cSelectedFoodUnit);
- 
+
 		// check if we need to udpate or add new selectedFood
 		// if we come from showSelectedFood we have to update the selectedFood
 		if (getIntent().getExtras().getString(DataParser.fromWhereWeCome)
@@ -522,6 +537,10 @@ public class ShowAddFoodToSelection extends Activity {
 		}
 
 		ActivityGroupMeal.group.back();
+		//refresh the page show selected food
+		ActivityGroupMeal.group.refreshShowSelectedFood(1);
+		//refresh button from show food list
+		ActivityGroupMeal.group.refreshShowFoodListButtonSelections();
 	}
 
 	@Override
@@ -607,9 +626,6 @@ public class ShowAddFoodToSelection extends Activity {
 
 	@Override
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
-		if (event.getKeyCode() == KeyEvent.KEYCODE_BACK) {
-			return false;
-		}
-		return super.onKeyDown(keyCode, event);
+		return false;
 	}
 }

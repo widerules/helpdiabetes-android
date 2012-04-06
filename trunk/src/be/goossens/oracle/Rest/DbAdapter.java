@@ -225,13 +225,13 @@ public class DbAdapter extends SQLiteOpenHelper {
 
 	// Exercise Event Funtions
 	// create
-	public long createExerciseEvent(String description, String startTime,
-			String stopTime, Date timeStamp, long exerciseTypeID) {
+	public long createExerciseEvent(String description, int startTime,
+			int stopTime, String timeStamp, long exerciseTypeID) {
 		ContentValues initialValues = new ContentValues();
 		initialValues.put(DATABASE_EXERCISEEVENT_DESCRIPTION, description);
 		initialValues.put(DATABASE_EXERCISEEVENT_STARTTIME,
-				startTime.toString());
-		initialValues.put(DATABASE_EXERCISEEVENT_STOPTIME, stopTime.toString());
+				startTime);
+		initialValues.put(DATABASE_EXERCISEEVENT_STOPTIME, stopTime);
 		initialValues.put(DATABASE_EXERCISEEVENT_TIMESTAMP,
 				timeStamp.toString());
 		initialValues

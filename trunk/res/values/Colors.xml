@@ -5,5 +5,11 @@
     <color name="colorInsuline">#FFFF00</color>
     <color name="colorFood">#00FFFF</color>
     <color name="colorTracking">#FFF</color>
+    <color name="ColorListViewOne">#D0DDEF</color>
+    <color name="ColorListViewTwo">#EEF3F9</color>
+    <color name="ColorListViewTextViewTextColor">#000</color>
+    <color name="ColorHelpDiabetesBlue">#5C89C7</color>
+    <color name="ColorHelpDiabetesBlueDarker">#1E2B3F</color>
+    <color name="ColorText">#000</color>
     
 </resources>
