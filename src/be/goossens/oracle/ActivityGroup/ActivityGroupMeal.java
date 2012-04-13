@@ -15,10 +15,10 @@ import be.goossens.oracle.Show.Food.ShowFoodList;
 import be.goossens.oracle.Show.Food.ShowManageOwnFood;
 import be.goossens.oracle.Show.Food.ShowSelectedFood;
 import be.goossens.oracle.Show.Food.ShowUpdateOwnFood;
-
+ 
 public class ActivityGroupMeal extends ActivityGroup {
 
-	// keep this in a static variable to make it accessible for all the nesten
+	// keep this in a static variable to make it accessible
 	// activities, let them manipulate the view
 	public static ActivityGroupMeal group;
 
@@ -88,7 +88,7 @@ public class ActivityGroupMeal extends ActivityGroup {
 		} catch (Exception e) {
 			if (history.size() >= 0)
 				super.setContentView(history.get(0));
-		}
+		} 
 	}
 
 	@Override
@@ -110,11 +110,11 @@ public class ActivityGroupMeal extends ActivityGroup {
 		try {
 			View v = history.get(0);
 			ShowFoodList currentActivity = (ShowFoodList) v.getContext();
-			currentActivity.onResume();
+			currentActivity.refreshFoodList();
 		} catch (Exception e) {
 		}
 	}
-
+ 
 	// show food list update button only!
 	public void refreshShowFoodListButtonSelections() {
 		try {

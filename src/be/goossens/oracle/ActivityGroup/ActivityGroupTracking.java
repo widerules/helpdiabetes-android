@@ -3,7 +3,6 @@ package be.goossens.oracle.ActivityGroup;
 import java.util.ArrayList;
 
 import be.goossens.oracle.Rest.DataParser;
-import be.goossens.oracle.Show.Exercise.ShowAddExerciseEvent;
 import be.goossens.oracle.Show.Tracking.ShowTracking;
 import android.app.ActivityGroup;
 import android.content.Context;

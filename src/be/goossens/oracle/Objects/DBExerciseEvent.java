@@ -1,6 +1,5 @@
 package be.goossens.oracle.Objects;
 
-import java.util.Date;
 
 public class DBExerciseEvent {
 
@@ -8,12 +7,12 @@ public class DBExerciseEvent {
 	private String description;
 	private int startTime;
 	private int endTime;
-	private Date timeStamp;
+	private String timeStamp;
 	private long exerciseTypeID;
 	private long userID;
 
 	public DBExerciseEvent(long id, String description, int startTime,
-			int endTime, Date timeStamp, long exerciseTypeID, long userID) {
+			int endTime, String timeStamp, long exerciseTypeID, long userID) {
 		super();
 		this.id = id;
 		this.description = description;
@@ -56,11 +55,11 @@ public class DBExerciseEvent {
 		this.endTime = endTime;
 	}
 
-	public Date getTimeStamp() {
+	public String getTimeStamp() {
 		return timeStamp;
 	}
 
-	public void setTimeStamp(Date timeStamp) {
+	public void setTimeStamp(String timeStamp) {
 		this.timeStamp = timeStamp;
 	}
 

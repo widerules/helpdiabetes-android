@@ -4,7 +4,7 @@
     <!--
     This file is needed to get the required values from the setting table in the database
     
-    Every string in here can be found in the database settings.name
+    Every string in here can be found in the database settings.name
     -->
 
 
@@ -28,5 +28,8 @@
 
     <!-- Font size settings -->
     <string name="font_size">fontSize</string>
+
+    <!-- Language -->
+    <string name="language">language</string>
 
 </resources>

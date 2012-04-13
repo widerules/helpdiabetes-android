@@ -21,7 +21,7 @@ public class CustomArrayAdapterCharSequenceSettings extends ArrayAdapter<CharSeq
 		super(context, textViewResourceId, objects);
 		this.ctx = context;
 		this.items = objects;
-	} 
+	}  
    
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {

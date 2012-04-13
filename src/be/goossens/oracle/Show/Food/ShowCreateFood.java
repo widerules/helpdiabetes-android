@@ -31,7 +31,7 @@ public class ShowCreateFood extends Activity {
 	private EditText editTextUnitStandardAmound;
 	private EditText editTextUnitName;
 	private Button btAdd;
-
+ 
 	private List<TextView> tvList;
 	private List<EditText> etList;
 

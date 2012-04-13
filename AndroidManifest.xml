@@ -37,28 +37,41 @@
         </activity>
         <activity android:name=".Show.Settings.ShowSettingsFontSizeLists" >
         </activity>
-        <activity android:name=".Show.Exercise.ShowExerciseEvents" >
-        </activity>
         <activity android:name=".Show.Exercise.ShowAddExerciseEvent" >
         </activity>
         <activity android:name=".Show.Exercise.ShowAddExerciseType" >
         </activity>
         <activity android:name=".Show.Exercise.ShowExerciseTypes" >
         </activity>
-        <activity android:name=".Show.Tracking.ShowTracking"></activity>
-        <activity android:name=".Show.ShowHomeTab" android:theme="@android:style/Theme.NoTitleBar">
+        <activity android:name=".Show.Tracking.ShowTracking" >
+        </activity>
+        <activity android:name=".Show.ShowHomeTab" >
+        </activity>
+        <activity android:name=".ActivityGroup.ActivityGroupTracking" >
+        </activity>
+        <activity android:name=".ActivityGroup.ActivityGroupMeal" >
+        </activity>
+        <activity android:name=".ActivityGroup.ActivityGroupExercise" >
+        </activity>
+        <activity android:name=".ActivityGroup.ActivityGroupGlucose" >
+        </activity>
+        <activity android:name=".ActivityGroup.ActivityGroupMedicine" >
+        </activity>
+        <activity android:name=".ActivityGroup.ActivityGroupSettings" >
+        </activity>
+        <activity android:name=".Show.Glucose.ShowAddGlucose" >
+        </activity>
+        <activity android:name=".Show.ShowSelectLanguage" >
+        </activity>
+        <activity
+            android:name=".Show.ShowStart"
+            android:theme="@android:style/Theme.NoTitleBar" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".ActivityGroup.ActivityGroupTracking">
-        </activity>
-        <activity android:name=".ActivityGroup.ActivityGroupMeal"></activity>
-        <activity android:name=".ActivityGroup.ActivityGroupExercise"></activity>
-        <activity android:name=".ActivityGroup.ActivityGroupGlucose"></activity>
-        <activity android:name=".ActivityGroup.ActivityGroupMedicine"></activity>
     </application>
 
 </manifest>

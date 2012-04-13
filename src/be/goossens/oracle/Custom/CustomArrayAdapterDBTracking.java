@@ -23,7 +23,7 @@ public class CustomArrayAdapterDBTracking extends ArrayAdapter<DBTracking> {
 		this.fontSize = fontSize;
 		this.objects = objects;
 	}
- 
+
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
 		View v = convertView;
@@ -34,38 +34,29 @@ public class CustomArrayAdapterDBTracking extends ArrayAdapter<DBTracking> {
 		}
 		TextView tt = (TextView) v.findViewById(R.id.text1);
 
+		// if norecors != "" then
 		if (!objects.get(position).getNoRecors().equals("")) {
 			tt.setText(objects.get(position).getNoRecors());
 		} else {
-			String date = "";
-
-			// add date if last date is not same as this date
-			if (position != 0) {
-				if ((objects.get(position).getTimestamp().getDay() != objects
-						.get(position - 1).getTimestamp().getDay())
-						|| (objects.get(position).getTimestamp().getMonth() != objects
-								.get(position - 1).getTimestamp().getMonth())
-						|| (objects.get(position).getTimestamp().getYear() != objects
-								.get(position - 1).getTimestamp().getYear())) {
-					date = (objects.get(position).getTimestamp().getDay() + "-"
-							+ objects.get(position).getTimestamp().getMonth()
-							+ "-" + objects.get(position).getTimestamp()
-							.getYear() + " \n");
-				}
+			// if the timestamp != 0 then we have to display the date in the
+			// record
+			if (objects.get(position).getTimestamp() != null) {
+				tt.setText(android.text.format.DateFormat
+						.getDateFormat(context).format(
+								objects.get(position).getTimestamp()));
 			} else {
-				date = (objects.get(position).getTimestamp().getDay() + "-"
-						+ objects.get(position).getTimestamp().getMonth() + "-" + objects
-						.get(position).getTimestamp().getYear() + " \n");
+				// if the exercise event != null we have to display the exercise
+				// event
+				if (objects.get(position).getExerciseEvent() != null) {
+					tt.setText("'E' "
+							+ objects.get(position).getExerciseEvent()
+									.getDescription());
+				} else if (objects.get(position).getMealEvent() != null) {
+					tt.setText("'M' " + objects.get(position).getMealEvent().getCalculatedInsulineAmount() + " insuline eenheden");
+				} else {
+					tt.setText("record");
+				}
 			}
-
-			String text = "";
-
-			if (objects.get(position).getExerciseEvent() != null) {
-				text = "Exercise: " + (objects.get(position).getExerciseEvent()
-						.getDescription());
-			}
-
-			tt.setText(date + text);
 
 		}
 

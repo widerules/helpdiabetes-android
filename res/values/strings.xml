@@ -9,9 +9,11 @@
     <string name="delete_all">Wis alles</string>
     <string name="yes">Ja</string>
     <string name="no">Nee</string>
-
-    <!-- ShowHome -->
-    <string name="showHomeWelcome">Wat wilt u doen?</string>
+    <string name="btup">+</string>
+    <string name="btdown">-</string>
+    
+    <!-- ShowStart -->
+    <string name="loadingRecords">laden van gegevens</string>
     
     <!-- ShowTracking -->
     <string name="showTracking">Rapporten</string>
@@ -21,7 +23,8 @@
     <string name="showSelectedFoodPopupAddAmountToTemplate">Wilt u de aantallen mee bewaren?</string>
     <string name="showSelectedFoodUnitsInsuline">eenheden insuline</string>
     <string name="showSelectedFoodUInsulineRatio">Insuline ratio</string>
-
+	<string name="showSelectedFoodEatSelectedFood">toevoegen aan rapport</string>
+    
     <!-- ShowFoodList -->
     <string name="showFoodListButtonSelections">Selecties</string>
 
@@ -73,7 +76,7 @@
     <string name="selected_food_aint_added">Geselecteerd eten niet toegevoegd</string>
     <string name="value_amount_cant_be_zero">waarde aantal mag niet 0 zijn</string>
     <string name="settings">Instellingen</string>
-    <string name="update_own_food">Eigen eten updaten</string>
+    <string name="update_own_food">Eigen eten daten</string>
     <string name="create_new_food">eten</string>
     <string name="food_name">Naam eten</string>
     <string name="part">stuk</string>
@@ -86,7 +89,7 @@
     <string name="prot_is_required">eiwit mag niet leeg zijn</string>
     <string name="carbs_is_required">koolhydraten mag niet leeg zijn</string>
     <string name="fat_is_required">Vet mag niet leeg zijn</string>
-    <string name="food_name_succesfull_updated">Eten naam is succesvol aangepast</string>
+    <string name="food_name_succesfull_dated">Eten naam is succesvol aangepast</string>
     <string name="add_unit">Hoeveelheid toevoegen</string>
     <string name="units">Hoeveelheden</string>
     <string name="unit">Hoeveelheid</string>
@@ -104,6 +107,9 @@
     <string name="save">Opslaan</string>
     <string name="cancel">Annuleren</string>
 
+    <!-- Slider -->
+    <string name="dateSliderTitle">Geselecteerde datum</string>
+    
     <!-- Settings strings -->
     <string name="pref_insuline_ratio">Insuline ratio aanpassen</string>
     <string name="pref_meal_times">Maaltijd tijden aanpassen</string>

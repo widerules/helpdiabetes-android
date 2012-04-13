@@ -1,10 +1,12 @@
 package be.goossens.oracle.Show.Settings;
 
 import be.goossens.oracle.R;
+import be.goossens.oracle.ActivityGroup.ActivityGroupSettings;
 import be.goossens.oracle.Rest.DbAdapter;
 import android.app.Activity;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.view.KeyEvent;
 import android.view.View;
 import android.widget.EditText;
 
@@ -110,12 +112,21 @@ public class ShowSettingsInsulineRatio extends Activity {
 			dbHelper.updateSettingsByName(getResources().getString(R.string.insuline_ratio_snack), "" + snackRatio);
 			dbHelper.updateSettingsByName(getResources().getString(R.string.insuline_ratio_dinner), "" + dinnerRatio);
 			 
-			finish();
+			// go back
+			ActivityGroupSettings.group.back();
 	}
 	
 	@Override
 	protected void onPause() {
 		dbHelper.close();
 		super.onPause();
+	}
+	
+	@Override
+	public boolean onKeyDown(int keyCode, KeyEvent event) {
+		if (event.getKeyCode() == KeyEvent.KEYCODE_BACK) {
+			return false;
+		}
+		return super.onKeyDown(keyCode, event);
 	}
 }

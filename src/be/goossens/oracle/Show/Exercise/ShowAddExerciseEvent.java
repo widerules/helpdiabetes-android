@@ -1,8 +1,13 @@
 package be.goossens.oracle.Show.Exercise;
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 
 import android.app.Activity;
+import android.app.Dialog;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
@@ -20,21 +25,25 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 import be.goossens.oracle.R;
+import be.goossens.oracle.ActivityGroup.ActivityGroupExercise;
 import be.goossens.oracle.Rest.DataParser;
 import be.goossens.oracle.Rest.DbAdapter;
-import be.goossens.oracle.Rest.Functions;
 import be.goossens.oracle.Show.ShowHomeTab;
+import be.goossens.oracle.slider.DateSlider;
+import be.goossens.oracle.slider.DateTimeSlider;
+import be.goossens.oracle.slider.TimeLabeler;
+
+
 
 public class ShowAddExerciseEvent extends Activity {
 	// private TimePicker startTime, endTime;
 	private Spinner spinnerExerciseTypes, spinnerDuration;
-	private EditText etDescription, etHour, etMinute;
-	private Button btAdd, btDelete, btHourUp, btHourDown, btMinuteUp,
-			btMinuteDown;
+	private EditText etDescription;
+	private Button btAdd, btDelete, btUpdateDateAndHour;
 	private TextView tvDate;
 	private DbAdapter dbHelper;
-
 	private static final int requestCodeAddExerciseType = 1;
+	private Calendar mCalendar;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -47,173 +56,70 @@ public class ShowAddExerciseEvent extends Activity {
 		spinnerExerciseTypes = (Spinner) findViewById(R.id.spinnerSportType);
 		spinnerDuration = (Spinner) findViewById(R.id.spinnerDuration);
 		etDescription = (EditText) findViewById(R.id.editText1);
-		etHour = (EditText) findViewById(R.id.editTextHour);
-		etMinute = (EditText) findViewById(R.id.editTextMinute);
-		btHourUp = (Button) findViewById(R.id.buttonHourUp);
-		btHourDown = (Button) findViewById(R.id.buttonHourDown);
-		btMinuteUp = (Button) findViewById(R.id.buttonMinuteUp);
-		btMinuteDown = (Button) findViewById(R.id.buttonMinuteDown);
+
 		btAdd = (Button) findViewById(R.id.buttonAdd);
 		btDelete = (Button) findViewById(R.id.buttonDelete);
+		btUpdateDateAndHour = (Button) findViewById(R.id.buttonUpdateDateAndHour);
+
 		tvDate = (TextView) findViewById(R.id.textViewDate);
 
 		btDelete.setVisibility(View.GONE);
 
-		Date date = new Date();
+		// create a new date with current date and hour
+		mCalendar = Calendar.getInstance();
 
-		// The year + 1900 is becaus date.getYear returns current year -
-		// 1900....
-
-		// The day and month + 1 becaus it starts counting from 0 ....
-		tvDate.setText((new Date().getDay() + 1) + "-"
-				+ (new Date().getMonth() + 1) + "-"
-				+ (new Date().getYear() + 1900));
-		btHourUp.setText(" " + getResources().getString(R.string.time_up) + " ");
-		btMinuteUp.setText(" " + getResources().getString(R.string.time_up)
-				+ " ");
-		btHourDown.setText(" " + getResources().getString(R.string.time_down)
-				+ " ");
-		btMinuteDown.setText(" " + getResources().getString(R.string.time_down)
-				+ " ");
-
-		if (date.getHours() < 10)
-			etHour.setText("0" + date.getHours());
-		else
-			etHour.setText("" + date.getHours());
-
-		if (date.getMinutes() < 10)
-			etMinute.setText("0" + date.getMinutes());
-		else
-			etMinute.setText("" + date.getMinutes());
+		updateTimeAndTimeTextView(Calendar.getInstance());
 
 		btAdd.setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
 				onClickAdd(v);
 			}
 		});
-
-		btHourUp.setOnClickListener(new OnClickListener() {
-
+  
+		btUpdateDateAndHour.setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
-				onClickHourUp();
+				showDialog(0);
 			}
 		});
-
-		btHourDown.setOnClickListener(new OnClickListener() {
-
-			public void onClick(View v) {
-				onClickHourDown();
-			}
-		});
-
-		btMinuteUp.setOnClickListener(new OnClickListener() {
-
-			public void onClick(View v) {
-				onClickMinuteUp();
-			}
-		});
-
-		btMinuteDown.setOnClickListener(new OnClickListener() {
-
-			public void onClick(View v) {
-				onClickMinuteDown();
-			}
-		});
+	} 
+	
+	private void updateTimeAndTimeTextView(Calendar selectedDate) {
+		//set the local variable = the given variable
+		mCalendar = selectedDate;
+		
+		// update the dateText view with the corresponding date
+		int minute = selectedDate.get(Calendar.MINUTE)
+				/ TimeLabeler.MINUTEINTERVAL * TimeLabeler.MINUTEINTERVAL;
+		tvDate.setText(String.format( 
+				"%te. %tB %tY%n%tH:%02d",
+				selectedDate, selectedDate, selectedDate, selectedDate, minute));
+	}
+	
+	private int getHour(){
+		return Integer.parseInt(String.format("%tH", mCalendar));
+	}
+	
+	private int getMinutes(){
+		int minute = mCalendar.get(Calendar.MINUTE)
+				/ TimeLabeler.MINUTEINTERVAL * TimeLabeler.MINUTEINTERVAL;
+		return Integer.parseInt(String.format("%02d",minute));
 	}
 
-	private void onClickHourUp() {
-		// The max hour that can be set = 23h
-		int hour = 0;
-		try {
-			// get hour
-			hour = Integer.parseInt(etHour.getText().toString());
-
-			// Do hour ++ if its less then 23 else set 0
-			if (hour < 23)
-				hour++;
-			else
-				hour = 0;
-
-			// set text back on hour
-			if (hour < 10)
-				etHour.setText("0" + hour);
-			else
-				etHour.setText("" + hour);
-
-		} catch (Exception e) {
-			// this wil be thrown when the etHour = "";
-			// when the user then press the + button we want so set 1 as hour
-			etHour.setText("01");
+	private DateSlider.OnDateSetListener mDateTimeSetListener = new DateSlider.OnDateSetListener() {
+		public void onDateSet(DateSlider view, Calendar selectedDate) {
+			updateTimeAndTimeTextView(selectedDate);
 		}
-	}
+	};
 
-	private void onClickHourDown() {
-		// The min hour that can be set = 0h
-		int hour = 0;
-		try {
-			// get hour
-			hour = Integer.parseInt(etHour.getText().toString());
+	@Override
+	protected Dialog onCreateDialog(int id) {
+		// this method is called after invoking 'showDialog' for the first time
+		// here we initiate the corresponding DateSlideSelector and return the
+		// dialog to its caller
 
-			// Do hour -- if its more then 0 else set 23
-			if (hour > 0)
-				hour--;
-			else
-				hour = 23;
-
-			// set text back on hour
-			if (hour < 10)
-				etHour.setText("0" + hour);
-			else
-				etHour.setText("" + hour);
-		} catch (Exception e) {
-			// this wil be thrown when the etHour = "";
-			// when the user then press the + button we want so set 1 as hour
-			etHour.setText("23");
-		}
-	}
-
-	private void onClickMinuteUp() {
-		// The max minutes that can be set = 59
-		int minutes = 0;
-		try {
-			minutes = Integer.parseInt(etMinute.getText().toString());
-
-			// Do minutes ++ if its less then 59 else set 0
-			if (minutes < 59)
-				minutes++;
-			else
-				minutes = 0;
-
-			// set text back on minutes
-			if (minutes < 10)
-				etMinute.setText("0" + minutes);
-			else
-				etMinute.setText("" + minutes);
-		} catch (Exception e) {
-		}
-	}
-
-	private void onClickMinuteDown() {
-		// The min minutes that can be set = 0
-		int minutes = 0;
-		try {
-			// get minutes
-			minutes = Integer.parseInt(etMinute.getText().toString());
-
-			// Do minutes -- if its more then 0 else set 59
-			if (minutes > 0)
-				minutes--;
-			else
-				minutes = 59;
-
-			// set text back on hour
-			if (minutes < 10)
-				etMinute.setText("0" + minutes);
-			else
-				etMinute.setText("" + minutes);
-		} catch (Exception e) {
-			etMinute.setText("59");
-		}
+	 	final Calendar c = Calendar.getInstance();
+		return new DateTimeSlider(ActivityGroupExercise.group,
+				mDateTimeSetListener, c);
 	}
 
 	@Override
@@ -229,8 +135,6 @@ public class ShowAddExerciseEvent extends Activity {
 	}
 
 	private void setExistingValues() {
-		Functions functions = new Functions();
-
 		Cursor cExerciseEvent = dbHelper.fetchExerciseEventByID(getIntent()
 				.getExtras().getLong(DataParser.idExerciseEvent));
 		cExerciseEvent.moveToFirst();
@@ -319,51 +223,48 @@ public class ShowAddExerciseEvent extends Activity {
 				 * + endTime.getCurrentMinute(),
 				 * spinnerExerciseTypes.getSelectedItemId());
 				 */
-			} else { 
+			} else {
 				// create new exercise event
-				Date date = new Date();
-				String timeStamp = "";
 				int startTime = 0;
 				int endTime = 0;
-
-				// Fill day on timestamp
-				if ((date.getDay()+1) < 10)
-					timeStamp += "0" + (date.getDay()+1);
-				else
-					timeStamp += (date.getDay()+1);
-
-				// Fill month on timestamp
-				if ((date.getMonth()+1) < 10)
-					timeStamp += "0" + (date.getMonth()+1);
-				else
-					timeStamp += (date.getMonth()+1);
-
-				// Fill year on timestamp
-				timeStamp += (date.getYear() + 1900);
-
+				
 				// Fill startTime with seconds of time
-				startTime = (Integer.parseInt(etHour.getText().toString()) * 3600)
-						+ (Integer.parseInt(etMinute.getText().toString()) * 60);
-
+				startTime = (getHour() * 3600) + (getMinutes() * 60);
+				
 				// Fill endTime
 				// The * 1800 comes from 30 minutes * position + 1
 				endTime = ((spinnerDuration.getSelectedItemPosition() + 1) * 1800);
-
+				
+				
+				
+				//TIMESTAMP
+				//Use this parser so we only get the date and not the hour and minutes!
+				DateFormat parser = new SimpleDateFormat("dd MM yyyy");
+				Date date = null;
+				try {
+					date = parser.parse("" + mCalendar.get(Calendar.DAY_OF_MONTH) + " " + mCalendar.get(Calendar.MONTH) + " " + mCalendar.get(Calendar.YEAR));
+				} catch (ParseException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} 
+				
+				// create exerciseEvent
 				dbHelper.createExerciseEvent(
 						etDescription.getText().toString(), startTime, endTime,
-						timeStamp, spinnerExerciseTypes.getSelectedItemId());
-
+						spinnerExerciseTypes.getSelectedItemId(),
+						mCalendar.getTimeInMillis());
+				
 			}
 
 			etDescription.setText("");
-
+  
 			// Go to tracking tab when clicked on add
 			ShowHomeTab parentActivity;
 			parentActivity = (ShowHomeTab) this.getParent().getParent();
-			parentActivity.goToTab(DataParser.activityIDTracking);
+			parentActivity.goToTab(DataParser.activityIDTracking); 
 		}
 	}
-
+ 
 	public void onClickDelete(View view) {
 		dbHelper.deleteExerciseEventByID(getIntent().getExtras().getLong(
 				DataParser.idExerciseEvent));

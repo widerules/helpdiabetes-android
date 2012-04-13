@@ -3,6 +3,7 @@ package be.goossens.oracle.Show.Settings;
 import java.util.ArrayList;
 
 import be.goossens.oracle.R;
+import be.goossens.oracle.ActivityGroup.ActivityGroupSettings;
 import be.goossens.oracle.Rest.DataParser;
 import be.goossens.oracle.Rest.DbAdapter;
 
@@ -10,6 +11,7 @@ import android.app.ListActivity;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.view.KeyEvent;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
@@ -26,7 +28,7 @@ public class ShowSettingsMealTimes extends ListActivity {
 	}
 
 	@Override
-	protected void onResume() {
+	public void onResume() {
 		super.onResume();
 		dbHelper.open();
 		fillData();
@@ -124,30 +126,17 @@ public class ShowSettingsMealTimes extends ListActivity {
 					getResources().getString(R.string.meal_time_breakfast));
 			break;
 		}
-		// launch the activity
-		startActivityForResult(i, 0);
-	}
-
-	// when we come back from our update setting meal time we have to refresh
-	// the data
-	@Override
-	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-		super.onActivityResult(requestCode, resultCode, data);
-		//only refresh data is resultCode = result_ok ( this is when we pressed saved in the update meal time )
-		// when we click on the back button in update mealtime the data wont refresh
-		if (resultCode == RESULT_OK) {
-			dbHelper.open();
-			fillData();
-		}
+		i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+		View view = ActivityGroupSettings.group.getLocalActivityManager()
+				.startActivity(DataParser.activityIDSettings, i).getDecorView();
+		ActivityGroupSettings.group.setContentView(view);
 	}
 
 	private void fillData() {
 		ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
 				android.R.layout.simple_list_item_1, createArrayList());
 		setListAdapter(adapter);
-	} 
-
-	
+	}
 
 	@Override
 	protected void onPause() {
@@ -155,4 +144,11 @@ public class ShowSettingsMealTimes extends ListActivity {
 		super.onPause();
 	}
 
+	@Override
+	public boolean onKeyDown(int keyCode, KeyEvent event) {
+		if (event.getKeyCode() == KeyEvent.KEYCODE_BACK) {
+			return false;
+		}
+		return super.onKeyDown(keyCode, event);
+	}
 }
