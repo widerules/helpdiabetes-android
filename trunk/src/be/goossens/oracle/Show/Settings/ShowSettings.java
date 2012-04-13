@@ -4,19 +4,29 @@ import java.util.ArrayList;
 import java.util.List;
 
 import android.app.ListActivity;
+import android.app.LocalActivityManager;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.KeyEvent;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.Window;
 import android.widget.ListView;
+import android.widget.Toast;
 import be.goossens.oracle.R;
+import be.goossens.oracle.ActivityGroup.ActivityGroupSettings;
 import be.goossens.oracle.Custom.CustomArrayAdapterCharSequenceSettings;
+import be.goossens.oracle.Rest.DataParser;
 
 public class ShowSettings extends ListActivity {
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.show_settings);
+
+		View contentView = LayoutInflater.from(getParent()).inflate(
+				R.layout.show_settings, null);
+		setContentView(contentView);
 	}
 
 	@Override
@@ -27,19 +37,16 @@ public class ShowSettings extends ListActivity {
 
 	private void fillListView() {
 		CustomArrayAdapterCharSequenceSettings adapter = new CustomArrayAdapterCharSequenceSettings(
-				this, R.layout.row_custom_array_adapter_charsequence_settings, getCharSequenceList());
+				this, R.layout.row_custom_array_adapter_charsequence_settings,
+				getCharSequenceList());
 
-		/*
-		 * ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(
-		 * this, R.array.settings_array, android.R.layout.simple_list_item_1);
-		 */
 		setListAdapter(adapter);
 	}
 
 	private List<CharSequence> getCharSequenceList() {
 		List<CharSequence> value = new ArrayList<CharSequence>();
 		String[] arr = getResources().getStringArray(R.array.settings_array);
-		for(int i = 0; i < arr.length ; i++){
+		for (int i = 0; i < arr.length; i++) {
 			value.add(arr[i]);
 		}
 		return value;
@@ -47,23 +54,39 @@ public class ShowSettings extends ListActivity {
 
 	@Override
 	protected void onListItemClick(ListView l, View v, int position, long id) {
-		super.onListItemClick(l, v, position, id);
 		Intent i = null;
 		switch (position) {
 		case 0:
-			i = new Intent(this, ShowSettingsMealTimes.class);
+			i = new Intent(getApplicationContext(), ShowSettingsMealTimes.class);
 			break;
 		case 1:
-			i = new Intent(this, ShowSettingsInsulineRatio.class);
+			i = new Intent(getApplicationContext(),
+					ShowSettingsInsulineRatio.class);
 			break;
 		case 2:
-			i = new Intent(this, ShowSettingsValueOrder.class);
+			i = new Intent(getApplicationContext(),
+					ShowSettingsValueOrder.class);
 			break;
 		case 3:
-			i = new Intent(this, ShowSettingsFontSizeLists.class);
+			i = new Intent(getApplicationContext(),
+					ShowSettingsFontSizeLists.class);
 			break;
 		}
-		startActivity(i);
+
+		i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+
+		View view = ActivityGroupSettings.group.getLocalActivityManager()
+				.startActivity("ShowSetting", i).getDecorView();
+
+		ActivityGroupSettings.group.setContentView(view);
+	}
+
+	@Override
+	public boolean onKeyDown(int keyCode, KeyEvent event) {
+		if (event.getKeyCode() == KeyEvent.KEYCODE_BACK) {
+			return false;
+		}
+		return super.onKeyDown(keyCode, event);
 	}
 
 }

@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<be.goossens.oracle.slider.SliderContainer
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res/be.goossens.oracle"
+    android:id="@+id/dateSliderContainer"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent">
+    <be.goossens.oracle.slider.ScrollLayout
+        style="@style/Scroller"
+        app:labelerClass="be.goossens.oracle.slider.YearLabeler"
+        app:labelerFormat="%tY"
+        app:childWidth="200dp"/>
+    <be.goossens.oracle.slider.ScrollLayout
+        style="@style/Scroller"
+        app:labelerClass="be.goossens.oracle.slider.WeekLabeler"
+        app:labelerFormat="week %d"
+        app:childWidth="100dp"/>
+    <be.goossens.oracle.slider.ScrollLayout
+        style="@style/Scroller"
+        app:labelerClass="be.goossens.oracle.slider.DayLabeler"
+        app:labelerFormat="%tA"
+        app:childWidth="150dp"/>
+    <include layout="@layout/slider_dialogbuttons"/>
+</be.goossens.oracle.slider.SliderContainer>

@@ -1,29 +1,40 @@
 package be.goossens.oracle.Rest;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 /*
  * This class got functions that are used in the application.
  */
 
-import java.util.Date;
-
-import android.widget.Toast;
-
 public class Functions {
 
-	//This method will get a string in the format of daymonthyear (31121990) out the database
-	//and returns a real date object
-	public Date parseStringTimeStampToDate(String date) {
-		Date value = new Date(); 
-		value.setDate(Integer.parseInt(date.substring(0,2)));
-		value.setMonth(Integer.parseInt(date.substring(2,4)));
-		value.setYear(Integer.parseInt(date.substring(4,8)));
-		return value;
+	public long getCurrentDateInSeconds() {
+		String sDate = "";
+		Date dDate = new Date();
+		SimpleDateFormat fmt = new SimpleDateFormat("MM-dd-yyyy");
+
+		if (("" + (dDate.getMonth()+1)).length() == 0)
+			sDate += "0" + (dDate.getMonth()+1);
+		else
+			sDate += "" + (dDate.getMonth()+1);
+
+		sDate += "-";
+
+		if (("" + dDate.getDate()).length() == 0)
+			sDate += "0" + dDate.getDate();
+		else
+			sDate += "" + dDate.getDate();
+
+		sDate += "-" + (dDate.getYear() + 1900);
+
+		try {
+			return fmt.parse(sDate).getTime();
+		} catch (ParseException e) {
+			return -1;
+		}
+
 	}
-	
-	//This method will get a string in the real timestamp format out the database
-	//and returns a real date object
-	public Date parseRealTimestampStringToDate(String timestamp){
-		Date value = new Date();
-		return value;
-	}
+
 }

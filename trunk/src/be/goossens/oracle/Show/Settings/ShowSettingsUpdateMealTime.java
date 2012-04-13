@@ -1,11 +1,13 @@
 package be.goossens.oracle.Show.Settings;
 
 import be.goossens.oracle.R;
+import be.goossens.oracle.ActivityGroup.ActivityGroupSettings;
 import be.goossens.oracle.Rest.DataParser;
 import be.goossens.oracle.Rest.DbAdapter;
 import android.app.Activity;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.view.KeyEvent;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.TimePicker;
@@ -99,26 +101,36 @@ public class ShowSettingsUpdateMealTime extends Activity {
 		// if the minutes are less then 10 ( 0 - 9 ) then we have to add another
 		// zero in front of the minutes
 		if (tp.getCurrentMinute() < 10) {
-			//we add a zero in front of the minutes when minutes are less then 10
+			// we add a zero in front of the minutes when minutes are less then
+			// 10
 			updateMealTime(":0");
 		} else {
 			updateMealTime(":");
 		}
-		setResult(RESULT_OK);
-		finish();
+ 
+		// go back
+		ActivityGroupSettings.group.back();
+		// refresh the list of meal times
+		ActivityGroupSettings.group.refreshShowSettingsMealTimes();
 	}
 
 	private void updateMealTime(String middle) {
 		dbHelper.updateSettingsByName(
-				getIntent().getExtras().getString(
-						DataParser.fromWhereWeCome), tp.getCurrentHour()
-						+ middle + tp.getCurrentMinute());
+				getIntent().getExtras().getString(DataParser.fromWhereWeCome),
+				tp.getCurrentHour() + middle + tp.getCurrentMinute());
 	}
 
-	
 	@Override
 	protected void onPause() {
 		super.onPause();
 		dbHelper.close();
+	}
+
+	@Override
+	public boolean onKeyDown(int keyCode, KeyEvent event) {
+		if (event.getKeyCode() == KeyEvent.KEYCODE_BACK) {
+			return false;
+		}
+		return super.onKeyDown(keyCode, event);
 	}
 }

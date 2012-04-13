@@ -37,7 +37,7 @@ public class ShowAddFoodToSelection extends Activity {
 	private TextView textViewSelectedFood;
 	private EditText editTextFoodAmound;
 	private Spinner spinnerFoodUnits;
-	private Button buttonAddOrUpdate,buttonDeleteSelectedFood;
+	private Button buttonAddOrUpdate, buttonDeleteSelectedFood;
 
 	// The table textview
 	private TextView textViewRowOneFieldOne, textViewRowOneFieldTwo,
@@ -84,7 +84,7 @@ public class ShowAddFoodToSelection extends Activity {
 		spinnerFoodUnits = (Spinner) findViewById(R.id.spinnerFoodUnit);
 		buttonAddOrUpdate = (Button) findViewById(R.id.buttonAddOrUpdate);
 		buttonDeleteSelectedFood = (Button) findViewById(R.id.buttonShowAddFoodDelete);
-		
+
 		// fill the listTextViewColumn ONE
 		listTextViewColumnOne
 				.add((TextView) findViewById(R.id.textViewShowAddFoodRowTwoFieldOne));
@@ -151,7 +151,7 @@ public class ShowAddFoodToSelection extends Activity {
 				onClickButtonAddFood(v);
 			}
 		});
-		
+
 		buttonDeleteSelectedFood.setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
 				onClickDeleteFoodFromSelection(v);
@@ -170,6 +170,7 @@ public class ShowAddFoodToSelection extends Activity {
 			editTextFoodAmound.setText("");
 		}
 		onKeyPress();
+
 		return super.dispatchKeyEvent(event);
 	}
 
@@ -295,15 +296,17 @@ public class ShowAddFoodToSelection extends Activity {
 	private void checkStandardAmound() {
 		Cursor cUnit = dbHelper.fetchFoodUnit(spinnerFoodUnits
 				.getSelectedItemId());
-		cUnit.moveToFirst();
-		if (cUnit
-				.getInt(cUnit
-						.getColumnIndexOrThrow(DbAdapter.DATABASE_FOODUNIT_STANDARDAMOUNT)) != 100) {
-			editTextFoodAmound
-					.setText(cUnit.getString(cUnit
-							.getColumnIndexOrThrow(DbAdapter.DATABASE_FOODUNIT_STANDARDAMOUNT)));
-		} else {
-			editTextFoodAmound.setText("");
+		if (cUnit.getCount() > 0) {
+			cUnit.moveToFirst();
+			if (cUnit
+					.getInt(cUnit
+							.getColumnIndexOrThrow(DbAdapter.DATABASE_FOODUNIT_STANDARDAMOUNT)) != 100) {
+				editTextFoodAmound
+						.setText(cUnit.getString(cUnit
+								.getColumnIndexOrThrow(DbAdapter.DATABASE_FOODUNIT_STANDARDAMOUNT)));
+			} else {
+				editTextFoodAmound.setText("");
+			}
 		}
 		cUnit.close();
 	}
@@ -506,6 +509,15 @@ public class ShowAddFoodToSelection extends Activity {
 
 		startManagingCursor(cSelectedFoodUnit);
 
+		float amount = 0f;
+		try {
+			// when the editTextFoodAmound = ""; this wil go to the catch
+			// part
+			amount = Float.parseFloat(editTextFoodAmound.getText().toString());
+		} catch (Exception e) {
+			amount = 0f;
+		}
+
 		// check if we need to udpate or add new selectedFood
 		// if we come from showSelectedFood we have to update the selectedFood
 		if (getIntent().getExtras().getString(DataParser.fromWhereWeCome)
@@ -513,20 +525,12 @@ public class ShowAddFoodToSelection extends Activity {
 			// update a selectedFood
 			dbHelper.updateSelectedFood(
 					getIntent().getExtras().getLong(DataParser.idSelectedFood),
-					Float.parseFloat(editTextFoodAmound.getText().toString()),
+					amount,
 					cSelectedFoodUnit.getLong(cSelectedFoodUnit
 							.getColumnIndexOrThrow(DbAdapter.DATABASE_FOODUNIT_ID)));
 			cSelectedFoodUnit.close();
 		} else {
-			float amount = 0f;
-			try {
-				// when the editTextFoodAmound = ""; this wil go to the catch
-				// part
-				amount = Float.parseFloat(editTextFoodAmound.getText()
-						.toString());
-			} catch (Exception e) {
-				amount = 0f;
-			}
+
 			// create a new selectedFood
 			dbHelper.createSelectedFood(
 					amount,
@@ -537,9 +541,9 @@ public class ShowAddFoodToSelection extends Activity {
 		}
 
 		ActivityGroupMeal.group.back();
-		//refresh the page show selected food
+		// refresh the page show selected food
 		ActivityGroupMeal.group.refreshShowSelectedFood(1);
-		//refresh button from show food list
+		// refresh button from show food list
 		ActivityGroupMeal.group.refreshShowFoodListButtonSelections();
 	}
 

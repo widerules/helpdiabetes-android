@@ -7,6 +7,7 @@ import java.util.List;
 import android.app.Activity;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.view.KeyEvent;
 import android.view.View;
 import android.widget.RadioButton;
 import be.goossens.oracle.R;
@@ -157,7 +158,7 @@ public class ShowSettingsValueOrder extends Activity {
 			dbHelper.updateSettingsByName(
 					listValueOrders.get(selectedRadioButton).getSettingName(),
 					"" + selectedRadioButton);
-			
+
 			dbHelper.updateSettingsByName(
 					listValueOrders.get(selectedRadioButton - 1)
 							.getSettingName(), "" + (selectedRadioButton + 1));
@@ -167,30 +168,35 @@ public class ShowSettingsValueOrder extends Activity {
 		}
 
 		refresh();
-	} 
+	}
 
 	// If the user pressed the button down
 	public void onClickDown(View view) {
 		int selectedRadioButton = getSelectedRadioButton();
-		
+
 		// if we selected the last radiobutton we have to update all the orders
 		// else we only update the selected on and the one below
 		if (selectedRadioButton == listRadioButtons.size() - 1) {
-			//update all valueOrders 
-			for(DBValueOrder obj : listValueOrders){
-				if(obj.getOrder() != 4){
-					dbHelper.updateSettingsByName(obj.getSettingName(), "" + (obj.getOrder() + 1));
+			// update all valueOrders
+			for (DBValueOrder obj : listValueOrders) {
+				if (obj.getOrder() != 4) {
+					dbHelper.updateSettingsByName(obj.getSettingName(), ""
+							+ (obj.getOrder() + 1));
 				} else {
 					dbHelper.updateSettingsByName(obj.getSettingName(), "1");
 				}
-			} 
-			 
+			}
+
 			// set the checked radio button on the first one
 			listRadioButtons.get(0).setChecked(true);
 		} else {
-			dbHelper.updateSettingsByName(listValueOrders.get(selectedRadioButton).getSettingName(), "" + (selectedRadioButton + 2));
-			dbHelper.updateSettingsByName(listValueOrders.get(selectedRadioButton + 1).getSettingName(), "" + (selectedRadioButton + 1));
-			
+			dbHelper.updateSettingsByName(
+					listValueOrders.get(selectedRadioButton).getSettingName(),
+					"" + (selectedRadioButton + 2));
+			dbHelper.updateSettingsByName(
+					listValueOrders.get(selectedRadioButton + 1)
+							.getSettingName(), "" + (selectedRadioButton + 1));
+
 			// set the checked radio button 1 lower
 			listRadioButtons.get(selectedRadioButton + 1).setChecked(true);
 		}
@@ -207,6 +213,13 @@ public class ShowSettingsValueOrder extends Activity {
 		super.onPause();
 		dbHelper.close();
 	}
-	
-	
+
+	@Override
+	public boolean onKeyDown(int keyCode, KeyEvent event) {
+		if (event.getKeyCode() == KeyEvent.KEYCODE_BACK) {
+			return false;
+		}
+		return super.onKeyDown(keyCode, event);
+	}
+
 }

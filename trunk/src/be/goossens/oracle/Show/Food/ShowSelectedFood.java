@@ -36,7 +36,9 @@ import be.goossens.oracle.Objects.DBSelectedFood;
 import be.goossens.oracle.Objects.DBValueOrder;
 import be.goossens.oracle.Rest.DataParser;
 import be.goossens.oracle.Rest.DbAdapter;
+import be.goossens.oracle.Rest.Functions;
 import be.goossens.oracle.Rest.ValueOrderComparator;
+import be.goossens.oracle.Show.ShowHomeTab;
 
 public class ShowSelectedFood extends ListActivity {
 	private DbAdapter dbHelper;
@@ -53,48 +55,111 @@ public class ShowSelectedFood extends ListActivity {
 	private String templateName;
 
 	private float fInsulineRatio;
+	private float fCorrectionFactor;
+	private float fCalculatedInsulineAmount;
 
 	private List<DBValueOrder> listValueOrders;
 
-	private Button btDelete,btSaveTemplate,btLoadTemplate;
-	
+	private Button btDelete, btSaveTemplate, btLoadTemplate,
+			btAddSelectedFoodToTracking;
+
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		
+
 		View contentView = LayoutInflater.from(getParent()).inflate(
 				R.layout.show_selected_food, null);
 		setContentView(contentView);
-		
-		btDelete = (Button)findViewById(R.id.buttonDelete);
-		btSaveTemplate = (Button)findViewById(R.id.buttonSaveAsTemplate);
-		btLoadTemplate = (Button)findViewById(R.id.buttonShowSelectedFoodButtonLoadTemplate);
-		
+
+		btDelete = (Button) findViewById(R.id.buttonDelete);
+		btSaveTemplate = (Button) findViewById(R.id.buttonSaveAsTemplate);
+		btLoadTemplate = (Button) findViewById(R.id.buttonShowSelectedFoodButtonLoadTemplate);
+		btAddSelectedFoodToTracking = (Button) findViewById(R.id.buttonAddSelectedFoodToTracking);
+
 		saveFoodAmount = false;
-		// only take insuline ratio in calculation when this boolean is true
+
 		fInsulineRatio = 0f;
+		fCorrectionFactor = 0f;
+		fCalculatedInsulineAmount = 0f;
+
 		dbHelper = new DbAdapter(this);
 
 		listOfSelectedFood = new ArrayList<DBSelectedFood>();
 		registerForContextMenu(getListView());
-		
+
+		btAddSelectedFoodToTracking.setOnClickListener(new OnClickListener() {
+			public void onClick(View v) {
+				onClickAddSelectedFoodToTracking();
+			}
+		});
+
 		btDelete.setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
 				onClickDeleteAll(v);
 			}
 		});
-		
+
 		btSaveTemplate.setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
 				onClickSaveAsTemplate(v);
 			}
 		});
-		
+
 		btLoadTemplate.setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
 				onClickLoadTemplate(v);
 			}
 		});
+	}
+
+	// Click on button add selected food to tracking
+	private void onClickAddSelectedFoodToTracking() {
+		Cursor cSelectedFood = dbHelper.fetchAllSelectedFood();
+
+		// only create objects if we have something in the selectedFood list
+		if (cSelectedFood.getCount() > 0) {
+			// create a meal event
+			long lMealEventID = dbHelper.createMealEvent(fInsulineRatio,
+					fCorrectionFactor, fCalculatedInsulineAmount,new Functions().getCurrentDateInSeconds());
+
+			// create for every food in the selectedFood a mealFood object
+			cSelectedFood.moveToFirst();
+			do {
+				// get the foodUnit ( we need it for the foodID )
+				Cursor cUnit = dbHelper
+						.fetchFoodUnit(cSelectedFood.getLong(cSelectedFood
+								.getColumnIndexOrThrow(DbAdapter.DATABASE_SELECTEDFOOD_UNITID)));
+				// move the foodUnit to the first object in the cursor
+				cUnit.moveToFirst();
+
+				// create the mealFood
+				dbHelper.createMealFood(
+						lMealEventID,
+						cUnit.getInt(cUnit
+								.getColumnIndexOrThrow(DbAdapter.DATABASE_FOODUNIT_FOODID)),
+						cSelectedFood.getFloat(cSelectedFood
+								.getColumnIndexOrThrow(DbAdapter.DATABASE_SELECTEDFOOD_AMOUNT)));
+
+				// close the foodUnit cursor
+				cUnit.close();
+			} while (cSelectedFood.moveToNext());
+		}
+
+		cSelectedFood.close();
+
+		// delete selected food from selectedFood table in database
+		deleteSelectedFood();
+
+		// kill this activity
+		ActivityGroupMeal.group.back();
+
+		// refresh the foodlist button
+		ActivityGroupMeal.group.refreshShowFoodListButtonSelections();
+
+		// Go to tracking activity
+		ShowHomeTab parentActivity;
+		parentActivity = (ShowHomeTab) this.getParent().getParent();
+		parentActivity.goToTab(DataParser.activityIDTracking);
 	}
 
 	// converts the cursor with all selected food to a arrayList<DBSelectedFood>
@@ -152,7 +217,7 @@ public class ShowSelectedFood extends ListActivity {
 		float totalCarbs = 0;
 		float totalProtein = 0;
 		float totalFat = 0;
-		float insuline = 0;
+		fCalculatedInsulineAmount = 0;
 
 		Cursor cSelectedFood = dbHelper.fetchAllSelectedFood();
 		if (cSelectedFood.getCount() > 0) {
@@ -286,7 +351,7 @@ public class ShowSelectedFood extends ListActivity {
 
 		// set the right insuline if fInsulineRatio != 0
 		if (fInsulineRatio != 0)
-			insuline = totalCarbs / fInsulineRatio;
+			fCalculatedInsulineAmount = totalCarbs / fInsulineRatio;
 
 		// Round the calculated floats
 		float p = (float) Math.pow(10, 2);
@@ -297,7 +362,8 @@ public class ShowSelectedFood extends ListActivity {
 
 		// Round insuline 1 decimal
 		p = (float) Math.pow(10, 1);
-		insuline = Math.round(insuline * p) / p;
+		fCalculatedInsulineAmount = Math.round(fCalculatedInsulineAmount * p)
+				/ p;
 
 		// set the text on the textview in the right order
 		String tvText = "";
@@ -332,7 +398,7 @@ public class ShowSelectedFood extends ListActivity {
 
 		// add insuline ratio to the string when the radio != 0
 		if (fInsulineRatio != 0) {
-			tvText += insuline
+			tvText += fCalculatedInsulineAmount
 					+ " "
 					+ getResources().getString(
 							R.string.showSelectedFoodUnitsInsuline) + " \n ";
@@ -385,6 +451,7 @@ public class ShowSelectedFood extends ListActivity {
 	}
 
 	private void startActivityUpdateSelectedFood(long selectedFoodId) {
+		dbHelper.open();
 		Cursor cSelectedFood = dbHelper.fetchSelectedFood(selectedFoodId);
 		cSelectedFood.moveToFirst();
 
@@ -450,15 +517,22 @@ public class ShowSelectedFood extends ListActivity {
 
 	// when we click on the button delete all
 	public void onClickDeleteAll(View view) {
-		Cursor allSelectedFood = dbHelper.fetchAllSelectedFood();
-		startManagingCursor(allSelectedFood);
-		while (allSelectedFood.moveToNext()) {
-			dbHelper.deleteSelectedFood(allSelectedFood.getInt(allSelectedFood
-					.getColumnIndexOrThrow(DbAdapter.DATABASE_SELECTEDFOOD_ID)));
-		}
+		deleteSelectedFood();
 		refreshData();
-		//update the button if showFoodList selections
+		// update the button if showFoodList selections
 		ActivityGroupMeal.group.refreshShowFoodListButtonSelections();
+	}
+
+	private void deleteSelectedFood() {
+		Cursor cSelectedFood = dbHelper.fetchAllSelectedFood();
+		if (cSelectedFood.getCount() > 0) {
+			cSelectedFood.moveToFirst();
+			do {
+				dbHelper.deleteSelectedFood(cSelectedFood.getInt(cSelectedFood
+						.getColumnIndexOrThrow(DbAdapter.DATABASE_SELECTEDFOOD_ID)));
+			} while (cSelectedFood.moveToNext());
+		}
+		cSelectedFood.close();
 	}
 
 	// this method will refresh all the data on the screen
@@ -688,7 +762,7 @@ public class ShowSelectedFood extends ListActivity {
 		ValueOrderComparator comparator = new ValueOrderComparator();
 		Collections.sort(listValueOrders, comparator);
 	}
- 
+
 	@Override
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
 		if (event.getKeyCode() == KeyEvent.KEYCODE_BACK) {

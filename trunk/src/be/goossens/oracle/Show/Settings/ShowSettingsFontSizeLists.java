@@ -5,9 +5,11 @@ import java.util.ArrayList;
 import android.app.ListActivity;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.view.KeyEvent;
 import android.view.View;
 import android.widget.TextView;
 import be.goossens.oracle.R;
+import be.goossens.oracle.ActivityGroup.ActivityGroupMeal;
 import be.goossens.oracle.Custom.CustomArrayAdapter;
 import be.goossens.oracle.Rest.DbAdapter;
 
@@ -97,6 +99,15 @@ public class ShowSettingsFontSizeLists extends ListActivity {
 		dbHelper.close();
 	}
 
-
+	@Override
+	public boolean onKeyDown(int keyCode, KeyEvent event) {
+		if (event.getKeyCode() == KeyEvent.KEYCODE_BACK) {
+			//on click back we refresh the lists
+			//the show food list
+			ActivityGroupMeal.group.refreshShowFoodList();
+			return false;
+		}
+		return super.onKeyDown(keyCode, event);
+	}
 
 }

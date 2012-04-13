@@ -14,124 +14,39 @@
             android:layout_width="fill_parent"
             android:layout_height="wrap_content" />
 
-        <TableLayout
-            android:id="@+id/tableLayout1"
+        <LinearLayout
+            android:id="@+id/linearLayout1"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content" >
 
-            <TableRow
-                android:id="@+id/tableRow1"
+            <TextView
+                android:id="@+id/textViewDate"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:gravity="center" >
+                android:textColor="@color/ColorText" />
 
-                <TextView
-                    android:id="@+id/textViewDate"
-                    android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"
-                    android:text="@string/description"
-                    android:textColor="@color/ColorText"
-                    android:gravity="center" />
-
-            </TableRow>
-
-            <TableRow
-                android:id="@+id/tableRow2"
-                android:layout_width="wrap_content"
+            <Button
+                android:id="@+id/buttonUpdateDateAndHour"
+                android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:gravity="center" >
+                android:text="@string/update" />
+        </LinearLayout>
 
-                <LinearLayout
-                    android:id="@+id/linearLayout2"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" >
+        <Spinner
+            android:id="@+id/spinnerDuration"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content" />
 
-                    <Button
-                        android:id="@+id/buttonHourDown"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/time_up" />
-
-                    <EditText
-                        android:id="@+id/editTextHour"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:digits="1234567890"
-                        android:inputType="phone" />
-
-                    <Button
-                        android:id="@+id/buttonHourUp"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/time_down" />
-
-                    <TextView
-                        android:id="@+id/textView1"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:paddingLeft="10dip"
-                        android:paddingRight="10dip" />
-
-                    <Button
-                        android:id="@+id/buttonMinuteDown"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/time_down" />
-
-                    <EditText
-                        android:id="@+id/editTextMinute"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:digits="1234567890"
-                        android:inputType="phone" />
-
-                    <Button
-                        android:id="@+id/buttonMinuteUp"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/time_up" />
-                </LinearLayout>
-            </TableRow>
-
-            <TableRow
-                android:id="@+id/tableRow3"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:gravity="center" >
-
-                <Spinner
-                    android:id="@+id/spinnerDuration"
-                    android:layout_width="fill_parent"
-                    android:layout_height="wrap_content" />
-            </TableRow>
-
-            <TableRow
-                android:id="@+id/tableRow4"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:gravity="center" >
-
-                <Spinner
-                    android:id="@+id/spinnerSportType"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1" />
-            </TableRow>
-
-            <TableRow
-                android:id="@+id/tableRow9"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:gravity="center" >
-
-                <EditText
-                    android:id="@+id/editText1"
-                    android:layout_width="0dip"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:inputType="text" />
-            </TableRow>
-        </TableLayout>
+        <Spinner
+            android:id="@+id/spinnerSportType"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content" />
+ 
+        <EditText
+            android:id="@+id/editText1"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:inputType="text" />
 
         <LinearLayout
             android:id="@+id/linearLayout3"

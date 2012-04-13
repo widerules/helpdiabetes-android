@@ -4,14 +4,9 @@ package be.goossens.oracle.Custom;
  * This class is used in the food list from ShowFoodList
  */
 
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 import android.content.Context;
-import android.database.Cursor;
-import android.os.Bundle;
-import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,49 +14,87 @@ import android.widget.ArrayAdapter;
 import android.widget.TextView;
 import be.goossens.oracle.R;
 import be.goossens.oracle.Objects.DBFoodComparable;
-import be.goossens.oracle.Rest.DbAdapter;
 import be.goossens.oracle.Rest.ExcelCharacter;
-import be.goossens.oracle.Rest.FoodComparator;
-import be.goossens.oracle.Show.Food.ShowFoodList;
 
-public class CustomArrayAdapterFoodList extends ArrayAdapter<String> {
+public class CustomArrayAdapterFoodList extends ArrayAdapter<DBFoodComparable> {
 
-	private List<DBFoodComparable> foodItemList = null;
-	private String previousSearchString = null;
+	private Context ctx;
+	private int fontSize;
+	private List<DBFoodComparable> foodItemList;
+	private String previousSearchString;
 	private int[] firstIndex;
 	private int[] lastIndex;
-	private Context callingContext;
-	private Thread backgroundThread;
-	private final Handler callingThreadHanlder = new Handler();
-	private int fontSize;
 
 	public CustomArrayAdapterFoodList(Context context, int textViewResourceId,
-			int maximuSearchStringLength, int fontSize) {
-		super(context, textViewResourceId, new ArrayList<String>());
-		callingContext = context;
-		foodItemList = new ArrayList<DBFoodComparable>();
+			int maximuSearchStringLength, int fontSize,
+			List<DBFoodComparable> foodItemList) {
+		super(context, textViewResourceId, foodItemList);
+		this.ctx = context;
+		this.foodItemList = foodItemList;
+		this.fontSize = fontSize;
+		
+		previousSearchString = null;
+		
 		firstIndex = new int[maximuSearchStringLength + 1];
 		lastIndex = new int[maximuSearchStringLength + 1];
-		firstIndex[0] = 0;
-		lastIndex[0] = 0;
-		previousSearchString = null;
-		this.fontSize = fontSize;
-	}
-
-	public DBFoodComparable getFoodItem(int position) {
-		try {
-			return new DBFoodComparable(foodItemList.get(position));
-		} catch (IndexOutOfBoundsException e) {
-			return null;
-		}
-	}
-
-	public void addFood(DBFoodComparable newFood) {
-		foodItemList.add(new DBFoodComparable(newFood));
-		Collections.sort(foodItemList);
+		
 		firstIndex[0] = 0;
 		lastIndex[0] = foodItemList.size() - 1;
-		previousSearchString = null;
+	}
+
+	@Override
+	public View getView(int position, View convertView, ViewGroup parent) {
+		View v = convertView;
+		if (v == null) {
+			LayoutInflater vi = (LayoutInflater) ctx
+					.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+			v = vi.inflate(R.layout.row_food, null);
+		}
+		TextView tt = (TextView) v.findViewById(R.id.row_food_text);
+		TextView ttTwo = (TextView) v.findViewById(R.id.text2);
+		if (tt != null) {
+			tt.setText(foodItemList.get(position).getName());
+			tt.setTextSize(fontSize);
+		}
+		ttTwo.setTextSize(fontSize);
+
+		return v;
+	}
+
+	// For searching in the list
+	public int getFirstMatchingItem(CharSequence s) {
+		int index = 0;
+		int[] result = new int[2];
+
+		if (previousSearchString != null) {
+			while ((index < s.length())
+					&& (index < previousSearchString.length())
+					&& (ExcelCharacter.compareToAsInExcel(s.charAt(index),
+							previousSearchString.charAt(index)) == 0)) {
+				index++;
+			}
+		}
+
+		if (index != s.length()) {
+			while ((index < s.length()) && (index < (firstIndex.length - 1))) {
+				result = searchFirst(firstIndex[index], lastIndex[index],
+						s.charAt(index), index);
+				if (result[0] > -1) {
+					firstIndex[index + 1] = result[0];
+					lastIndex[index + 1] = searchLast(result[0], result[1],
+							s.charAt(index), index);
+				} else {
+					if (index < (firstIndex.length - 1)) {
+						firstIndex[index + 1] = firstIndex[index];
+						lastIndex[index + 1] = lastIndex[index];
+					}
+				}
+				index++;
+			}
+		}
+
+		previousSearchString = s.toString();
+		return firstIndex[index];
 	}
 
 	private int[] searchFirst(int low, int high, char value, int index) {
@@ -150,130 +183,5 @@ public class CustomArrayAdapterFoodList extends ArrayAdapter<String> {
 		}
 		returnvalue = returnvalue - 1;
 		return returnvalue;
-	}
-
-	public int getFirstMatchingItem(CharSequence s) {
-		int index = 0;
-		int[] result = new int[2];
-		if (backgroundThread != null) {
-			if (backgroundThread.isAlive())
-				return -1;
-		}
-
-		if (previousSearchString != null) {
-			while ((index < s.length())
-					&& (index < previousSearchString.length())
-					&& (ExcelCharacter.compareToAsInExcel(s.charAt(index),
-							previousSearchString.charAt(index)) == 0)) {
-				index++;
-			}
-		}
-
-		if (index != s.length()) {
-			while ((index < s.length()) && (index < (firstIndex.length - 1))) {
-				result = searchFirst(firstIndex[index], lastIndex[index],
-						s.charAt(index), index);
-				if (result[0] > -1) {
-					firstIndex[index + 1] = result[0];
-					lastIndex[index + 1] = searchLast(result[0], result[1],
-							s.charAt(index), index);
-				} else {
-					if (index < (firstIndex.length - 1)) {
-						firstIndex[index + 1] = firstIndex[index];
-						lastIndex[index + 1] = lastIndex[index];
-					}
-				}
-				index++;
-			}
-		}
-
-		previousSearchString = s.toString();
-		return firstIndex[index];
-	}
-
-	@Override
-	public View getView(int position, View convertView, ViewGroup parent) {
-		View v = convertView;
-		if (v == null) {
-			LayoutInflater vi = (LayoutInflater) callingContext
-					.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-			v = vi.inflate(R.layout.row_food, null);
-		}
-		TextView tt = (TextView) v.findViewById(R.id.row_food_text);
-		TextView ttTwo = (TextView) v.findViewById(R.id.text2);
-		if (tt != null) {
-			tt.setText((String) getItem(position));
-			tt.setTextSize(fontSize);
-		}
-		ttTwo.setTextSize(fontSize);
-
-		return v;
-	}
-
-	private void updateList() {
-		lastIndex[0] = foodItemList.size() - 1;
-		previousSearchString = null;
-		clear();
-		for (int index = 0; index < foodItemList.size(); index++) {
-			add(foodItemList.get(index).toString());
-		}
-		((ShowFoodList) callingContext).triggerSearching();
-	}
-
-	public void initializeFoodItemList(Bundle savedBundle) {
-		final CustomArrayAdapterFoodList thisList = this;
-		backgroundThread = new Thread(new Runnable() {
-
-			public void run() {
-				thisList.initialize();
-			}
-		});
-		backgroundThread.start();
-	}
-
-	private void initialize() {
-		foodItemList = new ArrayList<DBFoodComparable>();
-
-		DbAdapter dbHelper = new DbAdapter(callingContext);
-		dbHelper.open();
-
-		Cursor cFoodList = dbHelper.fetchAllFood();
-		cFoodList.moveToFirst();
-		do {
-			DBFoodComparable newFood = new DBFoodComparable(
-					cFoodList.getInt(cFoodList
-							.getColumnIndexOrThrow(DbAdapter.DATABASE_FOOD_ID)),
-					null,
-					0,
-					0,
-					0,
-					0,
-					0,
-					cFoodList.getString(cFoodList
-							.getColumnIndexOrThrow(DbAdapter.DATABASE_FOOD_NAME)));
-			foodItemList.add(newFood);
-		} while (cFoodList.moveToNext());
-
-		cFoodList.close();
-		dbHelper.close();
-
-		/*
-		 * Use the food comparator to sort the list of food on foodName and sort
-		 * them like in excel meaning 'j�' comes on same hight as 'ja'.
-		 */
-		FoodComparator comparator = new FoodComparator();
-		Collections.sort(foodItemList, comparator);
-
-		if (callingContext != null) {
-			final Runnable runInUIThread = new Runnable() {
-
-				public void run() {
-					updateList();
-				}
-			};
-			callingThreadHanlder.post(runInUIThread);
-		} else {
-			lastIndex[0] = foodItemList.size() - 1;
-		}
 	}
 }

@@ -12,48 +12,43 @@ import android.widget.TabHost;
 import android.widget.TabHost.TabContentFactory;
 import android.widget.TabHost.TabSpec;
 import android.widget.TextView;
-import android.widget.Toast;
 import be.goossens.oracle.R;
 import be.goossens.oracle.ActivityGroup.ActivityGroupExercise;
 import be.goossens.oracle.ActivityGroup.ActivityGroupGlucose;
 import be.goossens.oracle.ActivityGroup.ActivityGroupMeal;
 import be.goossens.oracle.ActivityGroup.ActivityGroupMedicine;
+import be.goossens.oracle.ActivityGroup.ActivityGroupSettings;
 import be.goossens.oracle.ActivityGroup.ActivityGroupTracking;
-import be.goossens.oracle.Rest.DataParser;
-import be.goossens.oracle.Rest.DbAdapter;
-import be.goossens.oracle.Show.Settings.ShowSettings;
 
 public class ShowHomeTab extends TabActivity {
-	private DbAdapter dbHelper;
 	private TabHost tabHost;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.show_home_tab);
-		dbHelper = new DbAdapter(this);
-		dbHelper.createDatabase();
-
 		tabHost = getTabHost();
+		setupTabHost();
+	}
 
+	private void setupTabHost() {
 		Intent in = new Intent(this, ActivityGroupMeal.class);
-		setupTab(new TextView(this), DataParser.activityIDMeal,
-				R.drawable.ic_tab_meal, in);
+		setupTab(new TextView(this), "tab1", R.drawable.ic_tab_meal, in);
+
 		in = new Intent(this, ActivityGroupTracking.class);
-		setupTab(new TextView(this), DataParser.activityIDTracking,
-				R.drawable.ic_tab_tracking, in);
+		setupTab(new TextView(this), "tab2", R.drawable.ic_tab_tracking, in);
+
 		in = new Intent(this, ActivityGroupExercise.class);
-		setupTab(new TextView(this), DataParser.activityIDExercise,
-				R.drawable.ic_tab_exercise, in);
+		setupTab(new TextView(this), "tab3", R.drawable.ic_tab_exercise, in);
+
 		in = new Intent(this, ActivityGroupGlucose.class);
-		setupTab(new TextView(this), DataParser.activityIDGlucose,
-				R.drawable.ic_tab_glucose, in);
+		setupTab(new TextView(this), "tab4", R.drawable.ic_tab_glucose, in);
+
 		in = new Intent(this, ActivityGroupMedicine.class);
-		setupTab(new TextView(this), DataParser.activityIDMedicine,
-				R.drawable.ic_tab_medicine, in);
-		in = new Intent(this, ShowSettings.class);
-		setupTab(new TextView(this), DataParser.activityIDSettings,
-				R.drawable.ic_tab_settings, in);
+		setupTab(new TextView(this), "tab5", R.drawable.ic_tab_medicine, in);
+
+		in = new Intent(this, ActivityGroupSettings.class);
+		setupTab(new TextView(this), "tab6", R.drawable.ic_tab_settings, in);
 	}
 
 	private void setupTab(final View view, final String tag, final int image,
@@ -87,7 +82,6 @@ public class ShowHomeTab extends TabActivity {
 	}
 
 	private static View createTabView(final Context context, final int image) {
-
 		View view = LayoutInflater.from(context)
 				.inflate(R.layout.tabs_bg, null);
 		ImageView iv = (ImageView) view.findViewById(R.id.imageViewTabs);

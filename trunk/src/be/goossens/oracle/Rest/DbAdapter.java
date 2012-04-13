@@ -1,10 +1,13 @@
 package be.goossens.oracle.Rest;
 
+import java.io.BufferedInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.util.Date;
+import java.util.zip.ZipInputStream;
 
 import android.content.ContentValues;
 import android.content.Context;
@@ -13,6 +16,7 @@ import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
 import android.database.sqlite.SQLiteOpenHelper;
+import be.goossens.oracle.R;
 
 /*
  * This class provides the add, delete, create of all the database components
@@ -22,9 +26,25 @@ public class DbAdapter extends SQLiteOpenHelper {
 	// The android default system path to my application database
 	private static String DB_PATH = "/data/data/be.goossens.oracle/databases/";
 	private static String DB_NAME = "dbhelpdiabetes";
-	private static final int DATABASE_VERSION = 1;
+	private static final int DATABASE_VERSION = 3;
 	private SQLiteDatabase mDb;
 	private final Context mCtx;
+
+	// MealFood
+	private static final String DATABASE_MEALFOOD_TABLE = "MealFood";
+	public static final String DATABASE_MEALFOOD_ID = "_id";
+	public static final String DATABASE_MEALFOOD_MEALEVENTID = "MealEventID";
+	public static final String DATABASE_MEALFOOD_FOODID = "FoodID";
+	public static final String DATABASE_MEALFOOD_AMOUNT = "Amount";
+
+	// MealEvent
+	private static final String DATABASE_MEALEVENT_TABLE = "MealEvent";
+	public static final String DATABASE_MEALEVENT_ID = "_id";
+	public static final String DATABASE_MEALEVENT_INSULINERATIO = "InsulineRatio";
+	public static final String DATABASE_MEALEVENT_CORRECTIONFACTOR = "CorrectionFactor";
+	public static final String DATABASE_MEALEVENT_CALCULATEDINSULINEAMOUNT = "CalculatedInsulineAmount";
+	public static final String DATABASE_MEALEVENT_EVENTDATETIME = "EventDateTime";
+	public static final String DATABASE_MEALEVENT_USERID = "UserID";
 
 	// ExerciseType
 	private static final String DATABASE_EXERCISETYPE_TABLE = "ExerciseType";
@@ -39,7 +59,7 @@ public class DbAdapter extends SQLiteOpenHelper {
 	public static final String DATABASE_EXERCISEEVENT_DESCRIPTION = "Description";
 	public static final String DATABASE_EXERCISEEVENT_STARTTIME = "StartTime";
 	public static final String DATABASE_EXERCISEEVENT_STOPTIME = "StopTime";
-	public static final String DATABASE_EXERCISEEVENT_TIMESTAMP = "TimeStamp";
+	public static final String DATABASE_EXERCISEEVENT_EVENTDATETIME = "EventDateTime";
 	public static final String DATABASE_EXERCISEEVENT_EXERCISETYPEID = "ExerciseTypeID";
 	public static final String DATABASE_EXERCISEEVENT_USERID = "UserID";
 
@@ -59,7 +79,7 @@ public class DbAdapter extends SQLiteOpenHelper {
 	private static final String DATABASE_FOODTEMPLATE_TABLE = "FoodTemplate";
 	public static final String DATABASE_FOODTEMPLATE_ID = "_id";
 	public static final String DATABASE_FOODTEMPLATE_MEALTYPEID = "MealTypeID";
-	public static final String DATABASE_FOODTEMPLATE_USERID = "UserID";
+	public static final String DATABASE_FOODTEMPLATE_USERID = "UserID"; 
 	public static final String DATABASE_FOODTEMPLATE_VISIBLE = "Visible";
 	public static final String DATABASE_FOODTEMPLATE_FOODTEMPLATENAME = "FoodTemplateName";
 
@@ -107,49 +127,84 @@ public class DbAdapter extends SQLiteOpenHelper {
 	public static final String DATABASE_FOODUNIT_VISIBLE = "visible";
 	public static final String DATABASE_FOODUNIT_FOODID = "foodid";
 
+	// Food language
+	private static final String DATABASE_FOODLANGUAGE_TABLE = "FoodLanguage";
+	public static final String DATABASE_FOODLANGUAGE_ID = "_id";
+	public static final String DATABASE_FOODLANGUAGE_LANGUAGE = "Language";
+	public static final String DATABASE_FOODLANGUAGE_NAME = "Name";
+	public static final String DATABASE_FOODLANGUAGE_VALUE = "Value";
+
 	public DbAdapter(Context ctx) {
 		super(ctx, DB_NAME, null, DATABASE_VERSION);
 		this.mCtx = ctx;
 	}
 
-	/*
-	 * Create a empty database on the system and rewrites it with the
-	 * databasefile
-	 */
-	public void createDatabase() {
+	/**
+	 * Creates a empty database on the system and rewrites it with your own
+	 * database.
+	 * */
+	public boolean createDataBase() throws IOException {
 		if (!checkDatabase()) {
-			/*
-			 * This method will create a empty database
-			 */
+			// close the db
 			this.close();
-			this.getReadableDatabase();
-			copyDatabase();
+			// create a empty database
+			File newDBFile = new File(DB_PATH);
+			newDBFile.mkdirs();
+			// newDBFile.createNewFile();
+			// copy the zip database to the phone
+			copyFromZipFile();
+			return true;
+		}
+		return false;
+	}
+
+	public void open() {
+		String myPath = DB_PATH + DB_NAME;
+		mDb = SQLiteDatabase.openDatabase(myPath, null,
+				SQLiteDatabase.OPEN_READWRITE);
+	}
+ 
+	private boolean checkDatabase() {
+		SQLiteDatabase checkDB = null;
+		try {
+			// The database exists
+			String myPath = DB_PATH + DB_NAME;
+			checkDB = SQLiteDatabase.openDatabase(myPath, null,
+					SQLiteDatabase.OPEN_READONLY);
+			checkDB.close(); 
+			return true;      
+		} catch (SQLiteException e) {
+			// The database does not exists
+			return false;
 		}
 	}
 
-	// Copy your database from the local asset folder to the just created empty
-	// database
-	private void copyDatabase() {
-		try {
-			// Open the local db as the input stream
-			InputStream myInput = mCtx.getAssets().open(DB_NAME);
-			// Path to the just created empty db
-			String outFileName = DB_PATH + DB_NAME;
-			// Open the empty db as the output stream
-			OutputStream myOutput = new FileOutputStream(outFileName);
-			// transfer bytes from the inputfile to the outputfile
-			byte[] buffer = new byte[1024];
-			int length;
-			while ((length = myInput.read(buffer)) > 0) {
-				myOutput.write(buffer, 0, length);
+	private void copyFromZipFile() throws IOException {
+		// open the zip file as inputstream
+		InputStream is = mCtx.getResources().openRawResource(
+				R.raw.dbhelpdiabetes);
+
+		// Open the empty db as the output stream
+		OutputStream myOutput = new FileOutputStream(DB_PATH + DB_NAME);
+
+		ZipInputStream zis = new ZipInputStream(new BufferedInputStream(is));
+		try {  
+			while ((zis.getNextEntry()) != null) {
+				ByteArrayOutputStream baos = new ByteArrayOutputStream();
+				byte[] buffer = new byte[1024];
+				int count;
+				while ((count = zis.read(buffer)) != -1) {
+					baos.write(buffer, 0, count);
+				}
+				baos.writeTo(myOutput);
 			}
-			// close the streams
+		} finally {
+			zis.close();
 			myOutput.flush();
 			myOutput.close();
-			myInput.close();
-
-		} catch (IOException e) {
+			is.close();
 		}
+
 	}
 
 	@Override
@@ -160,24 +215,67 @@ public class DbAdapter extends SQLiteOpenHelper {
 		super.close();
 	}
 
-	// Check if the database already exists
-	public boolean checkDatabase() {
-		SQLiteDatabase checkDB = null;
-		try {
-			String myPath = DB_PATH + DB_NAME;
-			checkDB = SQLiteDatabase.openDatabase(myPath, null,
-					SQLiteDatabase.OPEN_READONLY);
-		} catch (SQLiteException e) {
-			// The database does not exists
-		}
-		return checkDB != null ? true : false;
-		// return false;
+	// get all timestamps
+	public Cursor fetchAllTimestamps() {
+		return mDb
+				.rawQuery(
+						"SELECT datetime(EventDateTime) as 'time' from (select EventDateTime from MealEvent UNION SELECT EventDateTime from ExerciseEvent)",
+						null);
 	}
 
-	public void open() throws SQLException {
-		String myPath = DB_PATH + DB_NAME;
-		mDb = SQLiteDatabase.openDatabase(myPath, null,
-				SQLiteDatabase.OPEN_READWRITE);
+	// Food Language Functions
+	// get all food languages
+	public Cursor fetchAllFoodLanguages() {
+		return mDb.query(DATABASE_FOODLANGUAGE_TABLE, new String[] {
+				DATABASE_FOODLANGUAGE_ID, DATABASE_FOODLANGUAGE_LANGUAGE,
+				DATABASE_FOODLANGUAGE_NAME, DATABASE_FOODLANGUAGE_VALUE },
+				null, null, DATABASE_FOODLANGUAGE_LANGUAGE, null, null);
+	}
+
+	// Meal Food Functions
+	// create
+	public long createMealFood(long mealEventID, int foodID, float amount) {
+		ContentValues initialValues = new ContentValues();
+		initialValues.put(DATABASE_MEALFOOD_MEALEVENTID, mealEventID);
+		initialValues.put(DATABASE_MEALFOOD_FOODID, foodID);
+		initialValues.put(DATABASE_MEALFOOD_AMOUNT, amount);
+		return mDb.insert(DATABASE_MEALFOOD_TABLE, null, initialValues);
+	}
+
+	// Meal Event Functions
+	// create
+	public long createMealEvent(float insulineRatio, float correctionFactor,
+			float calculatedInsulineAmount, long timestamp) {
+		ContentValues initialValues = new ContentValues();
+		initialValues.put(DATABASE_MEALEVENT_INSULINERATIO, insulineRatio);
+		initialValues
+				.put(DATABASE_MEALEVENT_CORRECTIONFACTOR, correctionFactor);
+		initialValues.put(DATABASE_MEALEVENT_CALCULATEDINSULINEAMOUNT,
+				calculatedInsulineAmount);
+		initialValues.put(DATABASE_MEALEVENT_EVENTDATETIME, timestamp);
+		initialValues.put(DATABASE_MEALEVENT_USERID, 0);
+		return mDb.insert(DATABASE_MEALEVENT_TABLE, null, initialValues);
+	}
+
+	// get all meal events
+	public Cursor fetchAllMealEvents() {
+		return mDb.query(DATABASE_MEALEVENT_TABLE, new String[] {
+				DATABASE_MEALEVENT_ID, DATABASE_MEALEVENT_INSULINERATIO,
+				DATABASE_MEALEVENT_CORRECTIONFACTOR,
+				DATABASE_MEALEVENT_CALCULATEDINSULINEAMOUNT,
+				DATABASE_MEALEVENT_EVENTDATETIME, DATABASE_MEALEVENT_USERID },
+				null, null, null, null, null);
+	}
+
+	// get all meal events by timestamp
+	public Cursor fetchAllMealEventsByTimestamp(long timestamp) {
+		return mDb.query(DATABASE_MEALEVENT_TABLE, new String[] {
+				DATABASE_MEALEVENT_ID, DATABASE_MEALEVENT_INSULINERATIO,
+				DATABASE_MEALEVENT_CORRECTIONFACTOR,
+				DATABASE_MEALEVENT_CALCULATEDINSULINEAMOUNT,
+				DATABASE_MEALEVENT_EVENTDATETIME, DATABASE_MEALEVENT_USERID },
+				DATABASE_MEALEVENT_EVENTDATETIME + " like '" + timestamp + "'",
+				null, null, null, null);
 	}
 
 	// Exercise Type Functions
@@ -226,16 +324,14 @@ public class DbAdapter extends SQLiteOpenHelper {
 	// Exercise Event Funtions
 	// create
 	public long createExerciseEvent(String description, int startTime,
-			int stopTime, String timeStamp, long exerciseTypeID) {
+			int stopTime, long exerciseTypeID, long timestamp) {
 		ContentValues initialValues = new ContentValues();
 		initialValues.put(DATABASE_EXERCISEEVENT_DESCRIPTION, description);
-		initialValues.put(DATABASE_EXERCISEEVENT_STARTTIME,
-				startTime);
+		initialValues.put(DATABASE_EXERCISEEVENT_STARTTIME, startTime);
 		initialValues.put(DATABASE_EXERCISEEVENT_STOPTIME, stopTime);
-		initialValues.put(DATABASE_EXERCISEEVENT_TIMESTAMP,
-				timeStamp.toString());
 		initialValues
 				.put(DATABASE_EXERCISEEVENT_EXERCISETYPEID, exerciseTypeID);
+		initialValues.put(DATABASE_EXERCISEEVENT_EVENTDATETIME, timestamp);
 		initialValues.put(DATABASE_EXERCISEEVENT_USERID, "0");
 		return mDb.insert(DATABASE_EXERCISEEVENT_TABLE, null, initialValues);
 	}
@@ -246,7 +342,7 @@ public class DbAdapter extends SQLiteOpenHelper {
 				DATABASE_EXERCISEEVENT_ID, DATABASE_EXERCISEEVENT_DESCRIPTION,
 				DATABASE_EXERCISEEVENT_STARTTIME,
 				DATABASE_EXERCISEEVENT_STOPTIME,
-				DATABASE_EXERCISEEVENT_TIMESTAMP,
+				DATABASE_EXERCISEEVENT_EVENTDATETIME,
 				DATABASE_EXERCISEEVENT_EXERCISETYPEID,
 				DATABASE_EXERCISEEVENT_USERID }, null, null, null, null, null);
 	}
@@ -257,10 +353,23 @@ public class DbAdapter extends SQLiteOpenHelper {
 				DATABASE_EXERCISEEVENT_ID, DATABASE_EXERCISEEVENT_DESCRIPTION,
 				DATABASE_EXERCISEEVENT_STARTTIME,
 				DATABASE_EXERCISEEVENT_STOPTIME,
-				DATABASE_EXERCISEEVENT_TIMESTAMP,
+				DATABASE_EXERCISEEVENT_EVENTDATETIME,
 				DATABASE_EXERCISEEVENT_EXERCISETYPEID,
 				DATABASE_EXERCISEEVENT_USERID }, DATABASE_EXERCISEEVENT_ID
 				+ "=" + id, null, null, null, null);
+	}
+
+	// get all exercise events by timestamp
+	public Cursor fetchExerciseEventsByTimestamp(Long timestamp) {
+		return mDb.query(DATABASE_EXERCISEEVENT_TABLE, new String[] {
+				DATABASE_EXERCISEEVENT_ID, DATABASE_EXERCISEEVENT_DESCRIPTION,
+				DATABASE_EXERCISEEVENT_STARTTIME,
+				DATABASE_EXERCISEEVENT_STOPTIME,
+				DATABASE_EXERCISEEVENT_EVENTDATETIME,
+				DATABASE_EXERCISEEVENT_EXERCISETYPEID,
+				DATABASE_EXERCISEEVENT_USERID },
+				DATABASE_EXERCISEEVENT_EVENTDATETIME + " like '" + timestamp
+						+ "'", null, null, null, null);
 	}
 
 	// update exercise event by ID
@@ -279,8 +388,8 @@ public class DbAdapter extends SQLiteOpenHelper {
 
 	// delete exercise event by ID
 	public boolean deleteExerciseEventByID(long id) {
-		return mDb.delete(DATABASE_EXERCISEEVENT_TABLE, DATABASE_EXERCISEEVENT_ID
-				+ "=" + id, null) > 0;
+		return mDb.delete(DATABASE_EXERCISEEVENT_TABLE,
+				DATABASE_EXERCISEEVENT_ID + "=" + id, null) > 0;
 	}
 
 	// Meal Type Functions
@@ -489,6 +598,15 @@ public class DbAdapter extends SQLiteOpenHelper {
 				DATABASE_FOOD_NAME, DATABASE_FOOD_ISFAVORITE,
 				DATABASE_FOOD_VISIBLE, DATABASE_FOOD_PLATFORM }, null, null,
 				DATABASE_FOOD_NAME, null, null);
+	}
+
+	// get food by language ID
+	public Cursor fetchFoodByLanguageID(long languageID) {
+		return mDb.query(DATABASE_FOOD_TABLE, new String[] { DATABASE_FOOD_ID,
+				DATABASE_FOOD_NAME, DATABASE_FOOD_ISFAVORITE,
+				DATABASE_FOOD_VISIBLE, DATABASE_FOOD_PLATFORM,
+				DATABASE_FOOD_FOODLANGUAGEID }, DATABASE_FOOD_FOODLANGUAGEID
+				+ "=" + languageID, null, DATABASE_FOOD_NAME, null, null);
 	}
 
 	// get a food by id

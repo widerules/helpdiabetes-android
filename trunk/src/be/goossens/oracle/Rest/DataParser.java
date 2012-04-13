@@ -28,20 +28,23 @@ public class DataParser {
 	public static final String doUpdateExerciseEvent = "updateExerciseEvent";
 	public static final String doCreateExerciseEvent = "createExerciseEvent";
 	public static final String idExerciseEvent = "exerciseEventID";
-	
+
 	// Exercise type //
 	public static final String doUpdateExerciseType = "updateExerciseType";
 	public static final String doCreateExerciseType = "createExerciseType";
 	public static final String idExerciseType = "exerciseTypeID";
-	
+
 	// used to parse the tabHost object //
 	public static final String tabhost = "tabhost";
-	
-	//Activity IDs //
-	public static final String activityIDTracking = "showTracking";
-	public static final String activityIDMeal = "showMeal";
-	public static final String activityIDGlucose = "showGlucose";
-	public static final String activityIDMedicine = "showMedicine";
-	public static final String activityIDExercise = "showExercise";
-	public static final String activityIDSettings = "showSettings";
+
+	// used to parse the boolean from showhometab to showfoodlist
+	public static final String bool = "booleanFromHomeTabToFoodList";
+
+	// Activity IDs //
+	public static final String activityIDTracking = "showActivityTracking";
+	public static final String activityIDMeal = "showActivityMeal";
+	public static final String activityIDGlucose = "showActivityGlucose";
+	public static final String activityIDMedicine = "showActivityMedicine";
+	public static final String activityIDExercise = "showActivityExercise";
+	public static final String activityIDSettings = "showActivitySettings";
 }
