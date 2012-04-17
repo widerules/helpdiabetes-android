@@ -6,20 +6,30 @@ import java.util.List;
 
 import android.app.ListActivity;
 import android.database.Cursor;
+import android.os.AsyncTask;
+import android.os.AsyncTask.Status;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 import be.goossens.oracle.R;
 import be.goossens.oracle.Custom.CustomArrayAdapterDBTracking;
+import be.goossens.oracle.Objects.DBBloodGlucoseEvent;
 import be.goossens.oracle.Objects.DBExerciseEvent;
 import be.goossens.oracle.Objects.DBMealEvent;
 import be.goossens.oracle.Objects.DBTracking;
+import be.goossens.oracle.Rest.DataParser;
 import be.goossens.oracle.Rest.DbAdapter;
+import be.goossens.oracle.Rest.Functions;
 
 public class ShowTracking extends ListActivity {
 	private DbAdapter dbHelper;
 	private List<DBTracking> listTracking;
+	private CustomArrayAdapterDBTracking adapter;
+	private TextView tvFetchingData;
+	private DoInBackground inBackground;
+	private boolean threadFinished;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -27,14 +37,37 @@ public class ShowTracking extends ListActivity {
 		setContentView(R.layout.show_tracking);
 		dbHelper = new DbAdapter(this);
 		listTracking = new ArrayList<DBTracking>();
+		adapter = null;
+		tvFetchingData = (TextView) findViewById(R.id.textViewFetchingData);
+		inBackground = new DoInBackground();
 	}
 
 	@Override
 	protected void onResume() {
 		super.onResume();
-		dbHelper.open();
+ 
+		tvFetchingData.setVisibility(View.VISIBLE);
+		setListAdapter(null);
+		// inBackground.execute();
+		new DoInBackground().execute();
 
-		fillListView();
+	}
+
+	private class DoInBackground extends AsyncTask<Void, Void, Void> {
+		@Override
+		protected Void doInBackground(Void... params) {
+			dbHelper.open();
+			fillListView();
+			dbHelper.close();
+			return null;
+		}
+
+		@Override
+		protected void onPostExecute(Void result) {
+			tvFetchingData.setVisibility(View.GONE);
+			setListAdapter(adapter);
+			super.onPostExecute(result);
+		}
 	}
 
 	private void fillListView() {
@@ -44,8 +77,8 @@ public class ShowTracking extends ListActivity {
 			// create the list
 			listTracking = new ArrayList<DBTracking>();
 			// Fill the list with 1 item "no records found"
-			listTracking.add(new DBTracking(null, null, null, getResources()
-					.getString(R.string.noTrackingValues)));
+			listTracking.add(new DBTracking(null, null, null, null,
+					getResources().getString(R.string.noTrackingValues)));
 
 		}
 
@@ -53,13 +86,13 @@ public class ShowTracking extends ListActivity {
 				R.string.font_size));
 		cSetting.moveToFirst();
 
-		CustomArrayAdapterDBTracking adapter = new CustomArrayAdapterDBTracking(
+		adapter = new CustomArrayAdapterDBTracking(
 				this,
-				R.layout.row_custom_array_adapter,
+				0,
 				listTracking,
 				cSetting.getInt(cSetting
 						.getColumnIndexOrThrow(DbAdapter.DATABASE_SETTINGS_VALUE)));
-		setListAdapter(adapter);
+		// setListAdapter(adapter);
 		cSetting.close();
 
 	}
@@ -70,154 +103,129 @@ public class ShowTracking extends ListActivity {
 		listTracking = new ArrayList<DBTracking>();
 		// needed to temp store the dates in
 		List<Date> listDates = new ArrayList<Date>();
-
 		// get all needed objects
-		Cursor cExerciseEvents = dbHelper.fetchAllExerciseEvents();
-		Cursor cMealEvents = dbHelper.fetchAllMealEvents();
-		// if exercise event != 0 then we can move to first
-		if (cExerciseEvents.getCount() > 0) {
-			cExerciseEvents.moveToFirst();
+		Cursor cDates = dbHelper.fetchAllTimestamps();
+
+		// fill listDates with all the dates
+		if (cDates.getCount() > 0) {
+			cDates.moveToFirst();
 			do {
-				// check if the date already exists in the list
-				boolean exists = false;
-				for (Date time : listDates) {
-					Date dbDate = new Date(
-							cExerciseEvents.getLong(cExerciseEvents
-									.getColumnIndexOrThrow(DbAdapter.DATABASE_EXERCISEEVENT_EVENTDATETIME)));
-
-					if (time.getTime() == dbDate.getTime())
-						exists = true;
-				}
-
-				// if the date doesnt exists in the list, we can add it!
-				if (!exists) {
-					// add the date to the list
-					listDates
-							.add(new Date(
-									cExerciseEvents.getLong(cExerciseEvents
-											.getColumnIndexOrThrow(DbAdapter.DATABASE_EXERCISEEVENT_EVENTDATETIME))));
-				}
-			} while (cExerciseEvents.moveToNext());
+				listDates
+						.add(new Functions().getYearMonthDayAsDateFromString(cDates.getString(cDates
+								.getColumnIndexOrThrow(new DataParser().timestamp))));
+			} while (cDates.moveToNext());
 		}
+		cDates.close();
 
-		// if meal event != 0 then we can move to first
-		if (cMealEvents.getCount() != 0) {
-			cMealEvents.moveToFirst();
-			do {
-				// check if the date already exists in the list
-				boolean exists = false;
-				for (Date time : listDates) {
-					Date dbDate = new Date(
-							cMealEvents.getLong(cMealEvents
-									.getColumnIndexOrThrow(DbAdapter.DATABASE_MEALEVENT_EVENTDATETIME)));
-					if (time.getTime() == dbDate.getTime())
-						exists = true;
-				}
+		for (Date date : listDates) {
+			// For each date object add it to the listview
+			listTracking.add(new DBTracking(null, null, null, date, ""));
 
-				// if the date doesnt exists in the list, we can add it!
-				if (!exists)
-					listDates
-							.add(new Date(
-									cMealEvents.getLong(cMealEvents
-											.getColumnIndexOrThrow(DbAdapter.DATABASE_MEALEVENT_EVENTDATETIME))));
-			} while (cMealEvents.moveToNext());
-		}
-
-		// /////////////////// For every date object /////////////////////
-		for (Date timestamp : listDates) {
-			// first we add the timestamp in a object so we can display it as a
-			// single row
-			listTracking.add(new DBTracking(null, null, timestamp, ""));
-
-			// get all exercise events from timestamp
-			Cursor cExerciseEventsFromTimestamp = dbHelper
-					.fetchExerciseEventsByTimestamp(timestamp.getTime());
-
-			// get all the meal events from timestamp
-			Cursor cMealEventsFromTimestamp = dbHelper
-					.fetchAllMealEventsByTimestamp(timestamp.getTime());
-
-			// if exercise event != 0 we can move to first
-			if (cExerciseEventsFromTimestamp.getCount() > 0) {
-				cExerciseEventsFromTimestamp.moveToFirst();
+			// For each date get the exercise events
+			Cursor cExerciseEvents = dbHelper
+					.fetchExerciseEventByDate(new Functions()
+							.getYearMonthDayAsStringFromDate(date));
+			if (cExerciseEvents.getCount() > 0) {
+				cExerciseEvents.moveToFirst();
 				do {
+					Cursor cExerciseType = dbHelper
+							.fetchExerciseTypeByID(cExerciseEvents.getLong(cExerciseEvents
+									.getColumnIndexOrThrow(DbAdapter.DATABASE_EXERCISEEVENT_EXERCISETYPEID)));
+					cExerciseType.moveToFirst();
+
 					listTracking
 							.add(new DBTracking(
 									new DBExerciseEvent(
-											cExerciseEventsFromTimestamp
-													.getLong(cExerciseEventsFromTimestamp
+											cExerciseEvents
+													.getLong(cExerciseEvents
 															.getColumnIndexOrThrow(DbAdapter.DATABASE_EXERCISEEVENT_ID)),
-											cExerciseEventsFromTimestamp
-													.getString(cExerciseEventsFromTimestamp
-															.getColumnIndexOrThrow(DbAdapter.DATABASE_EXERCISEEVENT_DESCRIPTION)),
-											cExerciseEventsFromTimestamp
-													.getInt(cExerciseEventsFromTimestamp
-															.getColumnIndexOrThrow(DbAdapter.DATABASE_EXERCISEEVENT_STARTTIME)),
-											cExerciseEventsFromTimestamp
-													.getInt(cExerciseEventsFromTimestamp
-															.getColumnIndexOrThrow(DbAdapter.DATABASE_EXERCISEEVENT_STOPTIME)),
-											cExerciseEventsFromTimestamp
-													.getString(cExerciseEventsFromTimestamp
-															.getColumnIndexOrThrow(DbAdapter.DATABASE_EXERCISEEVENT_EVENTDATETIME)),
-											cExerciseEventsFromTimestamp
-													.getInt(cExerciseEventsFromTimestamp
-															.getColumnIndexOrThrow(DbAdapter.DATABASE_EXERCISEEVENT_EXERCISETYPEID)),
-											cExerciseEventsFromTimestamp
-													.getInt(cExerciseEventsFromTimestamp
-															.getColumnIndexOrThrow(DbAdapter.DATABASE_EXERCISEEVENT_USERID))),
-									null, null, ""));
-				} while (cExerciseEventsFromTimestamp.moveToNext());
-			}
+											cExerciseEvents.getString(cExerciseEvents
+													.getColumnIndexOrThrow(DbAdapter.DATABASE_EXERCISEEVENT_DESCRIPTION)),
+											cExerciseEvents.getInt(cExerciseEvents
+													.getColumnIndexOrThrow(DbAdapter.DATABASE_EXERCISEEVENT_STARTTIME)),
+											cExerciseEvents.getInt(cExerciseEvents
+													.getColumnIndexOrThrow(DbAdapter.DATABASE_EXERCISEEVENT_STOPTIME)),
+											cExerciseEvents.getString(cExerciseEvents
+													.getColumnIndexOrThrow(DbAdapter.DATABASE_EXERCISEEVENT_EVENTDATETIME)),
+											cExerciseEvents.getLong(cExerciseEvents
+													.getColumnIndexOrThrow(DbAdapter.DATABASE_EXERCISEEVENT_EXERCISETYPEID)),
+											cExerciseEvents.getLong(cExerciseEvents
+													.getColumnIndexOrThrow(DbAdapter.DATABASE_EXERCISEEVENT_USERID)),
+											cExerciseType.getString(cExerciseType
+													.getColumnIndexOrThrow(DbAdapter.DATABASE_EXERCISETYPE_NAME))),
+									null, null, null, ""));
 
-			// if meal event != 0 we can move to first
-			if (cMealEventsFromTimestamp.getCount() > 0) {
-				cMealEventsFromTimestamp.moveToFirst();
+					cExerciseType.close();
+				} while (cExerciseEvents.moveToNext());
+			}
+			cExerciseEvents.close();
+
+			// For each date get the meal event
+			Cursor cMealEvents = dbHelper.fetchMealEventsByDate(new Functions()
+					.getYearMonthDayAsStringFromDate(date));
+			if (cMealEvents.getCount() > 0) {
+				cMealEvents.moveToFirst();
 				do {
 					listTracking
 							.add(new DBTracking(
 									null,
 									new DBMealEvent(
-											cMealEventsFromTimestamp
-													.getLong(cMealEventsFromTimestamp
+											cMealEvents
+													.getLong(cMealEvents
 															.getColumnIndexOrThrow(DbAdapter.DATABASE_MEALEVENT_ID)),
-											cMealEventsFromTimestamp
-													.getFloat(cMealEventsFromTimestamp
-															.getColumnIndexOrThrow(DbAdapter.DATABASE_MEALEVENT_INSULINERATIO)),
-											cMealEventsFromTimestamp
-													.getFloat(cMealEventsFromTimestamp
-															.getColumnIndexOrThrow(DbAdapter.DATABASE_MEALEVENT_CORRECTIONFACTOR)),
-											cMealEventsFromTimestamp
-													.getFloat(cMealEventsFromTimestamp
-															.getColumnIndexOrThrow(DbAdapter.DATABASE_MEALEVENT_CALCULATEDINSULINEAMOUNT)),
-											cMealEventsFromTimestamp
-													.getString(cMealEventsFromTimestamp
-															.getColumnIndexOrThrow(DbAdapter.DATABASE_MEALEVENT_EVENTDATETIME)),
-											cMealEventsFromTimestamp
-													.getLong(cMealEventsFromTimestamp
-															.getColumnIndexOrThrow(DbAdapter.DATABASE_MEALEVENT_USERID)),
-											null), null, ""));
-				} while (cMealEventsFromTimestamp.moveToNext());
+											cMealEvents.getFloat(cMealEvents
+													.getColumnIndexOrThrow(DbAdapter.DATABASE_MEALEVENT_INSULINERATIO)),
+											cMealEvents.getFloat(cMealEvents
+													.getColumnIndexOrThrow(DbAdapter.DATABASE_MEALEVENT_CORRECTIONFACTOR)),
+											cMealEvents.getFloat(cMealEvents
+													.getColumnIndexOrThrow(DbAdapter.DATABASE_MEALEVENT_CALCULATEDINSULINEAMOUNT)),
+											cMealEvents.getString(cMealEvents
+													.getColumnIndexOrThrow(DbAdapter.DATABASE_MEALEVENT_EVENTDATETIME)),
+											cMealEvents.getLong(cMealEvents
+													.getColumnIndexOrThrow(DbAdapter.DATABASE_MEALEVENT_USERID)),
+											null), null, null, ""));
+				} while (cMealEvents.moveToNext());
 			}
+			cMealEvents.close();
 
-			// close the cusor we dont need anymore
-			cMealEventsFromTimestamp.close();
-			cExerciseEventsFromTimestamp.close();
+			// For each date get the glucose event
+			Cursor cGlucoseEvent = dbHelper
+					.fetchBloodGlucoseEventByDate(new Functions()
+							.getYearMonthDayAsStringFromDate(date));
+			if (cGlucoseEvent.getCount() > 0) {
+				cGlucoseEvent.moveToFirst();
+				do {
+					// get the unit
+					Cursor cBGUnit = dbHelper
+							.fetchBloodGlucoseUnitsByID(cGlucoseEvent.getLong(cGlucoseEvent
+									.getColumnIndexOrThrow(DbAdapter.DATABASE_BLOODGLUCOSEEVENT_BGUNITID)));
+					cBGUnit.moveToFirst();
+
+					listTracking
+							.add(new DBTracking(
+									null,
+									null,
+									new DBBloodGlucoseEvent(
+											cGlucoseEvent
+													.getLong(cGlucoseEvent
+															.getColumnIndexOrThrow(DbAdapter.DATABASE_BLOODGLUCOSEEVENT_ID)),
+											cGlucoseEvent.getFloat(cGlucoseEvent
+													.getColumnIndexOrThrow(DbAdapter.DATABASE_BLOODGLUCOSEEVENT_AMOUNT)),
+											cGlucoseEvent.getString(cGlucoseEvent
+													.getColumnIndexOrThrow(DbAdapter.DATABASE_BLOODGLUCOSEEVENT_EVENTDATETIME)),
+											cGlucoseEvent.getLong(cGlucoseEvent
+													.getColumnIndexOrThrow(DbAdapter.DATABASE_BLOODGLUCOSEEVENT_BGUNITID)),
+											cGlucoseEvent.getLong(cGlucoseEvent
+													.getColumnIndexOrThrow(DbAdapter.DATABASE_BLOODGLUCOSEEVENT_USERID)),
+											cBGUnit.getString(cBGUnit
+													.getColumnIndexOrThrow(DbAdapter.DATABASE_BLOODGLUCOSEUNIT_UNIT))),
+									null, ""));
+
+					cBGUnit.close();
+				} while (cGlucoseEvent.moveToNext());
+			}
+			cGlucoseEvent.close();
 		}
-
-		// close the cursors we dont need anymore
-		cMealEvents.close();
-		cExerciseEvents.close();
-
-		/*// test gething all time stamps
-		Cursor cTimeStamps = dbHelper.fetchAllTimestamps();
-		if (cTimeStamps.getCount() > 0) {
-			cTimeStamps.moveToFirst();
-			do{
-			Toast.makeText(this, "" + cTimeStamps.getString(cTimeStamps.getColumnIndexOrThrow("time")), Toast.LENGTH_LONG)
-			.show();}while(cTimeStamps.moveToNext());
-		}
-		cTimeStamps.close();*/
-		
 	}
 
 	@Override
@@ -232,6 +240,7 @@ public class ShowTracking extends ListActivity {
 	@Override
 	protected void onPause() {
 		super.onPause();
+		inBackground.cancel(true);
 		dbHelper.close();
 	}
 }

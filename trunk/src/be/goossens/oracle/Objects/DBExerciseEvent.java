@@ -10,9 +10,10 @@ public class DBExerciseEvent {
 	private String timeStamp;
 	private long exerciseTypeID;
 	private long userID;
-
+	private String type;
+	
 	public DBExerciseEvent(long id, String description, int startTime,
-			int endTime, String timeStamp, long exerciseTypeID, long userID) {
+			int endTime, String timeStamp, long exerciseTypeID, long userID,String type) {
 		super();
 		this.id = id;
 		this.description = description;
@@ -21,6 +22,15 @@ public class DBExerciseEvent {
 		this.timeStamp = timeStamp;
 		this.exerciseTypeID = exerciseTypeID;
 		this.userID = userID;
+		this.type = type;
+	}
+
+	public String getType() {
+		return type;
+	}
+
+	public void setType(String type) {
+		this.type = type;
 	}
 
 	public long getId() {

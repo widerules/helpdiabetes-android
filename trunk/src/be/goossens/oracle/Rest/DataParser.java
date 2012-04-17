@@ -40,6 +40,9 @@ public class DataParser {
 	// used to parse the boolean from showhometab to showfoodlist
 	public static final String bool = "booleanFromHomeTabToFoodList";
 
+	// used to get all the timestamps out the database
+	public static final String timestamp = "eventDateTimeFromDB";
+	
 	// Activity IDs //
 	public static final String activityIDTracking = "showActivityTracking";
 	public static final String activityIDMeal = "showActivityMeal";

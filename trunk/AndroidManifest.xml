@@ -45,7 +45,9 @@
         </activity>
         <activity android:name=".Show.Tracking.ShowTracking" >
         </activity>
-        <activity android:name=".Show.ShowHomeTab" >
+        <activity
+            android:name=".Show.ShowHomeTab"
+            android:theme="@android:style/Theme.NoTitleBar" >
         </activity>
         <activity android:name=".ActivityGroup.ActivityGroupTracking" >
         </activity>
@@ -59,13 +61,11 @@
         </activity>
         <activity android:name=".ActivityGroup.ActivityGroupSettings" >
         </activity>
-        <activity android:name=".Show.Glucose.ShowAddGlucose" >
+        <activity android:name=".Show.Glucose.ShowAddGlucoseEvent" >
         </activity>
         <activity android:name=".Show.ShowSelectLanguage" >
         </activity>
-        <activity
-            android:name=".Show.ShowStart"
-            android:theme="@android:style/Theme.NoTitleBar" >
+        <activity android:name=".Show.ShowStart" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
