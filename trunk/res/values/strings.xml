@@ -48,6 +48,8 @@
 	<string name="time_up"> + </string>
     <string name="time_down"> - </string>
 	
+    <!-- ShowAddBloodGlucoseEvent -->
+    <string name="amountCantBeZero">Waarde mag niet 0 zijn!</string>
 	
     <!-- ShowAddExerciseType -->
     <string name="exercise_type_cant_be_empty">Intensiteit mag niet leeg zijn</string>
