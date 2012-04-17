@@ -9,9 +9,9 @@ import android.app.ListActivity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.res.Configuration;
 import android.database.Cursor;
 import android.os.AsyncTask;
+import android.os.AsyncTask.Status;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -58,19 +58,18 @@ public class ShowFoodList extends ListActivity {
 	 * to this activity
 	 */
 	private boolean startUp;
- 
-	// This boolean is used to see if asynctask is running
-	private boolean runAsyncTask;
+	private String getState = "getState";
 
+	private boolean threadFinished;
+	
 	@Override
-	public void onCreate(Bundle savedInstanceState) { 
+	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
 		View contentView = LayoutInflater.from(getParent()).inflate(
 				R.layout.show_food_list, null);
 		setContentView(contentView);
 
-		runAsyncTask = false;
 		startUp = true;
 
 		customArrayAdapterFoodList = null;
@@ -110,23 +109,44 @@ public class ShowFoodList extends ListActivity {
 				onClickShowSelectedFood(v);
 			}
 		});
-
 		updateButton();
+	}
 
-		if (startUp)
-			checkToShowPopUpToDeleteSelectedFood();
+	@Override
+	protected void onRestoreInstanceState(Bundle state) {
+		super.onRestoreInstanceState(state);
+		// retrieve the startUpBoolean
+		startUp = state.getBoolean(getState);
+	}
+
+	@Override
+	protected void onSaveInstanceState(Bundle outState) {
+		// save the startUpBoolean
+		outState.putBoolean(getState, startUp);
+		super.onSaveInstanceState(outState);
 	}
 
 	protected void onResume() {
-		refreshFoodList();
+		if (startUp)
+			checkToShowPopUpToDeleteSelectedFood();
+
+		fillListViewFood();
+		
 		super.onResume();
 	};
-
-	public void refreshFoodList() {
-		if (!runAsyncTask) {
-			runAsyncTask = true;
-			new threadUpdateListAdapter().execute();
+ 
+	// run when we come to this activity
+	private void fillListViewFood() {
+		if(!threadFinished){
+			new ThreadUpdateListAdapter().execute();
 		}
+	}
+	  
+	public void refreshFoodList() {
+		//if (threadUpdateListAdapter.getStatus() == Status.FINISHED) {
+		//	setListAdapter(null);
+		//	threadUpdateListAdapter.execute();
+		//}
 	}
 
 	// asynctask is used to thread in android
@@ -134,12 +154,10 @@ public class ShowFoodList extends ListActivity {
 	// list
 	// Then it will sort that array list
 	// and then it wil call onpostexecute where it wil update the list adapter
-	private class threadUpdateListAdapter extends AsyncTask<Void, Void, Void> {
+	private class ThreadUpdateListAdapter extends AsyncTask<Void, Void, Void> {
 
 		@Override
 		protected Void doInBackground(Void... params) {
-			//make list empty so we cant click on a item that doesnt exists anymore!
-			setListAdapter(null);
 			// open connection
 			dbHelperFoodList.open();
 			// get objects out of the database
@@ -148,10 +166,17 @@ public class ShowFoodList extends ListActivity {
 		}
 
 		@Override
-		protected void onPostExecute(Void result) {
+		protected void onCancelled() {
 			updateListAdapter();
 			dbHelperFoodList.close();
-			runAsyncTask = false;
+			super.onCancelled();
+		}
+
+		@Override
+		protected void onPostExecute(Void result) {
+			threadFinished = true;
+			updateListAdapter();
+			dbHelperFoodList.close();
 			super.onPostExecute(result);
 		}
 	}
@@ -293,7 +318,7 @@ public class ShowFoodList extends ListActivity {
 					}
 				}
 			};
-  
+
 			AlertDialog.Builder builder = new AlertDialog.Builder(
 					ActivityGroupMeal.group);
 			builder.setMessage(
@@ -341,7 +366,7 @@ public class ShowFoodList extends ListActivity {
 				.startActivity(DataParser.activityIDMeal, i).getDecorView();
 		ActivityGroupMeal.group.setContentView(v);
 	}
- 
+
 	@Override
 	protected void onPause() {
 		dbHelper.close();

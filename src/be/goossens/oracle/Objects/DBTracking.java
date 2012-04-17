@@ -5,24 +5,19 @@ import java.util.Date;
 public class DBTracking {
 	private DBExerciseEvent exerciseEvent;
 	private DBMealEvent mealEvent;
+	private DBBloodGlucoseEvent bloodGlucoseEvent;
 	private Date timestamp;
 	private String noRecors;
 
 	public DBTracking(DBExerciseEvent exerciseEvent, DBMealEvent mealEvent,
-			Date timestamp, String noRecors) {
+			DBBloodGlucoseEvent bloodGlucoseEvent, Date timestamp,
+			String noRecors) {
 		super();
 		this.exerciseEvent = exerciseEvent;
 		this.mealEvent = mealEvent;
+		this.bloodGlucoseEvent = bloodGlucoseEvent;
 		this.timestamp = timestamp;
 		this.noRecors = noRecors;
-	}
-
-	public DBMealEvent getMealEvent() {
-		return mealEvent;
-	}
-
-	public void setMealEvent(DBMealEvent mealEvent) {
-		this.mealEvent = mealEvent;
 	}
 
 	public DBExerciseEvent getExerciseEvent() {
@@ -33,6 +28,22 @@ public class DBTracking {
 		this.exerciseEvent = exerciseEvent;
 	}
 
+	public DBMealEvent getMealEvent() {
+		return mealEvent;
+	}
+
+	public void setMealEvent(DBMealEvent mealEvent) {
+		this.mealEvent = mealEvent;
+	}
+
+	public DBBloodGlucoseEvent getBloodGlucoseEvent() {
+		return bloodGlucoseEvent;
+	}
+
+	public void setBloodGlucoseEvent(DBBloodGlucoseEvent bloodGlucoseEvent) {
+		this.bloodGlucoseEvent = bloodGlucoseEvent;
+	}
+
 	public Date getTimestamp() {
 		return timestamp;
 	}
@@ -41,7 +52,7 @@ public class DBTracking {
 		this.timestamp = timestamp;
 	}
 
-	public String getNoRecors() {
+	public String getNoRecords() {
 		return noRecors;
 	}
 

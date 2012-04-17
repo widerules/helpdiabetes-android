@@ -30,6 +30,21 @@ public class DbAdapter extends SQLiteOpenHelper {
 	private SQLiteDatabase mDb;
 	private final Context mCtx;
 
+	// BloodGlucoseEvent
+	private static final String DATABASE_BLOODGLUCOSEEVENT_TABLE = "BloodGlucoseEvent";
+	public static final String DATABASE_BLOODGLUCOSEEVENT_ID = "_id";
+	public static final String DATABASE_BLOODGLUCOSEEVENT_AMOUNT = "Amount";
+	public static final String DATABASE_BLOODGLUCOSEEVENT_EVENTDATETIME = "EventDateTime";
+	public static final String DATABASE_BLOODGLUCOSEEVENT_BGUNITID = "BGUnitID";
+	public static final String DATABASE_BLOODGLUCOSEEVENT_USERID = "UserID";
+
+	// BloodGlucoseUnit
+	private static final String DATABASE_BLOODGLUCOSEUNIT_TABLE = "BloodGlucoseUnit";
+	public static final String DATABASE_BLOODGLUCOSEUNIT_ID = "_id";
+	public static final String DATABASE_BLOODGLUCOSEUNIT_UNITDESCRIPTION = "UnitDescription";
+	public static final String DATABASE_BLOODGLUCOSEUNIT_UNIT = "Unit";
+	public static final String DATABASE_BLOODGLUCOSEUNIT_VISIBLE = "Visible";
+
 	// MealFood
 	private static final String DATABASE_MEALFOOD_TABLE = "MealFood";
 	public static final String DATABASE_MEALFOOD_ID = "_id";
@@ -79,7 +94,7 @@ public class DbAdapter extends SQLiteOpenHelper {
 	private static final String DATABASE_FOODTEMPLATE_TABLE = "FoodTemplate";
 	public static final String DATABASE_FOODTEMPLATE_ID = "_id";
 	public static final String DATABASE_FOODTEMPLATE_MEALTYPEID = "MealTypeID";
-	public static final String DATABASE_FOODTEMPLATE_USERID = "UserID"; 
+	public static final String DATABASE_FOODTEMPLATE_USERID = "UserID";
 	public static final String DATABASE_FOODTEMPLATE_VISIBLE = "Visible";
 	public static final String DATABASE_FOODTEMPLATE_FOODTEMPLATENAME = "FoodTemplateName";
 
@@ -158,12 +173,12 @@ public class DbAdapter extends SQLiteOpenHelper {
 		return false;
 	}
 
-	public void open() {
+	public void open() { 
 		String myPath = DB_PATH + DB_NAME;
 		mDb = SQLiteDatabase.openDatabase(myPath, null,
 				SQLiteDatabase.OPEN_READWRITE);
 	}
- 
+
 	private boolean checkDatabase() {
 		SQLiteDatabase checkDB = null;
 		try {
@@ -171,8 +186,8 @@ public class DbAdapter extends SQLiteOpenHelper {
 			String myPath = DB_PATH + DB_NAME;
 			checkDB = SQLiteDatabase.openDatabase(myPath, null,
 					SQLiteDatabase.OPEN_READONLY);
-			checkDB.close(); 
-			return true;      
+			checkDB.close();
+			return true;
 		} catch (SQLiteException e) {
 			// The database does not exists
 			return false;
@@ -188,7 +203,7 @@ public class DbAdapter extends SQLiteOpenHelper {
 		OutputStream myOutput = new FileOutputStream(DB_PATH + DB_NAME);
 
 		ZipInputStream zis = new ZipInputStream(new BufferedInputStream(is));
-		try {  
+		try {
 			while ((zis.getNextEntry()) != null) {
 				ByteArrayOutputStream baos = new ByteArrayOutputStream();
 				byte[] buffer = new byte[1024];
@@ -217,10 +232,74 @@ public class DbAdapter extends SQLiteOpenHelper {
 
 	// get all timestamps
 	public Cursor fetchAllTimestamps() {
+		return mDb.rawQuery("SELECT DISTINCT date(eventdatetime) as '"
+				+ new DataParser().timestamp + "' from (select "
+				+ DATABASE_EXERCISEEVENT_EVENTDATETIME + " from "
+				+ DATABASE_EXERCISEEVENT_TABLE + " UNION select "
+				+ DATABASE_MEALEVENT_EVENTDATETIME + " from "
+				+ DATABASE_MEALEVENT_TABLE + " UNION select "
+				+ DATABASE_BLOODGLUCOSEEVENT_EVENTDATETIME + " from "
+				+ DATABASE_BLOODGLUCOSEEVENT_TABLE + ") order by 1 desc", null);
+	}
+
+	// BloodGlucose Events Functions
+	// create
+	public long createBloodGlucoseEvent(float amount, String timestamp,
+			long bloodglucoseUnitID) {
+		ContentValues initialValues = new ContentValues();
+		initialValues.put(DATABASE_BLOODGLUCOSEEVENT_AMOUNT, amount);
+		initialValues.put(DATABASE_BLOODGLUCOSEEVENT_EVENTDATETIME, timestamp);
+		initialValues.put(DATABASE_BLOODGLUCOSEEVENT_BGUNITID,
+				bloodglucoseUnitID);
+		initialValues.put(DATABASE_BLOODGLUCOSEEVENT_USERID, "0");
 		return mDb
-				.rawQuery(
-						"SELECT datetime(EventDateTime) as 'time' from (select EventDateTime from MealEvent UNION SELECT EventDateTime from ExerciseEvent)",
-						null);
+				.insert(DATABASE_BLOODGLUCOSEEVENT_TABLE, null, initialValues);
+	}
+
+	// get all blood glucose events
+	public Cursor fetchAllBloodGlucoseEvents() {
+		return mDb.query(DATABASE_BLOODGLUCOSEEVENT_TABLE, new String[] {
+				DATABASE_BLOODGLUCOSEEVENT_ID,
+				DATABASE_BLOODGLUCOSEEVENT_AMOUNT,
+				DATABASE_BLOODGLUCOSEEVENT_EVENTDATETIME,
+				DATABASE_BLOODGLUCOSEEVENT_BGUNITID,
+				DATABASE_BLOODGLUCOSEEVENT_USERID }, null, null, null, null,
+				null);
+	}
+
+	// get blood glucose events by timestamp
+	public Cursor fetchBloodGlucoseEventByDate(String date) {
+		return mDb.query(DATABASE_BLOODGLUCOSEEVENT_TABLE, new String[] {
+				DATABASE_BLOODGLUCOSEEVENT_ID,
+				DATABASE_BLOODGLUCOSEEVENT_AMOUNT,
+				DATABASE_BLOODGLUCOSEEVENT_EVENTDATETIME,
+				DATABASE_BLOODGLUCOSEEVENT_BGUNITID,
+				DATABASE_BLOODGLUCOSEEVENT_USERID }, "date("
+				+ DATABASE_BLOODGLUCOSEEVENT_EVENTDATETIME + ") " + " = "
+				+ "date('" + date + "')", null, null, null, null);
+	}
+
+	// BloodGlucose Unit Functions
+	// get all blood glucose units
+	public Cursor fetchAllBloodGlucoseUnits() {
+		return mDb.query(DATABASE_BLOODGLUCOSEUNIT_TABLE, new String[] {
+				DATABASE_BLOODGLUCOSEUNIT_ID,
+				DATABASE_BLOODGLUCOSEUNIT_UNITDESCRIPTION,
+				DATABASE_BLOODGLUCOSEUNIT_UNIT,
+				DATABASE_BLOODGLUCOSEUNIT_VISIBLE }, null, null, null, null,
+				null);
+	}
+
+	// get blood glucose units by id
+	public Cursor fetchBloodGlucoseUnitsByID(long id) {
+		return mDb
+				.query(DATABASE_BLOODGLUCOSEUNIT_TABLE, new String[] {
+						DATABASE_BLOODGLUCOSEUNIT_ID,
+						DATABASE_BLOODGLUCOSEUNIT_UNITDESCRIPTION,
+						DATABASE_BLOODGLUCOSEUNIT_UNIT,
+						DATABASE_BLOODGLUCOSEUNIT_VISIBLE },
+						DATABASE_BLOODGLUCOSEUNIT_ID + "=" + id, null, null,
+						null, null);
 	}
 
 	// Food Language Functions
@@ -245,7 +324,7 @@ public class DbAdapter extends SQLiteOpenHelper {
 	// Meal Event Functions
 	// create
 	public long createMealEvent(float insulineRatio, float correctionFactor,
-			float calculatedInsulineAmount, long timestamp) {
+			float calculatedInsulineAmount, String timestamp) {
 		ContentValues initialValues = new ContentValues();
 		initialValues.put(DATABASE_MEALEVENT_INSULINERATIO, insulineRatio);
 		initialValues
@@ -268,14 +347,14 @@ public class DbAdapter extends SQLiteOpenHelper {
 	}
 
 	// get all meal events by timestamp
-	public Cursor fetchAllMealEventsByTimestamp(long timestamp) {
+	public Cursor fetchMealEventsByDate(String date) {
 		return mDb.query(DATABASE_MEALEVENT_TABLE, new String[] {
 				DATABASE_MEALEVENT_ID, DATABASE_MEALEVENT_INSULINERATIO,
 				DATABASE_MEALEVENT_CORRECTIONFACTOR,
 				DATABASE_MEALEVENT_CALCULATEDINSULINEAMOUNT,
 				DATABASE_MEALEVENT_EVENTDATETIME, DATABASE_MEALEVENT_USERID },
-				DATABASE_MEALEVENT_EVENTDATETIME + " like '" + timestamp + "'",
-				null, null, null, null);
+				"date(" + DATABASE_MEALEVENT_EVENTDATETIME + ") " + " = "
+						+ "date('" + date + "')", null, null, null, null);
 	}
 
 	// Exercise Type Functions
@@ -324,7 +403,7 @@ public class DbAdapter extends SQLiteOpenHelper {
 	// Exercise Event Funtions
 	// create
 	public long createExerciseEvent(String description, int startTime,
-			int stopTime, long exerciseTypeID, long timestamp) {
+			int stopTime, long exerciseTypeID, String timestamp) {
 		ContentValues initialValues = new ContentValues();
 		initialValues.put(DATABASE_EXERCISEEVENT_DESCRIPTION, description);
 		initialValues.put(DATABASE_EXERCISEEVENT_STARTTIME, startTime);
@@ -359,17 +438,24 @@ public class DbAdapter extends SQLiteOpenHelper {
 				+ "=" + id, null, null, null, null);
 	}
 
-	// get all exercise events by timestamp
-	public Cursor fetchExerciseEventsByTimestamp(Long timestamp) {
+	// get exercise event by date
+
+	public Cursor fetchExerciseEventByDate(String date) {
 		return mDb.query(DATABASE_EXERCISEEVENT_TABLE, new String[] {
 				DATABASE_EXERCISEEVENT_ID, DATABASE_EXERCISEEVENT_DESCRIPTION,
 				DATABASE_EXERCISEEVENT_STARTTIME,
 				DATABASE_EXERCISEEVENT_STOPTIME,
 				DATABASE_EXERCISEEVENT_EVENTDATETIME,
 				DATABASE_EXERCISEEVENT_EXERCISETYPEID,
-				DATABASE_EXERCISEEVENT_USERID },
-				DATABASE_EXERCISEEVENT_EVENTDATETIME + " like '" + timestamp
-						+ "'", null, null, null, null);
+				DATABASE_EXERCISEEVENT_USERID }, "date("
+				+ DATABASE_EXERCISEEVENT_EVENTDATETIME + ")" + " = " + "date('"
+				+ date + "')", null, null, null, null);
+	}
+
+	public String test(String date) {
+		return "SELECT * FROM " + DATABASE_EXERCISEEVENT_TABLE
+				+ " WHERE date('" + DATABASE_EXERCISEEVENT_EVENTDATETIME
+				+ "') = date('" + date + "')";
 	}
 
 	// update exercise event by ID

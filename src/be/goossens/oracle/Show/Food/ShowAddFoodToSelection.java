@@ -175,6 +175,12 @@ public class ShowAddFoodToSelection extends Activity {
 	}
 
 	@Override
+	protected void onPause() {
+		super.onPause();
+		dbHelper.close();
+	}
+
+	@Override
 	protected void onResume() {
 		// clear the editTextSearch from showFoodList
 		ActivityGroupMeal.group.refreshShowFoodListEditTextSearch();

@@ -19,6 +19,7 @@ import be.goossens.oracle.ActivityGroup.ActivityGroupMeal;
 import be.goossens.oracle.ActivityGroup.ActivityGroupMedicine;
 import be.goossens.oracle.ActivityGroup.ActivityGroupSettings;
 import be.goossens.oracle.ActivityGroup.ActivityGroupTracking;
+import be.goossens.oracle.Rest.DataParser;
 
 public class ShowHomeTab extends TabActivity {
 	private TabHost tabHost;
@@ -30,25 +31,25 @@ public class ShowHomeTab extends TabActivity {
 		tabHost = getTabHost();
 		setupTabHost();
 	}
-
+ 
 	private void setupTabHost() {
 		Intent in = new Intent(this, ActivityGroupMeal.class);
-		setupTab(new TextView(this), "tab1", R.drawable.ic_tab_meal, in);
+		setupTab(new TextView(this), DataParser.activityIDMeal, R.drawable.ic_tab_meal, in);
 
 		in = new Intent(this, ActivityGroupTracking.class);
-		setupTab(new TextView(this), "tab2", R.drawable.ic_tab_tracking, in);
+		setupTab(new TextView(this), DataParser.activityIDTracking, R.drawable.ic_tab_tracking, in);
 
 		in = new Intent(this, ActivityGroupExercise.class);
-		setupTab(new TextView(this), "tab3", R.drawable.ic_tab_exercise, in);
+		setupTab(new TextView(this), DataParser.activityIDExercise, R.drawable.ic_tab_exercise, in);
 
 		in = new Intent(this, ActivityGroupGlucose.class);
-		setupTab(new TextView(this), "tab4", R.drawable.ic_tab_glucose, in);
+		setupTab(new TextView(this), DataParser.activityIDGlucose, R.drawable.ic_tab_glucose, in);
 
 		in = new Intent(this, ActivityGroupMedicine.class);
-		setupTab(new TextView(this), "tab5", R.drawable.ic_tab_medicine, in);
+		setupTab(new TextView(this), DataParser.activityIDMedicine, R.drawable.ic_tab_medicine, in);
 
 		in = new Intent(this, ActivityGroupSettings.class);
-		setupTab(new TextView(this), "tab6", R.drawable.ic_tab_settings, in);
+		setupTab(new TextView(this), DataParser.activityIDSettings, R.drawable.ic_tab_settings, in);
 	}
 
 	private void setupTab(final View view, final String tag, final int image,

@@ -5,6 +5,7 @@ package be.goossens.oracle.Show.Food;
  * */
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
@@ -118,9 +119,11 @@ public class ShowSelectedFood extends ListActivity {
 
 		// only create objects if we have something in the selectedFood list
 		if (cSelectedFood.getCount() > 0) {
-			// create a meal event
+			// create a meal event 
 			long lMealEventID = dbHelper.createMealEvent(fInsulineRatio,
-					fCorrectionFactor, fCalculatedInsulineAmount,new Functions().getCurrentDateInSeconds());
+					fCorrectionFactor, fCalculatedInsulineAmount,
+					new Functions().getDateAsStringFromCalendar(Calendar
+							.getInstance()));
 
 			// create for every food in the selectedFood a mealFood object
 			cSelectedFood.moveToFirst();

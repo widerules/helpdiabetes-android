@@ -108,9 +108,9 @@ public class ActivityGroupMeal extends ActivityGroup {
 	// show food list
 	public void refreshShowFoodList() {
 		try {
-			View v = history.get(0);
-			ShowFoodList currentActivity = (ShowFoodList) v.getContext();
-			currentActivity.refreshFoodList();
+			//View v = history.get(0);
+			//ShowFoodList currentActivity = (ShowFoodList) v.getContext();
+			//currentActivity.refreshFoodList();
 		} catch (Exception e) {
 		}
 	}
