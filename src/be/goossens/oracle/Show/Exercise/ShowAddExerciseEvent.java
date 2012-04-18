@@ -21,6 +21,7 @@ import android.widget.Spinner;
 import android.widget.Toast;
 import be.goossens.oracle.R;
 import be.goossens.oracle.ActivityGroup.ActivityGroupExercise;
+import be.goossens.oracle.ActivityGroup.ActivityGroupTracking;
 import be.goossens.oracle.Rest.DataParser;
 import be.goossens.oracle.Rest.DbAdapter;
 import be.goossens.oracle.Rest.Functions;
@@ -230,6 +231,9 @@ public class ShowAddExerciseEvent extends Activity {
  
 			etDescription.setText("");
 
+			//refresh tracking list
+			ActivityGroupTracking.group.showTrackingRefreshList(); 
+			
 			// Go to tracking tab when clicked on add
 			ShowHomeTab parentActivity; 
 			parentActivity = (ShowHomeTab) this.getParent().getParent();

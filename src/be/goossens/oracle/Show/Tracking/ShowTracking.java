@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import org.apache.http.impl.conn.tsccm.ThreadSafeClientConnManager;
+
 import android.app.ListActivity;
 import android.database.Cursor;
 import android.os.AsyncTask;
@@ -28,7 +30,6 @@ public class ShowTracking extends ListActivity {
 	private List<DBTracking> listTracking;
 	private CustomArrayAdapterDBTracking adapter;
 	private TextView tvFetchingData;
-	private DoInBackground inBackground;
 	private boolean threadFinished;
 
 	@Override
@@ -39,26 +40,29 @@ public class ShowTracking extends ListActivity {
 		listTracking = new ArrayList<DBTracking>();
 		adapter = null;
 		tvFetchingData = (TextView) findViewById(R.id.textViewFetchingData);
-		inBackground = new DoInBackground();
 	}
-
+ 
 	@Override
 	protected void onResume() {
 		super.onResume();
- 
-		tvFetchingData.setVisibility(View.VISIBLE);
-		setListAdapter(null);
-		// inBackground.execute();
-		new DoInBackground().execute();
-
+		dbHelper.open();
+		
+		if(!threadFinished){
+			threadFinished = true;
+			tvFetchingData.setVisibility(View.VISIBLE);
+			new DoInBackground().execute();
+		}
 	}
 
+	public void refreshData(){
+		new DoInBackground().execute();
+	}
+		
 	private class DoInBackground extends AsyncTask<Void, Void, Void> {
 		@Override
 		protected Void doInBackground(Void... params) {
 			dbHelper.open();
 			fillListView();
-			dbHelper.close();
 			return null;
 		}
 
@@ -230,17 +234,15 @@ public class ShowTracking extends ListActivity {
 
 	@Override
 	protected void onListItemClick(ListView l, View v, int position, long id) {
-		if (listTracking.get(position).getTimestamp() != null) {
+		/*if (listTracking.get(position).getTimestamp() != null) {
 			Toast.makeText(this,
 					"" + listTracking.get(position).getTimestamp().getTime(),
 					Toast.LENGTH_LONG).show();
-		}
+		}*/
 	}
 
 	@Override
 	protected void onPause() {
-		super.onPause();
-		inBackground.cancel(true);
-		dbHelper.close();
+		super.onPause(); 
 	}
 }

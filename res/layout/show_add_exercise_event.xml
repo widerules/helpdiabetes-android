@@ -4,33 +4,13 @@
     android:layout_height="wrap_content" >
 
     <LinearLayout
-        android:id="@+id/linearLayout1"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical" >
+        style="@style/linearLayoutVerticalWithPadding" >
 
-        <TextView
-            android:id="@+id/textView99"
+        <Button
+            android:id="@+id/buttonUpdateDateAndHour"
             android:layout_width="fill_parent"
-            android:layout_height="wrap_content" />
-
-        <LinearLayout
-            android:id="@+id/linearLayout1"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content" >
-
-            <TextView
-                android:id="@+id/textViewDate"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textColor="@color/ColorText" />
-
-            <Button
-                android:id="@+id/buttonUpdateDateAndHour"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/update" />
-        </LinearLayout>
+            android:layout_height="wrap_content"
+            android:text="@string/update" />
 
         <Spinner
             android:id="@+id/spinnerDuration"
@@ -41,31 +21,22 @@
             android:id="@+id/spinnerSportType"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content" />
- 
+
         <EditText
             android:id="@+id/editText1"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:inputType="text" />
 
-        <LinearLayout
-            android:id="@+id/linearLayout3"
-            android:layout_width="fill_parent"
+        <Button
+            android:id="@+id/buttonAdd"
+            style="@style/buttonAdd" />
+
+        <Button
+            android:id="@+id/buttonDelete"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:gravity="center" >
-
-            <Button
-                android:id="@+id/buttonAdd"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/add" />
-
-            <Button
-                android:id="@+id/buttonDelete"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/delete" />
-        </LinearLayout>
+            android:text="@string/delete" />
     </LinearLayout>
 
 </ScrollView>

@@ -175,22 +175,19 @@ public class ShowAddFoodToSelection extends Activity {
 	}
 
 	@Override
-	protected void onPause() {
-		super.onPause();
+	protected void onDestroy() {
 		dbHelper.close();
+		super.onDestroy();
 	}
-
+ 
 	@Override
 	protected void onResume() {
-		// clear the editTextSearch from showFoodList
-		ActivityGroupMeal.group.refreshShowFoodListEditTextSearch();
-
 		super.onResume();
 
 		dbHelper.open();
 
 		fillListValueOrders();
-
+ 
 		// Get the selected food
 		foodCursor = dbHelper.fetchFood(getIntent().getExtras().getLong(
 				DataParser.idFood));
@@ -205,6 +202,7 @@ public class ShowAddFoodToSelection extends Activity {
 		 * with the right unit 2. set the right amount 3. Show the button to
 		 * delete the food 4. set the text on the button from add to update
 		 */
+		 
 		if (getIntent().getExtras().getString(DataParser.fromWhereWeCome)
 				.equals(DataParser.weComeFRomShowSelectedFood)) {
 			Cursor cSelectedFood = dbHelper.fetchSelectedFood(getIntent()
@@ -254,6 +252,9 @@ public class ShowAddFoodToSelection extends Activity {
 	public void onClickDeleteFoodFromSelection(View view) {
 		dbHelper.deleteSelectedFood(getIntent().getExtras().getLong(
 				DataParser.idSelectedFood));
+		
+		//try to refresh the foodlist on the selectedFood page
+		ActivityGroupMeal.group.refreshShowSelectedFood(2);
 
 		ActivityGroupMeal.group.back();
 	}
@@ -548,16 +549,19 @@ public class ShowAddFoodToSelection extends Activity {
 
 		ActivityGroupMeal.group.back();
 		// refresh the page show selected food
-		ActivityGroupMeal.group.refreshShowSelectedFood(1);
-		// refresh button from show food list
-		ActivityGroupMeal.group.refreshShowFoodListButtonSelections();
+		ActivityGroupMeal.group.refreshShowSelectedFood(1); 
+		// update the button from the showfoodlist
+		int countSelectedFood = ActivityGroupMeal.group.showFoodListGetCountSelectedFood();
+		if(countSelectedFood != -1){
+			countSelectedFood++;
+			ActivityGroupMeal.group.showFoodListsetCountSelectedFood(countSelectedFood);
+		}
 	}
 
 	@Override
 	protected void onStop() {
 		foodCursor.close();
 		adapter = null;
-		dbHelper.close();
 		super.onStop();
 	}
 

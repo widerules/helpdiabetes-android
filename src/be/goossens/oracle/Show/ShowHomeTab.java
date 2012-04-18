@@ -20,10 +20,11 @@ import be.goossens.oracle.ActivityGroup.ActivityGroupMedicine;
 import be.goossens.oracle.ActivityGroup.ActivityGroupSettings;
 import be.goossens.oracle.ActivityGroup.ActivityGroupTracking;
 import be.goossens.oracle.Rest.DataParser;
+import be.goossens.oracle.Rest.DbAdapter;
 
 public class ShowHomeTab extends TabActivity {
 	private TabHost tabHost;
-
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -31,25 +32,44 @@ public class ShowHomeTab extends TabActivity {
 		tabHost = getTabHost();
 		setupTabHost();
 	}
- 
+
 	private void setupTabHost() {
+		int counter = 0;
+		
 		Intent in = new Intent(this, ActivityGroupMeal.class);
-		setupTab(new TextView(this), DataParser.activityIDMeal, R.drawable.ic_tab_meal, in);
-
+		setupTab(new TextView(this), DataParser.activityIDMeal,
+				R.drawable.ic_tab_meal, in);
+		counter++;
+		
 		in = new Intent(this, ActivityGroupTracking.class);
-		setupTab(new TextView(this), DataParser.activityIDTracking, R.drawable.ic_tab_tracking, in);
-
+		setupTab(new TextView(this), DataParser.activityIDTracking,
+				R.drawable.ic_tab_tracking, in);
+		counter++;
+		
 		in = new Intent(this, ActivityGroupExercise.class);
-		setupTab(new TextView(this), DataParser.activityIDExercise, R.drawable.ic_tab_exercise, in);
-
+		setupTab(new TextView(this), DataParser.activityIDExercise,
+				R.drawable.ic_tab_exercise, in);
+		counter++;
+		
 		in = new Intent(this, ActivityGroupGlucose.class);
-		setupTab(new TextView(this), DataParser.activityIDGlucose, R.drawable.ic_tab_glucose, in);
-
+		setupTab(new TextView(this), DataParser.activityIDGlucose,
+				R.drawable.ic_tab_glucose, in);
+		counter++;
+		
 		in = new Intent(this, ActivityGroupMedicine.class);
-		setupTab(new TextView(this), DataParser.activityIDMedicine, R.drawable.ic_tab_medicine, in);
-
+		setupTab(new TextView(this), DataParser.activityIDMedicine,
+				R.drawable.ic_tab_medicine, in);
+		counter++;
+		
 		in = new Intent(this, ActivityGroupSettings.class);
-		setupTab(new TextView(this), DataParser.activityIDSettings, R.drawable.ic_tab_settings, in);
+		setupTab(new TextView(this), DataParser.activityIDSettings,
+				R.drawable.ic_tab_settings, in);
+		counter++;
+		 
+		for(int i = counter; i >= 0;i--){
+			tabHost.setCurrentTab(i); 
+		}
+		
 	}
 
 	private void setupTab(final View view, final String tag, final int image,

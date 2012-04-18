@@ -32,6 +32,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 import be.goossens.oracle.R;
 import be.goossens.oracle.ActivityGroup.ActivityGroupMeal;
+import be.goossens.oracle.ActivityGroup.ActivityGroupTracking;
 import be.goossens.oracle.Custom.CustomBaseAdapterSelectedFood;
 import be.goossens.oracle.Objects.DBSelectedFood;
 import be.goossens.oracle.Objects.DBValueOrder;
@@ -155,10 +156,12 @@ public class ShowSelectedFood extends ListActivity {
 
 		// kill this activity
 		ActivityGroupMeal.group.back();
-
-		// refresh the foodlist button
-		ActivityGroupMeal.group.refreshShowFoodListButtonSelections();
-
+		//set button with selectedFoodCount = 0
+		ActivityGroupMeal.group.showFoodListsetCountSelectedFood(0);
+		 
+		//refresh tracking list
+		ActivityGroupTracking.group.showTrackingRefreshList();
+		
 		// Go to tracking activity
 		ShowHomeTab parentActivity;
 		parentActivity = (ShowHomeTab) this.getParent().getParent();
@@ -521,9 +524,10 @@ public class ShowSelectedFood extends ListActivity {
 	// when we click on the button delete all
 	public void onClickDeleteAll(View view) {
 		deleteSelectedFood();
+		//update the button with count = 0;
+		ActivityGroupMeal.group.showFoodListsetCountSelectedFood(0);
+		//refresh the data
 		refreshData();
-		// update the button if showFoodList selections
-		ActivityGroupMeal.group.refreshShowFoodListButtonSelections();
 	}
 
 	private void deleteSelectedFood() {

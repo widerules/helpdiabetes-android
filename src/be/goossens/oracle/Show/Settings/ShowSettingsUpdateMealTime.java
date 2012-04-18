@@ -1,22 +1,25 @@
 package be.goossens.oracle.Show.Settings;
 
-import be.goossens.oracle.R;
-import be.goossens.oracle.ActivityGroup.ActivityGroupSettings;
-import be.goossens.oracle.Rest.DataParser;
-import be.goossens.oracle.Rest.DbAdapter;
 import android.app.Activity;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.view.KeyEvent;
 import android.view.View;
+import android.view.View.OnClickListener;
+import android.widget.Button;
 import android.widget.TextView;
 import android.widget.TimePicker;
+import be.goossens.oracle.R;
+import be.goossens.oracle.ActivityGroup.ActivityGroupSettings;
+import be.goossens.oracle.Rest.DataParser;
+import be.goossens.oracle.Rest.DbAdapter;
 
 public class ShowSettingsUpdateMealTime extends Activity {
-	private TextView tv;
+/*	private TextView tv;
 	private TimePicker tp;
 	private DbAdapter dbHelper;
-
+	private Button btSave;
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -24,8 +27,18 @@ public class ShowSettingsUpdateMealTime extends Activity {
 		dbHelper = new DbAdapter(this);
 		tv = (TextView) findViewById(R.id.textViewShowSettingsUpdateMealTime);
 		tp = (TimePicker) findViewById(R.id.timePickerShowSettingsUpdateMealTime);
+		btSave = (Button)findViewById(R.id.button1);
+		
+		btSave.setOnClickListener(new OnClickListener() {
+			public void onClick(View v) {
+				onClickSave(v);
+			}
+		});
+		
 		// set the time picker to 24h mode view
 		tp.setIs24HourView(true);
+		
+		
 	}
 
 	@Override
@@ -132,5 +145,5 @@ public class ShowSettingsUpdateMealTime extends Activity {
 			return false;
 		}
 		return super.onKeyDown(keyCode, event);
-	}
+	}*/
 }

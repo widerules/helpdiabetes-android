@@ -30,11 +30,11 @@ public class ShowFoodTemplates extends ListActivity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		
+
 		View contentView = LayoutInflater.from(getParent()).inflate(
 				R.layout.show_food_templates, null);
 		setContentView(contentView);
-		
+
 		dbHelper = new DbAdapter(this);
 		registerForContextMenu(getListView());
 	}
@@ -105,11 +105,15 @@ public class ShowFoodTemplates extends ListActivity {
 	@Override
 	protected void onListItemClick(ListView l, View v, int position, long id) {
 		super.onListItemClick(l, v, position, id);
+		// count how much foodItems we add
+		int count = 0;
+
 		// First put all the food in the selectedFood table
 		Cursor cTemplateFood = dbHelper.fetchTemplateFoodsByFoodTemplateID(id);
 		cTemplateFood.moveToFirst();
 		Cursor cUnit = null;
 		do {
+			count++; 
 			cUnit = dbHelper
 					.fetchFoodUnit(cTemplateFood.getLong(cTemplateFood
 							.getColumnIndexOrThrow(DbAdapter.DATABASE_TEMPLATEFOOD_UNITID)));
@@ -121,14 +125,18 @@ public class ShowFoodTemplates extends ListActivity {
 					cUnit.getLong(cUnit
 							.getColumnIndexOrThrow(DbAdapter.DATABASE_FOODUNIT_ID)));
 		} while (cTemplateFood.moveToNext());
+
 		cUnit.close();
 		cTemplateFood.close();
 		ActivityGroupMeal.group.back();
+
 		// update the list in show selected food
 		ActivityGroupMeal.group.refreshShowSelectedFood(1);
 
-		// update the button from show food list
-		ActivityGroupMeal.group.refreshShowFoodListButtonSelections();
+		// update the button on showfoodlist page
+		ActivityGroupMeal.group
+				.showFoodListsetCountSelectedFood((ActivityGroupMeal.group
+						.showFoodListGetCountSelectedFood() + count));
 	}
 
 	// converts the cursor with all food templates to a arrayList
