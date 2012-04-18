@@ -1,35 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
-    android:orientation="vertical" >
-
-    <TextView
-        android:id="@+id/textView99"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content" />
+    style="@style/linearLayoutVerticalWithPadding" >
 
     <TextView
         android:id="@+id/textViewTotalTitle"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/total"
-        android:textAppearance="?android:attr/textAppearanceMedium"
-        android:textColor="@color/ColorText" />
+        style="@style/textViewTitle"
+        android:text="@string/total" />
 
     <TextView
         android:id="@+id/textViewShowTotal"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceMedium"
-        android:textColor="@color/ColorText" />
+        style="@style/textViewTitle" />
 
     <ListView
         android:id="@+android:id/list"
         android:layout_width="fill_parent"
-        android:layout_height="0dip"
-        android:layout_weight="1.0" >
-    </ListView>
+        android:layout_height="fill_parent"
+        android:layout_weight="1.0"
+        android:cacheColorHint="#00000000" />
 
     <LinearLayout
         android:id="@+id/linearLayout2"
@@ -42,13 +29,12 @@
             android:layout_height="wrap_content"
             android:layout_gravity="right"
             android:text="@string/save_as_template" />
-
+
         <Button
             android:id="@+id/buttonShowSelectedFoodButtonLoadTemplate"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:text="@string/Load_template" />
-
     </LinearLayout>
 
     <LinearLayout
@@ -61,13 +47,12 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/delete_all" />
-
+
         <Button
             android:id="@+id/buttonAddSelectedFoodToTracking"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:text="@string/showSelectedFoodEatSelectedFood" />
-
     </LinearLayout>
 
 </LinearLayout>

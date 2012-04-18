@@ -171,14 +171,14 @@ public class DbAdapter extends SQLiteOpenHelper {
 			return true;
 		}
 		return false;
-	}
+	} 
 
 	public void open() { 
 		String myPath = DB_PATH + DB_NAME;
 		mDb = SQLiteDatabase.openDatabase(myPath, null,
 				SQLiteDatabase.OPEN_READWRITE);
-	}
-
+	}  
+ 
 	private boolean checkDatabase() {
 		SQLiteDatabase checkDB = null;
 		try {
@@ -187,12 +187,12 @@ public class DbAdapter extends SQLiteOpenHelper {
 			checkDB = SQLiteDatabase.openDatabase(myPath, null,
 					SQLiteDatabase.OPEN_READONLY);
 			checkDB.close();
-			return true;
+			return true; 
 		} catch (SQLiteException e) {
 			// The database does not exists
 			return false;
 		}
-	}
+	}      
 
 	private void copyFromZipFile() throws IOException {
 		// open the zip file as inputstream

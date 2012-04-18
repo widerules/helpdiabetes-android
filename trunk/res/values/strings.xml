@@ -11,9 +11,7 @@
     <string name="no">Nee</string>
     <string name="btup">+</string>
     <string name="btdown">-</string>
-    
-    <!-- ShowStart -->
-    <string name="loadingRecords">laden van gegevens</string>
+    <string name="loading">laden</string>
     
     <!-- ShowTracking -->
     <string name="showTracking">Rapporten</string>
@@ -30,6 +28,7 @@
 
     <!-- ShowCreateUnit & ShowCreateFood -->
     <!-- These values are used to equal to ShowCreateFoodSpinnerResource.xml -->
+    <!-- If you update them here you have to update them there to! -->
     <string name="gram">gram</string>
     <string name="ml">ml</string>
 
@@ -45,8 +44,6 @@
     <string name="end_time">Duur</string>
     <string name="exercise_type">Intensiteit</string>
 	<string name="description_cant_be_empty">Beschrijving mag niet leeg zijn</string>
-	<string name="time_up"> + </string>
-    <string name="time_down"> - </string>
 	
     <!-- ShowAddBloodGlucoseEvent -->
     <string name="amountCantBeZero">Waarde mag niet 0 zijn!</string>
@@ -62,42 +59,40 @@
     <!-- Not sorted yet -->
     <string name="search">Zoeken: </string>
     <string name="creating_data">Aanmaken gegevens</string>
-    <string name="please_waite">Even geduld</string>
-    <string name="amound_of_kcal">kilocalories</string>
-    <string name="amound_of_carbs">koolhydraten</string>
-    <string name="amound_of_protein">eiwit</string>
-    <string name="amound_of_fat">vet</string>
+    <string name="amound_of_kcal">Kilocalorien</string>
+    <string name="amound_of_carbs">Koolhydraten</string>
+    <string name="amound_of_protein">Eiwit</string>
+    <string name="amound_of_fat">Vet</string>
     <string name="total">Totaal:</string>
     <string name="items_selected">items geselecteerd</string>
     <string name="multiplie">X</string>
     <string name="cant_add_more_then_five_digits">U kan niet meer dan 5 digits ingeven!</string>
     <string name="cant_delete_food_caus_food_is_in_use">Dit eten kan niet verwijderd worden (Het word nog gebruikt)!</string>
-    <string name="cant_delete_food_unit_caus_food_unit_is_in_use">Deze hoeveelheid kan niet verwijderd worden (Hij word nog gebruikt)!</string>
-    <string name="cant_delete_food_unit_caus_food_unit_is_last_one">Deze hoeveelheid kan niet verwijderd worden (Het is de laatste van dit eten)!</string>
+    <string name="cant_delete_food_unit_caus_food_unit_is_in_use">Deze eenheid kan niet verwijderd worden (Hij word nog gebruikt)!</string>
+    <string name="cant_delete_food_unit_caus_food_unit_is_last_one">Deze eenheid kan niet verwijderd worden (Het is de laatste van dit eten)!</string>
     <string name="value_cant_be_more_then_ninety_nine">De waarde mag niet meer dan 999 zijn!</string>
     <string name="selected_food_aint_added">Geselecteerd eten niet toegevoegd</string>
     <string name="value_amount_cant_be_zero">waarde aantal mag niet 0 zijn</string>
     <string name="settings">Instellingen</string>
-    <string name="update_own_food">Eigen eten daten</string>
+    <string name="update_own_food">Update eigen producten</string>
     <string name="create_new_food">eten</string>
-    <string name="food_name">Naam eten</string>
+    <string name="food_name">Productnaam</string>
     <string name="part">stuk</string>
     <string name="one">1</string>
     <string name="hundred">100</string>
     <string name="food_name_is_required">Naam eten mag niet leeg zijn</string>
     <string name="save_food_name">Eten naam wijzigen</string>
-    <string name="unit_name_is_required">Hoeveelheid mag niet leeg zijn</string>
+    <string name="unit_name_is_required">Eenheid mag niet leeg zijn</string>
     <string name="kcal_is_required">kilocalories mag niet leeg zijn</string>
     <string name="prot_is_required">eiwit mag niet leeg zijn</string>
     <string name="carbs_is_required">koolhydraten mag niet leeg zijn</string>
     <string name="fat_is_required">Vet mag niet leeg zijn</string>
     <string name="food_name_succesfull_dated">Eten naam is succesvol aangepast</string>
-    <string name="add_unit">Hoeveelheid toevoegen</string>
+    <string name="add_unit">Eenheid toevoegen</string>
     <string name="units">Hoeveelheden</string>
-    <string name="unit">Hoeveelheid</string>
+    <string name="unit">Eenheid</string>
     <string name="selections_are_empty">Selecties is leeg</string>
     <string name="saved">Opgeslagen</string>
-    <string name="getting_food">Eten ophalen</string>
     <string name="do_you_want_to_delete_the_selections">Wilt u de selecties leeg maken?</string>
     <string name="add_food_to_template_error">U moet minimum 2 etenswaren geselecteerd hebben</string>
     <string name="delete">verwijder</string>
@@ -130,8 +125,6 @@
     <string name="down">omlaag</string>
 
     <!-- Settings font size list -->
-    <string name="fontSizeUp">+</string>
-    <string name="fontSizeDown">-</string>
     <string name="fontSize">Tekst grootte</string>
     <string name="example">voorbeeld</string>
 

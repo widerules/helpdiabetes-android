@@ -42,10 +42,13 @@ public class CustomBaseAdapterSelectedFood extends BaseAdapter implements OnClic
 			LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 			convertView = inflater.inflate(R.layout.row_selected_food, null);
 		}
-
+		
 		TextView tvSelectedFoodName = (TextView) convertView.findViewById(R.id.textViewSelectedFoodValues);
+		TextView tv2 = (TextView) convertView.findViewById(R.id.text2);
 		tvSelectedFoodName.setText(entry.getFoodName() + " (" + entry.getAmound()  + " " + entry.getUnitName() + ")");
 		tvSelectedFoodName.setTextSize(fontSize);
+		tv2.setTextSize(fontSize);
+		
 		return convertView;
 	}
 	

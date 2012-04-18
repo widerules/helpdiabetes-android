@@ -13,14 +13,6 @@
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:textColor="@color/ColorText" />
 
-    <TextView
-        android:id="@+id/textView2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/please_waite"
-        android:textAppearance="?android:attr/textAppearanceMedium"
-        android:textColor="@color/ColorText" />
-
     <ProgressBar
         android:id="@+id/progressBar1"
         style="?android:attr/progressBarStyleLarge"

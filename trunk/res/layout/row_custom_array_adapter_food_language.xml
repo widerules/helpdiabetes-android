@@ -7,9 +7,8 @@
     <TextView
         android:id="@+id/text1"
         style="@style/listViewItemOneTextBig" />
-
+ 
     <TextView
         android:id="@+id/text2"
-        style="@style/listViewItemArrowTextBig" 
-        />
-</LinearLayout>
+        style="@style/listViewItemArrowTextBig" />
+    </LinearLayout>

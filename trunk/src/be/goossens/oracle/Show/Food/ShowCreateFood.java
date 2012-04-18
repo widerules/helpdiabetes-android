@@ -226,12 +226,11 @@ public class ShowCreateFood extends Activity {
 			dbHelper.createFoodUnit(foodId, unitName, standardAmound, carbs,
 					prot, fat, kcal);
 
+			//add the new food to the showFoodList page
+			ActivityGroupMeal.group.showFoodListAddFoodItem(foodId);
+			 
 			// Go back to the previous screen
 			ActivityGroupMeal.group.back();
-			// refresh the food list
-			ActivityGroupMeal.group.refreshShowFoodList();
-			// refresh manage own food
-			ActivityGroupMeal.group.refreshShowManageOwnFood(1);
 		}
 	}
 

@@ -32,16 +32,16 @@ public class CustomArrayAdapterFoodList extends ArrayAdapter<DBFoodComparable> {
 		this.ctx = context;
 		this.foodItemList = foodItemList;
 		this.fontSize = fontSize;
-		
+
 		previousSearchString = null;
-		
+
 		firstIndex = new int[maximuSearchStringLength + 1];
 		lastIndex = new int[maximuSearchStringLength + 1];
-		
+
 		firstIndex[0] = 0;
 		lastIndex[0] = foodItemList.size() - 1;
 	}
-
+   
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
 		View v = convertView;
@@ -52,12 +52,22 @@ public class CustomArrayAdapterFoodList extends ArrayAdapter<DBFoodComparable> {
 		}
 		TextView tt = (TextView) v.findViewById(R.id.row_food_text);
 		TextView ttTwo = (TextView) v.findViewById(R.id.text2);
-		if (tt != null) {
-			tt.setText(foodItemList.get(position).getName());
-			tt.setTextSize(fontSize);
-		}
+		tt.setText(foodItemList.get(position).getName());
+		tt.setTextSize(fontSize);
 		ttTwo.setTextSize(fontSize);
 
+		if (position % 2 == 0) {
+			tt.setBackgroundColor(ctx.getResources().getColor(
+					R.color.ColorListViewOne));
+			ttTwo.setBackgroundColor(ctx.getResources().getColor(
+					R.color.ColorListViewOne));
+		} else { 
+			tt.setBackgroundColor(ctx.getResources().getColor( 
+					R.color.ColorListViewTwo));
+			ttTwo.setBackgroundColor(ctx.getResources().getColor( 
+					R.color.ColorListViewTwo));
+		} 
+		
 		return v;
 	}
 

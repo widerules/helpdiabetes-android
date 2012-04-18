@@ -9,7 +9,7 @@ public class DataParser {
 	// public static final String
 	public static final String fromWhereWeCome = "fromWherWeCome";
 	public static final String whatToDo = "whatToDo";
-
+ 
 	// Food //
 	public static final String weComeFromShowFoodList = "weComeFromShowFoodList";
 	public static final String weComeFRomShowSelectedFood = "weComeFRomSelectedFood";

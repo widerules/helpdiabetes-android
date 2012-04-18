@@ -238,14 +238,13 @@ public class ShowUpdateOwnFood extends ListActivity {
 					getResources().getString(
 							R.string.cant_delete_food_caus_food_is_in_use),
 					Toast.LENGTH_LONG).show();
-		} else {
+		} else { 
 			// else we can delete it
 			deleteFoodAndFoodUnits(foodId);
+			//delete the fooditem from the showfoodlist page
+			ActivityGroupMeal.group.showFoodListDeleteFoodItem(foodId);
 			// and go back to foodlist
 			ActivityGroupMeal.group.back();
-			ActivityGroupMeal.group.refreshShowManageOwnFood(1);
-			// refresh the list of food in show food list
-			ActivityGroupMeal.group.refreshShowFoodList();
 		}
 	}
 

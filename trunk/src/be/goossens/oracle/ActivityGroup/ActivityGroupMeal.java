@@ -15,7 +15,7 @@ import be.goossens.oracle.Show.Food.ShowFoodList;
 import be.goossens.oracle.Show.Food.ShowManageOwnFood;
 import be.goossens.oracle.Show.Food.ShowSelectedFood;
 import be.goossens.oracle.Show.Food.ShowUpdateOwnFood;
- 
+
 public class ActivityGroupMeal extends ActivityGroup {
 
 	// keep this in a static variable to make it accessible
@@ -88,13 +88,21 @@ public class ActivityGroupMeal extends ActivityGroup {
 		} catch (Exception e) {
 			if (history.size() >= 0)
 				super.setContentView(history.get(0));
-		} 
+		}
 	}
 
 	@Override
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
 		if (event.getKeyCode() == KeyEvent.KEYCODE_BACK) {
 			back();
+			// if we come back to the showFoodList we have to clear the
+			// edittextbox and update the button
+			// if (history.size() == 0) {
+			// clear the editTextBox from the showFoodListPage
+			showFoodListClearEditTextbox();
+			// update the button from showFoodList
+			showFoodListUpdateButton();
+			// }
 		}
 		return true;
 	}
@@ -103,20 +111,39 @@ public class ActivityGroupMeal extends ActivityGroup {
 		return history.get(history.size() - sizeMinusNumber);
 	}
 
-	// Make for every class a refresh method
-
-	// show food list
-	public void refreshShowFoodList() {
+	// showFoodList get countSelectedFood
+	public int showFoodListGetCountSelectedFood() {
 		try {
-			//View v = history.get(0);
-			//ShowFoodList currentActivity = (ShowFoodList) v.getContext();
-			//currentActivity.refreshFoodList();
+			View v = history.get(0);
+			ShowFoodList currentActivity = (ShowFoodList) v.getContext();
+			return currentActivity.getCountSelectedFood();
+		} catch (Exception e) {
+			return -1;
+		}
+	}
+
+	// showFoodList set countSelectedFood
+	public void showFoodListsetCountSelectedFood(int countSelectedFood) {
+		try {
+			View v = history.get(0);
+			ShowFoodList currentActivity = (ShowFoodList) v.getContext();
+			currentActivity.setCountSelectedFood(countSelectedFood);
 		} catch (Exception e) {
 		}
 	}
- 
-	// show food list update button only!
-	public void refreshShowFoodListButtonSelections() {
+	
+	// showFoodList clear editTextBox
+	public void showFoodListClearEditTextbox() {
+		try {
+			View v = history.get(0);
+			ShowFoodList currentActivity = (ShowFoodList) v.getContext();
+			currentActivity.clearEditTextSearch();
+		} catch (Exception e) {
+		}
+	}
+
+	// showFoodList clear editTextBox
+	public void showFoodListUpdateButton() {
 		try {
 			View v = history.get(0);
 			ShowFoodList currentActivity = (ShowFoodList) v.getContext();
@@ -125,12 +152,32 @@ public class ActivityGroupMeal extends ActivityGroup {
 		}
 	}
 
-	// show food list update button only!
-	public void refreshShowFoodListEditTextSearch() {
+	// showFoodList add food item to list
+	public void showFoodListAddFoodItem(long foodId) {
 		try {
 			View v = history.get(0);
 			ShowFoodList currentActivity = (ShowFoodList) v.getContext();
-			currentActivity.clearEditTextSearch();
+			currentActivity.addFoodItemToList(foodId);
+		} catch (Exception e) {
+		}
+	}
+
+	// showFoodList delete food item from list
+	public void showFoodListDeleteFoodItem(long foodId) {
+		try {
+			View v = history.get(0);
+			ShowFoodList currentActivity = (ShowFoodList) v.getContext();
+			currentActivity.deleteFoodItemFromList(foodId);
+		} catch (Exception e) {
+		}
+	}
+
+	// showFoodList refresh listview
+	public void showFoodListRefreshListView() {
+		try {
+			View v = history.get(0);
+			ShowFoodList currentActivity = (ShowFoodList) v.getContext();
+			currentActivity.refreshListView();
 		} catch (Exception e) {
 		}
 	}

@@ -11,7 +11,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.AsyncTask;
-import android.os.AsyncTask.Status;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -26,7 +25,6 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
-import android.widget.Toast;
 import be.goossens.oracle.R;
 import be.goossens.oracle.ActivityGroup.ActivityGroupMeal;
 import be.goossens.oracle.Custom.CustomArrayAdapterFoodList;
@@ -46,6 +44,7 @@ public class ShowFoodList extends ListActivity {
 	private List<DBFoodComparable> listDBFoodComparable;
 
 	private Button btCreateFood, btSelections;
+	private int countSelectedFood;
 
 	// create a seperated dbAdapter for the foodlist
 	// this becaus the food list is in a thread and the other dbAdapter gets
@@ -60,8 +59,8 @@ public class ShowFoodList extends ListActivity {
 	private boolean startUp;
 	private String getState = "getState";
 
-	private boolean threadFinished;
-	
+	private boolean threadStarted;
+
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -109,7 +108,6 @@ public class ShowFoodList extends ListActivity {
 				onClickShowSelectedFood(v);
 			}
 		});
-		updateButton();
 	}
 
 	@Override
@@ -127,26 +125,26 @@ public class ShowFoodList extends ListActivity {
 	}
 
 	protected void onResume() {
+		dbHelper.open();
+
 		if (startUp)
 			checkToShowPopUpToDeleteSelectedFood();
 
-		fillListViewFood();
-		
-		super.onResume();
-	};
- 
-	// run when we come to this activity
-	private void fillListViewFood() {
-		if(!threadFinished){
+		// run when we first come to this activity ( app starts up )
+		if (!threadStarted) {
+			threadStarted = true;
+			// only do this once
+			countSelectedFood = dbHelper.fetchAllSelectedFood().getCount();
 			new ThreadUpdateListAdapter().execute();
 		}
-	}
-	  
-	public void refreshFoodList() {
-		//if (threadUpdateListAdapter.getStatus() == Status.FINISHED) {
-		//	setListAdapter(null);
-		//	threadUpdateListAdapter.execute();
-		//}
+
+		updateButton();
+
+		super.onResume();
+	};
+
+	public void clearEditTextSearch() {
+		editTextSearch.setText("");
 	}
 
 	// asynctask is used to thread in android
@@ -174,7 +172,7 @@ public class ShowFoodList extends ListActivity {
 
 		@Override
 		protected void onPostExecute(Void result) {
-			threadFinished = true;
+			// threadStarted = true;
 			updateListAdapter();
 			dbHelperFoodList.close();
 			super.onPostExecute(result);
@@ -253,12 +251,10 @@ public class ShowFoodList extends ListActivity {
 	}
 
 	public void updateButton() {
-		dbHelper.open();
 		Button buttonSelections = (Button) findViewById(R.id.buttonShowFoodListShowSelectedFood);
 		buttonSelections.setText(getResources().getString(
 				R.string.showFoodListButtonSelections)
-				+ " (" + dbHelper.fetchAllSelectedFood().getCount() + ")");
-		dbHelper.close();
+				+ " (" + countSelectedFood + ")");
 	}
 
 	// when we click on a item in the listview
@@ -289,15 +285,9 @@ public class ShowFoodList extends ListActivity {
 				.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
 	}
 
-	public void clearEditTextSearch() {
-		// every time we resume make the search box empty so the user dont have
-		// to press delete search box every time he adds a selection
-		editTextSearch.setText("");
-	}
-
 	private void checkToShowPopUpToDeleteSelectedFood() {
 		startUp = false;
-		dbHelper.open();
+
 		// check if there are still selections in the selectedFood table
 		if (dbHelper.fetchAllSelectedFood().getCount() > 0) {
 			// Show dialog box to delete the selections
@@ -312,8 +302,9 @@ public class ShowFoodList extends ListActivity {
 							dbHelper.deleteSelectedFood(cSelectedFood.getLong(cSelectedFood
 									.getColumnIndexOrThrow(DbAdapter.DATABASE_SELECTEDFOOD_ID)));
 						} while (cSelectedFood.moveToNext());
-						updateButton();
 						cSelectedFood.close();
+						countSelectedFood = 0;
+						updateButton();
 						break;
 					}
 				}
@@ -384,5 +375,72 @@ public class ShowFoodList extends ListActivity {
 			return false;
 		}
 		return super.onKeyDown(keyCode, event);
+	}
+
+	public int getCountSelectedFood() {
+		return countSelectedFood;
+	}
+
+	public void setCountSelectedFood(int count) {
+		countSelectedFood = count;
+		updateButton();
+	}
+
+	public void refreshListView() {
+		setListAdapter(null);
+		new ThreadUpdateListAdapter().execute();
+	}
+
+	public void deleteFoodItemFromList(long foodId) {
+		for (int i = 0; i < listDBFoodComparable.size(); i++) {
+			if (listDBFoodComparable.get(i).getId() == foodId) {
+				listDBFoodComparable.remove(i);
+			}
+		}
+		customArrayAdapterFoodList.notifyDataSetChanged();
+	}
+
+	private class ThreadAddFoodItemToList extends AsyncTask<Long, Void, Void> {
+
+		@Override
+		protected Void doInBackground(Long... params) {
+			dbHelper.open();
+			Cursor cFood = dbHelper.fetchFood(params[0]);
+
+			if (cFood.getCount() > 0) {
+				cFood.moveToFirst();
+				DBFoodComparable newFood = new DBFoodComparable(
+						cFood.getInt(cFood
+								.getColumnIndexOrThrow(DbAdapter.DATABASE_FOOD_ID)),
+						null,
+						0,
+						0,
+						0,
+						0,
+						0,
+						cFood.getString(cFood
+								.getColumnIndexOrThrow(DbAdapter.DATABASE_FOOD_NAME)));
+				listDBFoodComparable.add(newFood);
+			}
+
+			cFood.close();
+			dbHelper.close();
+
+			sortObjects();
+
+			return null;
+		}
+
+		@Override
+		protected void onPostExecute(Void result) {
+			setListAdapter(customArrayAdapterFoodList);
+			super.onPostExecute(result);
+		}
+
+	}
+
+	public void addFoodItemToList(long foodId) { 
+		setListAdapter(null);
+		new ThreadAddFoodItemToList().execute(foodId);
 	}
 }

@@ -5,18 +5,11 @@
 
     <LinearLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical" >
-
-        <TextView
-            android:id="@+id/textView99"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content" />
+        style="@style/linearLayoutVerticalWithPadding" >
 
         <TextView
             android:id="@+id/textViewSelectedFood"
-            android:layout_width="wrap_content"
+            android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:textColor="@color/ColorText" />
@@ -48,29 +41,22 @@
 
             <TableRow
                 android:id="@+id/tableRow1"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content" >
+                style="@style/styleTableRowGravityCenter" >
 
                 <TextView
                     android:id="@+id/textViewShowAddFoodRowOneFieldOne"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:padding="15dip"
-                    android:textColor="@color/ColorText" />
+                    style="@style/textViewInTableAlignRight"
+                    android:padding="15dip" />
 
                 <TextView
                     android:id="@+id/textViewShowAddFoodRowOneFieldTwo"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:padding="15dip"
-                    android:textColor="@color/ColorText" />
+                    style="@style/textViewInTableAlignRight"
+                    android:padding="15dip" />
 
                 <TextView
                     android:id="@+id/textViewShowAddFoodRowOneFieldThree"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:padding="15dip"
-                    android:textColor="@color/ColorText" />
+                    style="@style/textViewInTableAlignRight"
+                    android:padding="15dip" />
             </TableRow>
 
             <View
@@ -79,130 +65,93 @@
 
             <TableRow
                 android:id="@+id/tableRow2"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content" >
+                style="@style/styleTableRowGravityCenter" >
 
                 <TextView
                     android:id="@+id/textViewShowAddFoodRowTwoFieldOne"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:padding="15dip"
-                    android:textColor="@color/ColorText" />
+                    style="@style/textViewInTableAlignRight"
+                    android:padding="15dip" />
 
                 <TextView
                     android:id="@+id/textViewShowAddFoodRowTwoFieldTwo"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:padding="15dip"
-                    android:textColor="@color/ColorText" />
+                    style="@style/textViewInTableAlignRight"
+                    android:padding="15dip" />
 
                 <TextView
                     android:id="@+id/textViewShowAddFoodRowTwoFieldThree"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:padding="15dip"
-                    android:textColor="@color/ColorText" />
+                    style="@style/textViewInTableAlignRight"
+                    android:padding="15dip" />
             </TableRow>
 
             <TableRow
                 android:id="@+id/tableRow3"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content" >
+                style="@style/styleTableRowGravityCenter" >
 
                 <TextView
                     android:id="@+id/textViewShowAddFoodRowThreeFieldOne"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:padding="15dip"
-                    android:textColor="@color/ColorText" />
+                    style="@style/textViewInTableAlignRight"
+                    android:padding="15dip" />
 
                 <TextView
                     android:id="@+id/textViewShowAddFoodRowThreeFieldTwo"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:padding="15dip"
-                    android:textColor="@color/ColorText" />
+                    style="@style/textViewInTableAlignRight"
+                    android:padding="15dip" />
 
                 <TextView
                     android:id="@+id/textViewShowAddFoodRowThreeFieldThree"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:padding="15dip"
-                    android:textColor="@color/ColorText" />
+                    style="@style/textViewInTableAlignRight"
+                    android:padding="15dip" />
             </TableRow>
 
             <TableRow
                 android:id="@+id/tableRow4"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content" >
+                style="@style/styleTableRowGravityCenter" >
 
                 <TextView
                     android:id="@+id/textViewShowAddFoodRowFourFieldOne"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:padding="15dip"
-                    android:textColor="@color/ColorText" />
+                    style="@style/textViewInTableAlignRight"
+                    android:padding="15dip" />
 
                 <TextView
                     android:id="@+id/textViewShowAddFoodRowFourFieldTwo"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:padding="15dip"
-                    android:textColor="@color/ColorText" />
+                    style="@style/textViewInTableAlignRight"
+                    android:padding="15dip" />
 
                 <TextView
                     android:id="@+id/textViewShowAddFoodRowFourFieldThree"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:padding="15dip"
-                    android:textColor="@color/ColorText" />
+                    style="@style/textViewInTableAlignRight"
+                    android:padding="15dip" />
             </TableRow>
 
             <TableRow
                 android:id="@+id/tableRow5"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content" >
+                style="@style/styleTableRowGravityCenter" >
 
                 <TextView
                     android:id="@+id/textViewShowAddFoodRowFiveFieldOne"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:padding="15dip"
-                    android:textColor="@color/ColorText" />
+                    style="@style/textViewInTableAlignRight"
+                    android:padding="15dip" />
 
                 <TextView
                     android:id="@+id/textViewShowAddFoodRowFiveFieldTwo"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:padding="15dip"
-                    android:textColor="@color/ColorText" />
+                    style="@style/textViewInTableAlignRight"
+                    android:padding="15dip" />
 
                 <TextView
                     android:id="@+id/textViewShowAddFoodRowFiveFieldThree"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:padding="15dip"
-                    android:textColor="@color/ColorText" />
+                    style="@style/textViewInTableAlignRight"
+                    android:padding="15dip" />
             </TableRow>
         </TableLayout>
 
-        <LinearLayout
-            android:id="@+id/linearLayout2"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content" >
+        <Button
+            android:id="@+id/buttonAddOrUpdate"
+            style="@style/buttonAdd" />
 
-            <Button
-                android:id="@+id/buttonAddOrUpdate"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/add" />
-
-            <Button
-                android:id="@+id/buttonShowAddFoodDelete"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/delete" />
-        </LinearLayout>
+        <Button
+            android:id="@+id/buttonShowAddFoodDelete"
+            style="@style/buttonAdd"
+            android:text="@string/delete" />
     </LinearLayout>
 
 </ScrollView>

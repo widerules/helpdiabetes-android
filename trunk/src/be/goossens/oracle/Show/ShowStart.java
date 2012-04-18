@@ -4,6 +4,7 @@ import java.io.IOException;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.database.Cursor;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import be.goossens.oracle.R;
@@ -12,15 +13,13 @@ import be.goossens.oracle.Rest.DbAdapter;
 public class ShowStart extends Activity {
 
 	private DbAdapter dbHelper;
-	private boolean firstTime;
-
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.show_start);
 
 		dbHelper = new DbAdapter(this);
-		firstTime = false;
 		new checkDatabase().execute();
 	}
 
@@ -28,7 +27,7 @@ public class ShowStart extends Activity {
 		@Override
 		protected Void doInBackground(Void... arg0) {
 			try {
-				firstTime = dbHelper.createDataBase();
+				dbHelper.createDataBase();
 			} catch (IOException e) {
 			}
 			return null;
@@ -44,10 +43,20 @@ public class ShowStart extends Activity {
 		Intent i = new Intent(this, ShowHomeTab.class);
 		startActivity(i);
 
-		// if firsttime == true then we have to show the select language page
-		if (firstTime) {
+		// check to see if we have to show the selectLanguage page
+		dbHelper.open();
+		
+		Cursor cSetting = dbHelper.fetchSettingByName(getResources().getString(
+				R.string.language));
+		cSetting.moveToFirst();
+		 
+		if (cSetting.getLong(cSetting
+				.getColumnIndexOrThrow(DbAdapter.DATABASE_SETTINGS_VALUE)) == 0) {
 			Intent m = new Intent(this, ShowSelectLanguage.class);
 			startActivity(m);
 		}
+		
+		cSetting.close();
+		dbHelper.close();
 	}
 }

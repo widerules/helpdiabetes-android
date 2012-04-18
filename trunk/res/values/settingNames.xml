@@ -32,4 +32,6 @@
     <!-- Language -->
     <string name="language">language</string>
 
+    <!-- meal unit -->
+    <string name="glucose_unit">glucoseUnit</string>
 </resources>

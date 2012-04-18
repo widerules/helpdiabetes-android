@@ -32,8 +32,9 @@ public class ActivityGroupTracking extends ActivityGroup {
 			// Start the root activity within the group and get its view
 			View view = getLocalActivityManager().startActivity(
 					DataParser.activityIDTracking,
-					new Intent(this, ShowTracking.class).addFlags(
-							Intent.FLAG_ACTIVITY_CLEAR_TOP)).getDecorView();
+					new Intent(this, ShowTracking.class)
+							.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP))
+					.getDecorView();
 			replaceView(view);
 		}
 	}
@@ -83,6 +84,15 @@ public class ActivityGroupTracking extends ActivityGroup {
 		} catch (Exception e) {
 			if (history.size() >= 0)
 				super.setContentView(history.get(0));
+		}
+	}
+
+	public void showTrackingRefreshList() {
+		try {
+			View v = history.get(0);
+			ShowTracking currentActivity = (ShowTracking) v.getContext();
+			currentActivity.refreshData();
+		} catch (Exception e) {
 		}
 	}
 
