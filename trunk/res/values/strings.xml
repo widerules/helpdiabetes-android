@@ -19,25 +19,33 @@
     
     <!-- ShowSelectedFood -->
     <string name="showSelectedFoodPopupAddAmountToTemplate">Wilt u de aantallen mee bewaren?</string>
+    <string name="insuline">Insuline</string>
+    <string name="insulineRatio">KH/1E</string>
+    <string name="insulineUnit">E</string>
+    
     <string name="showSelectedFoodUnitsInsuline">eenheden insuline</string>
     <string name="showSelectedFoodUInsulineRatio">Insuline ratio</string>
 	<string name="showSelectedFoodEatSelectedFood">toevoegen aan rapport</string>
     
     <!-- ShowFoodList -->
     <string name="showFoodListButtonSelections">Selecties</string>
-
+    <string name="search">Zoeken</string>
+    <string name="options">Opties</string>
+    
     <!-- ShowCreateUnit & ShowCreateFood -->
     <!-- These values are used to equal to ShowCreateFoodSpinnerResource.xml -->
     <!-- If you update them here you have to update them there to! -->
     <string name="gram">gram</string>
     <string name="ml">ml</string>
-
+	<string name="unit_name_is_required">Eenheid mag niet leeg zijn</string>
+	<string name="unit_amount_cant_be_zero">Eenheid moet groter dan 0 zijn</string>
+    
     <!-- ShowExerciseEvents -->
     <string name="exercise_events">Sport activiteiten</string>
     <string name="add_exercise_events">Sport activiteit toevoegen</string>
     <string name="add_exercise_type">Intensiteit toevoegen</string>
     <string name="menu_update_exercise_type">Intensiteiten updaten</string>
-
+    
     <!-- ShowAddExerciseEvents -->
     <string name="description">Beschrijving</string>
     <string name="start_time">Begin tijd</string>
@@ -56,14 +64,13 @@
     <!-- Layout -->
     <string name="endOfListView">></string>
     
-    <!-- Not sorted yet -->
-    <string name="search">Zoeken: </string>
+    <!-- Not sorted yet -->    
     <string name="creating_data">Aanmaken gegevens</string>
     <string name="amound_of_kcal">Kilocalorien</string>
     <string name="amound_of_carbs">Koolhydraten</string>
     <string name="amound_of_protein">Eiwit</string>
     <string name="amound_of_fat">Vet</string>
-    <string name="total">Totaal:</string>
+    <string name="total">Totaal</string>
     <string name="items_selected">items geselecteerd</string>
     <string name="multiplie">X</string>
     <string name="cant_add_more_then_five_digits">U kan niet meer dan 5 digits ingeven!</string>
@@ -82,7 +89,7 @@
     <string name="hundred">100</string>
     <string name="food_name_is_required">Naam eten mag niet leeg zijn</string>
     <string name="save_food_name">Eten naam wijzigen</string>
-    <string name="unit_name_is_required">Eenheid mag niet leeg zijn</string>
+    
     <string name="kcal_is_required">kilocalories mag niet leeg zijn</string>
     <string name="prot_is_required">eiwit mag niet leeg zijn</string>
     <string name="carbs_is_required">koolhydraten mag niet leeg zijn</string>
@@ -126,6 +133,8 @@
 
     <!-- Settings font size list -->
     <string name="fontSize">Tekst grootte</string>
-    <string name="example">voorbeeld</string>
-
+	<string name="selected_wanted_size">Selecteer de gewenste grootte</string>
+	
+	<!-- Settings glucose unit -->
+	<string name="glucose_unit">Glucose unit</string>
 </resources>

@@ -14,7 +14,8 @@
 
             <TableRow
                 android:id="@+id/tableRow6"
-                style="@style/styleTableRowGravityCenter" >
+                style="@style/styleTableRowGravityCenter"
+                android:layout_marginRight="5dip" >
 
                 <TextView
                     android:id="@+id/textView1"
@@ -46,8 +47,6 @@
                 android:id="@+id/tableRowSpecialFoodUnit"
                 style="@style/styleTableRowGravityCenter"
                 android:visibility="gone" >
-
-                <TextView />
 
                 <EditText
                     android:id="@+id/editTextFoodUnitStandardAmound"

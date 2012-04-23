@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    style="@style/linearLayoutVerticalWithPadding" >
+
+    <TextView
+        android:id="@+id/textView1"
+        android:text="@string/glucose_unit"
+        style="@style/textViewSettingTitle" />
+
+    <RadioGroup
+        android:id="@+id/radioGroupGlucoseUnit"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent" >
+    </RadioGroup>
+
+</LinearLayout>

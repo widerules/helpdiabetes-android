@@ -3,20 +3,15 @@ package be.goossens.oracle.Show.Settings;
 import java.util.ArrayList;
 
 import android.app.ListActivity;
-import android.database.Cursor;
 import android.os.Bundle;
-import android.os.Handler;
 import android.view.KeyEvent;
-import android.view.MotionEvent;
 import android.view.View;
-import android.view.View.OnClickListener;
-import android.view.View.OnLongClickListener;
-import android.view.View.OnTouchListener;
-import android.widget.Button;
+import android.widget.ListView;
 import android.widget.TextView;
 import be.goossens.oracle.R;
 import be.goossens.oracle.ActivityGroup.ActivityGroupMeal;
-import be.goossens.oracle.Custom.CustomArrayAdapter;
+import be.goossens.oracle.ActivityGroup.ActivityGroupSettings;
+import be.goossens.oracle.Custom.CustomArrayAdapterFontSize;
 import be.goossens.oracle.Rest.DbAdapter;
 
 public class ShowSettingsFontSizeLists extends ListActivity {
@@ -24,9 +19,6 @@ public class ShowSettingsFontSizeLists extends ListActivity {
 	private DbAdapter dbHelper;
 	private TextView tvFontSize;
 	private ArrayList<String> list;
-	private int fontSize;
-
-	private Button btUp, btDown;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -34,91 +26,45 @@ public class ShowSettingsFontSizeLists extends ListActivity {
 		setContentView(R.layout.show_settings_font_size_list);
 		dbHelper = new DbAdapter(this);
 		list = getList();
-		fontSize = 0;
-
-		tvFontSize = (TextView) findViewById(R.id.textViewShowSettingsFontSizeListTextSize);
-		btUp = (Button) findViewById(R.id.button1);
-		btDown = (Button) findViewById(R.id.button2);
-
-		btUp.setOnClickListener(new OnClickListener() {
-
-			public void onClick(View v) {
-				onClickFontUp(v);
-			}
-		});
-
-		btDown.setOnClickListener(new OnClickListener() {
-
-			public void onClick(View v) {
-				onClickFontDown(v);
-			}
-		});
-
 	}
 
 	@Override
 	protected void onResume() {
 		super.onResume();
 		dbHelper.open();
-		fillTvFontSize();
-		updateList();
+		fillList();
 	}
 
-	private void saveSize() {
+	private void saveSize(int fontSize) {
 		dbHelper.updateSettingsByName(
-				getResources().getString(R.string.font_size), "" + fontSize);
+				getResources().getString(R.string.setting_font_size), "" + fontSize);
 	}
 
-	private void updateList() {
-		CustomArrayAdapter adapter = new CustomArrayAdapter(this,
-				R.layout.row_custom_array_adapter, list, fontSize);
+	private void fillList() {
+		CustomArrayAdapterFontSize adapter = new CustomArrayAdapterFontSize(this,
+				R.layout.row_custom_array_adapter, list);
+		
 		setListAdapter(adapter);
 	}
-
+ 
 	private ArrayList<String> getList() {
 		ArrayList<String> returnList = new ArrayList<String>();
-		for (int i = 0; i < 21; i++) {
-			returnList
-					.add(getResources().getString(R.string.example) + " " + i);
-		}
+		for (int i = 0; i < 53; i++) {
+			returnList.add(getResources().getString(R.string.fontSize));
+		} 
 		return returnList;
 	}
 
-	private void fillTvFontSize() {
-		Cursor cSetting = dbHelper.fetchSettingByName(getResources().getString(
-				R.string.font_size));
-		cSetting.moveToFirst();
-		fontSize = cSetting.getInt(cSetting
-				.getColumnIndexOrThrow(DbAdapter.DATABASE_SETTINGS_VALUE));
-		cSetting.close();
-		tvFontSize.setText(getResources().getString(R.string.fontSize) + " "
-				+ fontSize);
+	@Override
+	protected void onListItemClick(ListView l, View v, int position, long id) {
+		//save font size
+		saveSize((position+8));
+		//refresh the list of food 
+		ActivityGroupMeal.group.showFoodListRefreshListView();
+		//go back
+		ActivityGroupSettings.group.back();
 	}
-
-	private void changeFontSize(int number) {
-		fontSize += number;
-
-		if (fontSize < 3)
-			fontSize = 3;
-		else if (fontSize > 50)
-			fontSize = 50;
-
-		tvFontSize.setText(getResources().getString(R.string.fontSize) + " "
-				+ fontSize);
-	}
- 
-	public void onClickFontUp(View view) {
-		changeFontSize(1);
-		//saveSize();
-		updateList();
-	}
-
-	public void onClickFontDown(View view) {
-		changeFontSize(-1);
-		//saveSize();
-		updateList();
-	}
-
+	
 	@Override
 	protected void onPause() {
 		super.onPause();
@@ -128,10 +74,6 @@ public class ShowSettingsFontSizeLists extends ListActivity {
 	@Override
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
 		if (event.getKeyCode() == KeyEvent.KEYCODE_BACK) {
-			//save the fontSize
-			saveSize();
-			// on click back we refresh the showFoodList listview 
-			ActivityGroupMeal.group.showFoodListRefreshListView();
 			return false;
 		}
 		return super.onKeyDown(keyCode, event);

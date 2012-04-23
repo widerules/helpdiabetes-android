@@ -92,7 +92,7 @@ public class ShowAddExerciseEvent extends Activity {
 		public void onDateSet(DateSlider view, Calendar selectedDate) {
 			updateTimeAndTimeTextView(selectedDate);
 		}
-	};
+	};  
 
 	@Override
 	protected Dialog onCreateDialog(int id) {
@@ -118,6 +118,7 @@ public class ShowAddExerciseEvent extends Activity {
 	}
 
 	private void setExistingValues() {
+		dbHelper.open();
 		Cursor cExerciseEvent = dbHelper.fetchExerciseEventByID(getIntent()
 				.getExtras().getLong(DataParser.idExerciseEvent));
 		cExerciseEvent.moveToFirst();
@@ -147,6 +148,7 @@ public class ShowAddExerciseEvent extends Activity {
 	}
 
 	private void setRightItemInSpinner(long exerciseTypeID) {
+		dbHelper.open();
 		int position = 0;
 		Cursor cTemp = dbHelper.fetchAllExerciseTypes();
 		cTemp.moveToFirst();
@@ -162,6 +164,7 @@ public class ShowAddExerciseEvent extends Activity {
 	}
 
 	private void fillSpinnerSportType() {
+		dbHelper.open();
 		SimpleCursorAdapter adapter = new SimpleCursorAdapter(this,
 				android.R.layout.simple_spinner_item,
 				dbHelper.fetchAllExerciseTypes(),
@@ -186,6 +189,7 @@ public class ShowAddExerciseEvent extends Activity {
 	}
 
 	public void onClickAdd(View view) {
+		dbHelper.open();
 		if (etDescription.length() <= 0) {
 			Toast.makeText(
 					this,
@@ -242,6 +246,7 @@ public class ShowAddExerciseEvent extends Activity {
 	}
 
 	public void onClickDelete(View view) {
+		dbHelper.open();
 		dbHelper.deleteExerciseEventByID(getIntent().getExtras().getLong(
 				DataParser.idExerciseEvent));
 		setResult(RESULT_OK);

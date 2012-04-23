@@ -13,10 +13,18 @@ import be.goossens.oracle.Objects.DBFoodComparable;
 public class FoodComparator implements Comparator<DBFoodComparable> {
 
 	public int compare(DBFoodComparable foodOne, DBFoodComparable foodTwo) {
-		String foodNameOne = removeAccents(foodOne.getName());
-		String foodNameTwo = removeAccents(foodTwo.getName());
- 
-		return foodNameOne.toLowerCase().compareTo(foodNameTwo.toLowerCase());
+
+		if (foodOne.getIsfavorite() > 0 && foodTwo.getIsfavorite() <= 0)
+			return -1;
+		else if (foodOne.getIsfavorite() <= 0 && foodTwo.getIsfavorite() > 0)
+			return 1;
+		else {
+			String foodNameOne = removeAccents(foodOne.getName());
+			String foodNameTwo = removeAccents(foodTwo.getName());
+			 
+			return foodNameOne.toLowerCase().compareTo(
+					foodNameTwo.toLowerCase());
+		}
 	}
 
 	/*

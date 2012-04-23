@@ -80,8 +80,7 @@ public class ActivityGroupSettings extends ActivityGroup {
 				// call the super.setContent view! so set the real view
 				super.setContentView(history.get(history.size() - 1));
 			} else {
-				Toast.makeText(this, "you cant close this app! \n hehe :-)",
-						Toast.LENGTH_LONG).show();
+				
 			}
 		} catch (Exception e) {
 			if (history.size() >= 0)
@@ -113,7 +112,6 @@ public class ActivityGroupSettings extends ActivityGroup {
 
 	@Override
 	public void finish() {
-		Toast.makeText(this, "lol no finish for u ;)", Toast.LENGTH_LONG)
-				.show();
+		
 	}
 }

@@ -65,6 +65,8 @@ public class ShowSelectedFood extends ListActivity {
 	private Button btDelete, btSaveTemplate, btLoadTemplate,
 			btAddSelectedFoodToTracking;
 
+	private Functions functions;
+
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -72,6 +74,8 @@ public class ShowSelectedFood extends ListActivity {
 		View contentView = LayoutInflater.from(getParent()).inflate(
 				R.layout.show_selected_food, null);
 		setContentView(contentView);
+
+		functions = new Functions();
 
 		btDelete = (Button) findViewById(R.id.buttonDelete);
 		btSaveTemplate = (Button) findViewById(R.id.buttonSaveAsTemplate);
@@ -116,11 +120,12 @@ public class ShowSelectedFood extends ListActivity {
 
 	// Click on button add selected food to tracking
 	private void onClickAddSelectedFoodToTracking() {
+		dbHelper.open();
 		Cursor cSelectedFood = dbHelper.fetchAllSelectedFood();
 
 		// only create objects if we have something in the selectedFood list
 		if (cSelectedFood.getCount() > 0) {
-			// create a meal event 
+			// create a meal event
 			long lMealEventID = dbHelper.createMealEvent(fInsulineRatio,
 					fCorrectionFactor, fCalculatedInsulineAmount,
 					new Functions().getDateAsStringFromCalendar(Calendar
@@ -156,12 +161,12 @@ public class ShowSelectedFood extends ListActivity {
 
 		// kill this activity
 		ActivityGroupMeal.group.back();
-		//set button with selectedFoodCount = 0
+		// set button with selectedFoodCount = 0
 		ActivityGroupMeal.group.showFoodListsetCountSelectedFood(0);
-		 
-		//refresh tracking list
+
+		// refresh tracking list
 		ActivityGroupTracking.group.showTrackingRefreshList();
-		
+
 		// Go to tracking activity
 		ShowHomeTab parentActivity;
 		parentActivity = (ShowHomeTab) this.getParent().getParent();
@@ -172,7 +177,7 @@ public class ShowSelectedFood extends ListActivity {
 	// and returns the arraylist
 	private ArrayList<DBSelectedFood> getSelectedFood() {
 		ArrayList<DBSelectedFood> list = new ArrayList<DBSelectedFood>();
-
+		dbHelper.open();
 		Cursor cSelectedFood = dbHelper.fetchAllSelectedFood();
 		if (cSelectedFood.getCount() > 0) {
 			cSelectedFood.moveToFirst();
@@ -217,14 +222,17 @@ public class ShowSelectedFood extends ListActivity {
 
 	// This will set the total calculated values on top of the page
 	private void calculateValues() {
-		TextView tvTotal = (TextView) findViewById(R.id.textViewShowTotal);
+		TextView tvTotalNames = (TextView) findViewById(R.id.textViewShowTotalNames);
+		TextView tvTotalValues = (TextView) findViewById(R.id.textViewShowTotalValues);
+		TextView tvInsuline = (TextView) findViewById(R.id.textViewInsuline);
+
 		// calculate amound of kilocalories
 		float totalKcal = 0;
 		float totalCarbs = 0;
 		float totalProtein = 0;
 		float totalFat = 0;
 		fCalculatedInsulineAmount = 0;
-
+		dbHelper.open();
 		Cursor cSelectedFood = dbHelper.fetchAllSelectedFood();
 		if (cSelectedFood.getCount() > 0) {
 			startManagingCursor(cSelectedFood);
@@ -289,16 +297,16 @@ public class ShowSelectedFood extends ListActivity {
 		// Get all the needed settings
 		Cursor cSettingsBreakfastTime = dbHelper
 				.fetchSettingByName(getResources().getString(
-						R.string.meal_time_breakfast));
+						R.string.setting_meal_time_breakfast));
 		cSettingsBreakfastTime.moveToFirst();
 		Cursor cSettingsLunchTime = dbHelper.fetchSettingByName(getResources()
-				.getString(R.string.meal_time_lunch));
+				.getString(R.string.setting_meal_time_lunch));
 		cSettingsLunchTime.moveToFirst();
 		Cursor cSettingsSnackTime = dbHelper.fetchSettingByName(getResources()
-				.getString(R.string.meal_time_snack));
+				.getString(R.string.setting_meal_time_snack));
 		cSettingsSnackTime.moveToFirst();
 		Cursor cSettingsDinnerTime = dbHelper.fetchSettingByName(getResources()
-				.getString(R.string.meal_time_dinner));
+				.getString(R.string.setting_meal_time_dinner));
 		cSettingsDinnerTime.moveToFirst();
 
 		// Make all the needed variables
@@ -330,18 +338,18 @@ public class ShowSelectedFood extends ListActivity {
 		if (currentTime.after(dateBreakfastTime)
 				&& currentTime.before(dateLunchTime)) {
 			cInsulineRatio = dbHelper.fetchSettingByName(getResources()
-					.getString(R.string.insuline_ratio_breakfast));
+					.getString(R.string.setting_insuline_ratio_breakfast));
 		} else if (currentTime.after(dateLunchTime)
 				&& currentTime.before(dateSnackTime)) {
 			cInsulineRatio = dbHelper.fetchSettingByName(getResources()
-					.getString(R.string.insuline_ratio_lunch));
+					.getString(R.string.setting_insuline_ratio_lunch));
 		} else if (currentTime.after(dateSnackTime)
 				&& currentTime.before(dateDinnerTime)) {
 			cInsulineRatio = dbHelper.fetchSettingByName(getResources()
-					.getString(R.string.insuline_ratio_snack));
+					.getString(R.string.setting_insuline_ratio_snack));
 		} else {
 			cInsulineRatio = dbHelper.fetchSettingByName(getResources()
-					.getString(R.string.insuline_ratio_dinner));
+					.getString(R.string.setting_insuline_ratio_dinner));
 		}
 
 		cInsulineRatio.moveToFirst();
@@ -360,60 +368,68 @@ public class ShowSelectedFood extends ListActivity {
 			fCalculatedInsulineAmount = totalCarbs / fInsulineRatio;
 
 		// Round the calculated floats
-		float p = (float) Math.pow(10, 2);
-		totalCarbs = Math.round(totalCarbs * p) / p;
-		totalProtein = Math.round(totalProtein * p) / p;
-		totalFat = Math.round(totalFat * p) / p;
-		totalKcal = Math.round(totalKcal * p) / p;
-
-		// Round insuline 1 decimal
-		p = (float) Math.pow(10, 1);
-		fCalculatedInsulineAmount = Math.round(fCalculatedInsulineAmount * p)
-				/ p;
+		totalCarbs = functions.roundFloats(totalCarbs, 1);
+		totalProtein = functions.roundFloats(totalProtein, 1);
+		totalFat = functions.roundFloats(totalFat, 1);
+		totalKcal = functions.roundFloats(totalKcal, 1);
+		fCalculatedInsulineAmount = functions.roundFloats(
+				fCalculatedInsulineAmount, 1);
 
 		// set the text on the textview in the right order
-		String tvText = "";
+		String tvNameText = " ";
+		String tvValueText = " ";
 
 		for (DBValueOrder obj : listValueOrders) {
-			if (obj.getSettingName().equals(
-					getResources().getString(R.string.value_order_carb))) {
+			if (obj.getSettingName()
+					.equals(getResources().getString(
+							R.string.setting_value_order_carb))) {
 				// add the carbs to the total
-				tvText += " \t\t " + totalCarbs + " "
-						+ getResources().getString(R.string.amound_of_carbs)
-						+ " \n ";
-			} else if (obj.getSettingName().equals(
-					getResources().getString(R.string.value_order_prot))) {
+				tvNameText += getResources()
+						.getString(R.string.amound_of_carbs) + " \n ";
+				tvValueText += totalCarbs + " \n ";
+			} else if (obj.getSettingName()
+					.equals(getResources().getString(
+							R.string.setting_value_order_prot))) {
 				// add the prot to the total
-				tvText += " \t\t " + totalProtein + " "
-						+ getResources().getString(R.string.amound_of_protein)
+				tvNameText += getResources().getString(
+						R.string.amound_of_protein)
 						+ " \n ";
+				tvValueText += totalProtein + " \n ";
 			} else if (obj.getSettingName().equals(
-					getResources().getString(R.string.value_order_fat))) {
+					getResources().getString(R.string.setting_value_order_fat))) {
 				// add the fat to the total
-				tvText += " \t\t " + totalFat + " "
-						+ getResources().getString(R.string.amound_of_fat)
+				tvNameText += getResources().getString(R.string.amound_of_fat)
 						+ " \n ";
-			} else if (obj.getSettingName().equals(
-					getResources().getString(R.string.value_order_kcal))) {
+				tvValueText += totalFat + " \n ";
+
+			} else if (obj.getSettingName()
+					.equals(getResources().getString(
+							R.string.setting_value_order_kcal))) {
 				// add the kcal to the total
-				tvText += " \t\t " + totalKcal + " "
-						+ getResources().getString(R.string.amound_of_kcal)
+				tvNameText += getResources().getString(R.string.amound_of_kcal)
 						+ " \n ";
+				tvValueText += totalKcal + " \n ";
 			}
 		}
 
 		// add insuline ratio to the string when the radio != 0
 		if (fInsulineRatio != 0) {
-			tvText += fCalculatedInsulineAmount
-					+ " "
-					+ getResources().getString(
-							R.string.showSelectedFoodUnitsInsuline) + " \n ";
-			tvText += getResources().getString(
-					R.string.showSelectedFoodUInsulineRatio)
-					+ " " + fInsulineRatio;
+			tvInsuline.setText(fCalculatedInsulineAmount + " "
+					+ getResources().getString(R.string.insulineUnit) + " "
+					+ getResources().getString(R.string.insuline) + " " + "(à "
+					+ functions.roundFloats(fInsulineRatio, 1) + " "
+					+ getResources().getString(R.string.insulineRatio) + ")");
+		} else {
+			tvInsuline.setText("");
 		}
 
-		tvTotal.setText(tvText);
+		//remove the last \n from the strings 
+		tvNameText = tvNameText.substring(0,tvNameText.length() - 2);  
+		tvValueText = tvValueText.substring(0,tvValueText.length() - 2);
+		
+		// tvTotal.setText(tvText);
+		tvTotalNames.setText(tvNameText);
+		tvTotalValues.setText(tvValueText);
 	}
 
 	// This function will transform a string to a date object
@@ -441,18 +457,12 @@ public class ShowSelectedFood extends ListActivity {
 		AdapterContextMenuInfo info = (AdapterContextMenuInfo) item
 				.getMenuInfo();
 
-		switch (item.getItemId()) {
-		// if pressed delete
-		case DELETE_ID:
-			dbHelper.deleteSelectedFood(info.id);
-			refreshData();
-			break;
-		// if pressed edit
-		// go back to the select page
-		case EDIT_ID:
-			startActivityUpdateSelectedFood(info.id);
-			break;
-		}
+		/*
+		 * switch (item.getItemId()) { // if pressed delete case DELETE_ID:
+		 * dbHelper.deleteSelectedFood(info.id); refreshData(); break; // if
+		 * pressed edit // go back to the select page case EDIT_ID:
+		 * startActivityUpdateSelectedFood(info.id); break; }
+		 */
 		return super.onContextItemSelected(item);
 	}
 
@@ -477,7 +487,7 @@ public class ShowSelectedFood extends ListActivity {
 				.putExtra(DataParser.idSelectedFood, selectedFoodId);
 
 		View v = ActivityGroupMeal.group.getLocalActivityManager()
-				.startActivity(DataParser.activityIDMeal, i).getDecorView();
+				.startActivity(DataParser.activityIDShowFoodList, i).getDecorView();
 		ActivityGroupMeal.group.setContentView(v);
 
 		cUnit.close();
@@ -498,18 +508,19 @@ public class ShowSelectedFood extends ListActivity {
 			refreshData();
 			break;
 		}
-	}
-
+	}   
+  
 	// to fill the listview with data
 	private void fillData() {
 		listOfSelectedFood = getSelectedFood();
+		dbHelper.open();
 		if (listOfSelectedFood.size() > 0) {
 			Cursor cSettings = dbHelper.fetchSettingByName(getResources()
-					.getString(R.string.font_size));
+					.getString(R.string.setting_font_size));
 			cSettings.moveToFirst();
 			CustomBaseAdapterSelectedFood adapter = new CustomBaseAdapterSelectedFood(
 					this,
-					listOfSelectedFood,
+					listOfSelectedFood, 
 					cSettings.getInt(cSettings
 							.getColumnIndexOrThrow(DbAdapter.DATABASE_SETTINGS_VALUE)));
 			setListAdapter(adapter);
@@ -524,13 +535,14 @@ public class ShowSelectedFood extends ListActivity {
 	// when we click on the button delete all
 	public void onClickDeleteAll(View view) {
 		deleteSelectedFood();
-		//update the button with count = 0;
+		// update the button with count = 0;
 		ActivityGroupMeal.group.showFoodListsetCountSelectedFood(0);
-		//refresh the data
+		// refresh the data
 		refreshData();
 	}
 
 	private void deleteSelectedFood() {
+		dbHelper.open();
 		Cursor cSelectedFood = dbHelper.fetchAllSelectedFood();
 		if (cSelectedFood.getCount() > 0) {
 			cSelectedFood.moveToFirst();
@@ -551,11 +563,10 @@ public class ShowSelectedFood extends ListActivity {
 
 	private void calculateTemplates() {
 		Button buttonLoadTemplate = (Button) findViewById(R.id.buttonShowSelectedFoodButtonLoadTemplate);
-
+		dbHelper.open();
 		Cursor cFoodTemplates = dbHelper.fetchAllFoodTemplates();
-
-		buttonLoadTemplate.setText(""
-				+ getResources().getString(R.string.Load_template) + " ("
+ 
+		buttonLoadTemplate.setText(" ("
 				+ cFoodTemplates.getCount() + ")");
 
 		cFoodTemplates.close();
@@ -563,6 +574,7 @@ public class ShowSelectedFood extends ListActivity {
 
 	// this method is called when the user press on save as template
 	public void onClickSaveAsTemplate(View view) {
+		dbHelper.open();
 		/*
 		 * First we check if we have more then 1 selectedFood in the table It
 		 * would be stupid to add only 1 selected food to a template
@@ -641,6 +653,7 @@ public class ShowSelectedFood extends ListActivity {
 	}
 
 	private void createNewTemplate() {
+		dbHelper.open();
 		// Add the selected food to a template
 		// We create a new mealType
 		Long mealTypeID = dbHelper.createMealType("testOneMealType");
@@ -672,11 +685,12 @@ public class ShowSelectedFood extends ListActivity {
 	}
 
 	public void onClickLoadTemplate(View view) {
+		dbHelper.open();
 		if (dbHelper.fetchAllFoodTemplates().getCount() > 0) {
 			Intent i = new Intent(this, ShowFoodTemplates.class)
 					.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 			View v = ActivityGroupMeal.group.getLocalActivityManager()
-					.startActivity(DataParser.activityIDMeal, i).getDecorView();
+					.startActivity(DataParser.activityIDShowFoodList, i).getDecorView();
 			ActivityGroupMeal.group.setContentView(v);
 		} else {
 			showToast(getResources().getString(R.string.template_load_empty));
@@ -699,22 +713,23 @@ public class ShowSelectedFood extends ListActivity {
 
 	// This method will fill the list of DBValueOrders with the right values
 	private void fillListValueOrders() {
+		dbHelper.open();
 		// make the list empty
 		listValueOrders = new ArrayList<DBValueOrder>();
 
 		// get all the value orders
 		Cursor cSettingValueOrderProt = dbHelper
 				.fetchSettingByName(getResources().getString(
-						R.string.value_order_prot));
+						R.string.setting_value_order_prot));
 		Cursor cSettingValueOrderCarb = dbHelper
 				.fetchSettingByName(getResources().getString(
-						R.string.value_order_carb));
+						R.string.setting_value_order_carb));
 		Cursor cSettingValueOrderFat = dbHelper
 				.fetchSettingByName(getResources().getString(
-						R.string.value_order_fat));
+						R.string.setting_value_order_fat));
 		Cursor cSettingValueOrderKcal = dbHelper
 				.fetchSettingByName(getResources().getString(
-						R.string.value_order_kcal));
+						R.string.setting_value_order_kcal));
 
 		// Move cursors to first object
 		cSettingValueOrderProt.moveToFirst();

@@ -1,30 +1,36 @@
 package be.goossens.oracle.Show.Settings;
 
 import java.util.ArrayList;
-
-import be.goossens.oracle.R;
-import be.goossens.oracle.ActivityGroup.ActivityGroupSettings;
-import be.goossens.oracle.Rest.DataParser;
-import be.goossens.oracle.Rest.DbAdapter;
+import java.util.Calendar;
+import java.util.Date;
 
 import android.app.ListActivity;
-import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.view.KeyEvent;
 import android.view.View;
-import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import be.goossens.oracle.R;
+import be.goossens.oracle.ActivityGroup.ActivityGroupSettings;
+import be.goossens.oracle.Custom.CustomArrayAdapter;
+import be.goossens.oracle.Custom.CustomArrayAdapterSettingsMealTimes;
+import be.goossens.oracle.Rest.DbAdapter;
+import be.goossens.oracle.Rest.Functions;
+import be.goossens.oracle.slider.DateSlider;
+import be.goossens.oracle.slider.TimeSlider;
 
 public class ShowSettingsMealTimes extends ListActivity {
 	private DbAdapter dbHelper;
+	private int selectedMeal;
+	private Functions functions;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.show_settings_meal_times);
-
 		dbHelper = new DbAdapter(this);
+		functions = new Functions();
+		selectedMeal = 0;
 	}
 
 	@Override
@@ -42,19 +48,19 @@ public class ShowSettingsMealTimes extends ListActivity {
 		// get the times out the database
 		// breakfast
 		Cursor cBreakfastTime = dbHelper.fetchSettingByName(getResources()
-				.getString(R.string.meal_time_breakfast));
+				.getString(R.string.setting_meal_time_breakfast));
 		cBreakfastTime.moveToFirst();
 		// lunch
 		Cursor cLunchTime = dbHelper.fetchSettingByName(getResources()
-				.getString(R.string.meal_time_lunch));
+				.getString(R.string.setting_meal_time_lunch));
 		cLunchTime.moveToFirst();
 		// snack
 		Cursor cSnackTime = dbHelper.fetchSettingByName(getResources()
-				.getString(R.string.meal_time_snack));
+				.getString(R.string.setting_meal_time_snack));
 		cSnackTime.moveToFirst();
 		// dinner
 		Cursor cDinnerTime = dbHelper.fetchSettingByName(getResources()
-				.getString(R.string.meal_time_dinner));
+				.getString(R.string.setting_meal_time_dinner));
 		cDinnerTime.moveToFirst();
 
 		// Fill the list with the times
@@ -92,49 +98,95 @@ public class ShowSettingsMealTimes extends ListActivity {
 		return list;
 	}
 
-	@Override
-	protected void onListItemClick(ListView l, View v, int position, long id) {
-		super.onListItemClick(l, v, position, id);
-		// This list has 4 items in it ( 0 = breakfast, 1 = lunch, 2 = snack and
-		// 3 = dinner ).
-		// See which item is clicked and go to the page to change the time
-		Intent i = new Intent(this, ShowSettingsUpdateMealTime.class);
-		switch ((int) id) {
+	private DateSlider.OnDateSetListener mTimeSetListener = new DateSlider.OnDateSetListener() {
+		public void onDateSet(DateSlider view, Calendar selectedDate) {
+			String time = functions.getTimeFromDate(selectedDate.getTime());
+			String settingName = "";
+
+			// update the selectedMeal with the corresponding date
+			switch (selectedMeal) {
+			case 0:
+				// update breakfast in db
+				settingName = getResources().getString(
+						R.string.setting_meal_time_breakfast);
+				break;
+			case 1:
+				// update lunch in db
+				settingName = getResources().getString(
+						R.string.setting_meal_time_lunch);
+				break;
+			case 2:
+				// update snack in db
+				settingName = getResources().getString(
+						R.string.setting_meal_time_snack);
+				break;
+			case 3:
+				// update dinner in db
+				settingName = getResources().getString(
+						R.string.setting_meal_time_dinner);
+				break;
+			}
+
+			if (!settingName.equals("")) {
+				dbHelper.updateSettingsByName(settingName, time);
+				// refresh list
+				setListAdapter(null);
+				fillData();
+			}
+		}
+	};
+
+	protected android.app.Dialog onCreateDialog(int id) {
+		Calendar c = Calendar.getInstance();
+		Date date = new Date();
+
+		Cursor cSettingTime = null;
+ 
+		switch (id) {
 		case 0:
-			// put the breakfast key in the intent
-			i.putExtra(DataParser.fromWhereWeCome,
-					getResources().getString(R.string.meal_time_breakfast));
+			cSettingTime = dbHelper.fetchSettingByName(getResources()
+					.getString(R.string.setting_meal_time_breakfast));
 			break;
 		case 1:
-			// put the lunch key in the intent
-			i.putExtra(DataParser.fromWhereWeCome,
-					getResources().getString(R.string.meal_time_lunch));
+			cSettingTime = dbHelper.fetchSettingByName(getResources()
+					.getString(R.string.setting_meal_time_lunch));
 			break;
 		case 2:
-			// put the snack key in the intent
-			i.putExtra(DataParser.fromWhereWeCome,
-					getResources().getString(R.string.meal_time_snack));
+			cSettingTime = dbHelper.fetchSettingByName(getResources()
+					.getString(R.string.setting_meal_time_snack));
 			break;
 		case 3:
-			// put the dinner key in the intent
-			i.putExtra(DataParser.fromWhereWeCome,
-					getResources().getString(R.string.meal_time_dinner));
-			break;
-		default:
-			// default put the breakfast key in the intent
-			i.putExtra(DataParser.fromWhereWeCome,
-					getResources().getString(R.string.meal_time_breakfast));
+			cSettingTime = dbHelper.fetchSettingByName(getResources()
+					.getString(R.string.setting_meal_time_dinner));
 			break;
 		}
-		i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-		View view = ActivityGroupSettings.group.getLocalActivityManager()
-				.startActivity(DataParser.activityIDSettings, i).getDecorView();
-		ActivityGroupSettings.group.setContentView(view);
+
+		cSettingTime.moveToFirst();
+
+		date.setHours(functions.getHourFromString(cSettingTime.getString(cSettingTime
+				.getColumnIndexOrThrow(DbAdapter.DATABASE_SETTINGS_VALUE))));
+		date.setMinutes(functions.getMinutesFromString(cSettingTime.getString(cSettingTime
+				.getColumnIndexOrThrow(DbAdapter.DATABASE_SETTINGS_VALUE))));
+
+		cSettingTime.close();
+
+		c.setTime(date);
+
+		return new TimeSlider(ActivityGroupSettings.group, mTimeSetListener, c,
+				15);
+	};
+
+	@Override
+	protected void onListItemClick(ListView l, View v, int position, long id) {
+		selectedMeal = (int) id;
+		showDialog((int) id);
 	}
 
 	private void fillData() {
-		ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
-				android.R.layout.simple_list_item_1, createArrayList());
+		CustomArrayAdapterSettingsMealTimes adapter = new CustomArrayAdapterSettingsMealTimes(
+				this,
+				R.layout.row_custom_array_adapter_setting_meal_times,
+				createArrayList());
 		setListAdapter(adapter);
 	}
 

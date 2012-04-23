@@ -51,16 +51,16 @@ public class ShowSettingsValueOrder extends Activity {
 		// get all the value orders
 		Cursor cSettingValueOrderProt = dbHelper
 				.fetchSettingByName(getResources().getString(
-						R.string.value_order_prot));
+						R.string.setting_value_order_prot));
 		Cursor cSettingValueOrderCarb = dbHelper
 				.fetchSettingByName(getResources().getString(
-						R.string.value_order_carb));
+						R.string.setting_value_order_carb));
 		Cursor cSettingValueOrderFat = dbHelper
 				.fetchSettingByName(getResources().getString(
-						R.string.value_order_fat));
+						R.string.setting_value_order_fat));
 		Cursor cSettingValueOrderKcal = dbHelper
 				.fetchSettingByName(getResources().getString(
-						R.string.value_order_kcal));
+						R.string.setting_value_order_kcal));
 
 		// Move cursors to first object
 		cSettingValueOrderProt.moveToFirst();

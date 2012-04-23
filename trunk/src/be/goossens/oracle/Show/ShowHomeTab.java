@@ -20,7 +20,6 @@ import be.goossens.oracle.ActivityGroup.ActivityGroupMedicine;
 import be.goossens.oracle.ActivityGroup.ActivityGroupSettings;
 import be.goossens.oracle.ActivityGroup.ActivityGroupTracking;
 import be.goossens.oracle.Rest.DataParser;
-import be.goossens.oracle.Rest.DbAdapter;
 
 public class ShowHomeTab extends TabActivity {
 	private TabHost tabHost;
@@ -32,18 +31,18 @@ public class ShowHomeTab extends TabActivity {
 		tabHost = getTabHost();
 		setupTabHost();
 	}
-
+ 
 	private void setupTabHost() {
 		int counter = 0;
 		
-		Intent in = new Intent(this, ActivityGroupMeal.class);
-		setupTab(new TextView(this), DataParser.activityIDMeal,
-				R.drawable.ic_tab_meal, in);
-		counter++;
-		
-		in = new Intent(this, ActivityGroupTracking.class);
+		Intent in = new Intent(this, ActivityGroupTracking.class);
 		setupTab(new TextView(this), DataParser.activityIDTracking,
 				R.drawable.ic_tab_tracking, in);
+		counter++;
+		
+		in = new Intent(this, ActivityGroupMeal.class);
+		setupTab(new TextView(this), DataParser.activityIDShowFoodList,
+				R.drawable.ic_tab_meal, in);
 		counter++;
 		
 		in = new Intent(this, ActivityGroupExercise.class);
@@ -69,6 +68,9 @@ public class ShowHomeTab extends TabActivity {
 		for(int i = counter; i >= 0;i--){
 			tabHost.setCurrentTab(i); 
 		}
+		
+		//set default tab on show food list
+		goToTab(DataParser.activityIDShowFoodList);
 		
 	}
 

@@ -13,6 +13,16 @@ import be.goossens.oracle.slider.TimeLabeler;
 
 public class Functions {
 
+	public float roundFloats(float input,int numbersBehind){
+		float p = (float) Math.pow(10, numbersBehind);
+		return Math.round(input * p) / p;
+	}
+	
+	
+	/*
+	 * Time & Date functions
+	 * */
+	
 	public int getHour(Calendar calendar) {
 		return Integer.parseInt(String.format("%tH", calendar));
 	}
@@ -73,6 +83,23 @@ public class Functions {
 				+ seconds;
 	}
 
+	// This method will return a string object with the right time in the format
+	// HH:mm
+	public String getTimeFromDate(Date date) {
+		String hour = "";
+		String minute = "";
+
+		if (date.getHours() < 10)
+			hour = "0";
+		hour += date.getHours();
+
+		if (date.getMinutes() < 10)
+			minute = "0";
+		minute += date.getMinutes();
+
+		return hour + ":" + minute;
+	}
+
 	// This method will return a date object with the right date and time
 	// The input string will be in the format yyyy-MM-dd HH:mm:ss
 	public Date getYearMonthDayAsDateFromString(String date) {
@@ -82,6 +109,28 @@ public class Functions {
 			return value;
 		} catch (ParseException e) {
 			return null;
+		}
+	}
+
+	// This method will return a int with the hour from the input
+	// The input date will be in the format HH:mm
+	public int getHourFromString(String date) {
+		SimpleDateFormat format = new SimpleDateFormat("HH:mm");
+		try {
+			return format.parse(date).getHours();
+		} catch (ParseException e) {
+			return -1;
+		}
+	}
+
+	// This method will return a int with the minutes from the input
+	// The input date will be in the format HH:mm
+	public int getMinutesFromString(String date) {
+		SimpleDateFormat format = new SimpleDateFormat("HH:mm");
+		try {
+			return format.parse(date).getMinutes();
+		} catch (ParseException e) {
+			return -1;
 		}
 	}
 
@@ -95,37 +144,37 @@ public class Functions {
 			int minutes = value.getMinutes();
 			String returnHour = "";
 			String returnMinutes = "";
-			
-			if(hour < 10)
+
+			if (hour < 10)
 				returnHour = "0";
 			returnHour += hour;
-			
-			if(minutes < 10)
+
+			if (minutes < 10)
 				returnMinutes = "0";
 			returnMinutes += minutes;
-			 
+
 			return returnHour + ":" + returnMinutes;
 		} catch (ParseException e) {
 			return null;
 		}
 	}
-	
-	public String getDurationFromSeconds(int startTime, int endTime){
+
+	public String getDurationFromSeconds(int startTime, int endTime) {
 		int seconds = endTime - startTime;
 		int hour = seconds / 3600;
 		int minutes = (seconds - (hour * 3600)) / 60;
-		
+
 		String returnHour = "";
 		String returnMinutes = "";
-		
-		if(hour < 10)
+
+		if (hour < 10)
 			returnHour = "0";
 		returnHour += hour;
-		
-		if(minutes < 10)
+
+		if (minutes < 10)
 			returnMinutes = "0";
 		returnMinutes += minutes;
-		
+
 		return "" + returnHour + ":" + returnMinutes;
 	}
 

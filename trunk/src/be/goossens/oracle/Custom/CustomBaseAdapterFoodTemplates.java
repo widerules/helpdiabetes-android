@@ -2,16 +2,16 @@ package be.goossens.oracle.Custom;
 
 import java.util.List;
 
-import be.goossens.oracle.R;
-import be.goossens.oracle.Objects.DBFood;
-import be.goossens.oracle.Objects.DBFoodTemplate;
-
 import android.content.Context;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
+import be.goossens.oracle.R;
+import be.goossens.oracle.Objects.DBFood;
+import be.goossens.oracle.Objects.DBFoodTemplate;
 
 public class CustomBaseAdapterFoodTemplates extends BaseAdapter {
 	private Context context;
@@ -42,18 +42,32 @@ public class CustomBaseAdapterFoodTemplates extends BaseAdapter {
 			LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 			convertView = inflater.inflate(R.layout.row_custom_base_adapter_food_templates, null);
 		}
-		
-		TextView tv = (TextView) convertView.findViewById(R.id.textViewCustomBaseAdapter);
+		 
+		TextView tv1 = (TextView) convertView.findViewById(R.id.textView1);
+		TextView tv2 = (TextView) convertView.findViewById(R.id.textView2);
+		TextView tv3 = (TextView) convertView.findViewById(R.id.textView3);
 		
 		//Get the food from foodTemplate
-		String tvString = "";
+		String tv2String = "";
 	
+		String tv3String = "";
+		
 		for(DBFood obj : entry.getFoods()){
-			tvString += "\n \t - " + obj.getName();
+			tv2String += obj.getName() + " \n";
+			tv3String += obj.getAmount() + " \n"; 
 		}
 		
-		tv.setText(entry.getFoodTemplateName() + tvString);
-		tv.setTextSize(fontSize);
+		tv1.setText(entry.getFoodTemplateName());
+		tv1.setBackgroundColor(context.getResources().getColor(R.color.ColorBackgroundTrackingDate));
+		tv1.setTextColor(context.getResources().getColor(R.color.ColorTextTrackingDate));
+		tv1.setGravity(Gravity.CENTER);
+		
+		tv2.setText(tv2String);
+		tv3.setText(tv3String);
+		
+		tv1.setTextSize(fontSize);
+		tv2.setTextSize(fontSize);
+		tv3.setTextSize(fontSize);
 		
 		return convertView;
 	}

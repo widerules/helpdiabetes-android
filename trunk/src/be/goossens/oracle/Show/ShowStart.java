@@ -47,7 +47,7 @@ public class ShowStart extends Activity {
 		dbHelper.open();
 		
 		Cursor cSetting = dbHelper.fetchSettingByName(getResources().getString(
-				R.string.language));
+				R.string.setting_language));
 		cSetting.moveToFirst();
 		 
 		if (cSetting.getLong(cSetting

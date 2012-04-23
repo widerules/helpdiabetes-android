@@ -13,37 +13,12 @@
             android:layout_height="wrap_content"
             android:text="@string/update" />
 
-        <Button
-            android:id="@+id/buttonUp"
+        <be.goossens.oracle.numberPicker.NumberPicker
+            android:id="@+id/NumberPicker"
             android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/btup" />
-
-        <LinearLayout
-            android:id="@+id/linearLayout2"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content" >
-
-            <EditText
-                android:id="@+id/editTextValue"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:digits="1234567890."
-                android:inputType="phone" />
-
-            <TextView
-                android:id="@+id/textViewGlucoseUnit"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textColor="@color/ColorText" />
-            
-        </LinearLayout>
-
-        <Button
-            android:id="@+id/buttonDown"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/btdown" />
+            android:layout_height="fill_parent"
+            android:orientation="vertical" >
+        </be.goossens.oracle.numberPicker.NumberPicker>
 
         <Button
             android:id="@+id/buttonAdd"

@@ -3,13 +3,10 @@ package be.goossens.oracle.ActivityGroup;
 import java.util.ArrayList;
 
 import android.app.ActivityGroup;
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.KeyEvent;
 import android.view.View;
-import android.view.inputmethod.InputMethodManager;
-import android.widget.Toast;
 import be.goossens.oracle.Rest.DataParser;
 import be.goossens.oracle.Show.Food.ShowFoodList;
 import be.goossens.oracle.Show.Food.ShowManageOwnFood;
@@ -23,7 +20,7 @@ public class ActivityGroupMeal extends ActivityGroup {
 	public static ActivityGroupMeal group;
 
 	// Need to keep track of the history so the back button works properly
-	private ArrayList<View> history;
+	public ArrayList<View> history;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -35,7 +32,7 @@ public class ActivityGroupMeal extends ActivityGroup {
 		if (history.size() == 0) {
 			// Start the root activity within the group and get its view
 			View view = getLocalActivityManager().startActivity(
-					DataParser.activityIDMeal,
+					DataParser.activityIDShowFoodList,
 					new Intent(this, ShowFoodList.class)
 							.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP))
 					.getDecorView();
@@ -43,20 +40,8 @@ public class ActivityGroupMeal extends ActivityGroup {
 		}
 	}
 
-	// let the keyboard dissapear
-	private void keyboardDissapear() {
-		try {
-			InputMethodManager inputManager = (InputMethodManager) this
-					.getSystemService(Context.INPUT_METHOD_SERVICE);
-			inputManager.hideSoftInputFromWindow(this.getCurrentFocus()
-					.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
-		} catch (Exception e) {
-		}
-	}
-
 	@Override
 	public void onContentChanged() {
-		keyboardDissapear();
 		super.onContentChanged();
 	}
 
@@ -78,12 +63,12 @@ public class ActivityGroupMeal extends ActivityGroup {
 			// activity
 			// and then on another activity we wont get back!
 			if (history.size() > 1) {
+				// remove the view from the history list
 				history.remove(history.size() - 1);
 				// call the super.setContent view! so set the real view
 				super.setContentView(history.get(history.size() - 1));
 			} else {
-				Toast.makeText(this, "you cant close this app! \n hehe :-)",
-						Toast.LENGTH_LONG).show();
+
 			}
 		} catch (Exception e) {
 			if (history.size() >= 0)
@@ -131,7 +116,7 @@ public class ActivityGroupMeal extends ActivityGroup {
 		} catch (Exception e) {
 		}
 	}
-	
+
 	// showFoodList clear editTextBox
 	public void showFoodListClearEditTextbox() {
 		try {
@@ -217,7 +202,6 @@ public class ActivityGroupMeal extends ActivityGroup {
 
 	@Override
 	public void finish() {
-		Toast.makeText(this, "lol no finish for u ;)", Toast.LENGTH_LONG)
-				.show();
+
 	}
 }

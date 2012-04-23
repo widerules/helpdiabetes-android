@@ -44,8 +44,10 @@ public class DataParser {
 	public static final String timestamp = "eventDateTimeFromDB";
 	
 	// Activity IDs //
+	public static final String activityIDShowFoodList = "showActivityShowFoodList";
+	public static final String activityIDShowAddFoodToSelection = "showActivityShowAddFoodToSelection";
+	
 	public static final String activityIDTracking = "showActivityTracking";
-	public static final String activityIDMeal = "showActivityMeal";
 	public static final String activityIDGlucose = "showActivityGlucose";
 	public static final String activityIDMedicine = "showActivityMedicine";
 	public static final String activityIDExercise = "showActivityExercise";

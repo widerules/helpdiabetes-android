@@ -2,8 +2,6 @@ package be.goossens.oracle.ActivityGroup;
 
 import java.util.ArrayList;
 
-import be.goossens.oracle.Rest.DataParser;
-import be.goossens.oracle.Show.Tracking.ShowTracking;
 import android.app.ActivityGroup;
 import android.content.Context;
 import android.content.Intent;
@@ -12,6 +10,8 @@ import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Toast;
+import be.goossens.oracle.Rest.DataParser;
+import be.goossens.oracle.Show.Tracking.ShowTracking;
 
 public class ActivityGroupTracking extends ActivityGroup {
 	// keep this in a static variable to make it accessible for all the nesten
@@ -78,8 +78,7 @@ public class ActivityGroupTracking extends ActivityGroup {
 				// call the super.setContent view! so set the real view
 				super.setContentView(history.get(history.size() - 1));
 			} else {
-				Toast.makeText(this, "you cant close this app! \n hehe :-)",
-						Toast.LENGTH_LONG).show();
+				
 			}
 		} catch (Exception e) {
 			if (history.size() >= 0)
@@ -106,7 +105,6 @@ public class ActivityGroupTracking extends ActivityGroup {
 
 	@Override
 	public void finish() {
-		Toast.makeText(this, "lol no finish for u ;)", Toast.LENGTH_LONG)
-				.show();
+		
 	}
 }

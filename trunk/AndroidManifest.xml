@@ -29,8 +29,6 @@
         </activity>
         <activity android:name=".Show.Settings.ShowSettingsMealTimes" >
         </activity>
-        <activity android:name=".Show.Settings.ShowSettingsUpdateMealTime" >
-        </activity>
         <activity android:name=".Show.Food.ShowUpdateOwnFood" >
         </activity>
         <activity android:name=".Show.Settings.ShowSettingsValueOrder" >
@@ -71,6 +69,8 @@
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+        </activity>
+        <activity android:name=".Show.Settings.ShowSettingsGlucoseUnit" >
         </activity>
     </application>
 

@@ -5,7 +5,6 @@ package be.goossens.oracle.Custom;
  * This class will handle the text on the spinner
  * */
 
-import be.goossens.oracle.Rest.DbAdapter;
 import android.content.Context;
 import android.database.Cursor;
 import android.view.LayoutInflater;
@@ -13,6 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.SimpleCursorAdapter;
 import android.widget.TextView;
+import be.goossens.oracle.Rest.DbAdapter;
 
 
 public class CustomSimpleCursorAdapterUnit extends SimpleCursorAdapter {

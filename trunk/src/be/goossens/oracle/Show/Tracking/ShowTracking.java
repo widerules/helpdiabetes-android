@@ -4,17 +4,13 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import org.apache.http.impl.conn.tsccm.ThreadSafeClientConnManager;
-
 import android.app.ListActivity;
 import android.database.Cursor;
 import android.os.AsyncTask;
-import android.os.AsyncTask.Status;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 import be.goossens.oracle.R;
 import be.goossens.oracle.Custom.CustomArrayAdapterDBTracking;
 import be.goossens.oracle.Objects.DBBloodGlucoseEvent;
@@ -87,7 +83,7 @@ public class ShowTracking extends ListActivity {
 		}
 
 		Cursor cSetting = dbHelper.fetchSettingByName(getResources().getString(
-				R.string.font_size));
+				R.string.setting_font_size));
 		cSetting.moveToFirst();
 
 		adapter = new CustomArrayAdapterDBTracking(

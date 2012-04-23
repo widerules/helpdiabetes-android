@@ -134,6 +134,7 @@ public class ShowCreateUnit extends Activity {
 	}
 
 	private void checkUpdateUnit() {
+		dbHelper.open();
 		// if we are trying to update a unit
 		if (getIntent().getExtras().getLong("unitId") != 0) {
 			// set the text on the button
@@ -176,7 +177,7 @@ public class ShowCreateUnit extends Activity {
 						.get(i)
 						.getSettingName()
 						.equals(getResources().getString(
-								R.string.value_order_carb))) {
+								R.string.setting_value_order_carb))) {
 					etList.get(i)
 							.setText(
 									cUnit.getString(cUnit
@@ -185,7 +186,7 @@ public class ShowCreateUnit extends Activity {
 						.get(i)
 						.getSettingName()
 						.equals(getResources().getString(
-								R.string.value_order_prot))) {
+								R.string.setting_value_order_prot))) {
 					etList.get(i)
 							.setText(
 									cUnit.getString(cUnit
@@ -194,7 +195,7 @@ public class ShowCreateUnit extends Activity {
 						.get(i)
 						.getSettingName()
 						.equals(getResources().getString(
-								R.string.value_order_fat))) {
+								R.string.setting_value_order_fat))) {
 					etList.get(i)
 							.setText(
 									cUnit.getString(cUnit
@@ -203,7 +204,7 @@ public class ShowCreateUnit extends Activity {
 						.get(i)
 						.getSettingName()
 						.equals(getResources().getString(
-								R.string.value_order_kcal))) {
+								R.string.setting_value_order_kcal))) {
 					etList.get(i)
 							.setText(
 									cUnit.getString(cUnit
@@ -238,6 +239,7 @@ public class ShowCreateUnit extends Activity {
 	// This method will check if we may delete the unit ( its its not in use )
 	// Then we display the button delete
 	private void checkForButtonDelete() {
+		dbHelper.open();
 		Cursor cFoodUnit = dbHelper.fetchFoodUnit(getIntent().getExtras()
 				.getLong("unitId"));
 		// check if foodUnit is in use in selectedFood
@@ -257,6 +259,7 @@ public class ShowCreateUnit extends Activity {
 	}
 
 	public void onClickAdd(View view) {
+		dbHelper.open();
 		// always check the values so they are not empty or 0
 		if (checkValues()) {
 			float standardAmound = 0f;
@@ -285,7 +288,7 @@ public class ShowCreateUnit extends Activity {
 						.get(i)
 						.getSettingName()
 						.equals(getResources().getString(
-								R.string.value_order_carb))) {
+								R.string.setting_value_order_carb))) {
 					try {
 						carb = Float.parseFloat(etList.get(i).getText()
 								.toString());
@@ -296,7 +299,7 @@ public class ShowCreateUnit extends Activity {
 						.get(i)
 						.getSettingName()
 						.equals(getResources().getString(
-								R.string.value_order_prot))) {
+								R.string.setting_value_order_prot))) {
 					try {
 						prot = Float.parseFloat(etList.get(i).getText()
 								.toString());
@@ -307,7 +310,7 @@ public class ShowCreateUnit extends Activity {
 						.get(i)
 						.getSettingName()
 						.equals(getResources().getString(
-								R.string.value_order_fat))) {
+								R.string.setting_value_order_fat))) {
 					try {
 						fat = Float.parseFloat(etList.get(i).getText()
 								.toString());
@@ -318,7 +321,7 @@ public class ShowCreateUnit extends Activity {
 						.get(i)
 						.getSettingName()
 						.equals(getResources().getString(
-								R.string.value_order_kcal))) {
+								R.string.setting_value_order_kcal))) {
 					try {
 						kcal = Float.parseFloat(etList.get(i).getText()
 								.toString());
@@ -392,6 +395,7 @@ public class ShowCreateUnit extends Activity {
 
 	// If we press the button delete
 	public void onClickDelete(View view) {
+		dbHelper.open();
 		dbHelper.deleteFoodUnit(getIntent().getExtras().getLong("unitId"));
 		ActivityGroupMeal.group.back();
 		ActivityGroupMeal.group.refreshShowUpdateOwnFood(1);
@@ -399,22 +403,23 @@ public class ShowCreateUnit extends Activity {
 
 	// This method will fill the list of DBValueOrders with the right values
 	private void fillListValueOrders() {
+		dbHelper.open();
 		// make the list empty
 		listValueOrders = new ArrayList<DBValueOrder>();
 
 		// get all the value orders
 		Cursor cSettingValueOrderProt = dbHelper
 				.fetchSettingByName(getResources().getString(
-						R.string.value_order_prot));
+						R.string.setting_value_order_prot));
 		Cursor cSettingValueOrderCarb = dbHelper
 				.fetchSettingByName(getResources().getString(
-						R.string.value_order_carb));
+						R.string.setting_value_order_carb));
 		Cursor cSettingValueOrderFat = dbHelper
 				.fetchSettingByName(getResources().getString(
-						R.string.value_order_fat));
+						R.string.setting_value_order_fat));
 		Cursor cSettingValueOrderKcal = dbHelper
 				.fetchSettingByName(getResources().getString(
-						R.string.value_order_kcal));
+						R.string.setting_value_order_kcal));
 
 		// Move cursors to first object
 		cSettingValueOrderProt.moveToFirst();

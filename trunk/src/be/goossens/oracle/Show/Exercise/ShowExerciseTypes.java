@@ -73,7 +73,7 @@ public class ShowExerciseTypes extends ListActivity {
 
 	private void fillListView() {
 		Cursor cSettings = dbHelper.fetchSettingByName(getResources()
-				.getString(R.string.font_size));
+				.getString(R.string.setting_font_size));
 		cSettings.moveToFirst();
 
 		CustomArrayAdapterDBExerciseType adapter = new CustomArrayAdapterDBExerciseType(

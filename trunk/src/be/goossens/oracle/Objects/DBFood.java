@@ -3,11 +3,13 @@ package be.goossens.oracle.Objects;
 public class DBFood {
 	private int id;
 	private String name;
-
-	public DBFood(int id, String name) {
+	private String amount;
+	
+	public DBFood(int id, String name,String amount) {
 		super();
 		this.id = id;
 		this.name = name;
+		this.amount = amount;
 	}
 
 	public int getId() {
@@ -26,4 +28,14 @@ public class DBFood {
 		this.name = name;
 	}
 
+	public String getAmount() {
+		return amount;
+	}
+
+	public void setAmount(String amount) {
+		this.amount = amount;
+	}
+
+	
+	
 }
