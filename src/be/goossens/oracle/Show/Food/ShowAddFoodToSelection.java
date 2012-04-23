@@ -41,7 +41,7 @@ public class ShowAddFoodToSelection extends Activity {
 
 	// The table textview
 	private TextView textViewRowOneFieldOne, textViewRowOneFieldTwo,
-			textViewRowOneFieldThree;
+			textViewRowOneFieldThree, tvOneItemInSpinner;
 
 	// To store the selected food in
 	private Cursor foodCursor;
@@ -81,6 +81,8 @@ public class ShowAddFoodToSelection extends Activity {
 
 		textViewSelectedFood = (TextView) findViewById(R.id.textViewSelectedFood);
 		editTextFoodAmound = (EditText) findViewById(R.id.editTextFoodAmount);
+		tvOneItemInSpinner = (TextView) findViewById(R.id.textViewOneValue);
+
 		spinnerFoodUnits = (Spinner) findViewById(R.id.spinnerFoodUnit);
 		buttonAddOrUpdate = (Button) findViewById(R.id.buttonAddOrUpdate);
 		buttonDeleteSelectedFood = (Button) findViewById(R.id.buttonShowAddFoodDelete);
@@ -165,21 +167,21 @@ public class ShowAddFoodToSelection extends Activity {
 	// editTextFoodAmound.setText("");
 	@Override
 	public boolean dispatchKeyEvent(KeyEvent event) {
-		if (firstKeyPress) {
-			firstKeyPress = false;
-			editTextFoodAmound.setText("");
+		//if we press on the keyboard && not on the back button!
+		if (event.getKeyCode() != KeyEvent.KEYCODE_BACK) {
+			//if its the first time we press on the keyboard
+			if (firstKeyPress) {
+				//clear the text in the editText
+				firstKeyPress = false;
+				editTextFoodAmound.setText("");
+			}
 		}
+ 
 		onKeyPress();
 
 		return super.dispatchKeyEvent(event);
 	}
 
-	@Override
-	protected void onDestroy() {
-		dbHelper.close();
-		super.onDestroy();
-	}
- 
 	@Override
 	protected void onResume() {
 		super.onResume();
@@ -187,7 +189,7 @@ public class ShowAddFoodToSelection extends Activity {
 		dbHelper.open();
 
 		fillListValueOrders();
- 
+
 		// Get the selected food
 		foodCursor = dbHelper.fetchFood(getIntent().getExtras().getLong(
 				DataParser.idFood));
@@ -202,7 +204,7 @@ public class ShowAddFoodToSelection extends Activity {
 		 * with the right unit 2. set the right amount 3. Show the button to
 		 * delete the food 4. set the text on the button from add to update
 		 */
-		 
+
 		if (getIntent().getExtras().getString(DataParser.fromWhereWeCome)
 				.equals(DataParser.weComeFRomShowSelectedFood)) {
 			Cursor cSelectedFood = dbHelper.fetchSelectedFood(getIntent()
@@ -242,7 +244,26 @@ public class ShowAddFoodToSelection extends Activity {
 			// setStandardAmound = false so that we see our food amound and not
 			// "" or standardAmount
 			setStandardAmount = false;
+		} else {
+			// if we dont come from showSelectedFood or showFoodTemplates
+
+			// we have to see if we have a "gram" value , if yes we have to set
+			// the gram as default
+
 		}
+
+		// if we only have 1 item , we have to hide the spinner and show a
+		// textview with the unitName
+		Cursor cFoodUnit = dbHelper.fetchFoodUnitByFoodId(getIntent()
+				.getExtras().getLong(DataParser.idFood));
+		if (cFoodUnit.getCount() == 1) {
+			spinnerFoodUnits.setVisibility(View.GONE);
+			tvOneItemInSpinner.setVisibility(View.VISIBLE);
+			cFoodUnit.moveToFirst();
+			tvOneItemInSpinner.setText(cFoodUnit.getString(cFoodUnit
+					.getColumnIndexOrThrow(DbAdapter.DATABASE_FOODUNIT_NAME)));
+		}
+		cFoodUnit.close();
 
 		fillTextViewSelectedFood();
 		fillTextViewCalculated();
@@ -250,11 +271,17 @@ public class ShowAddFoodToSelection extends Activity {
 
 	// When we click on the button delete
 	public void onClickDeleteFoodFromSelection(View view) {
+		dbHelper.open();
 		dbHelper.deleteSelectedFood(getIntent().getExtras().getLong(
 				DataParser.idSelectedFood));
-		
-		//try to refresh the foodlist on the selectedFood page
+
+		// try to refresh the foodlist on the selectedFood page
 		ActivityGroupMeal.group.refreshShowSelectedFood(2);
+
+		// update the button from showFoodList
+		ActivityGroupMeal.group
+				.showFoodListsetCountSelectedFood((ActivityGroupMeal.group
+						.showFoodListGetCountSelectedFood() - 1));
 
 		ActivityGroupMeal.group.back();
 	}
@@ -301,6 +328,7 @@ public class ShowAddFoodToSelection extends Activity {
 	 * 100 Else it wil set "" as amount
 	 */
 	private void checkStandardAmound() {
+		dbHelper.open();
 		Cursor cUnit = dbHelper.fetchFoodUnit(spinnerFoodUnits
 				.getSelectedItemId());
 		if (cUnit.getCount() > 0) {
@@ -319,6 +347,7 @@ public class ShowAddFoodToSelection extends Activity {
 	}
 
 	private void setSelectedFoodUnitItemInSpinnerSelected(int unitId) {
+		dbHelper.open();
 		int position = 0;
 		Cursor cursorTemp = dbHelper.fetchFoodUnitByFoodId(getIntent()
 				.getExtras().getLong(DataParser.idFood));
@@ -349,6 +378,7 @@ public class ShowAddFoodToSelection extends Activity {
 	// This method is called when the spinner selected item changes or when the
 	// amount in editText changes
 	private void fillTextViewCalculated() {
+		dbHelper.open();
 		// First get the amount inserted
 		float amount = 0f;
 		try {
@@ -413,11 +443,12 @@ public class ShowAddFoodToSelection extends Activity {
 			}
 
 			// Fill the first row first field with unit name
-			textViewRowOneFieldOne.setText(unitName);
+			textViewRowOneFieldOne.setText("");
+			
 			textViewRowOneFieldTwo
 					.setText(cUnit.getString(cUnit
-							.getColumnIndexOrThrow(DbAdapter.DATABASE_FOODUNIT_STANDARDAMOUNT)));
-			textViewRowOneFieldThree.setText("" + amount);
+							.getColumnIndexOrThrow(DbAdapter.DATABASE_FOODUNIT_STANDARDAMOUNT)) + " " + unitName);
+			textViewRowOneFieldThree.setText("" + amount  + " " + unitName); 
 
 			// fill the rest of the table
 			for (int i = 0; i < listValueOrders.size(); i++) {
@@ -429,7 +460,7 @@ public class ShowAddFoodToSelection extends Activity {
 						.get(i)
 						.getSettingName()
 						.equals(getResources().getString(
-								R.string.value_order_carb))) {
+								R.string.setting_value_order_carb))) {
 					listTextViewColumnTwo
 							.get(i)
 							.setText(
@@ -443,7 +474,7 @@ public class ShowAddFoodToSelection extends Activity {
 						.get(i)
 						.getSettingName()
 						.equals(getResources().getString(
-								R.string.value_order_prot))) {
+								R.string.setting_value_order_prot))) {
 					listTextViewColumnTwo
 							.get(i)
 							.setText(
@@ -457,7 +488,7 @@ public class ShowAddFoodToSelection extends Activity {
 						.get(i)
 						.getSettingName()
 						.equals(getResources().getString(
-								R.string.value_order_fat))) {
+								R.string.setting_value_order_fat))) {
 					listTextViewColumnTwo
 							.get(i)
 							.setText(
@@ -471,7 +502,7 @@ public class ShowAddFoodToSelection extends Activity {
 						.get(i)
 						.getSettingName()
 						.equals(getResources().getString(
-								R.string.value_order_kcal))) {
+								R.string.setting_value_order_kcal))) {
 					listTextViewColumnTwo
 							.get(i)
 							.setText(
@@ -495,7 +526,7 @@ public class ShowAddFoodToSelection extends Activity {
 	}
 
 	private void fillData() {
-
+		dbHelper.open();
 		adapter = new SimpleCursorAdapter(this,
 				android.R.layout.simple_spinner_item,
 				dbHelper.fetchFoodUnitByFoodId(getIntent().getExtras().getLong(
@@ -511,6 +542,7 @@ public class ShowAddFoodToSelection extends Activity {
 
 	// when pressed on button Add
 	public void onClickButtonAddFood(View view) {
+		dbHelper.open();
 		Cursor cSelectedFoodUnit = dbHelper.fetchFoodUnit(spinnerFoodUnits
 				.getSelectedItemId());
 
@@ -549,12 +581,14 @@ public class ShowAddFoodToSelection extends Activity {
 
 		ActivityGroupMeal.group.back();
 		// refresh the page show selected food
-		ActivityGroupMeal.group.refreshShowSelectedFood(1); 
+		ActivityGroupMeal.group.refreshShowSelectedFood(1);
 		// update the button from the showfoodlist
-		int countSelectedFood = ActivityGroupMeal.group.showFoodListGetCountSelectedFood();
-		if(countSelectedFood != -1){
+		int countSelectedFood = ActivityGroupMeal.group
+				.showFoodListGetCountSelectedFood();
+		if (countSelectedFood != -1) {
 			countSelectedFood++;
-			ActivityGroupMeal.group.showFoodListsetCountSelectedFood(countSelectedFood);
+			ActivityGroupMeal.group
+					.showFoodListsetCountSelectedFood(countSelectedFood);
 		}
 	}
 
@@ -562,27 +596,29 @@ public class ShowAddFoodToSelection extends Activity {
 	protected void onStop() {
 		foodCursor.close();
 		adapter = null;
+		dbHelper.close();
 		super.onStop();
 	}
 
 	// This method will fill the list of DBValueOrders with the right values
 	private void fillListValueOrders() {
+		dbHelper.open();
 		// make the list empty
 		listValueOrders = new ArrayList<DBValueOrder>();
 
 		// get all the value orders
 		Cursor cSettingValueOrderProt = dbHelper
 				.fetchSettingByName(getResources().getString(
-						R.string.value_order_prot));
+						R.string.setting_value_order_prot));
 		Cursor cSettingValueOrderCarb = dbHelper
 				.fetchSettingByName(getResources().getString(
-						R.string.value_order_carb));
+						R.string.setting_value_order_carb));
 		Cursor cSettingValueOrderFat = dbHelper
 				.fetchSettingByName(getResources().getString(
-						R.string.value_order_fat));
+						R.string.setting_value_order_fat));
 		Cursor cSettingValueOrderKcal = dbHelper
 				.fetchSettingByName(getResources().getString(
-						R.string.value_order_kcal));
+						R.string.setting_value_order_kcal));
 
 		// Move cursors to first object
 		cSettingValueOrderProt.moveToFirst();

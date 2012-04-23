@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!-- 
+	This list is used in the popup when a item in the list is long clicked
+	You can translate this items but you cant change them from place
+	You also cant delete or add items to this list
+ -->
+
+<resources>
+    <string-array name="showFoodListResourceOptions">
+        <item>Verberg</item>
+    </string-array>
+    
+</resources>

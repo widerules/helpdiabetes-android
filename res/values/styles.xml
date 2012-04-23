@@ -1,36 +1,50 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    
+
+    <!-- editText -->
+    <style name="styleEditText">
+        <item name="android:background">@android:drawable/editbox_background_normal</item>
+        <item name="android:padding">10dip</item>
+    </style>
+
+    <!-- Setting title -->
+    <style name="textViewSettingTitle">
+        <item name="android:layout_width">fill_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textColor">@color/ColorText</item>
+        <item name="android:textAppearance">?android:attr/textAppearanceMedium</item>
+        <item name="android:paddingBottom">15dip</item>
+    </style>
+
     <!-- table -->
     <style name="styleTableRowGravityCenter">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:gravity">center_vertical</item>
     </style>
-        
+
     <style name="textViewInTableAlignRight">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">fill_parent</item>
         <item name="android:textColor">@color/ColorText</item>
         <item name="android:gravity">right|center_vertical</item>
     </style>
-    
-    <style name="editTextInTableText">
+
+    <style name="editTextInTableText" parent="styleEditText">
         <item name="android:layout_width">0dip</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_weight">1</item>
         <item name="android:inputType">text</item>
     </style>
-    
-    <style name="editTextInTableFloat">
+
+    <style name="editTextInTableFloat" parent="styleEditText">
         <item name="android:layout_width">0dip</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_weight">1</item>
         <item name="android:digits">1234567890.</item>
         <item name="android:inputType">phone</item>
     </style>
-    
-    
+
     <!-- linearlayouts -->
     <style name="linearLayoutVerticalWithPadding">
         <item name="android:layout_width">fill_parent</item>
@@ -39,7 +53,7 @@
         <item name="android:padding">10dip</item>
         <item name="android:paddingTop">15dip</item>
     </style>
-    
+
     <!-- textviews -->
     <style name="textViewTitle">
         <item name="android:layout_width">wrap_content</item>
@@ -47,7 +61,7 @@
         <item name="android:textAppearance">?android:attr/textAppearanceMedium</item>
         <item name="android:textColor">@color/ColorText</item>
     </style>
-    
+
     <!-- buttons -->
     <style name="buttonAdd">
         <item name="android:layout_width">fill_parent</item>
@@ -56,7 +70,7 @@
         <item name="android:gravity">center</item>
         <item name="android:layout_marginTop">15dip</item>
     </style>
-    
+
     <!-- listviews -->
     <style name="listViewItemOne">
         <item name="android:layout_width">0dip</item>
@@ -66,7 +80,7 @@
         <item name="android:gravity">center_vertical</item>
         <item name="android:textColor">@color/ColorText</item>
     </style>
-    
+
     <style name="listViewItemArrow">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">fill_parent</item>
@@ -75,13 +89,13 @@
         <item name="android:textColor">@color/ColorText</item>
         <item name="android:text">@string/endOfListView</item>
     </style>
-    
+
     <style name="listViewItemOneTextBig" parent="listViewItemOne">
         <item name="android:textSize">25dip</item>
     </style>
-    
+
     <style name="listViewItemArrowTextBig" parent="listViewItemArrow">
         <item name="android:textSize">25dip</item>
     </style>
-    
+
 </resources>

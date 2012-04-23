@@ -22,14 +22,21 @@
             <Spinner
                 android:id="@+id/spinnerFoodUnit"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1" />
+                android:layout_height="fill_parent" />
+
+            <TextView
+                android:id="@+id/textViewOneValue"
+                android:layout_width="wrap_content"
+                android:layout_height="fill_parent"
+                android:gravity="center"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:textColor="@color/ColorText"
+                android:visibility="gone" />
 
             <EditText
                 android:id="@+id/editTextFoodAmount"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
                 android:digits="1234567890."
                 android:inputType="phone" />
         </LinearLayout>
@@ -41,22 +48,27 @@
 
             <TableRow
                 android:id="@+id/tableRow1"
-                style="@style/styleTableRowGravityCenter" >
+                style="@style/styleTableRowGravityCenter"
+                android:background="@color/ColorBackgroundTrackingDate"
+                android:layout_marginBottom="10dip" >
 
                 <TextView
                     android:id="@+id/textViewShowAddFoodRowOneFieldOne"
                     style="@style/textViewInTableAlignRight"
-                    android:padding="15dip" />
+                    android:padding="15dip"
+                    android:textColor="@color/ColorTextTrackingDate" />
 
                 <TextView
                     android:id="@+id/textViewShowAddFoodRowOneFieldTwo"
                     style="@style/textViewInTableAlignRight"
-                    android:padding="15dip" />
+                    android:padding="15dip"
+                    android:textColor="@color/ColorTextTrackingDate" />
 
                 <TextView
                     android:id="@+id/textViewShowAddFoodRowOneFieldThree"
                     style="@style/textViewInTableAlignRight"
-                    android:padding="15dip" />
+                    android:padding="15dip"
+                    android:textColor="@color/ColorTextTrackingDate" />
             </TableRow>
 
             <View

@@ -5,12 +5,16 @@ import java.util.Collections;
 import java.util.List;
 
 import android.app.Activity;
+import android.content.Context;
 import android.database.Cursor;
+import android.graphics.Path.Direction;
 import android.os.Bundle;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.View.OnKeyListener;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.Button;
@@ -23,15 +27,17 @@ import be.goossens.oracle.R;
 import be.goossens.oracle.ActivityGroup.ActivityGroupMeal;
 import be.goossens.oracle.Custom.CustomArrayAdapterCharSequenceShowCreateFood;
 import be.goossens.oracle.Objects.DBValueOrder;
+import be.goossens.oracle.Rest.DataParser;
 import be.goossens.oracle.Rest.DbAdapter;
 import be.goossens.oracle.Rest.ValueOrderComparator;
+import be.goossens.oracle.Show.ShowHomeTab;
 
 public class ShowCreateFood extends Activity {
 	private EditText editTextfoodName;
 	private EditText editTextUnitStandardAmound;
 	private EditText editTextUnitName;
 	private Button btAdd;
- 
+
 	private List<TextView> tvList;
 	private List<EditText> etList;
 
@@ -85,7 +91,7 @@ public class ShowCreateFood extends Activity {
 
 			}
 		});
- 
+
 		btAdd.setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
 				onClickAdd(v);
@@ -148,6 +154,7 @@ public class ShowCreateFood extends Activity {
 	}
 
 	public void onClickAdd(View view) {
+		dbHelper.open();
 		if (checkAllFieldsGotSomeValue()) {
 			float standardAmound = 0f;
 			String unitName = "";
@@ -156,17 +163,25 @@ public class ShowCreateFood extends Activity {
 			float prot = 0f;
 			float fat = 0f;
 
+			// get current foodlanguageid
+			Cursor cSetting = dbHelper.fetchSettingByName(getResources()
+					.getString(R.string.setting_language));
+			cSetting.moveToFirst();
+
 			long foodId = dbHelper.createFood(editTextfoodName.getText()
-					.toString());
+					.toString(), cSetting.getLong(cSetting
+					.getColumnIndexOrThrow(DbAdapter.DATABASE_SETTINGS_VALUE)));
+
+			cSetting.close();
 			// see what option we selected
 			if (spinnerUnit.getSelectedItemPosition() == 0) {
 				// if we selected '100 gram'
 				standardAmound = 100f;
-				unitName = "gram";
+				unitName = getResources().getString(R.string.gram);
 			} else if (spinnerUnit.getSelectedItemPosition() == 1) {
 				// if we selected '100 ml'
 				standardAmound = 100f;
-				unitName = "ml";
+				unitName = getResources().getString(R.string.ml);
 			} else {
 				// else get from the editText boxes
 				standardAmound = Float.parseFloat(editTextUnitStandardAmound
@@ -180,7 +195,7 @@ public class ShowCreateFood extends Activity {
 						.get(i)
 						.getSettingName()
 						.equals(getResources().getString(
-								R.string.value_order_carb))) {
+								R.string.setting_value_order_carb))) {
 					try {
 						carbs = Float.parseFloat(etList.get(i).getText()
 								.toString());
@@ -191,7 +206,7 @@ public class ShowCreateFood extends Activity {
 						.get(i)
 						.getSettingName()
 						.equals(getResources().getString(
-								R.string.value_order_prot))) {
+								R.string.setting_value_order_prot))) {
 					try {
 						prot = Float.parseFloat(etList.get(i).getText()
 								.toString());
@@ -202,7 +217,7 @@ public class ShowCreateFood extends Activity {
 						.get(i)
 						.getSettingName()
 						.equals(getResources().getString(
-								R.string.value_order_fat))) {
+								R.string.setting_value_order_fat))) {
 					try {
 						fat = Float.parseFloat(etList.get(i).getText()
 								.toString());
@@ -213,7 +228,7 @@ public class ShowCreateFood extends Activity {
 						.get(i)
 						.getSettingName()
 						.equals(getResources().getString(
-								R.string.value_order_kcal))) {
+								R.string.setting_value_order_kcal))) {
 					try {
 						kcal = Float.parseFloat(etList.get(i).getText()
 								.toString());
@@ -226,9 +241,9 @@ public class ShowCreateFood extends Activity {
 			dbHelper.createFoodUnit(foodId, unitName, standardAmound, carbs,
 					prot, fat, kcal);
 
-			//add the new food to the showFoodList page
+			// add the new food to the showFoodList page
 			ActivityGroupMeal.group.showFoodListAddFoodItem(foodId);
-			 
+
 			// Go back to the previous screen
 			ActivityGroupMeal.group.back();
 		}
@@ -244,18 +259,30 @@ public class ShowCreateFood extends Activity {
 				.getSelectedItemPosition() + 1) {
 			// if we selected the last spinner option we have to check if
 			// standardamount and unitName are filled in
-			if (editTextUnitStandardAmound.getText().length() <= 0) {
-				Toast.makeText(
-						this,
-						getResources()
-								.getString(R.string.food_name_is_required),
-						Toast.LENGTH_LONG).show();
-				return false;
-			} else if (editTextUnitName.getText().length() <= 0) {
+			if (editTextUnitStandardAmound.getText().length() <= 0
+					|| editTextUnitName.getText().length() <= 0) {
 				Toast.makeText(
 						this,
 						getResources()
 								.getString(R.string.unit_name_is_required),
+						Toast.LENGTH_LONG).show();
+				return false;
+			}
+
+			// and check if standardamount != 0
+			float checkStandardAmount = 0;
+			try {
+				checkStandardAmount = Float
+						.parseFloat(editTextUnitStandardAmound.getText()
+								.toString());
+			} catch (Exception e) {
+				checkStandardAmount = 0;
+			}
+			if (checkStandardAmount == 0) {
+				Toast.makeText(
+						this,
+						getResources().getString(
+								R.string.unit_amount_cant_be_zero),
 						Toast.LENGTH_LONG).show();
 				return false;
 			}
@@ -266,22 +293,23 @@ public class ShowCreateFood extends Activity {
 
 	// This method will fill the list of DBValueOrders with the right values
 	private void fillListValueOrders() {
+		dbHelper.open();
 		// make the list empty
 		listValueOrders = new ArrayList<DBValueOrder>();
 
 		// get all the value orders
 		Cursor cSettingValueOrderProt = dbHelper
 				.fetchSettingByName(getResources().getString(
-						R.string.value_order_prot));
+						R.string.setting_value_order_prot));
 		Cursor cSettingValueOrderCarb = dbHelper
 				.fetchSettingByName(getResources().getString(
-						R.string.value_order_carb));
+						R.string.setting_value_order_carb));
 		Cursor cSettingValueOrderFat = dbHelper
 				.fetchSettingByName(getResources().getString(
-						R.string.value_order_fat));
+						R.string.setting_value_order_fat));
 		Cursor cSettingValueOrderKcal = dbHelper
 				.fetchSettingByName(getResources().getString(
-						R.string.value_order_kcal));
+						R.string.setting_value_order_kcal));
 
 		// Move cursors to first object
 		cSettingValueOrderProt.moveToFirst();
@@ -344,4 +372,5 @@ public class ShowCreateFood extends Activity {
 		}
 		return super.onKeyDown(keyCode, event);
 	}
+
 }

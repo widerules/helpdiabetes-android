@@ -86,6 +86,7 @@ public class ShowUpdateOwnFood extends ListActivity {
 	// converts the cursor with food units to a arrayList<DBFoodunit>
 	// and retturns that arrayList
 	private ArrayList<DBFoodUnit> getFoodUnitsFromSelectedFood() {
+		dbHelper.open();
 		Cursor cFoodUnits = dbHelper.fetchFoodUnitByFoodId(foodId);
 		startManagingCursor(cFoodUnits);
 		ArrayList<DBFoodUnit> list = new ArrayList<DBFoodUnit>();
@@ -103,6 +104,7 @@ public class ShowUpdateOwnFood extends ListActivity {
 	}
 
 	private void fillData() {
+		dbHelper.open();
 		// set the text on the editTextFoodName
 		Cursor cFood = dbHelper.fetchFood(foodId);
 		cFood.moveToFirst();
@@ -111,7 +113,7 @@ public class ShowUpdateOwnFood extends ListActivity {
 		cFood.close();
 		// fill the listview with all the units
 		Cursor cSetting = dbHelper.fetchSettingByName(getResources().getString(
-				R.string.font_size));
+				R.string.setting_font_size));
 		cSetting.moveToFirst();
 		CustomBaseAdapterUnit adapter = new CustomBaseAdapterUnit(
 				this,
@@ -124,6 +126,7 @@ public class ShowUpdateOwnFood extends ListActivity {
 
 	// write the foodname to the database
 	public void saveFoodName() {
+		dbHelper.open();
 		if (editTextFoodName.getText().length() > 0) {
 			dbHelper.updateFoodName(foodId, editTextFoodName.getText()
 					.toString());
@@ -136,7 +139,7 @@ public class ShowUpdateOwnFood extends ListActivity {
 				Intent.FLAG_ACTIVITY_CLEAR_TOP).putExtra(
 				DbAdapter.DATABASE_FOOD_ID, foodId);
 		View v = ActivityGroupMeal.group.getLocalActivityManager()
-				.startActivity(DataParser.activityIDMeal, i).getDecorView();
+				.startActivity(DataParser.activityIDShowFoodList, i).getDecorView();
 		ActivityGroupMeal.group.setContentView(v);
 	}
 
@@ -169,12 +172,13 @@ public class ShowUpdateOwnFood extends ListActivity {
 		Intent i = new Intent(this, ShowCreateUnit.class).addFlags(
 				Intent.FLAG_ACTIVITY_CLEAR_TOP).putExtra("unitId", id);
 		View view = ActivityGroupMeal.group.getLocalActivityManager()
-				.startActivity(DataParser.activityIDMeal, i).getDecorView();
+				.startActivity(DataParser.activityIDShowFoodList, i).getDecorView();
 		ActivityGroupMeal.group.setContentView(view);
 	}
 
 	@Override
 	public boolean onContextItemSelected(MenuItem item) {
+		dbHelper.open();
 		AdapterContextMenuInfo info = (AdapterContextMenuInfo) item
 				.getMenuInfo();
 
@@ -250,6 +254,7 @@ public class ShowUpdateOwnFood extends ListActivity {
 
 	// Check if the food is in use
 	private boolean checkIfTheFoodIsInUse(long foodId) {
+		dbHelper.open();
 		int count = 0;
 		// first get all selectedFood to see if the food is in use in the
 		// selectedFood table
@@ -304,6 +309,7 @@ public class ShowUpdateOwnFood extends ListActivity {
 
 	// Delete the foodUnits and the food
 	private void deleteFoodAndFoodUnits(long id) {
+		dbHelper.open();
 		// First we delete all foodUnits from the food we want to delete
 		Cursor cFoodUnit = dbHelper.fetchFoodUnitByFoodId(id);
 		startManagingCursor(cFoodUnit);

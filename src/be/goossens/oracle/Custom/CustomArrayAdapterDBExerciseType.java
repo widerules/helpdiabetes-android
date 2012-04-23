@@ -2,14 +2,14 @@ package be.goossens.oracle.Custom;
 
 import java.util.List;
 
-import be.goossens.oracle.R;
-import be.goossens.oracle.Objects.DBExerciseType;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
+import be.goossens.oracle.R;
+import be.goossens.oracle.Objects.DBExerciseType;
 
 public class CustomArrayAdapterDBExerciseType extends ArrayAdapter<DBExerciseType> {
 

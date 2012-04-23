@@ -11,8 +11,6 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
-import android.widget.SimpleCursorAdapter;
-import android.widget.Toast;
 import be.goossens.oracle.R;
 import be.goossens.oracle.Custom.CustomArrayAdapterFoodLanguage;
 import be.goossens.oracle.Objects.DBFoodLanguage;
@@ -73,7 +71,7 @@ public class ShowSelectLanguage extends Activity {
 	private void clickOnItem(int position) {
 		// update the setting languageID
 		dbHelper.updateSettingsByName(
-				getResources().getString(R.string.language), "" + objects.get(position).getId());
+				getResources().getString(R.string.setting_language), "" + objects.get(position).getId());
  
 		// close the db
 		dbHelper.close();

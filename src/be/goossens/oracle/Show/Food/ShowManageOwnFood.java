@@ -77,7 +77,7 @@ public class ShowManageOwnFood extends ListActivity {
 						cFood.getInt(cFood
 								.getColumnIndexOrThrow(DbAdapter.DATABASE_FOOD_ID)),
 						cFood.getString(cFood
-								.getColumnIndexOrThrow(DbAdapter.DATABASE_FOOD_NAME))));
+								.getColumnIndexOrThrow(DbAdapter.DATABASE_FOOD_NAME)),""));
 			} while (cFood.moveToNext());
 		}
 		cFood.close();
@@ -91,7 +91,7 @@ public class ShowManageOwnFood extends ListActivity {
 
 	private void fillData() {
 		Cursor cSetting = dbHelper.fetchSettingByName(getResources().getString(
-				R.string.font_size));
+				R.string.setting_font_size));
 		cSetting.moveToFirst();
 		CustomArrayAdapterDBFood adapter = new CustomArrayAdapterDBFood(
 				this,
@@ -115,7 +115,7 @@ public class ShowManageOwnFood extends ListActivity {
 	protected void onListItemClick(ListView l, View v, int position, long id) {
 		Intent i = new Intent(this, ShowUpdateOwnFood.class).addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 		i.putExtra(DbAdapter.DATABASE_FOOD_ID, Long.parseLong("" + listFood.get(position).getId()));
-		View view = ActivityGroupMeal.group.getLocalActivityManager().startActivity(DataParser.activityIDMeal, i).getDecorView();
+		View view = ActivityGroupMeal.group.getLocalActivityManager().startActivity(DataParser.activityIDShowFoodList, i).getDecorView();
 		ActivityGroupMeal.group.setContentView(view);
 	}
 
@@ -225,7 +225,7 @@ public class ShowManageOwnFood extends ListActivity {
 	// if we press on create new food
 	public void onClickCreateNewFood(View view) {
 		Intent i = new Intent(this, ShowCreateFood.class).addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-		View v = ActivityGroupMeal.group.getLocalActivityManager().startActivity(DataParser.activityIDMeal, i).getDecorView();
+		View v = ActivityGroupMeal.group.getLocalActivityManager().startActivity(DataParser.activityIDShowFoodList, i).getDecorView();
 		ActivityGroupMeal.group.setContentView(v);
 	}
 	

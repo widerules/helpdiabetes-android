@@ -7,6 +7,7 @@
     <string-array name="settings_array">
         <item>Maaltijd tijden</item>
         <item>Insuline ratio</item>
+        <item>Glucose unit</item>
         <item>Volgorde hoeveelheden</item>
         <item>Tekst grootte lijsten</item>
     </string-array>

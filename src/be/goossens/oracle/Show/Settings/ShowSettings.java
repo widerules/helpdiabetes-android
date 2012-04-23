@@ -4,19 +4,15 @@ import java.util.ArrayList;
 import java.util.List;
 
 import android.app.ListActivity;
-import android.app.LocalActivityManager;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.Window;
 import android.widget.ListView;
-import android.widget.Toast;
 import be.goossens.oracle.R;
 import be.goossens.oracle.ActivityGroup.ActivityGroupSettings;
 import be.goossens.oracle.Custom.CustomArrayAdapterCharSequenceSettings;
-import be.goossens.oracle.Rest.DataParser;
 
 public class ShowSettings extends ListActivity {
 
@@ -65,20 +61,24 @@ public class ShowSettings extends ListActivity {
 			break;
 		case 2:
 			i = new Intent(getApplicationContext(),
-					ShowSettingsValueOrder.class);
+					ShowSettingsGlucoseUnit.class);
 			break;
 		case 3:
+			i = new Intent(getApplicationContext(),
+					ShowSettingsValueOrder.class);
+			break;
+		case 4:
 			i = new Intent(getApplicationContext(),
 					ShowSettingsFontSizeLists.class);
 			break;
 		}
-
 		i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 
 		View view = ActivityGroupSettings.group.getLocalActivityManager()
 				.startActivity("ShowSetting", i).getDecorView();
 
 		ActivityGroupSettings.group.setContentView(view);
+
 	}
 
 	@Override

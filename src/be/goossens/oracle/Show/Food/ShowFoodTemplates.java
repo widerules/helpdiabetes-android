@@ -2,13 +2,6 @@ package be.goossens.oracle.Show.Food;
 
 import java.util.ArrayList;
 
-import be.goossens.oracle.R;
-import be.goossens.oracle.ActivityGroup.ActivityGroupMeal;
-import be.goossens.oracle.Custom.CustomBaseAdapterFoodTemplates;
-import be.goossens.oracle.Objects.DBFood;
-import be.goossens.oracle.Objects.DBFoodTemplate;
-import be.goossens.oracle.Rest.DbAdapter;
-
 import android.app.ListActivity;
 import android.database.Cursor;
 import android.os.Bundle;
@@ -21,6 +14,12 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView.AdapterContextMenuInfo;
 import android.widget.ListView;
+import be.goossens.oracle.R;
+import be.goossens.oracle.ActivityGroup.ActivityGroupMeal;
+import be.goossens.oracle.Custom.CustomBaseAdapterFoodTemplates;
+import be.goossens.oracle.Objects.DBFood;
+import be.goossens.oracle.Objects.DBFoodTemplate;
+import be.goossens.oracle.Rest.DbAdapter;
 
 public class ShowFoodTemplates extends ListActivity {
 	private DbAdapter dbHelper;
@@ -61,6 +60,7 @@ public class ShowFoodTemplates extends ListActivity {
 
 	@Override
 	public boolean onContextItemSelected(MenuItem item) {
+		dbHelper.open();
 		AdapterContextMenuInfo info = (AdapterContextMenuInfo) item
 				.getMenuInfo();
 
@@ -86,9 +86,10 @@ public class ShowFoodTemplates extends ListActivity {
 	}
 
 	private void fillData() {
+		dbHelper.open();
 		if (dbHelper.fetchAllFoodTemplates().getCount() > 0) {
 			Cursor cSettings = dbHelper.fetchSettingByName(getResources()
-					.getString(R.string.font_size));
+					.getString(R.string.setting_font_size));
 			cSettings.moveToFirst();
 			CustomBaseAdapterFoodTemplates adapter = new CustomBaseAdapterFoodTemplates(
 					this,
@@ -104,7 +105,7 @@ public class ShowFoodTemplates extends ListActivity {
 
 	@Override
 	protected void onListItemClick(ListView l, View v, int position, long id) {
-		super.onListItemClick(l, v, position, id);
+		dbHelper.open();
 		// count how much foodItems we add
 		int count = 0;
 
@@ -142,6 +143,7 @@ public class ShowFoodTemplates extends ListActivity {
 	// converts the cursor with all food templates to a arrayList
 	// and returns that array list
 	private ArrayList<DBFoodTemplate> getFoodTemplates() {
+		dbHelper.open();
 		ArrayList<DBFoodTemplate> list = new ArrayList<DBFoodTemplate>();
 		Cursor cFoodTemplates = dbHelper.fetchAllFoodTemplates();
 		cFoodTemplates.moveToFirst();
@@ -168,8 +170,8 @@ public class ShowFoodTemplates extends ListActivity {
 				foods.add(new DBFood(
 						cFood.getInt(cFood
 								.getColumnIndexOrThrow(DbAdapter.DATABASE_FOOD_ID)),
-						cFood.getString(cFood
-								.getColumnIndexOrThrow(DbAdapter.DATABASE_FOOD_NAME))));
+						cFood.getString(cFood 
+				 				.getColumnIndexOrThrow(DbAdapter.DATABASE_FOOD_NAME)),cTemplateFood.getFloat(cTemplateFood.getColumnIndexOrThrow(DbAdapter.DATABASE_TEMPLATEFOOD_AMOUNT)) + " " + cUnit.getString(cUnit.getColumnIndexOrThrow(DbAdapter.DATABASE_FOODUNIT_NAME)))); 
 				cUnit.close();
 				cFood.close();
 			} while (cTemplateFood.moveToNext());

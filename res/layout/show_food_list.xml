@@ -7,28 +7,36 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content" >
 
-        <EditText
-            android:id="@+id/editTextSearch"
-            android:layout_width="0dip"
-            android:layout_height="wrap_content"
-            android:layout_weight="1.0"
-            android:inputType="text" >
-        </EditText>
-
         <Button
             android:id="@+id/buttonShowFoodListShowCreateFood"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:drawableLeft="@android:drawable/ic_input_add" />
+            android:background="@drawable/ic_add_yes" />
+
+        <EditText
+            android:id="@+id/editTextSearch"
+            style="@style/styleEditText"
+            android:layout_width="0dip"
+            android:layout_height="wrap_content"
+            android:layout_weight="1.0" 
+            android:hint="@string/search"
+            android:inputType="text" 
+             />
+
+        <Button
+            android:id="@+id/buttonShowFoodListSearch"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/ic_search_no" />
 
         <Button
             android:id="@+id/buttonShowFoodListShowSelectedFood"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/showFoodListButtonSelections" />
+            android:background="@drawable/ic_selection_yes" />
     </LinearLayout>
 
-    <ListView
+    <ListView  
         android:id="@+android:id/list"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
@@ -37,7 +45,7 @@
     </ListView>
 
     <TextView
-        android:id="@+id/textView2"
+        android:id="@+id/textViewLoading"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
         android:layout_gravity="center"

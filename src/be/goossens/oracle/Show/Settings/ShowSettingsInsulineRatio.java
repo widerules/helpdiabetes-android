@@ -1,15 +1,14 @@
 package be.goossens.oracle.Show.Settings;
 
-import be.goossens.oracle.R;
-import be.goossens.oracle.ActivityGroup.ActivityGroupSettings;
-import be.goossens.oracle.Rest.DbAdapter;
 import android.app.Activity;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.EditText;
-import android.widget.Toast;
+import be.goossens.oracle.R;
+import be.goossens.oracle.ActivityGroup.ActivityGroupSettings;
+import be.goossens.oracle.Rest.DbAdapter;
 
 public class ShowSettingsInsulineRatio extends Activity {
 	private DbAdapter dbHelper;
@@ -73,7 +72,7 @@ public class ShowSettingsInsulineRatio extends Activity {
 
 		Cursor cSettingInsulineRatioBreakfast = dbHelper
 				.fetchSettingByName(getResources().getString(
-						R.string.insuline_ratio_breakfast));
+						R.string.setting_insuline_ratio_breakfast));
 		cSettingInsulineRatioBreakfast.moveToFirst();
 		breakfastRatio = cSettingInsulineRatioBreakfast
 				.getFloat(cSettingInsulineRatioBreakfast
@@ -81,7 +80,7 @@ public class ShowSettingsInsulineRatio extends Activity {
 
 		Cursor cSettinginsulineratioLunch = dbHelper
 				.fetchSettingByName(getResources().getString(
-						R.string.insuline_ratio_lunch));
+						R.string.setting_insuline_ratio_lunch));
 		cSettinginsulineratioLunch.moveToFirst();
 		lunchRatio = cSettinginsulineratioLunch
 				.getFloat(cSettinginsulineratioLunch
@@ -89,7 +88,7 @@ public class ShowSettingsInsulineRatio extends Activity {
 
 		Cursor cSettingInsulineRatioSnack = dbHelper
 				.fetchSettingByName(getResources().getString(
-						R.string.insuline_ratio_snack));
+						R.string.setting_insuline_ratio_snack));
 		cSettingInsulineRatioSnack.moveToFirst();
 		snackRatio = cSettingInsulineRatioSnack
 				.getFloat(cSettingInsulineRatioSnack
@@ -97,7 +96,7 @@ public class ShowSettingsInsulineRatio extends Activity {
 
 		Cursor cSettingInsulineRatioDinner = dbHelper
 				.fetchSettingByName(getResources().getString(
-						R.string.insuline_ratio_dinner));
+						R.string.setting_insuline_ratio_dinner));
 		cSettingInsulineRatioDinner.moveToFirst();
 		dinnerRatio = cSettingInsulineRatioDinner
 				.getFloat(cSettingInsulineRatioDinner
@@ -153,17 +152,20 @@ public class ShowSettingsInsulineRatio extends Activity {
 		snackRatio = Math.round(snackRatio * p) / p;
 		dinnerRatio = Math.round(dinnerRatio * p) / p;
 
+		//make sure dbHelper is open
+		dbHelper.open(); 
+		
 		dbHelper.updateSettingsByName(
-				getResources().getString(R.string.insuline_ratio_breakfast), ""
+				getResources().getString(R.string.setting_insuline_ratio_breakfast), ""
 						+ breakfastRatio);
 		dbHelper.updateSettingsByName(
-				getResources().getString(R.string.insuline_ratio_lunch), ""
+				getResources().getString(R.string.setting_insuline_ratio_lunch), ""
 						+ lunchRatio);
 		dbHelper.updateSettingsByName(
-				getResources().getString(R.string.insuline_ratio_snack), ""
+				getResources().getString(R.string.setting_insuline_ratio_snack), ""
 						+ snackRatio);
 		dbHelper.updateSettingsByName(
-				getResources().getString(R.string.insuline_ratio_dinner), ""
+				getResources().getString(R.string.setting_insuline_ratio_dinner), ""
 						+ dinnerRatio);
 
 		// go back

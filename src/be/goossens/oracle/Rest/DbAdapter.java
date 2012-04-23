@@ -171,14 +171,14 @@ public class DbAdapter extends SQLiteOpenHelper {
 			return true;
 		}
 		return false;
-	} 
+	}
 
-	public void open() { 
+	public void open() {
 		String myPath = DB_PATH + DB_NAME;
 		mDb = SQLiteDatabase.openDatabase(myPath, null,
 				SQLiteDatabase.OPEN_READWRITE);
-	}  
- 
+	}
+
 	private boolean checkDatabase() {
 		SQLiteDatabase checkDB = null;
 		try {
@@ -187,12 +187,12 @@ public class DbAdapter extends SQLiteOpenHelper {
 			checkDB = SQLiteDatabase.openDatabase(myPath, null,
 					SQLiteDatabase.OPEN_READONLY);
 			checkDB.close();
-			return true; 
+			return true;
 		} catch (SQLiteException e) {
 			// The database does not exists
 			return false;
 		}
-	}      
+	}
 
 	private void copyFromZipFile() throws IOException {
 		// open the zip file as inputstream
@@ -666,14 +666,14 @@ public class DbAdapter extends SQLiteOpenHelper {
 
 	// Food Functions
 	// add food
-	public long createFood(String name) {
+	public long createFood(String name, long foodLanguageID) {
 		ContentValues initialValues = new ContentValues();
 		initialValues.put(DATABASE_FOOD_NAME, name);
 		initialValues.put(DATABASE_FOOD_ISFAVORITE, "0");
 		initialValues.put(DATABASE_FOOD_VISIBLE, "1");
-		initialValues.put(DATABASE_FOOD_USERID, "1");
+		initialValues.put(DATABASE_FOOD_USERID, "0");
 		initialValues.put(DATABASE_FOOD_CATEGORYID, "1");
-		initialValues.put(DATABASE_FOOD_FOODLANGUAGEID, "1");
+		initialValues.put(DATABASE_FOOD_FOODLANGUAGEID, foodLanguageID);
 		initialValues.put(DATABASE_FOOD_PLATFORM, "android");
 		return mDb.insert(DATABASE_FOOD_TABLE, null, initialValues);
 	}
@@ -692,7 +692,8 @@ public class DbAdapter extends SQLiteOpenHelper {
 				DATABASE_FOOD_NAME, DATABASE_FOOD_ISFAVORITE,
 				DATABASE_FOOD_VISIBLE, DATABASE_FOOD_PLATFORM,
 				DATABASE_FOOD_FOODLANGUAGEID }, DATABASE_FOOD_FOODLANGUAGEID
-				+ "=" + languageID, null, DATABASE_FOOD_NAME, null, null);
+				+ "=" + languageID + " and " + DATABASE_FOOD_VISIBLE + " = 1",
+				null, DATABASE_FOOD_NAME, null, null);
 	}
 
 	// get a food by id
@@ -708,12 +709,15 @@ public class DbAdapter extends SQLiteOpenHelper {
 	}
 
 	// get all food filter on food name
-	public Cursor fetchFoodWithFilterByName(String filter) throws SQLException {
+	public Cursor fetchFoodWithFilterByName(String filter, long languageID)
+			throws SQLException {
 		Cursor mCursor = mDb.query(true, DATABASE_FOOD_TABLE, new String[] {
 				DATABASE_FOOD_ID, DATABASE_FOOD_NAME, DATABASE_FOOD_ISFAVORITE,
 				DATABASE_FOOD_VISIBLE, DATABASE_FOOD_PLATFORM },
-				DATABASE_FOOD_NAME + " LIKE '%" + filter + "%'", null,
-				DATABASE_FOOD_NAME, null, null, null);
+				DATABASE_FOOD_NAME + " LIKE '%" + filter + "%' and "
+						+ DATABASE_FOOD_VISIBLE + " = 1 and "
+						+ DATABASE_FOOD_FOODLANGUAGEID + " = " + languageID,
+				null, DATABASE_FOOD_NAME, null, null, null);
 		if (mCursor != null) {
 			mCursor.moveToFirst();
 		}
@@ -739,6 +743,22 @@ public class DbAdapter extends SQLiteOpenHelper {
 	public boolean updateFoodName(long id, String foodname) {
 		ContentValues initialValues = new ContentValues();
 		initialValues.put(DATABASE_FOOD_NAME, foodname);
+		return mDb.update(DATABASE_FOOD_TABLE, initialValues, DATABASE_FOOD_ID
+				+ "=" + id, null) > 0;
+	}
+
+	// Update food set invisible
+	public boolean updateFoodSetInVisible(long id) {
+		ContentValues initialValues = new ContentValues();
+		initialValues.put(DATABASE_FOOD_VISIBLE, 0);
+		return mDb.update(DATABASE_FOOD_TABLE, initialValues, DATABASE_FOOD_ID
+				+ "=" + id, null) > 0;
+	}
+
+	// Update food favorite
+	public boolean updateFoodIsFavorite(long id, int favorite) {
+		ContentValues initialValues = new ContentValues();
+		initialValues.put(DATABASE_FOOD_ISFAVORITE, favorite);
 		return mDb.update(DATABASE_FOOD_TABLE, initialValues, DATABASE_FOOD_ID
 				+ "=" + id, null) > 0;
 	}

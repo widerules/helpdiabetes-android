@@ -1,8 +1,6 @@
 package be.goossens.oracle.Objects;
 
-import be.goossens.oracle.Rest.ExcelCharacter;
-
-public class DBFoodComparable implements Comparable<DBFoodComparable> {
+public class DBFoodComparable {
 	private int id;
 	private String platform;
 	private int languageid;
@@ -105,39 +103,6 @@ public class DBFoodComparable implements Comparable<DBFoodComparable> {
 		return name;
 	}
 	
-	public int compareFoodItemTo(String stringToCompare) {
-		int returnvalue = 0;
-		int index = 0;
-
-		char[] thisItem = name.toCharArray();
-		char[] itemStringToCompare = stringToCompare.toCharArray();
-
-		while ((index < name.length()) && (index < itemStringToCompare.length)) {
-			if (ExcelCharacter.compareToAsInExcel(thisItem[index],
-					itemStringToCompare[index]) != 0) {
-				break;
-			}
-			index++;
-		}
-		if ((index < name.length()) && (index < itemStringToCompare.length)) {
-			if (ExcelCharacter.compareToAsInExcel(thisItem[index],
-					itemStringToCompare[index]) < 0)
-				return -1;
-			if (ExcelCharacter.compareToAsInExcel(thisItem[index],
-					itemStringToCompare[index]) > 0)
-				return 1;
-		}
-		if ((index >= name.length()) || (index >= itemStringToCompare.length)) {
-			if (thisItem.length < itemStringToCompare.length)
-				return -1;
-			if (thisItem.length > itemStringToCompare.length)
-				return 1;
-		}
-		return returnvalue;
-	}
-
-	public int compareTo(DBFoodComparable itemToCompare) {
-		return compareFoodItemTo(itemToCompare.name);
-	}
+	
 
 }
