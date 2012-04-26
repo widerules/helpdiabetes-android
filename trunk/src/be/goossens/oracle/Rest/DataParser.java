@@ -24,6 +24,9 @@ public class DataParser {
 	// showAddFoodToSelectionPage
 	public static final String foodAmount = "foodAmount";
 
+	//For parsing the search value to the create food page
+	public static final String foodSearchValue = "searchValue";
+	
 	// Exercise event //
 	public static final String doUpdateExerciseEvent = "updateExerciseEvent";
 	public static final String doCreateExerciseEvent = "createExerciseEvent";

@@ -245,8 +245,10 @@ public class ShowUpdateOwnFood extends ListActivity {
 		} else { 
 			// else we can delete it
 			deleteFoodAndFoodUnits(foodId);
+			
 			//delete the fooditem from the showfoodlist page
-			ActivityGroupMeal.group.showFoodListDeleteFoodItem(foodId);
+			ActivityGroupMeal.group.deleteFoodIDFromList = foodId;
+			
 			// and go back to foodlist
 			ActivityGroupMeal.group.back();
 		}
@@ -330,13 +332,11 @@ public class ShowUpdateOwnFood extends ListActivity {
 
 	@Override
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
-		if (event.getKeyCode() == KeyEvent.KEYCODE_BACK) {
-			// Do this in the onclick back becaus we need to refresh the page
-			// when we update the food name
-			ActivityGroupMeal.group.back();
-			ActivityGroupMeal.group.refreshShowManageOwnFood(1);
-			return true;
-		}
-		return super.onKeyDown(keyCode, event);
+		//if we press the back key
+		if (event.getKeyCode() == KeyEvent.KEYCODE_BACK)
+			//return false so the keydown event from activitygroupmeal will get called
+			return false;
+		else
+			return super.onKeyDown(keyCode, event);
 	}
 }

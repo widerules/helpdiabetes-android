@@ -4,8 +4,8 @@
 
     <TextView
         android:id="@+id/textView1"
-        android:text="@string/glucose_unit"
-        style="@style/textViewSettingTitle" />
+        android:text="@string/pref_glucose_unit"
+        style="@style/defaultFontTitle" />
 
     <RadioGroup
         android:id="@+id/radioGroupGlucoseUnit"

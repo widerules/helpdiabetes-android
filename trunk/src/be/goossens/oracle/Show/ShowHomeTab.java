@@ -4,6 +4,7 @@ import android.app.TabActivity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
@@ -23,11 +24,15 @@ import be.goossens.oracle.Rest.DataParser;
 
 public class ShowHomeTab extends TabActivity {
 	private TabHost tabHost;
+	public static TabActivity context;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.show_home_tab);
+		
+		context = this;
+		
 		tabHost = getTabHost();
 		setupTabHost();
 	}
@@ -90,18 +95,6 @@ public class ShowHomeTab extends TabActivity {
 
 	public void goToTab(String tag) {
 		tabHost.setCurrentTabByTag(tag);
-		keyboardDissapear();
-	}
-
-	// let the keyboard dissapear
-	private void keyboardDissapear() {
-		try {
-			InputMethodManager inputManager = (InputMethodManager) this
-					.getSystemService(Context.INPUT_METHOD_SERVICE);
-			inputManager.hideSoftInputFromWindow(this.getCurrentFocus()
-					.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
-		} catch (Exception e) {
-		}
 	}
 
 	private static View createTabView(final Context context, final int image) {
@@ -112,5 +105,4 @@ public class ShowHomeTab extends TabActivity {
 		return view;
 
 	}
-
 }

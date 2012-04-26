@@ -7,18 +7,23 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.widget.TextView;
 import be.goossens.oracle.R;
 import be.goossens.oracle.Rest.DbAdapter;
 
 public class ShowStart extends Activity {
 
 	private DbAdapter dbHelper;
+	private TextView tv2;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.show_start);
 
+		tv2 = (TextView)findViewById(R.id.textView2);
+		tv2.setText(getResources().getString(R.string.checkingDatabase));
+		
 		dbHelper = new DbAdapter(this);
 		new checkDatabase().execute();
 	}
@@ -58,5 +63,6 @@ public class ShowStart extends Activity {
 		
 		cSetting.close();
 		dbHelper.close();
+		finish();
 	}
 }

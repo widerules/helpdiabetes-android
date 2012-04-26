@@ -1,35 +1,39 @@
 package be.goossens.oracle.Show.Exercise;
 
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.List;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.Dialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.SimpleCursorAdapter;
 import android.widget.Spinner;
 import android.widget.Toast;
 import be.goossens.oracle.R;
 import be.goossens.oracle.ActivityGroup.ActivityGroupExercise;
 import be.goossens.oracle.ActivityGroup.ActivityGroupTracking;
+import be.goossens.oracle.Custom.CustomArrayAdapterCharSequenceForASpinner;
+import be.goossens.oracle.Custom.CustomSimpleCursorAdapterForASpinner;
 import be.goossens.oracle.Rest.DataParser;
 import be.goossens.oracle.Rest.DbAdapter;
 import be.goossens.oracle.Rest.Functions;
 import be.goossens.oracle.Show.ShowHomeTab;
 import be.goossens.oracle.slider.DateSlider;
 import be.goossens.oracle.slider.DateTimeSlider;
-import be.goossens.oracle.slider.TimeLabeler;
- 
+
 public class ShowAddExerciseEvent extends Activity {
 	// private TimePicker startTime, endTime;
 	private Spinner spinnerExerciseTypes, spinnerDuration;
@@ -76,23 +80,23 @@ public class ShowAddExerciseEvent extends Activity {
 			}
 		});
 	}
- 
+
 	private void updateTimeAndTimeTextView(Calendar selectedDate) {
 		// set the local variable = the given variable
 		mCalendar = selectedDate;
 
 		// update the dateText view with the corresponding date
-		int minute = selectedDate.get(Calendar.MINUTE)
-				/ TimeLabeler.MINUTEINTERVAL * TimeLabeler.MINUTEINTERVAL;
-		btUpdateDateAndHour.setText(String.format("%te. %tB %tY%n%tH:%02d", selectedDate,
-				selectedDate, selectedDate, selectedDate, minute));
+		btUpdateDateAndHour.setText(android.text.format.DateFormat
+				.getDateFormat(this).format(mCalendar.getTime())
+				+ " "
+				+ functions.getTimeFromDate(mCalendar.getTime()));
 	}
 
 	private DateSlider.OnDateSetListener mDateTimeSetListener = new DateSlider.OnDateSetListener() {
 		public void onDateSet(DateSlider view, Calendar selectedDate) {
 			updateTimeAndTimeTextView(selectedDate);
 		}
-	};  
+	};
 
 	@Override
 	protected Dialog onCreateDialog(int id) {
@@ -122,16 +126,6 @@ public class ShowAddExerciseEvent extends Activity {
 		Cursor cExerciseEvent = dbHelper.fetchExerciseEventByID(getIntent()
 				.getExtras().getLong(DataParser.idExerciseEvent));
 		cExerciseEvent.moveToFirst();
-
-		/*
-		 * Date dStartTime = functions
-		 * .parseStringToDate(cExerciseEvent.getString(cExerciseEvent
-		 * .getColumnIndexOrThrow(DbAdapter.DATABASE_EXERCISEEVENT_STARTTIME)));
-		 * 
-		 * Date dStopTime = functions
-		 * .parseStringToDate(cExerciseEvent.getString(cExerciseEvent
-		 * .getColumnIndexOrThrow(DbAdapter.DATABASE_EXERCISEEVENT_STOPTIME)));
-		 */
 
 		etDescription
 				.setText(cExerciseEvent.getString(cExerciseEvent
@@ -165,20 +159,30 @@ public class ShowAddExerciseEvent extends Activity {
 
 	private void fillSpinnerSportType() {
 		dbHelper.open();
-		SimpleCursorAdapter adapter = new SimpleCursorAdapter(this,
-				android.R.layout.simple_spinner_item,
+
+		CustomSimpleCursorAdapterForASpinner adapter = new CustomSimpleCursorAdapterForASpinner(
+				this, android.R.layout.simple_spinner_item,
 				dbHelper.fetchAllExerciseTypes(),
 				new String[] { DbAdapter.DATABASE_EXERCISETYPE_NAME },
 				new int[] { android.R.id.text1 });
+
 		spinnerExerciseTypes.setAdapter(adapter);
+  
 		adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 	}
 
 	private void fillSpinnerDuration() {
-		ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(
+		/*ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(
 				this, R.array.standard_duration,
-				android.R.layout.simple_spinner_item);
+				android.R.layout.simple_spinner_item);*/
+		
+		
+		CustomArrayAdapterCharSequenceForASpinner adapter =
+				new CustomArrayAdapterCharSequenceForASpinner(
+						this, android.R.layout.simple_spinner_item, getResources().getStringArray(R.array.standard_duration));
+		
 		spinnerDuration.setAdapter(adapter);
+		
 		adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 	}
 
@@ -201,22 +205,15 @@ public class ShowAddExerciseEvent extends Activity {
 			if (getIntent().getExtras().getString(DataParser.whatToDo)
 					.equals(DataParser.doUpdateExerciseEvent)) {
 				// update exercise event
-				/*
-				 * dbHelper.updateExerciseEventByID(
-				 * getIntent().getExtras().getLong( DataParser.idExerciseEvent),
-				 * etDescription.getText().toString(),
-				 * startTime.getCurrentHour() + ":" +
-				 * startTime.getCurrentMinute(), endTime.getCurrentHour() + ":"
-				 * + endTime.getCurrentMinute(),
-				 * spinnerExerciseTypes.getSelectedItemId());
-				 */
+
 			} else {
 				// create new exercise event
 				int startTime = 0;
 				int endTime = 0;
 
 				// Fill startTime with seconds of time
-				startTime = (functions.getHour(mCalendar) * 3600) + (functions.getMinutes(mCalendar) * 60);
+				startTime = (functions.getHour(mCalendar) * 3600)
+						+ (functions.getMinutes(mCalendar) * 60);
 
 				// Fill endTime
 				// The * 1800 comes from 30 minutes * position + 1
@@ -228,18 +225,19 @@ public class ShowAddExerciseEvent extends Activity {
 
 				// create exerciseEvent
 				dbHelper.createExerciseEvent(
-						etDescription.getText().toString(), startTime, endTime, 
-						spinnerExerciseTypes.getSelectedItemId(), functions.getDateAsStringFromCalendar(mCalendar));
+						etDescription.getText().toString(), startTime, endTime,
+						spinnerExerciseTypes.getSelectedItemId(),
+						functions.getDateAsStringFromCalendar(mCalendar));
 
 			}
- 
+
 			etDescription.setText("");
 
-			//refresh tracking list
-			ActivityGroupTracking.group.showTrackingRefreshList(); 
-			
+			// refresh tracking list
+			ActivityGroupTracking.group.showTrackingRefreshList();
+
 			// Go to tracking tab when clicked on add
-			ShowHomeTab parentActivity; 
+			ShowHomeTab parentActivity;
 			parentActivity = (ShowHomeTab) this.getParent().getParent();
 			parentActivity.goToTab(DataParser.activityIDTracking);
 		}
@@ -283,5 +281,40 @@ public class ShowAddExerciseEvent extends Activity {
 				fillSpinnerSportType();
 			break;
 		}
+	}
+
+	// if we press the back button on this activity we have to show a popup to
+	// exit
+	@Override
+	public boolean onKeyDown(int keyCode, KeyEvent event) {
+		if (event.getKeyCode() == KeyEvent.KEYCODE_BACK) {
+			showPopUpToExitApplication();
+			// when we return true here we wont call the onkeydown from
+			// activitygroup
+			return true;
+		} else
+			return super.onKeyDown(keyCode, event);
+	}
+
+	private void showPopUpToExitApplication() {
+		DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
+
+			public void onClick(DialogInterface dialog, int which) {
+				switch (which) {
+				case DialogInterface.BUTTON_POSITIVE:
+					// exit application on click button positive
+					ActivityGroupExercise.group.killApplication();
+					break;
+				}
+			}
+		};
+
+		AlertDialog.Builder builder = new AlertDialog.Builder(
+				ActivityGroupExercise.group);
+		builder.setMessage(getResources().getString(R.string.sureToExit))
+				.setPositiveButton(getResources().getString(R.string.yes),
+						dialogClickListener)
+				.setNegativeButton(getResources().getString(R.string.no),
+						dialogClickListener).show();
 	}
 }

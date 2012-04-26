@@ -99,4 +99,10 @@ public class ActivityGroupExercise extends ActivityGroup {
 	public void finish() {
 		
 	}
+	
+	// this method will kill the application
+		public void killApplication() {
+			// finish the tab activity so everything will close
+			this.getParent().finish();
+		}
 }

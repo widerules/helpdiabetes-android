@@ -1,32 +1,36 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
+    <!-- Default fonts -->
+    <style name="defaultFontNormal">
+        <item name="android:textColor">@color/ColorText</item>
+        <item name="android:textSize">18dip</item> 
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+    </style>
+
+    <style name="defaultFontTitle" parent="defaultFontNormal">
+        <item name="android:textStyle">bold</item>
+        <item name="android:layout_width">fill_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+    </style>
+
     <!-- editText -->
-    <style name="styleEditText">
+    <style name="styleEditText" parent="defaultFontNormal">
         <item name="android:background">@android:drawable/editbox_background_normal</item>
         <item name="android:padding">10dip</item>
     </style>
 
-    <!-- Setting title -->
-    <style name="textViewSettingTitle">
-        <item name="android:layout_width">fill_parent</item>
-        <item name="android:layout_height">wrap_content</item>
-        <item name="android:textColor">@color/ColorText</item>
-        <item name="android:textAppearance">?android:attr/textAppearanceMedium</item>
-        <item name="android:paddingBottom">15dip</item>
-    </style>
-
     <!-- table -->
-    <style name="styleTableRowGravityCenter">
+    <style name="styleTableRowGravityCenter" parent="defaultFontNormal">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:gravity">center_vertical</item>
     </style>
 
-    <style name="textViewInTableAlignRight">
+    <style name="textViewInTableAlignRight" parent="defaultFontNormal">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">fill_parent</item>
-        <item name="android:textColor">@color/ColorText</item>
         <item name="android:gravity">right|center_vertical</item>
     </style>
 
@@ -46,7 +50,7 @@
     </style>
 
     <!-- linearlayouts -->
-    <style name="linearLayoutVerticalWithPadding">
+    <style name="linearLayoutVerticalWithPadding" parent="defaultFontNormal">
         <item name="android:layout_width">fill_parent</item>
         <item name="android:layout_height">fill_parent</item>
         <item name="android:orientation">vertical</item>
@@ -54,48 +58,41 @@
         <item name="android:paddingTop">15dip</item>
     </style>
 
-    <!-- textviews -->
-    <style name="textViewTitle">
-        <item name="android:layout_width">wrap_content</item>
-        <item name="android:layout_height">wrap_content</item>
-        <item name="android:textAppearance">?android:attr/textAppearanceMedium</item>
-        <item name="android:textColor">@color/ColorText</item>
-    </style>
-
-    <!-- buttons -->
-    <style name="buttonAdd">
+    <!--  linearlayout that goes around buttonAdd -->
+    <style name="linearLayoutForButtonAdd">
         <item name="android:layout_width">fill_parent</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:text">@string/add</item>
-        <item name="android:gravity">center</item>
-        <item name="android:layout_marginTop">15dip</item>
+        <item name="android:layout_marginTop">25dip</item>
+        <item name="android:weightSum">1.0</item>
+        <item name="android:gravity">center_horizontal</item>
+    </style>
+    
+    <!-- buttons -->
+    <style name="button" parent="defaultFontNormal"> 
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
     </style>
 
+    <style name="buttonAdd" parent="button"> 
+        <item name="android:layout_weight">0.7</item>
+        <item name="android:text">@string/add</item>
+    </style>
+    
     <!-- listviews -->
-    <style name="listViewItemOne">
+    <style name="listViewItemOne" parent="defaultFontNormal">
         <item name="android:layout_width">0dip</item>
         <item name="android:layout_height">fill_parent</item>
         <item name="android:layout_weight">1.0</item>
         <item name="android:padding">10dip</item>
         <item name="android:gravity">center_vertical</item>
-        <item name="android:textColor">@color/ColorText</item>
     </style>
 
-    <style name="listViewItemArrow">
+    <style name="listViewItemArrow" parent="defaultFontNormal">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">fill_parent</item>
         <item name="android:gravity">right|center_vertical</item>
         <item name="android:padding">10dip</item>
-        <item name="android:textColor">@color/ColorText</item>
         <item name="android:text">@string/endOfListView</item>
-    </style>
-
-    <style name="listViewItemOneTextBig" parent="listViewItemOne">
-        <item name="android:textSize">25dip</item>
-    </style>
-
-    <style name="listViewItemArrowTextBig" parent="listViewItemArrow">
-        <item name="android:textSize">25dip</item>
     </style>
 
 </resources>

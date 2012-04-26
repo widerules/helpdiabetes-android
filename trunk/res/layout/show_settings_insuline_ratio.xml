@@ -7,7 +7,7 @@
 
         <TextView
             android:id="@+id/textView3"
-            style="@style/textViewSettingTitle"
+            style="@style/defaultFontTitle"
             android:text="@string/pref_insuline_ratio" />
 
         <TableLayout
@@ -17,21 +17,16 @@
 
             <TableRow
                 android:id="@+id/tableRow1"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content" >
+                style="@style/styleTableRowGravityCenter" >
 
                 <TextView
                     android:id="@+id/textView2"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/pref_breakfastratio_title"
-                    android:textColor="@color/ColorText" />
+                    style="@style/textViewInTableAlignRight"
+                    android:text="@string/pref_breakfastratio_title" />
 
                 <EditText
                     android:id="@+id/editTextShowPreferencesBreakfastRatio"
-                    android:layout_width="0dip"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
+                    style="@style/editTextInTableText"
                     android:digits="1234567890."
                     android:inputType="phone" >
                 </EditText>
@@ -39,21 +34,16 @@
 
             <TableRow
                 android:id="@+id/tableRow2"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content" >
+                style="@style/styleTableRowGravityCenter" >
 
                 <TextView
-                    android:id="@+id/textView3"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/pref_lunchratio_title"
-                    android:textColor="@color/ColorText" />
+                    android:id="@+id/textView4"
+                    style="@style/textViewInTableAlignRight"
+                    android:text="@string/pref_lunchratio_title" />
 
                 <EditText
                     android:id="@+id/editTextShowPreferencesLunchRatio"
-                    android:layout_width="0dip"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
+                    style="@style/editTextInTableText"
                     android:digits="1234567890."
                     android:inputType="phone" >
                 </EditText>
@@ -61,57 +51,42 @@
 
             <TableRow
                 android:id="@+id/tableRow3"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content" >
+                style="@style/styleTableRowGravityCenter" >
 
                 <TextView
-                    android:id="@+id/textView4"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/pref_snackratio_title"
-                    android:textColor="@color/ColorText" />
+                    android:id="@+id/textView5"
+                    style="@style/textViewInTableAlignRight"
+                    android:text="@string/pref_snackratio_title" />
 
                 <EditText
                     android:id="@+id/editTextShowPreferencesSnackRatio"
-                    android:layout_width="0dip"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
+                    style="@style/editTextInTableText"
                     android:digits="1234567890."
                     android:inputType="phone" />
             </TableRow>
 
             <TableRow
                 android:id="@+id/tableRow4"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content" >
+                style="@style/styleTableRowGravityCenter" >
 
                 <TextView
-                    android:id="@+id/textView5"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/pref_dinnerratio_title"
-                    android:textColor="@color/ColorText" />
+                    android:id="@+id/textView6"
+                    style="@style/textViewInTableAlignRight"
+                    android:text="@string/pref_dinnerratio_title" />
 
                 <EditText
                     android:id="@+id/editTextShowPreferencesDinnerRatio"
-                    android:layout_width="0dip"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
+                    style="@style/editTextInTableText"
                     android:digits="1234567890."
                     android:inputType="phone" />
             </TableRow>
         </TableLayout>
 
-        <LinearLayout
-            android:id="@+id/linearLayout1"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content" >
+        <LinearLayout style="@style/linearLayoutForButtonAdd" >
 
             <Button
-                android:id="@+id/button1"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:onClick="onClickUpdate"
+                android:id="@+id/buttonUpdate"
+                style="@style/buttonAdd"
                 android:text="@string/update" />
         </LinearLayout>
     </LinearLayout>

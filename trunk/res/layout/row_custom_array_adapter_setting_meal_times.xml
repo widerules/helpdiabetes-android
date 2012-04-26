@@ -6,10 +6,10 @@
 
     <TextView
         android:id="@+id/text1"
-        style="@style/listViewItemOneTextBig" />
+        style="@style/listViewItemOne" />
 
-    <TextView
+    <TextView 
         android:id="@+id/text2"
-        style="@style/listViewItemArrowTextBig" 
+        style="@style/listViewItemArrow" 
         />
 </LinearLayout>

@@ -5,7 +5,7 @@
     <TextView
         android:id="@+id/textView2"
         android:text="@string/pref_value_order"
-        style="@style/textViewSettingTitle" />
+        style="@style/defaultFontTitle" />
 
     <LinearLayout
         android:id="@+id/linearLayout1"
@@ -51,17 +51,13 @@
             android:orientation="vertical" >
 
             <Button
-                android:id="@+id/button1"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:onClick="onClickUp"
+                android:id="@+id/buttonUp"
+                style="@style/button"
                 android:text="@string/up" />
 
             <Button
-                android:id="@+id/button2"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:onClick="onClickDown"
+                android:id="@+id/buttonDown"
+                style="@style/button"
                 android:text="@string/down" />
         </LinearLayout>
     </LinearLayout>

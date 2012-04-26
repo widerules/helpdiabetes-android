@@ -134,10 +134,9 @@ public class ShowFoodTemplates extends ListActivity {
 		// update the list in show selected food
 		ActivityGroupMeal.group.refreshShowSelectedFood(1);
 
-		// update the button on showfoodlist page
-		ActivityGroupMeal.group
-				.showFoodListsetCountSelectedFood((ActivityGroupMeal.group
-						.showFoodListGetCountSelectedFood() + count));
+		// update the count selected food
+		ActivityGroupMeal.group.getFoodData().countSelectedFood += count;
+		
 	}
 
 	// converts the cursor with all food templates to a arrayList
@@ -197,10 +196,12 @@ public class ShowFoodTemplates extends ListActivity {
 
 	@Override
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
-		if (event.getKeyCode() == KeyEvent.KEYCODE_BACK) {
+		//if we press the back key
+		if (event.getKeyCode() == KeyEvent.KEYCODE_BACK)
+			//return false so the keydown event from activitygroupmeal will get called
 			return false;
-		}
-		return super.onKeyDown(keyCode, event);
+		else
+			return super.onKeyDown(keyCode, event);
 	}
 
 }

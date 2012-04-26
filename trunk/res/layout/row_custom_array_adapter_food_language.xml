@@ -6,9 +6,9 @@
 
     <TextView
         android:id="@+id/text1"
-        style="@style/listViewItemOneTextBig" />
+        style="@style/defaultFontTitle" />
  
     <TextView
         android:id="@+id/text2"
-        style="@style/listViewItemArrowTextBig" />
+        style="@style/defaultFontTitle" />
     </LinearLayout>

@@ -1,7 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    style="@style/linearLayoutVerticalWithPadding"
-    android:gravity="center" >
+    style="@style/linearLayoutVerticalWithPadding" >
+
+    <TextView
+        style="@style/defaultFontTitle"
+        android:text="@string/titelSettings" />
 
     <ListView
         android:id="@+android:id/list"
