@@ -161,8 +161,9 @@ public class ShowSelectedFood extends ListActivity {
 
 		// kill this activity
 		ActivityGroupMeal.group.back();
-		// set button with selectedFoodCount = 0
-		ActivityGroupMeal.group.showFoodListsetCountSelectedFood(0);
+		
+		// set  selectedFoodCount = 0
+		ActivityGroupMeal.group.getFoodData().countSelectedFood = 0;
 
 		// refresh tracking list
 		ActivityGroupTracking.group.showTrackingRefreshList();
@@ -195,9 +196,9 @@ public class ShowSelectedFood extends ListActivity {
 
 				list.add(new DBSelectedFood(
 						cSelectedFood
-								.getLong(cSelectedFood
+								.getLong(cSelectedFood 
 										.getColumnIndexOrThrow(DbAdapter.DATABASE_SELECTEDFOOD_ID)),
-						cSelectedFood.getLong(cSelectedFood
+						cSelectedFood.getFloat(cSelectedFood
 								.getColumnIndexOrThrow(DbAdapter.DATABASE_SELECTEDFOOD_AMOUNT)),
 						cSelectedFood.getLong(cSelectedFood
 								.getColumnIndexOrThrow(DbAdapter.DATABASE_SELECTEDFOOD_UNITID)),
@@ -536,7 +537,7 @@ public class ShowSelectedFood extends ListActivity {
 	public void onClickDeleteAll(View view) {
 		deleteSelectedFood();
 		// update the button with count = 0;
-		ActivityGroupMeal.group.showFoodListsetCountSelectedFood(0);
+		ActivityGroupMeal.group.getFoodData().countSelectedFood = 0;
 		// refresh the data
 		refreshData();
 	}
@@ -787,9 +788,11 @@ public class ShowSelectedFood extends ListActivity {
 
 	@Override
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
-		if (event.getKeyCode() == KeyEvent.KEYCODE_BACK) {
+		//if we press the back key
+		if (event.getKeyCode() == KeyEvent.KEYCODE_BACK)
+			//return false so the keydown event from activitygroupmeal will get called
 			return false;
-		}
-		return super.onKeyDown(keyCode, event);
+		else
+			return super.onKeyDown(keyCode, event);
 	}
 }

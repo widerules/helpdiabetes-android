@@ -15,12 +15,14 @@ public class CustomArrayAdapterCharSequenceShowCreateFood extends
 
 	private Context ctx;
 	private List<CharSequence> items;
+	private int textViewResourceId;
 
 	public CustomArrayAdapterCharSequenceShowCreateFood(Context context,
 			int textViewResourceId, List<CharSequence> objects) {
 		super(context, textViewResourceId, objects);
 		this.ctx = context;
 		this.items = objects;
+		this.textViewResourceId = textViewResourceId;
 	}
 
 	@Override
@@ -29,9 +31,7 @@ public class CustomArrayAdapterCharSequenceShowCreateFood extends
 		if (v == null) {
 			LayoutInflater vi = (LayoutInflater) ctx
 					.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-			v = vi.inflate(
-					R.layout.custom_spinner_array_adapter_charsequence_show_create_food,
-					null);
+			v = vi.inflate(textViewResourceId, null);
 		}
 		TextView tt = (TextView) v.findViewById(R.id.text1);
 		tt.setText(items.get(position).toString());

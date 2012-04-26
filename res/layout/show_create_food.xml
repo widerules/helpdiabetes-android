@@ -7,6 +7,10 @@
         xmlns:android="http://schemas.android.com/apk/res/android"
         style="@style/linearLayoutVerticalWithPadding" >
 
+        <TextView
+            style="@style/defaultFontTitle"
+            android:text="@string/titelCreateFood" />
+
         <TableLayout
             android:id="@+id/tableLayout1"
             android:layout_width="fill_parent"
@@ -14,8 +18,7 @@
 
             <TableRow
                 android:id="@+id/tableRow6"
-                style="@style/styleTableRowGravityCenter"
-                android:layout_marginRight="5dip" >
+                style="@style/styleTableRowGravityCenter" >
 
                 <TextView
                     android:id="@+id/textView1"
@@ -24,7 +27,8 @@
 
                 <EditText
                     android:id="@+id/editTextFoodName"
-                    style="@style/editTextInTableText" >
+                    style="@style/editTextInTableText"
+                    android:inputType="text" >
                 </EditText>
             </TableRow>
 
@@ -40,7 +44,7 @@
                 <Spinner
                     android:id="@+id/spinnerShowCreateFoodUnit"
                     android:layout_width="fill_parent"
-                    android:layout_height="wrap_content" />
+                    android:layout_height="fill_parent" />
             </TableRow>
 
             <TableRow
@@ -114,9 +118,12 @@
             </TableRow>
         </TableLayout>
 
-        <Button
-            android:id="@+id/buttonAdd"
-            style="@style/buttonAdd" />
+        <LinearLayout style="@style/linearLayoutForButtonAdd" >
+
+            <Button
+                android:id="@+id/buttonAdd"
+                style="@style/buttonAdd" />
+        </LinearLayout>
     </LinearLayout>
 
 </ScrollView>

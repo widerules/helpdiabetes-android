@@ -6,10 +6,10 @@
 
     <string-array name="settings_array">
         <item>Maaltijd tijden</item>
-        <item>Insuline ratio</item>
-        <item>Glucose unit</item>
-        <item>Volgorde hoeveelheden</item>
-        <item>Tekst grootte lijsten</item>
+        <item>Insuline-KH ratios</item>
+        <item>Bloedglucose eenheden</item>
+        <item>Voorkeur voedingswaarden</item>
+        <item>Lettertype</item>
     </string-array>
 
 </resources>

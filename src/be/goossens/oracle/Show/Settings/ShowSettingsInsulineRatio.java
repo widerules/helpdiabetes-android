@@ -1,10 +1,16 @@
 package be.goossens.oracle.Show.Settings;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import android.app.Activity;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.view.KeyEvent;
 import android.view.View;
+import android.view.View.OnClickListener;
+import android.view.View.OnKeyListener;
+import android.widget.Button;
 import android.widget.EditText;
 import be.goossens.oracle.R;
 import be.goossens.oracle.ActivityGroup.ActivityGroupSettings;
@@ -16,6 +22,11 @@ public class ShowSettingsInsulineRatio extends Activity {
 			insulineRatioSnack, insulineRatioDinner;
 	private boolean firstKeyPressBreakfast, firstKeyPressLunch,
 			firstKeyPressSnack, firstKeyPressDinner;
+	private Button btUpdate;
+
+	// create a edittext list to run true the array and set a onkey listener on
+	// every edittext
+	private List<EditText> listEditTexts;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -23,46 +34,101 @@ public class ShowSettingsInsulineRatio extends Activity {
 		setContentView(R.layout.show_settings_insuline_ratio);
 		dbHelper = new DbAdapter(this);
 		dbHelper.open();
+
 		insulineRatioBreakfast = (EditText) findViewById(R.id.editTextShowPreferencesBreakfastRatio);
 		insulineRatioLunch = (EditText) findViewById(R.id.editTextShowPreferencesLunchRatio);
 		insulineRatioSnack = (EditText) findViewById(R.id.editTextShowPreferencesSnackRatio);
 		insulineRatioDinner = (EditText) findViewById(R.id.editTextShowPreferencesDinnerRatio);
+
+		btUpdate = (Button) findViewById(R.id.buttonUpdate);
 
 		firstKeyPressBreakfast = true;
 		firstKeyPressLunch = true;
 		firstKeyPressSnack = true;
 		firstKeyPressDinner = true;
 
+		// create a edittext list and add al edittexts to it
+		listEditTexts = new ArrayList<EditText>();
+		listEditTexts.add(insulineRatioBreakfast);
+		listEditTexts.add(insulineRatioLunch);
+		listEditTexts.add(insulineRatioSnack);
+		listEditTexts.add(insulineRatioDinner);
+
+		btUpdate.setOnClickListener(new OnClickListener() {
+			public void onClick(View v) {
+				onClickUpdate(v);
+			}
+		});
+
+		// create for every edittext in the list a onkeylistener
+		for (int i = 0; i < listEditTexts.size(); i++) {
+			listEditTexts.get(i).setOnKeyListener(new OnKeyListener() {
+
+				public boolean onKey(View v, int keyCode, KeyEvent event) {
+					// filter so we only get the onkey up actions
+					if (event.getAction() != KeyEvent.ACTION_DOWN) {
+						// if the pressed key = enter we go to the next
+						if (event.getKeyCode() == KeyEvent.KEYCODE_ENTER) {
+							goToNextEditText();
+						}
+					}
+					// if we dont return false our numbers wont get in the
+					// edittext
+					return false;
+				}
+			});
+		}
+
 		fillData();
 	}
 
+	public void goToNextEditText() {
+		// change focus to next
+		// but do size-1 so we dont try to change from edittext so one outside
+		// the list that doesnt exists
+		for (int i = 0; i < listEditTexts.size() - 1; i++) {
+			if (this.getCurrentFocus() == listEditTexts.get(i)) {
+				// set focus
+				listEditTexts.get(i + 1).requestFocus();
+				// stop this method
+				return;
+			}
+		}
+		//if we get here we clicked enter on the last edit text
+		// if we do that we trigger the onclick Update button
+		onClickUpdate(null);
+	}
+ 
 	@Override
 	public boolean dispatchKeyEvent(KeyEvent event) {
-		if(insulineRatioBreakfast.isFocused()){
-			if(firstKeyPressBreakfast){
-				firstKeyPressBreakfast = false;
-				insulineRatioBreakfast.setText("");
+		//only check if we need to clear the box if we didnt press the enter button
+		//becaus enter button will go to the next edittext
+		if (event.getKeyCode() != KeyEvent.KEYCODE_ENTER) {
+			if (insulineRatioBreakfast.isFocused()) {
+				if (firstKeyPressBreakfast) {
+					firstKeyPressBreakfast = false;
+					insulineRatioBreakfast.setText("");
+				}
+			} else if (insulineRatioLunch.isFocused()) {
+				if (firstKeyPressLunch) {
+					firstKeyPressLunch = false;
+					insulineRatioLunch.setText("");
+				}
+			} else if (insulineRatioDinner.isFocused()) {
+				if (firstKeyPressDinner) {
+					firstKeyPressDinner = false;
+					insulineRatioDinner.setText("");
+				}
+			} else if (insulineRatioSnack.isFocused()) {
+				if (firstKeyPressSnack) {
+					firstKeyPressSnack = false;
+					insulineRatioSnack.setText("");
+				}
 			}
-		} else if(insulineRatioLunch.isFocused()){
-			if(firstKeyPressLunch){
-				firstKeyPressLunch = false;
-				insulineRatioLunch.setText("");
-			}
-		} else if(insulineRatioDinner.isFocused()){
-			if(firstKeyPressDinner){
-				firstKeyPressDinner = false;
-				insulineRatioDinner.setText("");
-			}
-		} else if(insulineRatioSnack.isFocused()){
-			if(firstKeyPressSnack){
-				firstKeyPressSnack = false;
-				insulineRatioSnack.setText("");
-			} 
 		}
-		
 		return super.dispatchKeyEvent(event);
 	}
-	
+
 	public void fillData() {
 
 		float breakfastRatio = 0;
@@ -152,20 +218,22 @@ public class ShowSettingsInsulineRatio extends Activity {
 		snackRatio = Math.round(snackRatio * p) / p;
 		dinnerRatio = Math.round(dinnerRatio * p) / p;
 
-		//make sure dbHelper is open
-		dbHelper.open(); 
-		
+		// make sure dbHelper is open
+		dbHelper.open();
+
 		dbHelper.updateSettingsByName(
-				getResources().getString(R.string.setting_insuline_ratio_breakfast), ""
+				getResources().getString(
+						R.string.setting_insuline_ratio_breakfast), ""
 						+ breakfastRatio);
 		dbHelper.updateSettingsByName(
-				getResources().getString(R.string.setting_insuline_ratio_lunch), ""
-						+ lunchRatio);
+				getResources().getString(R.string.setting_insuline_ratio_lunch),
+				"" + lunchRatio);
 		dbHelper.updateSettingsByName(
-				getResources().getString(R.string.setting_insuline_ratio_snack), ""
-						+ snackRatio);
+				getResources().getString(R.string.setting_insuline_ratio_snack),
+				"" + snackRatio);
 		dbHelper.updateSettingsByName(
-				getResources().getString(R.string.setting_insuline_ratio_dinner), ""
+				getResources()
+						.getString(R.string.setting_insuline_ratio_dinner), ""
 						+ dinnerRatio);
 
 		// go back

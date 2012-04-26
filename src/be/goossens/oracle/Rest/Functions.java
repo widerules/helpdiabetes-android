@@ -5,6 +5,7 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
+import android.content.Context;
 import be.goossens.oracle.slider.TimeLabeler;
 
 /*
@@ -13,16 +14,28 @@ import be.goossens.oracle.slider.TimeLabeler;
 
 public class Functions {
 
-	public float roundFloats(float input,int numbersBehind){
-		float p = (float) Math.pow(10, numbersBehind);
-		return Math.round(input * p) / p;
+	//This function will get a string as input and transrom that string to xxxx... if its longer then 6
+	public String getShorterString(String input){
+		if(input.length() > 6)
+			return input.substring(0, 4) + "...";
+		else return
+				input;
 	}
 	
 	
 	/*
-	 * Time & Date functions
-	 * */
+	 * Round function
+	 */
 	
+	public float roundFloats(float input, int numbersBehind) {
+		float p = (float) Math.pow(10, numbersBehind);
+		return Math.round(input * p) / p;
+	}
+
+	/*
+	 * Time & Date functions
+	 */
+
 	public int getHour(Calendar calendar) {
 		return Integer.parseInt(String.format("%tH", calendar));
 	}

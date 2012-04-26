@@ -691,17 +691,20 @@ public class DbAdapter extends SQLiteOpenHelper {
 		return mDb.query(DATABASE_FOOD_TABLE, new String[] { DATABASE_FOOD_ID,
 				DATABASE_FOOD_NAME, DATABASE_FOOD_ISFAVORITE,
 				DATABASE_FOOD_VISIBLE, DATABASE_FOOD_PLATFORM,
-				DATABASE_FOOD_FOODLANGUAGEID }, DATABASE_FOOD_FOODLANGUAGEID
-				+ "=" + languageID + " and " + DATABASE_FOOD_VISIBLE + " = 1",
-				null, DATABASE_FOOD_NAME, null, null);
+				DATABASE_FOOD_FOODLANGUAGEID, DATABASE_FOOD_CATEGORYID,
+				DATABASE_FOOD_USERID }, DATABASE_FOOD_FOODLANGUAGEID + "="
+				+ languageID + " and " + DATABASE_FOOD_VISIBLE + " = 1", null,
+				DATABASE_FOOD_NAME, null, null);
 	}
-
+ 
 	// get a food by id
 	public Cursor fetchFood(Long id) throws SQLException {
 		Cursor mCursor = mDb.query(true, DATABASE_FOOD_TABLE, new String[] {
 				DATABASE_FOOD_ID, DATABASE_FOOD_NAME, DATABASE_FOOD_ISFAVORITE,
-				DATABASE_FOOD_VISIBLE, DATABASE_FOOD_PLATFORM },
-				DATABASE_FOOD_ID + "=" + id, null, null, null, null, null);
+				DATABASE_FOOD_VISIBLE, DATABASE_FOOD_PLATFORM,
+				DATABASE_FOOD_FOODLANGUAGEID, DATABASE_FOOD_CATEGORYID,
+				DATABASE_FOOD_USERID }, DATABASE_FOOD_ID + "=" + id, null,
+				null, null, null, null);
 		if (mCursor != null) {
 			mCursor.moveToFirst();
 		}

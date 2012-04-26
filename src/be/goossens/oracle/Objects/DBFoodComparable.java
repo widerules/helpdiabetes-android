@@ -1,17 +1,17 @@
 package be.goossens.oracle.Objects;
 
 public class DBFoodComparable {
-	private int id;
+	private long id;
 	private String platform;
-	private int languageid;
+	private long languageid;
 	private int visible;
-	private int categoryid;
-	private int userid;
+	private long categoryid;
+	private long userid;
 	private int isfavorite;
 	private String name;
 	
-	public DBFoodComparable(int id, String platform, int languageid, int visible,
-			int categoryid, int userid, int isfavorite, String name) {
+	public DBFoodComparable(long id, String platform, long languageid, int visible,
+			long categoryid, long userid, int isfavorite, String name) {
 		super();
 		this.id = id;
 		this.platform = platform;
@@ -35,11 +35,11 @@ public class DBFoodComparable {
 		this.name = newFood.getName();
 	}
 
-	public int getId() {
+	public long getId() {
 		return id;
 	}
 
-	public void setId(int id) {
+	public void setId(long id) {
 		this.id = id;
 	}
 
@@ -51,11 +51,11 @@ public class DBFoodComparable {
 		this.platform = platform;
 	}
 
-	public int getLanguageid() {
+	public long getLanguageid() {
 		return languageid;
 	}
 
-	public void setLanguageid(int languageid) {
+	public void setLanguageid(long languageid) {
 		this.languageid = languageid;
 	}
 
@@ -67,19 +67,19 @@ public class DBFoodComparable {
 		this.visible = visible;
 	}
 
-	public int getCategoryid() {
+	public long getCategoryid() {
 		return categoryid;
 	}
 
-	public void setCategoryid(int categoryid) {
+	public void setCategoryid(long categoryid) {
 		this.categoryid = categoryid;
 	}
 
-	public int getUserid() {
+	public long getUserid() {
 		return userid;
 	}
 
-	public void setUserid(int userid) {
+	public void setUserid(long userid) {
 		this.userid = userid;
 	}
 

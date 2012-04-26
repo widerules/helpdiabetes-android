@@ -78,7 +78,7 @@ public class ActivityGroupTracking extends ActivityGroup {
 				// call the super.setContent view! so set the real view
 				super.setContentView(history.get(history.size() - 1));
 			} else {
-				
+
 			}
 		} catch (Exception e) {
 			if (history.size() >= 0)
@@ -105,6 +105,12 @@ public class ActivityGroupTracking extends ActivityGroup {
 
 	@Override
 	public void finish() {
-		
+
+	}
+
+	// this method will kill the application
+	public void killApplication() {
+		// finish the tab activity so everything will close
+		this.getParent().finish();
 	}
 }

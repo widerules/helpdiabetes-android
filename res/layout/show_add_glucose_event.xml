@@ -7,22 +7,56 @@
         android:id="@+id/linearLayout1"
         style="@style/linearLayoutVerticalWithPadding" >
 
+        <TextView
+            style="@style/defaultFontTitle"
+            android:text="@string/titelAddGlucose" />
+
         <Button
             android:id="@+id/buttonUpdateDateAndHour"
+            style="@style/defaultFontNormal"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:text="@string/update" />
 
-        <be.goossens.oracle.numberPicker.NumberPicker
-            android:id="@+id/NumberPicker"
+        <Button
+            android:id="@+id/increment"
+            style="@style/defaultFontNormal"
             android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
-            android:orientation="vertical" >
-        </be.goossens.oracle.numberPicker.NumberPicker>
+            android:layout_height="wrap_content" />
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center" > 
+
+            <EditText
+                android:id="@+id/editTextAmount"
+                style="@style/styleEditText"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1.0"
+                android:gravity="center" />
+
+            <TextView
+                android:id="@+id/textViewUnit"
+                style="@style/defaultFontNormal"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+        </LinearLayout>
 
         <Button
-            android:id="@+id/buttonAdd"
-            style="@style/buttonAdd" />
+            android:id="@+id/decrement"
+            style="@style/defaultFontNormal"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/btdown" />
+
+        <LinearLayout style="@style/linearLayoutForButtonAdd" >
+
+            <Button
+                android:id="@+id/buttonAdd"
+                style="@style/buttonAdd" />
+        </LinearLayout>
     </LinearLayout>
 
 </ScrollView>

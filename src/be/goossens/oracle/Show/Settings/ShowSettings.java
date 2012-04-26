@@ -3,7 +3,9 @@ package be.goossens.oracle.Show.Settings;
 import java.util.ArrayList;
 import java.util.List;
 
+import android.app.AlertDialog;
 import android.app.ListActivity;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.KeyEvent;
@@ -11,6 +13,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ListView;
 import be.goossens.oracle.R;
+import be.goossens.oracle.ActivityGroup.ActivityGroupMeal;
 import be.goossens.oracle.ActivityGroup.ActivityGroupSettings;
 import be.goossens.oracle.Custom.CustomArrayAdapterCharSequenceSettings;
 
@@ -81,12 +84,39 @@ public class ShowSettings extends ListActivity {
 
 	}
 
+	// if we press the back button on this activity we have to show a popup to
+	// exit
 	@Override
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
 		if (event.getKeyCode() == KeyEvent.KEYCODE_BACK) {
-			return false;
-		}
-		return super.onKeyDown(keyCode, event);
+			showPopUpToExitApplication();
+			// when we return true here we wont call the onkeydown from
+			// activitygroupmeal
+			return true;
+		} else
+			return super.onKeyDown(keyCode, event);
+	}
+
+	private void showPopUpToExitApplication() {
+		DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
+
+			public void onClick(DialogInterface dialog, int which) {
+				switch (which) {
+				case DialogInterface.BUTTON_POSITIVE:
+					// exit application on click button positive
+					ActivityGroupSettings.group.killApplication();
+					break;
+				}
+			}
+		};
+
+		AlertDialog.Builder builder = new AlertDialog.Builder(
+				ActivityGroupSettings.group);
+		builder.setMessage(getResources().getString(R.string.sureToExit))
+				.setPositiveButton(getResources().getString(R.string.yes),
+						dialogClickListener)
+				.setNegativeButton(getResources().getString(R.string.no),
+						dialogClickListener).show();
 	}
 
 }

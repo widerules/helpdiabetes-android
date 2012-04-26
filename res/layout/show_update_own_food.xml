@@ -1,13 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
-    android:orientation="vertical" >
+    style="@style/linearLayoutVerticalWithPadding" >
 
-      <TextView
-        android:id="@+id/textView99"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content" />
+    <TextView
+            style="@style/defaultFontTitle"
+            android:text="@string/titelUpdateFood" />
     
     <LinearLayout
         android:id="@+id/linearLayout1"
@@ -19,14 +16,14 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/food_name"
-            android:textColor="@color/ColorText" />
+			style="@style/defaultFontNormal" />
 
         <EditText
             android:id="@+id/editTextShowUpdateOwnFoodFoodName"
-            android:layout_width="0dip"
+            android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="1" >
-        </EditText>
+            style="@style/styleEditText"
+            android:inputType="text" /> 
     </LinearLayout>
 
     <Button
@@ -35,26 +32,28 @@
         android:layout_height="wrap_content"
         android:drawableLeft="@android:drawable/ic_input_add"
         android:gravity="left|center_vertical"
-        android:text="@string/add_unit" />
+        android:text="@string/add_unit"
+        style="@style/defaultFontNormal" />
 
     <TextView
         android:id="@+id/textView2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/units"
-        android:textColor="@color/ColorText" />
+        style="@style/defaultFontNormal" />
 
     <ListView
         android:id="@+android:id/list"
-        android:layout_width="fill_parent"
+        android:layout_width="fill_parent" 
         android:layout_height="wrap_content"
-        android:layout_weight="1.0" >
-    </ListView>
+        android:layout_weight="1.0"
+        android:cacheColorHint="#00000000" />
 
     <Button
         android:id="@+id/buttonDelete"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/delete" />
+        android:text="@string/delete"
+        style="@style/defaultFontNormal" />
 
 </LinearLayout>

@@ -1,43 +1,48 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="fill_parent"
-    android:layout_height="fill_parent" >
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    style="@style/linearLayoutVerticalWithPadding" >
 
-    <LinearLayout
-        style="@style/linearLayoutVerticalWithPadding" >
+    <TextView
+        style="@style/defaultFontTitle"
+        android:text="@string/titelAddExercise" />
 
-        <Button
-            android:id="@+id/buttonUpdateDateAndHour"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/update" />
+    <Button
+        android:id="@+id/buttonUpdateDateAndHour"
+        style="@style/defaultFontNormal"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/update" />
 
-        <Spinner
-            android:id="@+id/spinnerDuration"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content" />
+    <Spinner
+        android:id="@+id/spinnerDuration"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content" />
 
-        <Spinner
-            android:id="@+id/spinnerSportType"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content" />
+    <Spinner 
+        android:id="@+id/spinnerSportType"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content" />
 
-        <EditText
-            android:id="@+id/editText1"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:inputType="text"
-            android:hint="@string/description" />
+    <EditText
+        android:id="@+id/editText1"
+        style="@style/styleEditText"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:hint="@string/description"
+        android:inputType="text" />
+
+    <LinearLayout style="@style/linearLayoutForButtonAdd" >
 
         <Button
             android:id="@+id/buttonAdd"
             style="@style/buttonAdd" />
-
-        <Button
-            android:id="@+id/buttonDelete"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/delete" />
     </LinearLayout>
 
-</ScrollView>
+    <Button
+        android:id="@+id/buttonDelete"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:text="@string/delete" />
+
+</LinearLayout>

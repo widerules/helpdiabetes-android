@@ -12,7 +12,7 @@
     <TextView
         android:id="@+id/row_food_text"
         style="@style/listViewItemOne" />
-
+ 
     <TextView
         android:id="@+id/text2"
         style="@style/listViewItemArrow" />

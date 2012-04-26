@@ -16,12 +16,14 @@ public class CustomArrayAdapterFoodLanguage extends
 
 	private Context ctx;
 	private List<DBFoodLanguage> items;
-
+	private int fontSize;
+	
 	public CustomArrayAdapterFoodLanguage(Context context,
 			int textViewResourceId, List<DBFoodLanguage> objects) {
 		super(context, textViewResourceId, objects);
 		this.ctx = context;
 		this.items = objects;
+		fontSize = 25;
 	}
 
 	@Override
@@ -39,6 +41,9 @@ public class CustomArrayAdapterFoodLanguage extends
 
 		tt.setText(items.get(position).getLanguage());
 
+		tt.setTextSize(fontSize);
+		ttTwo.setTextSize(fontSize);
+		
 		if (position % 2 == 0) {
 			tt.setBackgroundColor(ctx.getResources().getColor(
 					R.color.ColorListViewOne));

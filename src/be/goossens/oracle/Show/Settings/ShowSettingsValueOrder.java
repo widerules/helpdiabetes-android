@@ -9,6 +9,8 @@ import android.database.Cursor;
 import android.os.Bundle;
 import android.view.KeyEvent;
 import android.view.View;
+import android.view.View.OnClickListener;
+import android.widget.Button;
 import android.widget.RadioButton;
 import be.goossens.oracle.R;
 import be.goossens.oracle.Objects.DBValueOrder;
@@ -20,6 +22,8 @@ public class ShowSettingsValueOrder extends Activity {
 
 	private List<RadioButton> listRadioButtons;
 	private List<DBValueOrder> listValueOrders;
+
+	private Button btUp, btDown;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -34,6 +38,24 @@ public class ShowSettingsValueOrder extends Activity {
 		listRadioButtons.add((RadioButton) findViewById(R.id.radio2));
 		listRadioButtons.add((RadioButton) findViewById(R.id.radio3));
 		listRadioButtons.get(0).setSelected(true);
+
+		btUp = (Button) findViewById(R.id.buttonUp);
+		btDown = (Button) findViewById(R.id.buttonDown);
+
+		btUp.setOnClickListener(new OnClickListener() {
+
+			public void onClick(View v) {
+				onClickUp(v);
+			}
+		});
+
+		btDown.setOnClickListener(new OnClickListener() {
+
+			public void onClick(View v) {
+				onClickDown(v);
+			}
+		});
+
 	}
 
 	@Override

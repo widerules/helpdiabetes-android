@@ -10,12 +10,17 @@ import java.util.Collections;
 import java.util.List;
 
 import android.app.Activity;
+import android.content.Context;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.View.OnKeyListener;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.Button;
@@ -23,12 +28,13 @@ import android.widget.EditText;
 import android.widget.SimpleCursorAdapter;
 import android.widget.Spinner;
 import android.widget.TextView;
-import android.widget.Toast;
 import be.goossens.oracle.R;
 import be.goossens.oracle.ActivityGroup.ActivityGroupMeal;
+import be.goossens.oracle.Custom.CustomSimpleCursorAdapterAddFoodToSelectionSpinner;
 import be.goossens.oracle.Objects.DBValueOrder;
 import be.goossens.oracle.Rest.DataParser;
 import be.goossens.oracle.Rest.DbAdapter;
+import be.goossens.oracle.Rest.Functions;
 import be.goossens.oracle.Rest.ValueOrderComparator;
 
 public class ShowAddFoodToSelection extends Activity {
@@ -45,35 +51,31 @@ public class ShowAddFoodToSelection extends Activity {
 
 	// To store the selected food in
 	private Cursor foodCursor;
-	private SimpleCursorAdapter adapter;
+	private CustomSimpleCursorAdapterAddFoodToSelectionSpinner adapter;
 
 	// this boolean is needed to not set "" or standardamount in the
 	// editTextFoodAmound on start if we come from showSelectedFood
 	private boolean setStandardAmount;
-
-	// this boolean is needed to check it the user presses the first time on a
-	// key in the amount field.
-	// if so we first delete whats in the amount feel ( this way the user dont
-	// have to delete it iself )
-	private boolean firstKeyPress;
 
 	private List<DBValueOrder> listValueOrders;
 	private List<TextView> listTextViewColumnOne;
 	private List<TextView> listTextViewColumnTwo;
 	private List<TextView> listTextViewColumnThree;
 
+	private Functions functions;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
 		View contentView = LayoutInflater.from(getParent()).inflate(
-				R.layout.show_add_food, null);
+				R.layout.show_add_food_to_selection, null);
 		setContentView(contentView);
 
 		dbHelper = new DbAdapter(this);
+		functions = new Functions();
 
 		setStandardAmount = true;
-		firstKeyPress = true;
 
 		listTextViewColumnOne = new ArrayList<TextView>();
 		listTextViewColumnTwo = new ArrayList<TextView>();
@@ -125,28 +127,6 @@ public class ShowAddFoodToSelection extends Activity {
 		// Hide the button to delete the food from selectedFood
 		buttonDeleteSelectedFood.setVisibility(View.GONE);
 
-		// update the textViews when the spinner selected item changes
-		spinnerFoodUnits
-				.setOnItemSelectedListener(new OnItemSelectedListener() {
-					public void onItemSelected(AdapterView<?> arg0, View arg1,
-							int arg2, long arg3) {
-						if (setStandardAmount) {
-							checkStandardAmound();
-							fillTextViewSelectedFood();
-							fillTextViewCalculated();
-							firstKeyPress = true;
-						}
-
-						// switch standardamount if its false
-						if (!setStandardAmount)
-							setStandardAmount = true;
-					}
-
-					public void onNothingSelected(AdapterView<?> arg0) {
-
-					}
-				});
-
 		// set on click listener for buttonAddOrUpdate
 		buttonAddOrUpdate.setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
@@ -159,27 +139,96 @@ public class ShowAddFoodToSelection extends Activity {
 				onClickDeleteFoodFromSelection(v);
 			}
 		});
+
+		// add a edittext handler afther we did the on resume
+		// otherwise the boolean firstKey will already be changed
+		editTextFoodAmound.addTextChangedListener(new TextWatcher() {
+			public void onTextChanged(CharSequence s, int start, int before,
+					int count) {
+			}
+
+			public void beforeTextChanged(CharSequence s, int start, int count,
+					int after) {
+			}
+
+			public void afterTextChanged(Editable s) {
+				// fill the table with the right value
+				fillTextViewCalculated();
+			}
+		});
+
+		editTextFoodAmound.setOnKeyListener(new OnKeyListener() {
+			public boolean onKey(View v, int keyCode, KeyEvent event) {
+				// filter so we only get the onkey up actions
+				if (event.getAction() != KeyEvent.ACTION_DOWN) {
+					// if the pressed key = enter we save the food to selection
+					if (event.getKeyCode() == KeyEvent.KEYCODE_ENTER) {
+						onClickButtonAddFood(null);
+					}
+				}
+				// if we dont return false our numbers wont get in the edittext
+				return false;
+			}
+		});
 	}
 
-	// This will handle the editTextFoodAmunt
-	// we cant handle this text with a editText.setOnTextListener becaus then we
-	// would create a infinity loop with
-	// editTextFoodAmound.setText("");
-	@Override
-	public boolean dispatchKeyEvent(KeyEvent event) {
-		//if we press on the keyboard && not on the back button!
-		if (event.getKeyCode() != KeyEvent.KEYCODE_BACK) {
-			//if its the first time we press on the keyboard
-			if (firstKeyPress) {
-				//clear the text in the editText
-				firstKeyPress = false;
-				editTextFoodAmound.setText("");
-			}
-		}
- 
-		onKeyPress();
+	// This method will give focus on the edit text and set the cursor on the
+	// end of the text
+	// This method is called afther the spinner changes from unit
+	private void setFocusOnEditText() {
+		editTextFoodAmound.requestFocus();
+		editTextFoodAmound.setSelection(editTextFoodAmound.getText().length());
+		showKeyboard();
+	}
 
-		return super.dispatchKeyEvent(event);
+	// This method is called when we get a focus on edittext
+	// This method will show the keyboard
+	private void showKeyboard() {
+		InputMethodManager inputManager = (InputMethodManager) this
+				.getSystemService(Context.INPUT_METHOD_SERVICE);
+
+		inputManager.showSoftInput(editTextFoodAmound,
+				InputMethodManager.SHOW_FORCED);
+	}
+
+	/*
+	 * // This will handle the editTextFoodAmunt // we cant handle this text
+	 * with a editText.setOnTextListener becaus then we // would create a
+	 * infinity loop with // editTextFoodAmound.setText("");
+	 * 
+	 * @Override public boolean dispatchKeyEvent(KeyEvent event) { // if we
+	 * press on the keyboard && not on the back button! if (event.getKeyCode()
+	 * != KeyEvent.KEYCODE_BACK && event.getKeyCode() != KeyEvent.KEYCODE_DEL &&
+	 * firstKeyPress) { // clear the text in the editText
+	 * editTextFoodAmound.setText(""); }
+	 * 
+	 * // First time we press a key if (firstKeyPress) { firstKeyPress = false;
+	 * }
+	 * 
+	 * // if we press the delete button we dont have to check the amount if
+	 * (event.getKeyCode() == KeyEvent.KEYCODE_DEL) { fillTextViewCalculated();
+	 * return super.dispatchKeyEvent(event); }
+	 * 
+	 * // if the value > 99999 we return false if (getInsertedAmund() > 999) {
+	 * Toast.makeText( this, getResources().getString(
+	 * R.string.value_cant_be_more_then_ninety_nine),
+	 * Toast.LENGTH_SHORT).show(); fillTextViewCalculated(); return false; }
+	 * else { // fill textview and return true fillTextViewCalculated(); return
+	 * super.dispatchKeyEvent(event); } }
+	 */
+
+	private float getInsertedAmund() {
+		float returnValue = 0f;
+
+		try {
+			returnValue = Float.parseFloat(editTextFoodAmound.getText()
+					.toString());
+			returnValue = functions.roundFloats(returnValue, 1);
+		} catch (Exception e) {
+			returnValue = 0f;
+		}
+
+		return returnValue;
 	}
 
 	@Override
@@ -249,7 +298,7 @@ public class ShowAddFoodToSelection extends Activity {
 
 			// we have to see if we have a "gram" value , if yes we have to set
 			// the gram as default
-
+			setSelectedItemOnSpinnerToGram();
 		}
 
 		// if we only have 1 item , we have to hide the spinner and show a
@@ -260,13 +309,45 @@ public class ShowAddFoodToSelection extends Activity {
 			spinnerFoodUnits.setVisibility(View.GONE);
 			tvOneItemInSpinner.setVisibility(View.VISIBLE);
 			cFoodUnit.moveToFirst();
-			tvOneItemInSpinner.setText(cFoodUnit.getString(cFoodUnit
-					.getColumnIndexOrThrow(DbAdapter.DATABASE_FOODUNIT_NAME)));
+			tvOneItemInSpinner
+					.setText(functions.getShorterString(cFoodUnit.getString(cFoodUnit
+							.getColumnIndexOrThrow(DbAdapter.DATABASE_FOODUNIT_NAME))));
 		}
 		cFoodUnit.close();
 
 		fillTextViewSelectedFood();
 		fillTextViewCalculated();
+
+		// hide the keyboard
+		InputMethodManager mgr = (InputMethodManager) this
+				.getSystemService(Context.INPUT_METHOD_SERVICE);
+		mgr.hideSoftInputFromWindow(editTextFoodAmound.getWindowToken(), 0);
+
+		// set the spinner on item selected listener after we did all the
+		// creation stuff
+		// otherwise this will be triggered and show keyboard
+		
+		// update the textViews when the spinner selected item changes
+		spinnerFoodUnits
+				.setOnItemSelectedListener(new OnItemSelectedListener() {
+					public void onItemSelected(AdapterView<?> arg0, View arg1,
+							int arg2, long arg3) {
+						if (setStandardAmount) {
+							checkStandardAmound();
+							fillTextViewSelectedFood();
+							fillTextViewCalculated();
+							setFocusOnEditText();
+						}
+
+						// switch standardamount if its false
+						if (!setStandardAmount)
+							setStandardAmount = true;
+					}
+
+					public void onNothingSelected(AdapterView<?> arg0) {
+
+					}
+				});
 	}
 
 	// When we click on the button delete
@@ -278,49 +359,11 @@ public class ShowAddFoodToSelection extends Activity {
 		// try to refresh the foodlist on the selectedFood page
 		ActivityGroupMeal.group.refreshShowSelectedFood(2);
 
-		// update the button from showFoodList
-		ActivityGroupMeal.group
-				.showFoodListsetCountSelectedFood((ActivityGroupMeal.group
-						.showFoodListGetCountSelectedFood() - 1));
+		// do the selectedFoodCounter--
+		ActivityGroupMeal.group.getFoodData().countSelectedFood--;
 
+		// go back
 		ActivityGroupMeal.group.back();
-	}
-
-	/*
-	 * This function will always be executed when a user changes the value of
-	 * the amound
-	 */
-	private void onKeyPress() {
-		// check if the user try's to add more then 999 as value
-		// this is becaus if we try to add 999999 the application crash!
-		int insertedAmound;
-
-		try {
-			insertedAmound = Integer.parseInt(editTextFoodAmound.getText()
-					.toString());
-		} catch (Exception e) {
-			insertedAmound = 0;
-		}
-
-		if (insertedAmound > 999) {
-			Toast.makeText(
-					this,
-					getResources().getString(
-							R.string.value_cant_be_more_then_ninety_nine),
-					Toast.LENGTH_SHORT).show();
-			editTextFoodAmound.setText(editTextFoodAmound.getText()
-					.subSequence(1, editTextFoodAmound.getText().length()));
-		} else if (editTextFoodAmound.getText().toString().length() > 5) {
-			Toast.makeText(
-					this,
-					getResources().getString(
-							R.string.cant_add_more_then_five_digits),
-					Toast.LENGTH_SHORT).show();
-			editTextFoodAmound.setText(editTextFoodAmound.getText()
-					.subSequence(1, editTextFoodAmound.getText().length()));
-		} else {
-			fillTextViewCalculated();
-		}
 	}
 
 	/*
@@ -344,6 +387,30 @@ public class ShowAddFoodToSelection extends Activity {
 			}
 		}
 		cUnit.close();
+	}
+
+	private void setSelectedItemOnSpinnerToGram() {
+		dbHelper.open();
+		Cursor cUnits = dbHelper.fetchFoodUnitByFoodId(getIntent().getExtras()
+				.getLong(DataParser.idFood));
+
+		if (cUnits.getCount() > 0) {
+			cUnits.moveToFirst();
+			do {
+				if (cUnits
+						.getString(
+								cUnits.getColumnIndexOrThrow(DbAdapter.DATABASE_FOODUNIT_NAME))
+						.equals(getResources().getString(R.string.gram))) {
+					try {
+						spinnerFoodUnits.setSelection(cUnits.getPosition());
+						cUnits.moveToLast();
+					} catch (Exception e) {
+					}
+				}
+			} while (cUnits.moveToNext());
+		}
+
+		cUnits.close();
 	}
 
 	private void setSelectedFoodUnitItemInSpinnerSelected(int unitId) {
@@ -380,12 +447,8 @@ public class ShowAddFoodToSelection extends Activity {
 	private void fillTextViewCalculated() {
 		dbHelper.open();
 		// First get the amount inserted
-		float amount = 0f;
-		try {
-			amount = Float.parseFloat(editTextFoodAmound.getText().toString());
-		} catch (Exception e) {
-			amount = 0f;
-		}
+		float amount = getInsertedAmund();
+
 		// calculate al the standard fields
 		float calcCarbs = 0f;
 		float calcKcal = 0f;
@@ -424,31 +487,28 @@ public class ShowAddFoodToSelection extends Activity {
 			}
 
 			// Round the calculated floats
-			float p = (float) Math.pow(10, 2);
-			calcCarbs = Math.round(calcCarbs * p) / p;
-			calcKcal = Math.round(calcKcal * p) / p;
-			calcFat = Math.round(calcFat * p) / p;
-			calcProtein = Math.round(calcProtein * p) / p;
+			calcCarbs = functions.roundFloats(calcCarbs, 1);
+			calcKcal = functions.roundFloats(calcKcal, 1);
+			calcFat = functions.roundFloats(calcFat, 1);
+			calcProtein = functions.roundFloats(calcProtein, 1);
 
 			// Fill the table with the data
 			// 1. Fill column 2 with the standard stuff
 			String unitName = cUnit.getString(cUnit
 					.getColumnIndexOrThrow(DbAdapter.DATABASE_FOODUNIT_NAME));
 
-			// if the text is to long we have to substring the text and add
-			// "..." to it.
-			// otherwise our last column wont be shown on the screen!
-			if (unitName.length() > 10) {
-				unitName = unitName.substring(0, 8) + "...";
-			}
+			// make the unitName shorter if its to long
+			unitName = functions.getShorterString(unitName);
 
 			// Fill the first row first field with unit name
 			textViewRowOneFieldOne.setText("");
-			
+
 			textViewRowOneFieldTwo
 					.setText(cUnit.getString(cUnit
-							.getColumnIndexOrThrow(DbAdapter.DATABASE_FOODUNIT_STANDARDAMOUNT)) + " " + unitName);
-			textViewRowOneFieldThree.setText("" + amount  + " " + unitName); 
+							.getColumnIndexOrThrow(DbAdapter.DATABASE_FOODUNIT_STANDARDAMOUNT))
+							+ " " + unitName);
+
+			textViewRowOneFieldThree.setText("" + amount + " " + unitName);
 
 			// fill the rest of the table
 			for (int i = 0; i < listValueOrders.size(); i++) {
@@ -466,6 +526,7 @@ public class ShowAddFoodToSelection extends Activity {
 							.setText(
 									cUnit.getString(cUnit
 											.getColumnIndexOrThrow(DbAdapter.DATABASE_FOODUNIT_CARBS)));
+
 					listTextViewColumnThree.get(i).setText("" + calcCarbs);
 				}
 
@@ -527,7 +588,8 @@ public class ShowAddFoodToSelection extends Activity {
 
 	private void fillData() {
 		dbHelper.open();
-		adapter = new SimpleCursorAdapter(this,
+
+		adapter = new CustomSimpleCursorAdapterAddFoodToSelectionSpinner(this,
 				android.R.layout.simple_spinner_item,
 				dbHelper.fetchFoodUnitByFoodId(getIntent().getExtras().getLong(
 						DataParser.idFood)),
@@ -548,14 +610,9 @@ public class ShowAddFoodToSelection extends Activity {
 
 		startManagingCursor(cSelectedFoodUnit);
 
-		float amount = 0f;
-		try {
-			// when the editTextFoodAmound = ""; this wil go to the catch
-			// part
-			amount = Float.parseFloat(editTextFoodAmound.getText().toString());
-		} catch (Exception e) {
-			amount = 0f;
-		}
+		float amount = getInsertedAmund();
+		// round the input to 1 decimal behind ,
+		amount = functions.roundFloats(amount, 1);
 
 		// check if we need to udpate or add new selectedFood
 		// if we come from showSelectedFood we have to update the selectedFood
@@ -569,7 +626,6 @@ public class ShowAddFoodToSelection extends Activity {
 							.getColumnIndexOrThrow(DbAdapter.DATABASE_FOODUNIT_ID)));
 			cSelectedFoodUnit.close();
 		} else {
-
 			// create a new selectedFood
 			dbHelper.createSelectedFood(
 					amount,
@@ -579,17 +635,11 @@ public class ShowAddFoodToSelection extends Activity {
 			cSelectedFoodUnit.close();
 		}
 
+		// set the boolean in activitygroup on true
+		ActivityGroupMeal.group.addedFoodItemToList = true;
+
+		// go back
 		ActivityGroupMeal.group.back();
-		// refresh the page show selected food
-		ActivityGroupMeal.group.refreshShowSelectedFood(1);
-		// update the button from the showfoodlist
-		int countSelectedFood = ActivityGroupMeal.group
-				.showFoodListGetCountSelectedFood();
-		if (countSelectedFood != -1) {
-			countSelectedFood++;
-			ActivityGroupMeal.group
-					.showFoodListsetCountSelectedFood(countSelectedFood);
-		}
 	}
 
 	@Override
@@ -643,7 +693,7 @@ public class ShowAddFoodToSelection extends Activity {
 										.getColumnIndexOrThrow(DbAdapter.DATABASE_SETTINGS_VALUE)),
 						cSettingValueOrderCarb.getString(cSettingValueOrderCarb
 								.getColumnIndexOrThrow(DbAdapter.DATABASE_SETTINGS_NAME)),
-						getResources().getString(R.string.amound_of_carbs)));
+						getResources().getString(R.string.short_carbs)));
 
 		listValueOrders
 				.add(new DBValueOrder(
@@ -661,7 +711,7 @@ public class ShowAddFoodToSelection extends Activity {
 										.getColumnIndexOrThrow(DbAdapter.DATABASE_SETTINGS_VALUE)),
 						cSettingValueOrderKcal.getString(cSettingValueOrderKcal
 								.getColumnIndexOrThrow(DbAdapter.DATABASE_SETTINGS_NAME)),
-						getResources().getString(R.string.amound_of_kcal)));
+						getResources().getString(R.string.short_kcal)));
 
 		// Close all the cursor
 		cSettingValueOrderProt.close();
@@ -676,6 +726,12 @@ public class ShowAddFoodToSelection extends Activity {
 
 	@Override
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
-		return false;
+		// if we press the back key
+		if (event.getKeyCode() == KeyEvent.KEYCODE_BACK)
+			// return false so the keydown event from activitygroupmeal will get
+			// called
+			return false;
+		else
+			return super.onKeyDown(keyCode, event);
 	}
 }

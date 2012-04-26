@@ -5,16 +5,13 @@ import java.util.Collections;
 import java.util.List;
 
 import android.app.Activity;
-import android.content.Context;
 import android.database.Cursor;
-import android.graphics.Path.Direction;
 import android.os.Bundle;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.View.OnKeyListener;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.Button;
@@ -30,7 +27,6 @@ import be.goossens.oracle.Objects.DBValueOrder;
 import be.goossens.oracle.Rest.DataParser;
 import be.goossens.oracle.Rest.DbAdapter;
 import be.goossens.oracle.Rest.ValueOrderComparator;
-import be.goossens.oracle.Show.ShowHomeTab;
 
 public class ShowCreateFood extends Activity {
 	private EditText editTextfoodName;
@@ -97,6 +93,40 @@ public class ShowCreateFood extends Activity {
 				onClickAdd(v);
 			}
 		});
+
+		for (int i = 0; i < etList.size(); i++) {
+			etList.get(i).setOnKeyListener(new OnKeyListener() {
+
+				public boolean onKey(View v, int keyCode, KeyEvent event) {
+					// filter so we only get the onkey up actions
+					if (event.getAction() != KeyEvent.ACTION_DOWN) {
+						// if the pressed key = enter we go to the next
+						if (event.getKeyCode() == KeyEvent.KEYCODE_ENTER) {
+							goToNextEditText();
+						} 
+					}
+					//if we dont return false our numbers wont get in the edittext
+					return false;
+				}
+			});
+		}
+	}
+
+	public void goToNextEditText() {
+		// change focus to next
+		// but do size-1 so we dont try to change from edittext so one outside
+		// the list that doesnt exists
+		for (int i = 0; i < etList.size() - 1; i++) {
+			if (this.getCurrentFocus() == etList.get(i)) {
+				// set focus
+				etList.get(i + 1).requestFocus();
+				// stop this method
+				return;
+			}
+		}
+		// if we get here we clicked enter on the last edit text
+		// if we do that we create the food and go back to the list
+		onClickAdd(null);
 	}
 
 	// This method will show the special food unit table row when the last
@@ -117,9 +147,15 @@ public class ShowCreateFood extends Activity {
 	protected void onResume() {
 		super.onResume();
 		dbHelper.open();
+		fillTextViewFoodName();
 		fillListValueOrders();
 		fillSpinner();
 		fillTextViews();
+	}
+
+	private void fillTextViewFoodName() {
+		editTextfoodName.setText(getIntent().getExtras().getString(
+				DataParser.foodSearchValue));
 	}
 
 	private void fillTextViews() {
@@ -163,16 +199,10 @@ public class ShowCreateFood extends Activity {
 			float prot = 0f;
 			float fat = 0f;
 
-			// get current foodlanguageid
-			Cursor cSetting = dbHelper.fetchSettingByName(getResources()
-					.getString(R.string.setting_language));
-			cSetting.moveToFirst();
-
 			long foodId = dbHelper.createFood(editTextfoodName.getText()
-					.toString(), cSetting.getLong(cSetting
-					.getColumnIndexOrThrow(DbAdapter.DATABASE_SETTINGS_VALUE)));
+					.toString(),
+					ActivityGroupMeal.group.getFoodData().foodLanguageID);
 
-			cSetting.close();
 			// see what option we selected
 			if (spinnerUnit.getSelectedItemPosition() == 0) {
 				// if we selected '100 gram'
@@ -241,8 +271,9 @@ public class ShowCreateFood extends Activity {
 			dbHelper.createFoodUnit(foodId, unitName, standardAmound, carbs,
 					prot, fat, kcal);
 
-			// add the new food to the showFoodList page
-			ActivityGroupMeal.group.showFoodListAddFoodItem(foodId);
+			// set the foodID in the activitygroup so the showFoodList know we
+			// have to update the list
+			ActivityGroupMeal.group.newFoodID = foodId;
 
 			// Go back to the previous screen
 			ActivityGroupMeal.group.back();
@@ -367,10 +398,13 @@ public class ShowCreateFood extends Activity {
 
 	@Override
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
-		if (event.getKeyCode() == KeyEvent.KEYCODE_BACK) {
+		// if we press the back key
+		if (event.getKeyCode() == KeyEvent.KEYCODE_BACK)
+			// return false so the keydown event from activitygroupmeal will get
+			// called
 			return false;
-		}
-		return super.onKeyDown(keyCode, event);
+		else
+			return super.onKeyDown(keyCode, event);
 	}
 
 }

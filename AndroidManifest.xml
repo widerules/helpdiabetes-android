@@ -72,6 +72,8 @@
         </activity>
         <activity android:name=".Show.Settings.ShowSettingsGlucoseUnit" >
         </activity>
+        <activity android:name=".Show.Medicine.ShowAddMedicineEvent"></activity>
+        <activity android:name=".Show.Food.ShowLoadingFoodData"></activity>
     </application>
 
 </manifest>

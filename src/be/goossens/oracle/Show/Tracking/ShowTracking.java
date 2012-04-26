@@ -4,14 +4,19 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import android.app.AlertDialog;
 import android.app.ListActivity;
+import android.content.DialogInterface;
 import android.database.Cursor;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.view.KeyEvent;
 import android.view.View;
 import android.widget.ListView;
 import android.widget.TextView;
 import be.goossens.oracle.R;
+import be.goossens.oracle.ActivityGroup.ActivityGroupMeal;
+import be.goossens.oracle.ActivityGroup.ActivityGroupTracking;
 import be.goossens.oracle.Custom.CustomArrayAdapterDBTracking;
 import be.goossens.oracle.Objects.DBBloodGlucoseEvent;
 import be.goossens.oracle.Objects.DBExerciseEvent;
@@ -37,23 +42,23 @@ public class ShowTracking extends ListActivity {
 		adapter = null;
 		tvFetchingData = (TextView) findViewById(R.id.textViewFetchingData);
 	}
- 
+
 	@Override
 	protected void onResume() {
 		super.onResume();
 		dbHelper.open();
-		
-		if(!threadFinished){
+
+		if (!threadFinished) {
 			threadFinished = true;
 			tvFetchingData.setVisibility(View.VISIBLE);
 			new DoInBackground().execute();
 		}
 	}
 
-	public void refreshData(){
+	public void refreshData() {
 		new DoInBackground().execute();
 	}
-		
+
 	private class DoInBackground extends AsyncTask<Void, Void, Void> {
 		@Override
 		protected Void doInBackground(Void... params) {
@@ -230,15 +235,54 @@ public class ShowTracking extends ListActivity {
 
 	@Override
 	protected void onListItemClick(ListView l, View v, int position, long id) {
-		/*if (listTracking.get(position).getTimestamp() != null) {
-			Toast.makeText(this,
-					"" + listTracking.get(position).getTimestamp().getTime(),
-					Toast.LENGTH_LONG).show();
-		}*/
+		/*
+		 * if (listTracking.get(position).getTimestamp() != null) {
+		 * Toast.makeText(this, "" +
+		 * listTracking.get(position).getTimestamp().getTime(),
+		 * Toast.LENGTH_LONG).show(); }
+		 */
 	}
 
 	@Override
 	protected void onPause() {
-		super.onPause(); 
+		super.onPause();
+	}
+
+	// if we press the back button on this activity we have to show a popup to
+	// exit
+	@Override
+	public boolean onKeyDown(int keyCode, KeyEvent event) {
+		if (event.getKeyCode() == KeyEvent.KEYCODE_BACK) {
+			showPopUpToExitApplication();
+			// when we return true here we wont call the onkeydown from
+			// activitygroup
+			return true;
+		} else
+			return super.onKeyDown(keyCode, event);
+	}
+
+	private void showPopUpToExitApplication() {
+		DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
+
+			public void onClick(DialogInterface dialog, int which) {
+				switch (which) {
+				case DialogInterface.BUTTON_POSITIVE:
+					// exit application on click button positive
+					ActivityGroupTracking.group.killApplication();
+					break;
+				}
+			}
+		};
+
+		AlertDialog.Builder builder = new AlertDialog.Builder(
+				ActivityGroupTracking.group);
+		builder.setMessage(
+				getResources().getString(R.string.sureToExit))
+				.setPositiveButton(
+						getResources().getString(R.string.yes),
+						dialogClickListener)
+				.setNegativeButton(
+						getResources().getString(R.string.no),
+						dialogClickListener).show();
 	}
 }
