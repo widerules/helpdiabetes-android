@@ -1,8 +1,6 @@
 package be.goossens.oracle.Show.Exercise;
 
-import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.List;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -35,7 +33,6 @@ import be.goossens.oracle.slider.DateSlider;
 import be.goossens.oracle.slider.DateTimeSlider;
 
 public class ShowAddExerciseEvent extends Activity {
-	// private TimePicker startTime, endTime;
 	private Spinner spinnerExerciseTypes, spinnerDuration;
 	private EditText etDescription;
 	private Button btAdd, btDelete, btUpdateDateAndHour;
@@ -44,7 +41,7 @@ public class ShowAddExerciseEvent extends Activity {
 	private Calendar mCalendar;
 	private Functions functions;
 
-	@Override
+	@Override 
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		View contentView = LayoutInflater.from(getParent()).inflate(
@@ -172,11 +169,6 @@ public class ShowAddExerciseEvent extends Activity {
 	}
 
 	private void fillSpinnerDuration() {
-		/*ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(
-				this, R.array.standard_duration,
-				android.R.layout.simple_spinner_item);*/
-		
-		
 		CustomArrayAdapterCharSequenceForASpinner adapter =
 				new CustomArrayAdapterCharSequenceForASpinner(
 						this, android.R.layout.simple_spinner_item, getResources().getStringArray(R.array.standard_duration));

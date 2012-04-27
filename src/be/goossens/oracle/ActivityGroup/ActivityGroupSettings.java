@@ -9,11 +9,13 @@ import android.os.Bundle;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.Toast;
 import be.goossens.oracle.Rest.DataParser;
+import be.goossens.oracle.Show.Exercise.ShowAddExerciseType;
+import be.goossens.oracle.Show.Exercise.ShowExerciseTypes;
+import be.goossens.oracle.Show.Food.ShowFoodList;
 import be.goossens.oracle.Show.Settings.ShowSettings;
 import be.goossens.oracle.Show.Settings.ShowSettingsMealTimes;
- 
+
 public class ActivityGroupSettings extends ActivityGroup {
 	// keep this in a static variable to make it accessible
 	// activities, let them manipulate the view
@@ -27,20 +29,21 @@ public class ActivityGroupSettings extends ActivityGroup {
 		super.onCreate(savedInstanceState);
 		this.history = new ArrayList<View>();
 		group = this;
-		
+
 		// make a root activity when the history size = 0
 		if (history.size() == 0) {
 			// Start the root activity within the group and get its view
-			View view = getLocalActivityManager().startActivity(DataParser.activityIDSettings,
-					new Intent(this, 
-							ShowSettings.class)	.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP))
+			View view = getLocalActivityManager().startActivity(
+					DataParser.activityIDSettings,
+					new Intent(this, ShowSettings.class)
+							.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP))
 					.getDecorView();
-			
+
 			replaceView(view);
-		} 
-		
+		}
+
 	}
-	
+
 	// let the keyboard dissapear
 	private void keyboardDissapear() {
 		try {
@@ -80,7 +83,7 @@ public class ActivityGroupSettings extends ActivityGroup {
 				// call the super.setContent view! so set the real view
 				super.setContentView(history.get(history.size() - 1));
 			} else {
-				
+
 			}
 		} catch (Exception e) {
 			if (history.size() >= 0)
@@ -94,6 +97,15 @@ public class ActivityGroupSettings extends ActivityGroup {
 			back();
 		}
 		return true;
+	}
+
+	// The exercise types view will alaways be in history place 1 if it exists
+	public ShowExerciseTypes getExerciseTypes() {
+		try {
+			return (ShowExerciseTypes) history.get(1).getContext();
+		} catch (Exception e) {
+			return null;
+		}
 	}
 
 	// Make for every class a refresh method
@@ -112,12 +124,12 @@ public class ActivityGroupSettings extends ActivityGroup {
 
 	@Override
 	public void finish() {
-		
+
 	}
-	
+
 	// this method will kill the application
-		public void killApplication() {
-			// finish the tab activity so everything will close
-			this.getParent().finish();
-		}
+	public void killApplication() {
+		// finish the tab activity so everything will close
+		this.getParent().finish();
+	}
 }

@@ -30,6 +30,22 @@ public class DbAdapter extends SQLiteOpenHelper {
 	private SQLiteDatabase mDb;
 	private final Context mCtx;
 
+	// MedicineEvent
+	private static final String DATABASE_MEDICINEEVENT_TABLE = "MedicineEvent";
+	public static final String DATABASE_MEDICINEEVENT_ID = "_id";
+	public static final String DATABASE_MEDICINEEVENT_AMOUNT = "Amount";
+	public static final String DATABASE_MEDICINEEVENT_TIMESTAMP = "TimeStamp";
+	public static final String DATABASE_MEDICINEEVENT_MEDICINETYPEID = "MedicineTypeID";
+	public static final String DATABASE_MEDICINEEVENT_USERID = "UserID";
+
+	// MedicineType
+	private static final String DATABASE_MEDICINETYPE_TABLE = "MedicineType";
+	public static final String DATABASE_MEDICINETYPE_ID = "_id";
+	public static final String DATABASE_MEDICINETYPE_MEDICINETYPE = "MedicineType";
+	public static final String DATABASE_MEDICINETYPE_MEDICINENAME = "MedicineName";
+	public static final String DATABASE_MEDICINETYPE_MEDICINEUNIT = "MedicineUnit";
+	public static final String DATABASE_MEDICINETYPE_VISIBLE = "Visible";
+
 	// BloodGlucoseEvent
 	private static final String DATABASE_BLOODGLUCOSEEVENT_TABLE = "BloodGlucoseEvent";
 	public static final String DATABASE_BLOODGLUCOSEEVENT_ID = "_id";
@@ -239,7 +255,54 @@ public class DbAdapter extends SQLiteOpenHelper {
 				+ DATABASE_MEALEVENT_EVENTDATETIME + " from "
 				+ DATABASE_MEALEVENT_TABLE + " UNION select "
 				+ DATABASE_BLOODGLUCOSEEVENT_EVENTDATETIME + " from "
-				+ DATABASE_BLOODGLUCOSEEVENT_TABLE + ") order by 1 desc", null);
+				+ DATABASE_BLOODGLUCOSEEVENT_TABLE + " UNION select "
+				+ DATABASE_MEDICINEEVENT_TIMESTAMP + " from "
+				+ DATABASE_MEDICINEEVENT_TABLE + ") order by 1 desc", null);
+	}
+
+	// Medicine Events Functions
+	// create
+	public long createMedicineEvent(float amount, String timestamp,
+			long medicineTypeID) {
+		ContentValues initialValues = new ContentValues();
+		initialValues.put(DATABASE_MEDICINEEVENT_AMOUNT, amount);
+		initialValues.put(DATABASE_MEDICINEEVENT_TIMESTAMP, timestamp);
+		initialValues
+				.put(DATABASE_MEDICINEEVENT_MEDICINETYPEID, medicineTypeID);
+		return mDb.insert(DATABASE_MEDICINEEVENT_TABLE, null, initialValues);
+	}
+
+	// get medicine events by timestamp
+	public Cursor fetchMedicineEventByDate(String date) {
+		return mDb.query(DATABASE_MEDICINEEVENT_TABLE,
+				new String[] { DATABASE_MEDICINEEVENT_ID,
+						DATABASE_MEDICINEEVENT_AMOUNT,
+						DATABASE_MEDICINEEVENT_MEDICINETYPEID,
+						DATABASE_MEDICINEEVENT_TIMESTAMP,
+						DATABASE_MEDICINEEVENT_USERID }, "date("
+						+ DATABASE_MEDICINEEVENT_TIMESTAMP + ") " + " = "
+						+ "date('" + date + "')", null, null, null, null);
+	}
+
+	// Medicine Type Functions
+	// get all medicine types
+	public Cursor fetchAllMedicineTypes() {
+		return mDb.query(DATABASE_MEDICINETYPE_TABLE, new String[] {
+				DATABASE_MEDICINETYPE_ID, DATABASE_MEDICINETYPE_MEDICINENAME,
+				DATABASE_MEDICINETYPE_MEDICINETYPE,
+				DATABASE_MEDICINETYPE_MEDICINEUNIT,
+				DATABASE_MEDICINETYPE_VISIBLE }, DATABASE_MEDICINETYPE_VISIBLE
+				+ " = 1", null, null, null, null);
+	}
+
+	// get medicine types by ID
+	public Cursor fetchMedicineTypesByID(long medicineTypeID) {
+		return mDb.query(DATABASE_MEDICINETYPE_TABLE, new String[] {
+				DATABASE_MEDICINETYPE_ID, DATABASE_MEDICINETYPE_MEDICINENAME,
+				DATABASE_MEDICINETYPE_MEDICINETYPE,
+				DATABASE_MEDICINETYPE_MEDICINEUNIT,
+				DATABASE_MEDICINETYPE_VISIBLE }, DATABASE_MEDICINETYPE_ID
+				+ " = " + medicineTypeID, null, null, null, null);
 	}
 
 	// BloodGlucose Events Functions
@@ -696,7 +759,19 @@ public class DbAdapter extends SQLiteOpenHelper {
 				+ languageID + " and " + DATABASE_FOOD_VISIBLE + " = 1", null,
 				DATABASE_FOOD_NAME, null, null);
 	}
- 
+
+	// get food by language ID and favorite = 1
+	public Cursor fetchFoodByLanguageIDAndFavorite(long languageID) {
+		return mDb.query(DATABASE_FOOD_TABLE, new String[] { DATABASE_FOOD_ID,
+				DATABASE_FOOD_NAME, DATABASE_FOOD_ISFAVORITE,
+				DATABASE_FOOD_VISIBLE, DATABASE_FOOD_PLATFORM,
+				DATABASE_FOOD_FOODLANGUAGEID, DATABASE_FOOD_CATEGORYID,
+				DATABASE_FOOD_USERID }, DATABASE_FOOD_FOODLANGUAGEID + "="
+				+ languageID + " and " + DATABASE_FOOD_VISIBLE + " = 1"
+				+ " and " + DATABASE_FOOD_ISFAVORITE + " = 1", null,
+				DATABASE_FOOD_NAME, null, null);
+	}
+
 	// get a food by id
 	public Cursor fetchFood(Long id) throws SQLException {
 		Cursor mCursor = mDb.query(true, DATABASE_FOOD_TABLE, new String[] {

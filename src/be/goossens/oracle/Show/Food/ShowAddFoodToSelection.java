@@ -25,7 +25,6 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.SimpleCursorAdapter;
 import android.widget.Spinner;
 import android.widget.TextView;
 import be.goossens.oracle.R;
@@ -170,11 +169,38 @@ public class ShowAddFoodToSelection extends Activity {
 				return false;
 			}
 		});
+
+		//when the spinner selected item changes
+		spinnerFoodUnits
+				.setOnItemSelectedListener(new OnItemSelectedListener() {
+					public void onItemSelected(AdapterView<?> arg0, View arg1,
+							int arg2, long arg3) {
+						if (setStandardAmount) {
+							//check the standard amount
+							checkStandardAmound();
+							//fill the textview selected food
+							fillTextViewSelectedFood();
+							//fill the calculated column
+							fillTextViewCalculated();
+							//set focus on the edittext and let the keyboard come out
+							//setFocusOnEditText();
+						}
+
+						// switch standardamount if its false
+						if (!setStandardAmount)
+							setStandardAmount = true;
+					}
+
+					public void onNothingSelected(AdapterView<?> arg0) {
+
+					}
+				});
 	}
 
-	// This method will give focus on the edit text and set the cursor on the
-	// end of the text
+	// This method will give focus on the edit text, set the cursor on the
+	// end of the text and show the keyboard
 	// This method is called afther the spinner changes from unit
+	// or when there is only one unit 
 	private void setFocusOnEditText() {
 		editTextFoodAmound.requestFocus();
 		editTextFoodAmound.setSelection(editTextFoodAmound.getText().length());
@@ -190,33 +216,15 @@ public class ShowAddFoodToSelection extends Activity {
 		inputManager.showSoftInput(editTextFoodAmound,
 				InputMethodManager.SHOW_FORCED);
 	}
-
-	/*
-	 * // This will handle the editTextFoodAmunt // we cant handle this text
-	 * with a editText.setOnTextListener becaus then we // would create a
-	 * infinity loop with // editTextFoodAmound.setText("");
-	 * 
-	 * @Override public boolean dispatchKeyEvent(KeyEvent event) { // if we
-	 * press on the keyboard && not on the back button! if (event.getKeyCode()
-	 * != KeyEvent.KEYCODE_BACK && event.getKeyCode() != KeyEvent.KEYCODE_DEL &&
-	 * firstKeyPress) { // clear the text in the editText
-	 * editTextFoodAmound.setText(""); }
-	 * 
-	 * // First time we press a key if (firstKeyPress) { firstKeyPress = false;
-	 * }
-	 * 
-	 * // if we press the delete button we dont have to check the amount if
-	 * (event.getKeyCode() == KeyEvent.KEYCODE_DEL) { fillTextViewCalculated();
-	 * return super.dispatchKeyEvent(event); }
-	 * 
-	 * // if the value > 99999 we return false if (getInsertedAmund() > 999) {
-	 * Toast.makeText( this, getResources().getString(
-	 * R.string.value_cant_be_more_then_ninety_nine),
-	 * Toast.LENGTH_SHORT).show(); fillTextViewCalculated(); return false; }
-	 * else { // fill textview and return true fillTextViewCalculated(); return
-	 * super.dispatchKeyEvent(event); } }
-	 */
-
+ 
+	// This method will hide the keyboard 
+	// This method is called when this activity starts up and there is more then 1 unit
+	private void hideKeyboard(){
+		InputMethodManager inputManager = (InputMethodManager) this
+				.getSystemService(Context.INPUT_METHOD_SERVICE);
+		inputManager.hideSoftInputFromInputMethod(editTextFoodAmound.getWindowToken(), 0);
+	}
+	
 	private float getInsertedAmund() {
 		float returnValue = 0f;
 
@@ -312,42 +320,19 @@ public class ShowAddFoodToSelection extends Activity {
 			tvOneItemInSpinner
 					.setText(functions.getShorterString(cFoodUnit.getString(cFoodUnit
 							.getColumnIndexOrThrow(DbAdapter.DATABASE_FOODUNIT_NAME))));
+			
+			//if we only have 1 unit we show the keyboard
+			//setFocusOnEditText();
+		} else {
+			//if we have more then 1 item we have to hide the keyboard becaus the spinner needs to be selected first
+			//hideKeyboard();
+			//set focus to the spinner 
+			//spinnerFoodUnits.requestFocus(); 
 		}
 		cFoodUnit.close();
 
 		fillTextViewSelectedFood();
 		fillTextViewCalculated();
-
-		// hide the keyboard
-		InputMethodManager mgr = (InputMethodManager) this
-				.getSystemService(Context.INPUT_METHOD_SERVICE);
-		mgr.hideSoftInputFromWindow(editTextFoodAmound.getWindowToken(), 0);
-
-		// set the spinner on item selected listener after we did all the
-		// creation stuff
-		// otherwise this will be triggered and show keyboard
-		
-		// update the textViews when the spinner selected item changes
-		spinnerFoodUnits
-				.setOnItemSelectedListener(new OnItemSelectedListener() {
-					public void onItemSelected(AdapterView<?> arg0, View arg1,
-							int arg2, long arg3) {
-						if (setStandardAmount) {
-							checkStandardAmound();
-							fillTextViewSelectedFood();
-							fillTextViewCalculated();
-							setFocusOnEditText();
-						}
-
-						// switch standardamount if its false
-						if (!setStandardAmount)
-							setStandardAmount = true;
-					}
-
-					public void onNothingSelected(AdapterView<?> arg0) {
-
-					}
-				});
 	}
 
 	// When we click on the button delete

@@ -3,19 +3,14 @@
     style="@style/linearLayoutVerticalWithPadding" >
 
     <TextView
+        android:id="@+id/textView1"
         style="@style/defaultFontTitle"
-        android:text="@string/pref_exercise_types" />
-
-    <Button
-        android:id="@+id/buttonAdd"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:background="@drawable/ic_add_yes" />
+        android:text="@string/pref_db_language" />
 
     <ListView
         android:id="@+android:id/list"
         android:layout_width="fill_parent"
-        android:layout_height="wrap_content" >
-    </ListView>
+        android:layout_height="fill_parent"
+        android:cacheColorHint="#00000000" />
 
 </LinearLayout>

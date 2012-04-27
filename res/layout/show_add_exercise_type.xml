@@ -1,89 +1,40 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
-    android:orientation="vertical" >
+    style="@style/linearLayoutVerticalWithPadding" >
 
     <TextView
-        android:id="@+id/textView1"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/add_exercise_type" />
-
-    <TableLayout
-        android:id="@+id/tableLayout1"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content" >
-
-        <TableRow
-            android:id="@+id/tableRow1"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" >
-
-            <TextView
-                android:id="@+id/textView2"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/exercise_type"
-                android:textColor="@color/ColorText" />
-
-            <EditText
-                android:id="@+id/editTextShowAddExerciseTypeName"
-                android:layout_width="0dip"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:inputType="text" >
-            </EditText>
-        </TableRow>
-
-        <TableRow
-            android:id="@+id/tableRow2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" >
-
-            <TextView
-                android:id="@+id/textView3"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/description"
-                android:textColor="@color/ColorText" />
-
-            <EditText
-                android:id="@+id/editTextShowAddExerciseTypeDescription"
-                android:layout_width="0dip"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:inputType="text" >
-            </EditText>
-        </TableRow>
-    </TableLayout>
+        style="@style/defaultFontTitle"
+        android:text="@string/pref_add_exercise_type" />
 
     <LinearLayout
-        android:id="@+id/linearLayout1"
         android:layout_width="fill_parent"
-        android:layout_height="wrap_content" >
-
-        <Button
-            android:id="@+id/buttonAdd"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/add"
-            android:onClick="onClickAdd" />
-
-        <Button
-            android:id="@+id/buttonDelete"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:onClick="onClickDelete"
-            android:text="@string/delete" />
-
-        <Button
-            android:id="@+id/button2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/cancel"
-            android:onClick="onClickCancel" />
+        android:layout_height="fill_parent"
+        android:gravity="center" 
+        android:orientation="vertical" >
 
+        <EditText
+            android:id="@+id/editTextShowAddExerciseTypeName"
+            style="@style/styleEditText"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/exercise_type" 
+            android:inputType="text" >
+        </EditText>
+
+        <LinearLayout style="@style/linearLayoutForButtonAdd" >
+
+            <Button
+                android:id="@+id/buttonAdd"
+                style="@style/buttonAdd" />
+        </LinearLayout>
+
+        <LinearLayout style="@style/linearLayoutForButtonAdd" >
+
+            <Button
+                android:id="@+id/buttonDelete"
+                style="@style/buttonAdd"
+                android:text="@string/delete" />
+        </LinearLayout>
     </LinearLayout>
 
 </LinearLayout>

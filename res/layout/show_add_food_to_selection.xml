@@ -1,0 +1,166 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent" >
+
+    <LinearLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        style="@style/linearLayoutVerticalWithPadding" >
+
+        <TextView
+            style="@style/defaultFontTitle"
+            android:text="@string/titelAddFood" />
+
+        <TextView
+            android:id="@+id/textViewSelectedFood"
+            style="@style/defaultFontNormal"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content" />
+
+        <LinearLayout
+            android:id="@+id/linearLayout1"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content" >
+
+            <Spinner
+                android:id="@+id/spinnerFoodUnit"
+                android:layout_width="wrap_content"
+                android:layout_height="fill_parent" />
+
+            <EditText
+                android:id="@+id/editTextFoodAmount"
+                style="@style/styleEditText"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:layout_weight="1.0"
+                android:digits="1234567890."
+                android:inputType="phone"
+                android:maxLength="7"
+                android:numeric="decimal" />
+
+            <TextView
+                android:id="@+id/textViewOneValue"
+                style="@style/defaultFontNormal"
+                android:layout_width="wrap_content"
+                android:layout_height="fill_parent"
+                android:gravity="center"
+                android:visibility="gone" />
+        </LinearLayout>
+
+        <TableLayout
+            android:id="@+id/tableLayout1"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content" >
+
+            <TableRow
+                android:id="@+id/tableRow1"
+                style="@style/styleTableRowGravityCenter" >
+
+                <TextView
+                    android:id="@+id/textViewShowAddFoodRowOneFieldOne"
+                    style="@style/textViewInTableAlignRight" />
+
+                <TextView
+                    android:id="@+id/textViewShowAddFoodRowOneFieldTwo"
+                    style="@style/textViewInTableAlignRight" />
+
+                <TextView
+                    android:id="@+id/textViewShowAddFoodRowOneFieldThree"
+                    style="@style/textViewInTableAlignRight"
+                    android:paddingLeft="10dip" />
+            </TableRow>
+
+            <View
+                android:layout_height="2dip"
+                android:background="#FF909090" />
+
+            <TableRow
+                android:id="@+id/tableRow2"
+                style="@style/styleTableRowGravityCenter" >
+
+                <TextView
+                    android:id="@+id/textViewShowAddFoodRowTwoFieldOne"
+                    style="@style/textViewInTableAlignRight" />
+
+                <TextView
+                    android:id="@+id/textViewShowAddFoodRowTwoFieldTwo"
+                    style="@style/textViewInTableAlignRight" />
+
+                <TextView
+                    android:id="@+id/textViewShowAddFoodRowTwoFieldThree"
+                    style="@style/textViewInTableAlignRight"
+                    android:paddingLeft="10dip" />
+            </TableRow>
+
+            <TableRow
+                android:id="@+id/tableRow3"
+                style="@style/styleTableRowGravityCenter" >
+
+                <TextView
+                    android:id="@+id/textViewShowAddFoodRowThreeFieldOne"
+                    style="@style/textViewInTableAlignRight" />
+
+                <TextView
+                    android:id="@+id/textViewShowAddFoodRowThreeFieldTwo"
+                    style="@style/textViewInTableAlignRight" />
+
+                <TextView
+                    android:id="@+id/textViewShowAddFoodRowThreeFieldThree"
+                    style="@style/textViewInTableAlignRight"
+                    android:paddingLeft="10dip" />
+            </TableRow>
+
+            <TableRow
+                android:id="@+id/tableRow4"
+                style="@style/styleTableRowGravityCenter" >
+
+                <TextView
+                    android:id="@+id/textViewShowAddFoodRowFourFieldOne"
+                    style="@style/textViewInTableAlignRight" />
+
+                <TextView
+                    android:id="@+id/textViewShowAddFoodRowFourFieldTwo"
+                    style="@style/textViewInTableAlignRight" />
+
+                <TextView
+                    android:id="@+id/textViewShowAddFoodRowFourFieldThree"
+                    style="@style/textViewInTableAlignRight"
+                    android:paddingLeft="10dip" />
+            </TableRow>
+
+            <TableRow
+                android:id="@+id/tableRow5"
+                style="@style/styleTableRowGravityCenter" >
+
+                <TextView
+                    android:id="@+id/textViewShowAddFoodRowFiveFieldOne"
+                    style="@style/textViewInTableAlignRight" />
+
+                <TextView
+                    android:id="@+id/textViewShowAddFoodRowFiveFieldTwo"
+                    style="@style/textViewInTableAlignRight" />
+
+                <TextView
+                    android:id="@+id/textViewShowAddFoodRowFiveFieldThree"
+                    style="@style/textViewInTableAlignRight"
+                    android:paddingLeft="10dip" />
+            </TableRow>
+        </TableLayout>
+
+        <LinearLayout style="@style/linearLayoutForButtonAdd" >
+
+            <Button
+                android:id="@+id/buttonAddOrUpdate"
+                style="@style/buttonAdd" />
+        </LinearLayout>
+
+        <LinearLayout style="@style/linearLayoutForButtonAdd" >
+
+            <Button
+                android:id="@+id/buttonShowAddFoodDelete"
+                style="@style/buttonAdd"
+                android:text="@string/delete" />
+        </LinearLayout>
+    </LinearLayout>
+
+</ScrollView>

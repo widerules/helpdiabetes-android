@@ -53,16 +53,21 @@ public class ActivityGroupMeal extends ActivityGroup {
 
 		// make a root activity when the history size = 0
 		if (history.size() == 0) {
-			startMainActivity();
+			restartThisActivity();
 		}
 	}
 
-	private void startMainActivity() {
+	public void restartThisActivity() {
+		//clear history
+		history = null;
+		
+		//inialize list
 		history = new ArrayList<View>();
+		
 		// Start the root activity within the group and get its view
 		// This activity is the activity that hold our objects for showFoodList
 		View view = getLocalActivityManager().startActivity(
-				DataParser.activityIDShowFoodList,
+		 		DataParser.activityIDShowFoodList,
 				new Intent(this, ShowLoadingFoodData.class)
 						.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP))
 				.getDecorView();
@@ -182,11 +187,21 @@ public class ActivityGroupMeal extends ActivityGroup {
 	}
 
 	// showFoodList refresh listview
-	public void showFoodListRefreshListView() {
+		public void showFoodListUpdateListAdapter() {
+			try {
+				View v = history.get(0);
+				ShowFoodList currentActivity = (ShowFoodList) v.getContext();
+				currentActivity.setNewFontSize();
+			} catch (Exception e) {
+			}
+		}
+	
+	// showFoodList refresh listview
+	public void refreshFoodListFontSize() {
 		try {
 			View v = history.get(0);
-			ShowFoodList currentActivity = (ShowFoodList) v.getContext();
-			// currentActivity.refreshListView();
+			ShowLoadingFoodData currentActivity = (ShowLoadingFoodData) v.getContext();
+			currentActivity.setNewFontSize();
 		} catch (Exception e) {
 		}
 	}

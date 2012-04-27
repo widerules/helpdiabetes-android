@@ -161,8 +161,8 @@ public class ShowSelectedFood extends ListActivity {
 
 		// kill this activity
 		ActivityGroupMeal.group.back();
-		
-		// set  selectedFoodCount = 0
+
+		// set selectedFoodCount = 0
 		ActivityGroupMeal.group.getFoodData().countSelectedFood = 0;
 
 		// refresh tracking list
@@ -196,7 +196,7 @@ public class ShowSelectedFood extends ListActivity {
 
 				list.add(new DBSelectedFood(
 						cSelectedFood
-								.getLong(cSelectedFood 
+								.getLong(cSelectedFood
 										.getColumnIndexOrThrow(DbAdapter.DATABASE_SELECTEDFOOD_ID)),
 						cSelectedFood.getFloat(cSelectedFood
 								.getColumnIndexOrThrow(DbAdapter.DATABASE_SELECTEDFOOD_AMOUNT)),
@@ -424,10 +424,10 @@ public class ShowSelectedFood extends ListActivity {
 			tvInsuline.setText("");
 		}
 
-		//remove the last \n from the strings 
-		tvNameText = tvNameText.substring(0,tvNameText.length() - 2);  
-		tvValueText = tvValueText.substring(0,tvValueText.length() - 2);
-		
+		// remove the last \n from the strings
+		tvNameText = tvNameText.substring(0, tvNameText.length() - 2);
+		tvValueText = tvValueText.substring(0, tvValueText.length() - 2);
+
 		// tvTotal.setText(tvText);
 		tvTotalNames.setText(tvNameText);
 		tvTotalValues.setText(tvValueText);
@@ -488,7 +488,8 @@ public class ShowSelectedFood extends ListActivity {
 				.putExtra(DataParser.idSelectedFood, selectedFoodId);
 
 		View v = ActivityGroupMeal.group.getLocalActivityManager()
-				.startActivity(DataParser.activityIDShowFoodList, i).getDecorView();
+				.startActivity(DataParser.activityIDShowFoodList, i)
+				.getDecorView();
 		ActivityGroupMeal.group.setContentView(v);
 
 		cUnit.close();
@@ -499,7 +500,7 @@ public class ShowSelectedFood extends ListActivity {
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		// without this dbHelper.open the app wil crash when it comes back from
 		// ShowAddFoodToSelection
-		dbHelper.open();
+		dbHelper.open(); 
 		switch (requestCode) {
 		// if we come back from our update screen refresh all the values
 		case update_selectedFood_id:
@@ -509,8 +510,8 @@ public class ShowSelectedFood extends ListActivity {
 			refreshData();
 			break;
 		}
-	}   
-  
+	}
+
 	// to fill the listview with data
 	private void fillData() {
 		listOfSelectedFood = getSelectedFood();
@@ -521,7 +522,7 @@ public class ShowSelectedFood extends ListActivity {
 			cSettings.moveToFirst();
 			CustomBaseAdapterSelectedFood adapter = new CustomBaseAdapterSelectedFood(
 					this,
-					listOfSelectedFood, 
+					listOfSelectedFood,
 					cSettings.getInt(cSettings
 							.getColumnIndexOrThrow(DbAdapter.DATABASE_SETTINGS_VALUE)));
 			setListAdapter(adapter);
@@ -535,11 +536,40 @@ public class ShowSelectedFood extends ListActivity {
 
 	// when we click on the button delete all
 	public void onClickDeleteAll(View view) {
-		deleteSelectedFood();
-		// update the button with count = 0;
-		ActivityGroupMeal.group.getFoodData().countSelectedFood = 0;
-		// refresh the data
-		refreshData();
+		// show a popup to ask if the user is sure he wants to delete his
+		// selected food
+
+		// only show this popup when we have food selected
+		if (ActivityGroupMeal.group.getFoodData().countSelectedFood > 0) {
+			showPopUpToDeleteAllSelectedFood();
+		}
+	}
+
+	// this method is called when the user press the button delete
+	private void showPopUpToDeleteAllSelectedFood() {
+		DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
+			public void onClick(DialogInterface dialog, int which) {
+				switch (which) {
+				case DialogInterface.BUTTON_POSITIVE:
+					// delete all selected food
+					deleteSelectedFood();
+					// set counter == 0
+					ActivityGroupMeal.group.getFoodData().countSelectedFood = 0;
+					// refresh the data
+					refreshData();
+					break;
+				}
+			}
+		};
+
+		AlertDialog.Builder builder = new AlertDialog.Builder(
+				ActivityGroupMeal.group);
+		builder.setMessage(
+				getResources().getString(R.string.sureToDeleteSelectedFood))
+				.setPositiveButton(getResources().getString(R.string.yes),
+						dialogClickListener)
+				.setNegativeButton(getResources().getString(R.string.no),
+						dialogClickListener).show();
 	}
 
 	private void deleteSelectedFood() {
@@ -566,9 +596,8 @@ public class ShowSelectedFood extends ListActivity {
 		Button buttonLoadTemplate = (Button) findViewById(R.id.buttonShowSelectedFoodButtonLoadTemplate);
 		dbHelper.open();
 		Cursor cFoodTemplates = dbHelper.fetchAllFoodTemplates();
- 
-		buttonLoadTemplate.setText(" ("
-				+ cFoodTemplates.getCount() + ")");
+
+		buttonLoadTemplate.setText(" (" + cFoodTemplates.getCount() + ")");
 
 		cFoodTemplates.close();
 	}
@@ -691,7 +720,8 @@ public class ShowSelectedFood extends ListActivity {
 			Intent i = new Intent(this, ShowFoodTemplates.class)
 					.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 			View v = ActivityGroupMeal.group.getLocalActivityManager()
-					.startActivity(DataParser.activityIDShowFoodList, i).getDecorView();
+					.startActivity(DataParser.activityIDShowFoodList, i)
+					.getDecorView();
 			ActivityGroupMeal.group.setContentView(v);
 		} else {
 			showToast(getResources().getString(R.string.template_load_empty));
@@ -788,9 +818,10 @@ public class ShowSelectedFood extends ListActivity {
 
 	@Override
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
-		//if we press the back key
+		// if we press the back key
 		if (event.getKeyCode() == KeyEvent.KEYCODE_BACK)
-			//return false so the keydown event from activitygroupmeal will get called
+			// return false so the keydown event from activitygroupmeal will get
+			// called
 			return false;
 		else
 			return super.onKeyDown(keyCode, event);

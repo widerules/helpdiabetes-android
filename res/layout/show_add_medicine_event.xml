@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent" >
+
+    <LinearLayout style="@style/linearLayoutVerticalWithPadding" >
+
+        <TextView
+            style="@style/defaultFontTitle"
+            android:text="@string/titelAddMedicine" />
+
+        <Button
+            android:id="@+id/buttonUpdateDateAndHour"
+            style="@style/defaultFontNormal"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/update" />
+
+        <Spinner
+            android:id="@+id/SpinnerMedicine"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content" />
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content" >
+
+            <EditText
+                android:id="@+id/editTextMedicineAmount"
+                style="@style/styleEditText"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1.0" 
+                android:digits="1234567890."
+                android:inputType="phone"
+                android:numeric="decimal" />
+
+            <TextView
+                android:id="@+id/textViewMedicineUnit"
+                style="@style/defaultFontNormal" 
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+        </LinearLayout>
+
+        <LinearLayout style="@style/linearLayoutForButtonAdd" >
+
+            <Button
+                android:id="@+id/buttonAdd"
+                style="@style/buttonAdd" />
+        </LinearLayout>
+    </LinearLayout>
+
+</ScrollView>

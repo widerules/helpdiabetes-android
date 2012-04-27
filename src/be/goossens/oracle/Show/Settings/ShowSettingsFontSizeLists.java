@@ -60,7 +60,7 @@ public class ShowSettingsFontSizeLists extends ListActivity {
 		//save font size
 		saveSize((position+8));
 		//refresh the list of food 
-		ActivityGroupMeal.group.showFoodListRefreshListView();
+		ActivityGroupMeal.group.refreshFoodListFontSize();
 		//go back
 		ActivityGroupSettings.group.back();
 	}

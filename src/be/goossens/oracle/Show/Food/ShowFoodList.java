@@ -31,6 +31,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 import be.goossens.oracle.R;
 import be.goossens.oracle.ActivityGroup.ActivityGroupMeal;
 import be.goossens.oracle.Objects.DBFoodComparable;
@@ -135,7 +136,7 @@ public class ShowFoodList extends ListActivity {
 				onClickSearch();
 			}
 		});
-	} 
+	}
 
 	// This method will show the gray or the highlighted search button
 	private void checkSearchButton() {
@@ -163,7 +164,7 @@ public class ShowFoodList extends ListActivity {
 				setListAdapter(null);
 				// start asynctask to get food
 				new AsyncGetSearch().execute();
-			} 
+			}
 		}
 	}
 
@@ -270,11 +271,12 @@ public class ShowFoodList extends ListActivity {
 								.getColumnIndexOrThrow(DbAdapter.DATABASE_FOOD_ISFAVORITE)),
 						cFood.getString(cFood
 								.getColumnIndexOrThrow(DbAdapter.DATABASE_FOOD_NAME)));
-				// add new food item to list
-				ActivityGroupMeal.group.getFoodData().listFood.add(newFood);
 
-				// sort the list
-				ActivityGroupMeal.group.getFoodData().sortObjects();
+				// add new food item to list
+				ActivityGroupMeal.group.getFoodData().listAllFood.add(newFood);
+
+				// sort the list and recreate the total list
+				ActivityGroupMeal.group.getFoodData().recreateTotalList();
 			}
 			cFood.close();
 			db.close();
@@ -291,7 +293,6 @@ public class ShowFoodList extends ListActivity {
 
 			super.onPostExecute(result);
 		}
-
 	}
 
 	public void onClickCreateNewFood(View view) {
@@ -500,7 +501,7 @@ public class ShowFoodList extends ListActivity {
 				.getDecorView();
 		ActivityGroupMeal.group.setContentView(v);
 	}
-
+ 
 	@Override
 	protected void onPause() {
 		dbHelper.close();
@@ -513,41 +514,73 @@ public class ShowFoodList extends ListActivity {
 	}
 
 	public void changeFavorite(int position) {
+		// set list adapter = null and show loading so we cant click on a other
+		// until this is donne
+		tvLoading.setVisibility(View.VISIBLE);
+		setListAdapter(null);
+
 		DbAdapter db = new DbAdapter(this);
 		db.open();
 
 		// to hold the foodID we are changing
-		long foodID = ActivityGroupMeal.group.getFoodData().listFood.get(
-				position).getId();
+		DBFoodComparable food = ActivityGroupMeal.group.getFoodData().listFood.get(position);
 
 		// when the favorite == 0
-		if (ActivityGroupMeal.group.getFoodData().listFood.get(position)
-				.getIsfavorite() == 0) {
-			db.updateFoodIsFavorite(
-					ActivityGroupMeal.group.getFoodData().listFood
-							.get(position).getId(), 1);
-			ActivityGroupMeal.group.getFoodData().listFood.get(position)
-					.setIsfavorite(1);
+		// we have to add the favorite to the listFavoriteFood
+		// sort the 2 listviews and recreate the total listview
+		if (food.getIsfavorite() == 0) {
+			// update the value in database 
+			db.updateFoodIsFavorite(food.getId(), 1);
+
+			// set the foodobjects favorite = 1
+			food.setIsfavorite(1);
+			// add food to the list of favorites
+			ActivityGroupMeal.group.getFoodData().listFavoriteFood.add(food);
+
+			// set favorite = 1 in the listviews with all the food ( otherwise
+			// we dont see a gold star )
+			ActivityGroupMeal.group.getFoodData().setIsFavoriteFromFoodListAll(food.getId(), 1);
 		} else {
-			// else we set isfavorite = 0
-			db.updateFoodIsFavorite(
-					ActivityGroupMeal.group.getFoodData().listFood
-							.get(position).getId(), 0);
-			ActivityGroupMeal.group.getFoodData().listFood.get(position)
-					.setIsfavorite(0);
+			// else we set isfavorite = 0 in the database
+			db.updateFoodIsFavorite(food.getId(), 0);
+			// we delete the favorite food from the favorite list
+			ActivityGroupMeal.group.getFoodData().deleteFoodFromFavoriteList(food.getId());
+			// and we set the favorite = 0 in the listviews ( so we dont see a golden star anymore )
+			ActivityGroupMeal.group.getFoodData().setIsFavoriteFromFoodListAll(food.getId(), 0);
 		}
-
-		// sort the objects
-		ActivityGroupMeal.group.getFoodData().sortObjects();
-
-		// notify the change to the listview
-		customArrayAdapterFoodList.notifyDataSetChanged();
-
-		// go to the selection
-		goToFoodID(foodID);
 
 		// close db connection
 		db.close();
+
+		// start a asyntask to recreate the total list and update the
+		// listadapter
+		new AsyncRecreateTotalList().execute(food.getId());
+
+	}
+
+	private class AsyncRecreateTotalList extends AsyncTask<Long, Void, Long> {
+
+		@Override
+		protected Long doInBackground(Long... params) {
+			// sort the 2 lists again and recreate our total list
+			ActivityGroupMeal.group.getFoodData().recreateTotalList();
+			return params[0];
+		}
+
+		@Override
+		protected void onPostExecute(Long result) {
+			// hide the loading
+			tvLoading.setVisibility(View.GONE);
+
+			// update the list adapter
+			updateListAdapter();
+
+			// go to the selection
+			goToFoodID(result);
+
+			super.onPostExecute(result);
+		}
+
 	}
 
 	// get the position of a given foodID
@@ -839,5 +872,15 @@ public class ShowFoodList extends ListActivity {
 			returnvalue = returnvalue - 1;
 			return returnvalue;
 		}
+	}
+
+	// This method will refresh the listview with the right fontSize
+	// This method is caled when the user presses on a listitem in setting font
+	// size
+	public void setNewFontSize() {
+		// show the loading
+		tvLoading.setVisibility(View.VISIBLE);
+		setListAdapter(null);
+		updateListAdapter();
 	}
 }

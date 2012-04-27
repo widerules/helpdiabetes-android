@@ -9,135 +9,127 @@ package be.goossens.oracle.Show.Exercise;
 import android.app.Activity;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.view.KeyEvent;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 import be.goossens.oracle.R;
+import be.goossens.oracle.ActivityGroup.ActivityGroupSettings;
 import be.goossens.oracle.Rest.DataParser;
 import be.goossens.oracle.Rest.DbAdapter;
 
 public class ShowAddExerciseType extends Activity {
-	private DbAdapter dbHelper;
-	private EditText etName, etDescription;
+	private EditText etName;
 	private Button btAdd, btDelete;
+	private long excistingExerciseTypeID;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+
+		View contentView = LayoutInflater.from(getParent()).inflate(
+				R.layout.show_add_exercise_type, null);
+		setContentView(contentView);
+
 		setContentView(R.layout.show_add_exercise_type);
 		etName = (EditText) findViewById(R.id.editTextShowAddExerciseTypeName);
-		etDescription = (EditText) findViewById(R.id.editTextShowAddExerciseTypeDescription);
 		btAdd = (Button) findViewById(R.id.buttonAdd);
 		btDelete = (Button) findViewById(R.id.buttonDelete);
+
+		// standard hide the button delete
 		btDelete.setVisibility(View.GONE);
-		dbHelper = new DbAdapter(this);
+
+		btAdd.setOnClickListener(new OnClickListener() {
+
+			public void onClick(View v) {
+				onClickAdd();
+			}
+		});
 	}
 
 	@Override
 	protected void onResume() {
 		super.onResume();
-		dbHelper.open();
 
-		if (getIntent().getExtras().getString(DataParser.whatToDo)
-				.equals(DataParser.doUpdateExerciseType))
-			fillExistingData();
+		// we put a try around this code becaus when we come here to create a
+		// NEW exercise type this will return a nullpointerexception
+		try {
+			excistingExerciseTypeID = getIntent().getExtras().getLong(
+					DataParser.idExerciseType);
+			fillEditText();
+		} catch (NullPointerException e) {
+			excistingExerciseTypeID = -1;
+		}
 
 	}
 
-	// This method is called when we update a existing exercise type
-	private void fillExistingData() {
-		Cursor cExerciseType = dbHelper.fetchExerciseTypeByID(getIntent()
-				.getExtras().getLong(DataParser.idExerciseType));
-
+	private void fillEditText() {
+		DbAdapter db = new DbAdapter(this);
+		db.open();
+		Cursor cExerciseType = db
+				.fetchExerciseTypeByID(excistingExerciseTypeID);
 		cExerciseType.moveToFirst();
-
 		etName.setText(cExerciseType.getString(cExerciseType
 				.getColumnIndexOrThrow(DbAdapter.DATABASE_EXERCISETYPE_NAME)));
-		etDescription
-				.setText(cExerciseType.getString(cExerciseType
-						.getColumnIndexOrThrow(DbAdapter.DATABASE_EXERCISETYPE_DESCRIPTION)));
-
 		cExerciseType.close();
-
-		btAdd.setText(getResources().getString(R.string.update));
-		checkButtonDelete();
+		db.close();
 	}
 
-	// This method will check if the exercise type is in use
-	// if the exercise type is not in use and its not the last one we can show
-	// the button delete
-	private void checkButtonDelete() {
-		boolean showBtDelete = true;
+	public void test(String txt) {
+		Toast.makeText(this, txt, Toast.LENGTH_LONG).show();
+	}
 
-		// check if the exercise type is in use
-		Cursor cExerciseEvents = dbHelper.fetchAllExerciseEvents();
-		if (cExerciseEvents.getCount() > 0) {
-			cExerciseEvents.moveToFirst();
-			do {
-				if (cExerciseEvents
-						.getLong(cExerciseEvents
-								.getColumnIndexOrThrow(DbAdapter.DATABASE_EXERCISEEVENT_EXERCISETYPEID)) == getIntent()
-						.getExtras().getLong(DataParser.idExerciseType))
-					showBtDelete = false;
-			} while (cExerciseEvents.moveToNext());
-		}
-		cExerciseEvents.close();
+	// on click button add
+	private void onClickAdd() {
+		if (etName.length() > 0) {
+			DbAdapter db = new DbAdapter(this);
+			db.open();
+			
+			//create new one
+			if (excistingExerciseTypeID == -1) {
+				
 
-		// if the exercise type is not in use check it it is the last one
-		if (showBtDelete) {
-			if (dbHelper.fetchAllExerciseTypes().getCount() < 2) {
-				showBtDelete = false;
+				// create the exercise type
+				long exerciseType = db.createExerciseType(etName.getText()
+						.toString(), "");
+
+				db.close();
+
+				// add the created item to the list of food on the exercise
+				// TYPES
+				// activity
+				ActivityGroupSettings.group.getExerciseTypes()
+						.addExerciseTypeToList(exerciseType);
+
+				// go back to the list
+				ActivityGroupSettings.group.back();
+			} else {
+				//update one
+				db.updateExerciseTypeByID(excistingExerciseTypeID, etName.getText().toString(), "");
+				
+				//refresh the list
+				ActivityGroupSettings.group.getExerciseTypes().refreshObject(excistingExerciseTypeID, etName.getText().toString());
+				
+				//go back 
+				ActivityGroupSettings.group.back();
 			}
-		}
-
-		// if still showBtDelete = true then we set the button to visible
-		if (showBtDelete)
-			btDelete.setVisibility(View.VISIBLE);
-	}
-
-	// on click add button
-	public void onClickAdd(View view) {
-		// name cant be ""
-		if (etName.length() <= 0)
+		} else {
 			Toast.makeText(
 					this,
 					getResources().getString(
 							R.string.exercise_type_cant_be_empty),
 					Toast.LENGTH_LONG).show();
-		else {
-			// update exercise type
-			if (getIntent().getExtras().getString(DataParser.whatToDo)
-					.equals(DataParser.doUpdateExerciseType)) {
-				dbHelper.updateExerciseTypeByID(getIntent().getExtras()
-						.getLong(DataParser.idExerciseType), etName.getText()
-						.toString(), etDescription.getText().toString());
-			} else {
-				// create new exercise type
-				dbHelper.createExerciseType(etName.getText().toString(),
-						etDescription.getText().toString());
-			}
-			setResult(RESULT_OK);
-			finish();
 		}
 	}
 
-	// on click delete button
-	public void onClickDelete(View view) {
-		dbHelper.deleteExerciseTypeByID(getIntent().getExtras().getLong(
-				DataParser.idExerciseType));
-		setResult(RESULT_OK);
-		finish();
-	}
-
-	// on click cancel button
-	public void onClickCancel(View view) {
-		finish();
-	}
-
 	@Override
-	protected void onPause() {
-		super.onPause();
-		dbHelper.close();
+	public boolean onKeyDown(int keyCode, KeyEvent event) {
+		if (event.getKeyCode() == KeyEvent.KEYCODE_BACK) {
+			return false;
+		}
+		return super.onKeyDown(keyCode, event);
 	}
 }

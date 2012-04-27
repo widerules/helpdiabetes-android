@@ -13,9 +13,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ListView;
 import be.goossens.oracle.R;
-import be.goossens.oracle.ActivityGroup.ActivityGroupMeal;
 import be.goossens.oracle.ActivityGroup.ActivityGroupSettings;
 import be.goossens.oracle.Custom.CustomArrayAdapterCharSequenceSettings;
+import be.goossens.oracle.Show.Exercise.ShowExerciseTypes;
 
 public class ShowSettings extends ListActivity {
 
@@ -44,10 +44,15 @@ public class ShowSettings extends ListActivity {
 
 	private List<CharSequence> getCharSequenceList() {
 		List<CharSequence> value = new ArrayList<CharSequence>();
-		String[] arr = getResources().getStringArray(R.array.settings_array);
-		for (int i = 0; i < arr.length; i++) {
-			value.add(arr[i]);
-		}
+
+		value.add(getResources().getString(R.string.pref_meal_times));
+		value.add(getResources().getString(R.string.pref_insuline_ratio));
+		value.add(getResources().getString(R.string.pref_glucose_unit));
+		value.add(getResources().getString(R.string.pref_value_order));
+		value.add(getResources().getString(R.string.pref_text_size));
+		value.add(getResources().getString(R.string.pref_exercise_types));
+		value.add(getResources().getString(R.string.pref_db_language));
+
 		return value;
 	}
 
@@ -73,6 +78,13 @@ public class ShowSettings extends ListActivity {
 		case 4:
 			i = new Intent(getApplicationContext(),
 					ShowSettingsFontSizeLists.class);
+			break;
+		case 5:
+			i = new Intent(getApplicationContext(), ShowExerciseTypes.class);
+			break;
+		case 6:
+			i = new Intent(getApplicationContext(),
+					ShowSettingsDBLanguage.class);
 			break;
 		}
 		i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);

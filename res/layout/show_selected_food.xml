@@ -1,10 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     style="@style/linearLayoutVerticalWithPadding" >
-
-    <TextView
-            style="@style/defaultFontTitle"
-            android:text="@string/titelFoodSelections" />
     
     <TextView
         android:id="@+id/textViewTotalTitle"
@@ -44,7 +40,14 @@
         android:gravity="center_horizontal" 
         android:textColor="@color/ColorTextTrackingDate" />
 
-    <LinearLayout
+    <ListView
+        android:id="@+android:id/list"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_weight="1.0"
+        android:cacheColorHint="#00000000" />
+
+     <LinearLayout
         android:id="@+id/linearLayout3"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content" >
@@ -87,12 +90,5 @@
             android:layout_gravity="right"
             android:background="@drawable/ic_check" />
     </LinearLayout>
-
-    <ListView
-        android:id="@+android:id/list"
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        android:layout_weight="1.0"
-        android:cacheColorHint="#00000000" />
-
+    
 </LinearLayout>
