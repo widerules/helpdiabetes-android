@@ -113,11 +113,24 @@ public class Functions {
 		return hour + ":" + minute;
 	}
 
-	// This method will return a date object with the right date and time
+	//This method will return a date object with the right date and time
+	// The input string willb e in the format yyyy-MM-dd HH:mm:ss
+	// This method is used to order our dbTracking list on time
+	public Date getYearMonthDayHourMinutesAsDateFromString(String date){
+		SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		try { 
+			Date value = format.parse(date);
+			return value;
+		} catch (ParseException e) {
+			return null;
+		}
+	}
+	
+	// This method will return a date object with the right date
 	// The input string will be in the format yyyy-MM-dd HH:mm:ss
 	public Date getYearMonthDayAsDateFromString(String date) {
 		SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
-		try {
+		try { 
 			Date value = format.parse(date);
 			return value;
 		} catch (ParseException e) {

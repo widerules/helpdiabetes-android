@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+  <!-- 
+  
+   <string name="titelTracking">Log</string> 
+   <string name="titelCreateFood">New food</string> 
+   <string name="titelUpdateFood">Food</string> 
+   <string name="titelCreateUnit">Food unit</string> 
+   <string name="titelAddFood">New Selection</string> 
+   <string name="titelFoodSelections">Selection Overview</string> 
+   <string name="titelAddExercise">Event</string> 
+   <string name="titelAddGlucose">Glucose</string> 
+   <string name="titelSettings">Settings</string> 
+   <string name="titelAddMedicine">Medication</string> 
+
+   <string name="pref_insuline_ratio">Insulin-carb ratio</string> 
+   <string name="pref_meal_times">Meal Time Slots</string> 
+   <string name="pref_value_order">Food composition</string> 
+   <string name="pref_text_size">Font Size</string> 
+   <string name="pref_glucose_unit">Glucose-unit</string>
+  
+  
+   -->  
+</resources>

@@ -45,9 +45,9 @@ public class CustomArrayAdapterDBTracking extends ArrayAdapter<DBTracking> {
 			tv.setTextColor(context.getResources().getColor(R.color.ColorText));
 			tv.setText(objects.get(position).getNoRecords());
 		} else {
-			// if the timestamp != 0 then we have to display the date in the
+			// if the timestamp != 0 and boolean showtimestamp == true then we have to display the date in the
 			// record
-			if (objects.get(position).getTimestamp() != null) {
+			if (objects.get(position).getTimestamp() != null && objects.get(position).getShowTimeStamp()) {
 				v = vi.inflate(R.layout.row_custom_array_adapter_tracking_date,
 						null);
 				TextView tv = (TextView) v.findViewById(R.id.textViewTracking1);
@@ -124,7 +124,10 @@ public class CustomArrayAdapterDBTracking extends ArrayAdapter<DBTracking> {
 
 					tv2.setText(""
 							+ objects.get(position).getMealEvent()
-									.getCalculatedInsulineAmount() + " " + context.getResources().getString(R.string.showSelectedFoodUnitsInsuline));
+									.getCalculatedInsulineAmount()
+							+ " "
+							+ context.getResources().getString(
+									R.string.showSelectedFoodUnitsInsuline));
 
 					tv2.setTextSize(fontSize);
 
@@ -161,6 +164,40 @@ public class CustomArrayAdapterDBTracking extends ArrayAdapter<DBTracking> {
 
 					tv2.setTextColor(context.getResources().getColor(
 							R.color.colorGlucose));
+
+					tv2.setGravity(Gravity.RIGHT);
+
+					tv2.setTextSize(fontSize);
+				} else if (objects.get(position).getMedicineEvent() != null) {
+					v = vi.inflate(
+							R.layout.row_custom_array_adapter_tracking_medicine,
+							null);
+
+					ImageView iv = (ImageView) v
+							.findViewById(R.id.imageViewTracking);
+					TextView tv1 = (TextView) v
+							.findViewById(R.id.textViewTracking1);
+					TextView tv2 = (TextView) v
+							.findViewById(R.id.textViewTracking2);
+
+					iv.setImageDrawable(context.getResources().getDrawable(
+							R.drawable.ic_tab_medicine_selected));
+
+					tv1.setText(new Functions().getTimeFromString(objects
+							.get(position).getMedicineEvent().getTimeStamp()));
+
+					tv2.setText(""
+							+ objects.get(position).getMedicineEvent()
+									.getAmount()
+							+ " "
+							+ objects.get(position).getMedicineEvent()
+									.getMedicineTypeUnit()
+							+ " "
+							+ objects.get(position).getMedicineEvent()
+									.getMedicineTypeName());
+
+					tv2.setTextColor(context.getResources().getColor(
+							R.color.colorMedicine));
 
 					tv2.setGravity(Gravity.RIGHT);
 

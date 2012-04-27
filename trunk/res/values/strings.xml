@@ -15,22 +15,30 @@
 
     <!-- Exit application dialog -->
     <string name="sureToExit">Bent u zeker dat u wilt afsluiten ?</string>
-    
+
     <!-- Show start -->
     <string name="checkingDatabase">Database initialiseren</string>
     <string name="retrievingFood">Producten ophalen</string>
 
-    <!-- Page titels --> 
-   <string name="titelTracking">Historiek</string> 
-   <string name="titelCreateFood">Nieuw voedingsmiddel</string> 
-   <string name="titelUpdateFood">Voedingsmiddel</string> 
-   <string name="titelCreateUnit">Voedingsmiddel Eenheid</string> 
-   <string name="titelAddFood">Nieuwe selectie</string> 
-   <string name="titelFoodSelections">Overzicht selectie</string> 
-   <string name="titelAddExercise">Activiteit</string> 
-   <string name="titelAddGlucose">Bloedglucose</string> 
-   <string name="titelSettings">Instellingen</string> 
-   <string name="titelAddMedicine">Medicatie</string> 
+    <!-- Page titels -->
+    <string name="titelTracking">Historiek</string>
+    <string name="titelCreateFood">Nieuw voedingsmiddel</string>
+    <string name="titelUpdateFood">Voedingsmiddel</string>
+    <string name="titelCreateUnit">Voedingsmiddel Eenheid</string>
+    <string name="titelAddFood">Nieuwe selectie</string>
+    <string name="titelAddExercise">Activiteit</string>
+    <string name="titelAddGlucose">Bloedglucose</string>
+    <string name="titelSettings">Instellingen</string>
+    <string name="titelAddMedicine">Medicatie</string>
+
+    <!-- Settings strings used as title on the setting pages and as text in the list of settings -->
+    <string name="pref_insuline_ratio">Insuline-KH Ratio</string>
+    <string name="pref_meal_times">Maaltijd tijden</string>
+    <string name="pref_value_order">Voorkeur voedingswaarde</string>
+    <string name="pref_text_size">Lettergrootte</string>
+    <string name="pref_glucose_unit">Bloedglucose-eenheid</string>
+    <string name="pref_exercise_types">Activiteit intensiteiten</string>
+    <string name="pref_db_language">Database taal</string>
 
     <!-- ShowTracking -->
     <string name="showTracking">Rapporten</string>
@@ -44,6 +52,8 @@
     <string name="showSelectedFoodUnitsInsuline">eenheden insuline</string>
     <string name="showSelectedFoodUInsulineRatio">Insuline ratio</string>
     <string name="showSelectedFoodEatSelectedFood">toevoegen aan rapport</string>
+    <string name="total">Totaal selecties</string>
+    <string name="sureToDeleteSelectedFood">Bent u zeker dat u alle selecties wilt verwijderen?</string>
 
     <!-- ShowFoodList -->
     <string name="showFoodListButtonSelections">Selecties</string>
@@ -63,13 +73,13 @@
     <!-- ShowExerciseEvents -->
     <string name="exercise_events">Sport activiteiten</string>
     <string name="add_exercise_events">Sport activiteit toevoegen</string>
-    <string name="add_exercise_type">Intensiteit toevoegen</string>
+    <string name="pref_add_exercise_type">Intensiteit toevoegen</string>
     <string name="menu_update_exercise_type">Intensiteiten updaten</string>
 
-    <!-- show add food to selection --> 
+    <!-- show add food to selection -->
     <string name="short_kcal">Kcals</string>
     <string name="short_carbs">Kh</string>
-    
+
     <!-- ShowAddExerciseEvents -->
     <string name="description">Beschrijving</string>
     <string name="start_time">Begin tijd</string>
@@ -93,7 +103,6 @@
     <string name="amound_of_carbs">Koolhydraten</string>
     <string name="amound_of_protein">Eiwit</string>
     <string name="amound_of_fat">Vet</string>
-    <string name="total">Totaal</string>
     <string name="items_selected">items geselecteerd</string>
     <string name="multiplie">X</string>
     <string name="cant_add_more_then_five_digits">U kan niet meer dan 5 digits ingeven!</string>
@@ -135,13 +144,6 @@
 
     <!-- Slider -->
     <string name="dateSliderTitle">Geselecteerde datum</string>
-
-    <!-- Settings strings --> 
-   <string name="pref_insuline_ratio">Insuline-KH Ratio</string> 
-   <string name="pref_meal_times">Maaltijd tijden</string> 
-   <string name="pref_value_order">Voorkeur voedingswaarde</string> 
-   <string name="pref_text_size">Lettertype</string> 
-   <string name="pref_glucose_unit">Bloedglucose-eenheid</string> 
 
     <!-- Settings meal time -->
     <string name="pref_breakfastratio_title">Ontbijt</string>

@@ -22,7 +22,8 @@
             android:id="@+id/increment"
             style="@style/defaultFontNormal"
             android:layout_width="fill_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:text="@string/btup" />
 
         <LinearLayout
             android:layout_width="fill_parent"

@@ -7,90 +7,105 @@ import android.app.ListActivity;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.view.KeyEvent;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
+import android.widget.Button;
 import android.widget.ListView;
 import be.goossens.oracle.R;
+import be.goossens.oracle.ActivityGroup.ActivityGroupMeal;
+import be.goossens.oracle.ActivityGroup.ActivityGroupSettings;
 import be.goossens.oracle.Custom.CustomArrayAdapterDBExerciseType;
 import be.goossens.oracle.Objects.DBExerciseType;
 import be.goossens.oracle.Rest.DataParser;
 import be.goossens.oracle.Rest.DbAdapter;
 
 public class ShowExerciseTypes extends ListActivity {
-	private DbAdapter dbHelper;
 	private List<DBExerciseType> listExerciseTypes;
-	private final static int requestCodeAddExercise = 1;
+	private Button btAdd;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.show_exercise_types);
-		dbHelper = new DbAdapter(this);
-		registerForContextMenu(getListView());
+
+		View contentView = LayoutInflater.from(getParent()).inflate(
+				R.layout.show_exercise_types, null);
+		setContentView(contentView);
+
+		btAdd = (Button) findViewById(R.id.buttonAdd);
+
+		btAdd.setOnClickListener(new OnClickListener() {
+			public void onClick(View v) {
+				onClickAddExerciseType();
+			}
+		});
+
 	}
 
-	// update exercise type when we select one from the list
+	//refresh the name of a object
+	//this is called from showaddexercisetype when we update a exercise type
+	public void refreshObject(long exerciseID,String exerciseName){
+		setListAdapter(null);
+		for(DBExerciseType obj: listExerciseTypes){
+			if(obj.getId() == exerciseID){
+				//set name
+				listExerciseTypes.get(listExerciseTypes.indexOf(obj)).setName(exerciseName);
+				//update listadapter
+				fillListView();
+				//stop looping
+				return;
+			}
+		}
+	}
+	
+	// on click on a existing exercise type
 	@Override
 	protected void onListItemClick(ListView l, View v, int position, long id) {
-		Intent i = new Intent(this, ShowAddExerciseType.class);
-		i.putExtra(DataParser.whatToDo, DataParser.doUpdateExerciseType);
-		i.putExtra(DataParser.idExerciseType, listExerciseTypes.get((int)id).getId());
-		startActivityForResult(i, requestCodeAddExercise);
-		super.onListItemClick(l, v, position, id);
+		Intent i = new Intent(getApplicationContext(),
+				ShowAddExerciseType.class)
+				.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP).putExtra(DataParser.idExerciseType, listExerciseTypes.get(position).getId());
+
+		View view = ActivityGroupSettings.group.getLocalActivityManager()
+				.startActivity("ShowSetting", i).getDecorView();
+
+		ActivityGroupSettings.group.setContentView(view);
 	}
 
 	// on click button add exercise type
-	public void onClickAddExerciseType(View view) {
-		Intent i = new Intent(this, ShowAddExerciseType.class); 
-		i.putExtra(DataParser.whatToDo, DataParser.doCreateExerciseType);
-		startActivityForResult(i, requestCodeAddExercise);
-	}
+	public void onClickAddExerciseType() {
+		Intent i = new Intent(getApplicationContext(),
+				ShowAddExerciseType.class)
+				.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 
-	@Override
-	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-		// without this dbHelper.open() the app will crash if we come back from
-		// another page
-		dbHelper.open();
-		switch (requestCode) {
-		case requestCodeAddExercise:
-			if (resultCode == RESULT_OK)
-				refresh();
-			break;
-		}
-		super.onActivityResult(requestCode, resultCode, data);
-	}
+		View v = ActivityGroupSettings.group.getLocalActivityManager()
+				.startActivity("ShowSetting", i).getDecorView();
 
+		ActivityGroupSettings.group.setContentView(v);
+	}
+	
 	@Override
 	protected void onResume() {
 		super.onResume();
-		dbHelper.open();
-		refresh();
-	}
-
-	private void refresh() {
 		fillListExerciseTypes();
 		fillListView();
 	}
 
 	private void fillListView() {
-		Cursor cSettings = dbHelper.fetchSettingByName(getResources()
-				.getString(R.string.setting_font_size));
-		cSettings.moveToFirst();
-
 		CustomArrayAdapterDBExerciseType adapter = new CustomArrayAdapterDBExerciseType(
-				this,
-				R.layout.row_custom_array_adapter,
+				this, R.layout.row_custom_array_adapter_with_arrow,
 				listExerciseTypes,
-				cSettings.getInt(cSettings
-						.getColumnIndexOrThrow(DbAdapter.DATABASE_SETTINGS_VALUE)));
+				ActivityGroupMeal.group.getFoodData().dbFontSize);
 
 		setListAdapter(adapter);
-
-		cSettings.close();
 	}
 
 	// This method will fill the list object with the right items
 	private void fillListExerciseTypes() {
 		listExerciseTypes = new ArrayList<DBExerciseType>();
+		DbAdapter dbHelper = new DbAdapter(this);
+		dbHelper.open();
+
 		Cursor cExerciseType = dbHelper.fetchAllExerciseTypes();
 
 		if (cExerciseType.getCount() > 0) {
@@ -109,14 +124,40 @@ public class ShowExerciseTypes extends ListActivity {
 		}
 
 		cExerciseType.close();
-	}
-
-	
-	
-	@Override
-	protected void onPause() {
-		super.onPause();
 		dbHelper.close();
 	}
 
+	// this method is called from the addexercisetype view
+	public void addExerciseTypeToList(long exerciseType) {
+		setListAdapter(null);
+		
+		DbAdapter db = new DbAdapter(this);
+		db.open();
+		Cursor cExerciseType = db.fetchExerciseTypeByID(exerciseType);
+		if (cExerciseType.getCount() > 0) {
+			cExerciseType.moveToFirst();
+			listExerciseTypes
+					.add(new DBExerciseType(
+							cExerciseType
+									.getLong(cExerciseType
+											.getColumnIndexOrThrow(DbAdapter.DATABASE_EXERCISETYPE_ID)),
+							cExerciseType.getString(cExerciseType
+									.getColumnIndexOrThrow(DbAdapter.DATABASE_EXERCISETYPE_NAME)),
+							cExerciseType.getString(cExerciseType
+									.getColumnIndexOrThrow(DbAdapter.DATABASE_EXERCISETYPE_DESCRIPTION))));
+		}
+		cExerciseType.close();
+		db.close();
+		
+		//set the listadapter back to the list of exercise types
+		fillListView();
+	}
+
+	@Override
+	public boolean onKeyDown(int keyCode, KeyEvent event) {
+		if (event.getKeyCode() == KeyEvent.KEYCODE_BACK) {
+			return false;
+		}
+		return super.onKeyDown(keyCode, event);
+	}
 }

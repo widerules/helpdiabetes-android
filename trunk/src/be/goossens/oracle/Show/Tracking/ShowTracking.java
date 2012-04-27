@@ -1,6 +1,8 @@
 package be.goossens.oracle.Show.Tracking;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
@@ -18,16 +20,17 @@ import be.goossens.oracle.R;
 import be.goossens.oracle.ActivityGroup.ActivityGroupMeal;
 import be.goossens.oracle.ActivityGroup.ActivityGroupTracking;
 import be.goossens.oracle.Custom.CustomArrayAdapterDBTracking;
-import be.goossens.oracle.Objects.DBBloodGlucoseEvent;
+import be.goossens.oracle.Objects.DBMedicineEvent;
+import be.goossens.oracle.Objects.DBloodGlucoseEvent;
 import be.goossens.oracle.Objects.DBExerciseEvent;
 import be.goossens.oracle.Objects.DBMealEvent;
 import be.goossens.oracle.Objects.DBTracking;
 import be.goossens.oracle.Rest.DataParser;
 import be.goossens.oracle.Rest.DbAdapter;
 import be.goossens.oracle.Rest.Functions;
+import be.goossens.oracle.Rest.TimeComparator;
 
 public class ShowTracking extends ListActivity {
-	private DbAdapter dbHelper;
 	private List<DBTracking> listTracking;
 	private CustomArrayAdapterDBTracking adapter;
 	private TextView tvFetchingData;
@@ -37,7 +40,6 @@ public class ShowTracking extends ListActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.show_tracking);
-		dbHelper = new DbAdapter(this);
 		listTracking = new ArrayList<DBTracking>();
 		adapter = null;
 		tvFetchingData = (TextView) findViewById(R.id.textViewFetchingData);
@@ -46,7 +48,6 @@ public class ShowTracking extends ListActivity {
 	@Override
 	protected void onResume() {
 		super.onResume();
-		dbHelper.open();
 
 		if (!threadFinished) {
 			threadFinished = true;
@@ -56,54 +57,46 @@ public class ShowTracking extends ListActivity {
 	}
 
 	public void refreshData() {
+		setListAdapter(null);
 		new DoInBackground().execute();
 	}
 
 	private class DoInBackground extends AsyncTask<Void, Void, Void> {
 		@Override
 		protected Void doInBackground(Void... params) {
-			dbHelper.open();
-			fillListView();
+			setListTracking();
 			return null;
 		}
 
 		@Override
 		protected void onPostExecute(Void result) {
+			fillListView();
 			tvFetchingData.setVisibility(View.GONE);
-			setListAdapter(adapter);
 			super.onPostExecute(result);
 		}
 	}
 
 	private void fillListView() {
-		setListTracking();
-
 		if (listTracking.size() <= 0) {
 			// create the list
 			listTracking = new ArrayList<DBTracking>();
 			// Fill the list with 1 item "no records found"
-			listTracking.add(new DBTracking(null, null, null, null,
-					getResources().getString(R.string.noTrackingValues)));
-
+			listTracking
+					.add(new DBTracking(null, null, null, null, null, false,
+							getResources().getString(R.string.noTrackingValues)));
 		}
 
-		Cursor cSetting = dbHelper.fetchSettingByName(getResources().getString(
-				R.string.setting_font_size));
-		cSetting.moveToFirst();
-
-		adapter = new CustomArrayAdapterDBTracking(
-				this,
-				0,
-				listTracking,
-				cSetting.getInt(cSetting
-						.getColumnIndexOrThrow(DbAdapter.DATABASE_SETTINGS_VALUE)));
-		// setListAdapter(adapter);
-		cSetting.close();
+		adapter = new CustomArrayAdapterDBTracking(this, 0, listTracking,
+				ActivityGroupMeal.group.getFoodData().dbFontSize);
+		setListAdapter(adapter);
 
 	}
 
 	// This method will fill the listTracking with all the data from the db
 	private void setListTracking() {
+		DbAdapter dbHelper = new DbAdapter(this);
+		dbHelper.open();
+
 		// clear the list and create the object
 		listTracking = new ArrayList<DBTracking>();
 		// needed to temp store the dates in
@@ -124,7 +117,12 @@ public class ShowTracking extends ListActivity {
 
 		for (Date date : listDates) {
 			// For each date object add it to the listview
-			listTracking.add(new DBTracking(null, null, null, date, ""));
+			listTracking.add(new DBTracking(null, null, null, null, date, true,
+					""));
+
+			// create a temporary list with all the events from the date so we
+			// can sort it by time
+			List<DBTracking> listTempDBTracking = new ArrayList<DBTracking>();
 
 			// For each date get the exercise events
 			Cursor cExerciseEvents = dbHelper
@@ -137,8 +135,9 @@ public class ShowTracking extends ListActivity {
 							.fetchExerciseTypeByID(cExerciseEvents.getLong(cExerciseEvents
 									.getColumnIndexOrThrow(DbAdapter.DATABASE_EXERCISEEVENT_EXERCISETYPEID)));
 					cExerciseType.moveToFirst();
-
-					listTracking
+					// new DBTracking(exerciseEvent, mealEvent,
+					// bloodGlucoseEvent, medicineEvent, timestamp, noRecors)
+					listTempDBTracking
 							.add(new DBTracking(
 									new DBExerciseEvent(
 											cExerciseEvents
@@ -158,7 +157,13 @@ public class ShowTracking extends ListActivity {
 													.getColumnIndexOrThrow(DbAdapter.DATABASE_EXERCISEEVENT_USERID)),
 											cExerciseType.getString(cExerciseType
 													.getColumnIndexOrThrow(DbAdapter.DATABASE_EXERCISETYPE_NAME))),
-									null, null, null, ""));
+									null,
+									null,
+									null,
+									new Functions()
+											.getYearMonthDayHourMinutesAsDateFromString(cExerciseEvents.getString(cExerciseEvents
+													.getColumnIndexOrThrow(DbAdapter.DATABASE_EXERCISEEVENT_EVENTDATETIME))),
+									false, ""));
 
 					cExerciseType.close();
 				} while (cExerciseEvents.moveToNext());
@@ -171,7 +176,9 @@ public class ShowTracking extends ListActivity {
 			if (cMealEvents.getCount() > 0) {
 				cMealEvents.moveToFirst();
 				do {
-					listTracking
+					// new DBTracking(exerciseEvent, mealEvent,
+					// bloodGlucoseEvent, medicineEvent, timestamp, noRecors)
+					listTempDBTracking
 							.add(new DBTracking(
 									null,
 									new DBMealEvent(
@@ -188,7 +195,13 @@ public class ShowTracking extends ListActivity {
 													.getColumnIndexOrThrow(DbAdapter.DATABASE_MEALEVENT_EVENTDATETIME)),
 											cMealEvents.getLong(cMealEvents
 													.getColumnIndexOrThrow(DbAdapter.DATABASE_MEALEVENT_USERID)),
-											null), null, null, ""));
+											null),
+									null,
+									null,
+									new Functions()
+											.getYearMonthDayHourMinutesAsDateFromString(cMealEvents.getString(cMealEvents
+													.getColumnIndexOrThrow(DbAdapter.DATABASE_MEALEVENT_EVENTDATETIME))),
+									false, ""));
 				} while (cMealEvents.moveToNext());
 			}
 			cMealEvents.close();
@@ -205,12 +218,13 @@ public class ShowTracking extends ListActivity {
 							.fetchBloodGlucoseUnitsByID(cGlucoseEvent.getLong(cGlucoseEvent
 									.getColumnIndexOrThrow(DbAdapter.DATABASE_BLOODGLUCOSEEVENT_BGUNITID)));
 					cBGUnit.moveToFirst();
-
-					listTracking
+					// new DBTracking(exerciseEvent, mealEvent,
+					// bloodGlucoseEvent, medicineEvent, timestamp, noRecors)
+					listTempDBTracking
 							.add(new DBTracking(
 									null,
 									null,
-									new DBBloodGlucoseEvent(
+									new DBloodGlucoseEvent(
 											cGlucoseEvent
 													.getLong(cGlucoseEvent
 															.getColumnIndexOrThrow(DbAdapter.DATABASE_BLOODGLUCOSEEVENT_ID)),
@@ -224,13 +238,69 @@ public class ShowTracking extends ListActivity {
 													.getColumnIndexOrThrow(DbAdapter.DATABASE_BLOODGLUCOSEEVENT_USERID)),
 											cBGUnit.getString(cBGUnit
 													.getColumnIndexOrThrow(DbAdapter.DATABASE_BLOODGLUCOSEUNIT_UNIT))),
-									null, ""));
+									null,
+									new Functions()
+											.getYearMonthDayHourMinutesAsDateFromString(cGlucoseEvent.getString(cGlucoseEvent
+													.getColumnIndexOrThrow(DbAdapter.DATABASE_BLOODGLUCOSEEVENT_EVENTDATETIME))),
+									false, ""));
 
 					cBGUnit.close();
 				} while (cGlucoseEvent.moveToNext());
 			}
 			cGlucoseEvent.close();
+
+			// For each date get the medicine event
+			Cursor cMedicineEvent = dbHelper
+					.fetchMedicineEventByDate(new Functions()
+							.getYearMonthDayAsStringFromDate(date));
+			if (cMedicineEvent.getCount() > 0) {
+				cMedicineEvent.moveToFirst();
+
+				// loop true all medicine events
+				do {
+					// get the medicine type
+					Cursor cMedicineType = dbHelper
+							.fetchMedicineTypesByID(cMedicineEvent.getLong(cMedicineEvent
+									.getColumnIndexOrThrow(DbAdapter.DATABASE_MEDICINEEVENT_MEDICINETYPEID)));
+					cMedicineType.moveToFirst();
+					// new DBTracking(exerciseEvent, mealEvent,
+					// bloodGlucoseEvent,
+					// medicineEvent, timestamp, noRecors)
+					listTempDBTracking
+							.add(new DBTracking(
+									null,
+									null,
+									null,
+									new DBMedicineEvent(
+											cMedicineEvent
+													.getLong(cMedicineEvent
+															.getColumnIndexOrThrow(DbAdapter.DATABASE_MEDICINEEVENT_ID)),
+											cMedicineEvent.getFloat(cMedicineEvent
+													.getColumnIndexOrThrow(DbAdapter.DATABASE_MEDICINEEVENT_AMOUNT)),
+											cMedicineEvent.getString(cMedicineEvent
+													.getColumnIndexOrThrow(DbAdapter.DATABASE_MEDICINEEVENT_TIMESTAMP)),
+											cMedicineEvent.getLong(cMedicineEvent
+													.getColumnIndexOrThrow(DbAdapter.DATABASE_MEDICINEEVENT_MEDICINETYPEID)),
+											cMedicineType.getString(cMedicineType
+													.getColumnIndexOrThrow(DbAdapter.DATABASE_MEDICINETYPE_MEDICINENAME)),
+											cMedicineType.getString(cMedicineType
+													.getColumnIndexOrThrow(DbAdapter.DATABASE_MEDICINETYPE_MEDICINEUNIT))),
+									new Functions()
+											.getYearMonthDayHourMinutesAsDateFromString(cMedicineEvent.getString(cMedicineEvent
+													.getColumnIndexOrThrow(DbAdapter.DATABASE_MEDICINEEVENT_TIMESTAMP))),
+									false, ""));
+					cMedicineType.close();
+				} while (cMedicineEvent.moveToNext());
+			}
+			cMedicineEvent.close();
+ 
+			// order the temp list on timestamp
+			Collections.sort(listTempDBTracking, new TimeComparator()); 
+			
+			// add the temp list to the real list
+			listTracking.addAll(listTracking.size(), listTempDBTracking);
 		}
+		dbHelper.close();
 	}
 
 	@Override
@@ -276,13 +346,10 @@ public class ShowTracking extends ListActivity {
 
 		AlertDialog.Builder builder = new AlertDialog.Builder(
 				ActivityGroupTracking.group);
-		builder.setMessage(
-				getResources().getString(R.string.sureToExit))
-				.setPositiveButton(
-						getResources().getString(R.string.yes),
+		builder.setMessage(getResources().getString(R.string.sureToExit))
+				.setPositiveButton(getResources().getString(R.string.yes),
 						dialogClickListener)
-				.setNegativeButton(
-						getResources().getString(R.string.no),
+				.setNegativeButton(getResources().getString(R.string.no),
 						dialogClickListener).show();
 	}
 }
