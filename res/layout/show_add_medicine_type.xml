@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    style="@style/linearLayoutVerticalWithPadding" >
+
+    <TextView
+        style="@style/defaultFontTitle"
+        android:text="@string/pref_add_medicine_type" />
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:gravity="center" 
+        android:orientation="vertical" >
+
+        <EditText
+            android:id="@+id/editText1"
+            style="@style/styleEditText"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/Name" 
+            android:inputType="text" >
+        </EditText>
+        
+        <EditText
+            android:id="@+id/editText2"
+            style="@style/styleEditText"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/unit" 
+            android:inputType="text" >
+        </EditText>
+
+        <LinearLayout style="@style/linearLayoutForButtonAdd" >
+
+            <Button
+                android:id="@+id/buttonAdd"
+                style="@style/buttonAdd" />
+        </LinearLayout>
+
+        <LinearLayout style="@style/linearLayoutForButtonAdd" >
+
+            <Button
+                android:id="@+id/buttonDelete"
+                style="@style/buttonAdd"
+                android:text="@string/delete" />
+        </LinearLayout>
+    </LinearLayout>
+
+</LinearLayout>

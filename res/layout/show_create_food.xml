@@ -52,6 +52,10 @@
                 style="@style/styleTableRowGravityCenter"
                 android:visibility="gone" >
 
+                <TextView
+                    android:id="@+id/textView2"
+                    style="@style/textViewInTableAlignRight" />
+
                 <EditText
                     android:id="@+id/editTextFoodUnitStandardAmound"
                     style="@style/editTextInTableFloat"
@@ -66,12 +70,13 @@
             </TableRow>
 
             <TableRow
-                android:id="@+id/tableRow2"
+                android:id="@+id/tableRowCarb"
                 style="@style/styleTableRowGravityCenter" >
 
                 <TextView
                     android:id="@+id/textViewShowCreateFood1"
-                    style="@style/textViewInTableAlignRight" />
+                    style="@style/textViewInTableAlignRight"
+                    android:text="@string/short_carbs" />
 
                 <EditText
                     android:id="@+id/editTextShowCreateFood1"
@@ -79,12 +84,13 @@
             </TableRow>
 
             <TableRow
-                android:id="@+id/tableRow1"
+                android:id="@+id/tableRowProt"
                 style="@style/styleTableRowGravityCenter" >
 
                 <TextView
                     android:id="@+id/textViewShowCreateFood2"
-                    style="@style/textViewInTableAlignRight" />
+                    style="@style/textViewInTableAlignRight"
+                    android:text="@string/amound_of_protein" />
 
                 <EditText
                     android:id="@+id/editTextShowCreateFood2"
@@ -92,12 +98,13 @@
             </TableRow>
 
             <TableRow
-                android:id="@+id/tableRow3"
+                android:id="@+id/tableRowFat"
                 style="@style/styleTableRowGravityCenter" >
 
                 <TextView
                     android:id="@+id/textViewShowCreateFood3"
-                    style="@style/textViewInTableAlignRight" />
+                    style="@style/textViewInTableAlignRight"
+                    android:text="@string/amound_of_fat" />
 
                 <EditText
                     android:id="@+id/editTextShowCreateFood3"
@@ -105,12 +112,13 @@
             </TableRow>
 
             <TableRow
-                android:id="@+id/tableRow5"
+                android:id="@+id/tableRowKcal"
                 style="@style/styleTableRowGravityCenter" >
 
                 <TextView
                     android:id="@+id/textViewShowCreateFood4"
-                    style="@style/textViewInTableAlignRight" />
+                    style="@style/textViewInTableAlignRight"
+                    android:text="@string/short_kcal" />
 
                 <EditText
                     android:id="@+id/editTextShowCreateFood4"
