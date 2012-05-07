@@ -50,7 +50,8 @@
         <TableLayout
             android:id="@+id/tableLayout1"
             android:layout_width="fill_parent"
-            android:layout_height="wrap_content" >
+            android:layout_height="wrap_content"
+            android:stretchColumns="*" >
 
             <TableRow
                 android:id="@+id/tableRow1"
@@ -75,12 +76,13 @@
                 android:background="#FF909090" />
 
             <TableRow
-                android:id="@+id/tableRow2"
+                android:id="@+id/tableRowCarb"
                 style="@style/styleTableRowGravityCenter" >
 
                 <TextView
                     android:id="@+id/textViewShowAddFoodRowTwoFieldOne"
-                    style="@style/textViewInTableAlignRight" />
+                    style="@style/textViewInTableAlignRight"
+                    android:text="@string/short_carbs" />
 
                 <TextView
                     android:id="@+id/textViewShowAddFoodRowTwoFieldTwo"
@@ -93,12 +95,13 @@
             </TableRow>
 
             <TableRow
-                android:id="@+id/tableRow3"
+                android:id="@+id/tableRowProt"
                 style="@style/styleTableRowGravityCenter" >
 
                 <TextView
                     android:id="@+id/textViewShowAddFoodRowThreeFieldOne"
-                    style="@style/textViewInTableAlignRight" />
+                    style="@style/textViewInTableAlignRight"
+                    android:text="@string/amound_of_protein" />
 
                 <TextView
                     android:id="@+id/textViewShowAddFoodRowThreeFieldTwo"
@@ -111,12 +114,13 @@
             </TableRow>
 
             <TableRow
-                android:id="@+id/tableRow4"
+                android:id="@+id/tableRowFat"
                 style="@style/styleTableRowGravityCenter" >
 
                 <TextView
                     android:id="@+id/textViewShowAddFoodRowFourFieldOne"
-                    style="@style/textViewInTableAlignRight" />
+                    style="@style/textViewInTableAlignRight"
+                    android:text="@string/amound_of_fat" />
 
                 <TextView
                     android:id="@+id/textViewShowAddFoodRowFourFieldTwo"
@@ -129,12 +133,13 @@
             </TableRow>
 
             <TableRow
-                android:id="@+id/tableRow5"
+                android:id="@+id/tableRowKcal"
                 style="@style/styleTableRowGravityCenter" >
 
                 <TextView
                     android:id="@+id/textViewShowAddFoodRowFiveFieldOne"
-                    style="@style/textViewInTableAlignRight" />
+                    style="@style/textViewInTableAlignRight"
+                    android:text="@string/short_kcal" />
 
                 <TextView
                     android:id="@+id/textViewShowAddFoodRowFiveFieldTwo"
@@ -147,14 +152,51 @@
             </TableRow>
         </TableLayout>
 
-        <LinearLayout style="@style/linearLayoutForButtonAdd" >
+        <LinearLayout
+            android:id="@+id/LinearLayoutBtUpdate"
+            style="@style/linearLayoutForButtonAdd"
+            android:visibility="gone" >
 
             <Button
-                android:id="@+id/buttonAddOrUpdate"
-                style="@style/buttonAdd" />
+                android:id="@+id/buttonUpdate"
+                style="@style/buttonAdd"
+                android:text="@string/update" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/LinearLayoutBtAddAndAddAnother"
+            style="@style/linearLayoutForButtonAdd"
+            android:visibility="gone" >
+
+            <Button
+                android:id="@+id/buttonShowAddFoodAddAndAddAnother"
+                style="@style/buttonAdd"
+                android:text="@string/add_and_add_another" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/LinearLayoutBtAddAndGoToOverview"
+            style="@style/linearLayoutForButtonAdd"
+            android:visibility="gone" >
+
+            <Button
+                android:id="@+id/buttonShowAddFoodAddAndGoToOverview"
+                style="@style/buttonAdd"
+                android:text="@string/add_and_go_to_selected" />
         </LinearLayout>
 
         <LinearLayout style="@style/linearLayoutForButtonAdd" >
+
+            <Button
+                android:id="@+id/buttonShowAddFoodCancel"
+                style="@style/buttonAdd"
+                android:text="@string/cancel" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/LinearLayoutBtDelete"
+            style="@style/linearLayoutForButtonAdd"
+            android:visibility="gone" >
 
             <Button
                 android:id="@+id/buttonShowAddFoodDelete"

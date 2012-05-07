@@ -12,6 +12,20 @@
     <string name="btup">+</string>
     <string name="btdown">-</string>
     <string name="loading">laden</string>
+    <string name="hide">Verberg</string>
+    <string name="Name">Naam</string>
+    <string name="unit">Eenheid</string>
+    <string name="name_cant_be_empty">Naam mag niet leeg zijn</string>
+    <string name="unit_cant_be_empty">Eenheid mag niet leeg zijn</string>
+    <string name="short_kcal">Kcals</string>
+    <string name="short_carbs">Kh</string>
+    <string name="save">Opslaan</string>
+    <string name="oke">Oke</string>
+    <string name="cancel">Annuleren</string>
+    <string name="visibility">Zichtbaarheid</string>
+    <string name="visible">Zichtbaar</string>
+    <string name="invisible">Onzichtbaar</string>
+    <string name="next">Volgende</string>
 
     <!-- Exit application dialog -->
     <string name="sureToExit">Bent u zeker dat u wilt afsluiten ?</string>
@@ -19,6 +33,7 @@
     <!-- Show start -->
     <string name="checkingDatabase">Database initialiseren</string>
     <string name="retrievingFood">Producten ophalen</string>
+    <string name="are_you_diabetes_patient">Bent u diabetes patient?</string>
 
     <!-- Page titels -->
     <string name="titelTracking">Historiek</string>
@@ -37,8 +52,13 @@
     <string name="pref_value_order">Voorkeur voedingswaarde</string>
     <string name="pref_text_size">Lettergrootte</string>
     <string name="pref_glucose_unit">Bloedglucose-eenheid</string>
-    <string name="pref_exercise_types">Activiteit intensiteiten</string>
-    <string name="pref_db_language">Database taal</string>
+    <string name="pref_exercise_types">Activiteit types</string>
+    <string name="pref_medicine_types">Medicijn types</string>
+    <string name="pref_db_language">Taal voedingstabel</string>
+
+    <!-- setting sub titles -->
+    <string name="pref_add_exercise_type">Activiteit type toevoegen</string>
+    <string name="pref_add_medicine_type">Medicijn type toevoegen</string>
 
     <!-- ShowTracking -->
     <string name="showTracking">Rapporten</string>
@@ -66,32 +86,33 @@
     <string name="gram">gram</string>
     <string name="ml">ml</string>
 
+    <!-- ShowUpdateFood -->
+    <string name="update_food_name">Productnaam aanpassen</string>
+
     <!-- ShowCreateUnit & ShowCreateFood -->
-    <string name="unit_name_is_required">Eenheid mag niet leeg zijn</string>
     <string name="unit_amount_cant_be_zero">Eenheid moet groter dan 0 zijn</string>
 
     <!-- ShowExerciseEvents -->
     <string name="exercise_events">Sport activiteiten</string>
     <string name="add_exercise_events">Sport activiteit toevoegen</string>
-    <string name="pref_add_exercise_type">Intensiteit toevoegen</string>
     <string name="menu_update_exercise_type">Intensiteiten updaten</string>
 
     <!-- show add food to selection -->
-    <string name="short_kcal">Kcals</string>
-    <string name="short_carbs">Kh</string>
+    <string name="add_and_add_another">Toevoegen en terug naar lijst</string>
+    <string name="add_and_go_to_selected">Toevoegen en naar overzicht gaan</string>
 
     <!-- ShowAddExerciseEvents -->
     <string name="description">Beschrijving</string>
     <string name="start_time">Begin tijd</string>
     <string name="end_time">Duur</string>
-    <string name="exercise_type">Intensiteit</string>
+    <string name="exercise_type">Type</string>
     <string name="description_cant_be_empty">Beschrijving mag niet leeg zijn</string>
 
     <!-- ShowAddBloodGlucoseEvent -->
     <string name="amountCantBeZero">Waarde mag niet 0 zijn!</string>
 
     <!-- ShowAddExerciseType -->
-    <string name="exercise_type_cant_be_empty">Intensiteit mag niet leeg zijn</string>
+    <string name="exercise_type_cant_be_empty">Type mag niet leeg zijn</string>
     <string name="date">Datum</string>
 
     <!-- Layout -->
@@ -128,7 +149,6 @@
     <string name="food_name_succesfull_dated">Eten naam is succesvol aangepast</string>
     <string name="add_unit">Eenheid toevoegen</string>
     <string name="units">Hoeveelheden</string>
-    <string name="unit">Eenheid</string>
     <string name="selections_are_empty">Selecties is leeg</string>
     <string name="saved">Opgeslagen</string>
     <string name="do_you_want_to_delete_the_selections">Wilt u de selecties leeg maken?</string>
@@ -139,8 +159,6 @@
     <string name="Load_template">laad template</string>
     <string name="template_load_empty">Er zijn geen templates</string>
     <string name="template_name_cant_be_empty">Template naam mag niet leeg zijn</string>
-    <string name="save">Opslaan</string>
-    <string name="cancel">Annuleren</string>
 
     <!-- Slider -->
     <string name="dateSliderTitle">Geselecteerde datum</string>
@@ -151,13 +169,19 @@
     <string name="pref_snackratio_title">Vieruurtje</string>
     <string name="pref_dinnerratio_title">Avondmaal</string>
     <string name="starts_at">begint om</string>
+    
+    <!-- Settings insuline KH ratio -->
+	<string name="if_value_zero_dont_calc_insuline">Als de waarde 0 is word er geen insuline berekend!</string>
 
     <!-- Settings value order -->
-    <string name="up">omhoog</string>
-    <string name="down">omlaag</string>
+    <string name="standard_cant_be_hidden">Default kan niet onzichtbaar gezet worden</string>
 
     <!-- Settings font size list -->
     <string name="fontSize">Tekst grootte</string>
     <string name="selected_wanted_size">Selecteer de gewenste grootte</string>
+
+    <!-- Setting medicine types -->
+    <string name="standard">default</string>
+    <string name="standard_is_used_for">Default word gebruikt om geselecteerd eten aan de rapport pagina toe te voegen</string>
 
 </resources>

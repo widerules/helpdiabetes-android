@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     style="@style/linearLayoutVerticalWithPadding" >
-    
+
     <TextView
         android:id="@+id/textViewTotalTitle"
         style="@style/defaultFontTitle"
@@ -37,7 +37,7 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:background="@color/ColorBackgroundTrackingDate"
-        android:gravity="center_horizontal" 
+        android:gravity="center_horizontal"
         android:textColor="@color/ColorTextTrackingDate" />
 
     <ListView
@@ -47,48 +47,55 @@
         android:layout_weight="1.0"
         android:cacheColorHint="#00000000" />
 
-     <LinearLayout
-        android:id="@+id/linearLayout3"
+    <HorizontalScrollView
         android:layout_width="fill_parent"
-        android:layout_height="wrap_content" >
+        android:layout_height="wrap_content"
+        android:fillViewport="true"
+        android:scrollbars="none" >
 
-        <Button
-            android:id="@+id/buttonDelete"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="left"
-            android:background="@drawable/ic_trashcan" />
-
-        <TextView
+        <LinearLayout
+            android:id="@+id/linearLayout3"
             android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1.0" />
+            android:layout_height="wrap_content" >
 
-        <Button
-            android:id="@+id/buttonSaveAsTemplate"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:background="@drawable/ic_save" />
+            <Button
+                android:id="@+id/buttonAddSelectedFoodToTracking"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="left"
+                android:background="@drawable/ic_check" />
 
-        <Button
-            android:id="@+id/buttonShowSelectedFoodButtonLoadTemplate"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:background="@drawable/ic_load" />
- 
-        <TextView
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1.0" />
+            <TextView
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1.0" />
 
-        <Button
-            android:id="@+id/buttonAddSelectedFoodToTracking"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="right"
-            android:background="@drawable/ic_check" />
-    </LinearLayout>
-    
+            <Button
+                android:id="@+id/buttonSaveAsTemplate"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:text="@string/save_as_template" />
+
+            <Button
+                android:id="@+id/buttonLoadTemplate"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:text="@string/Load_template" />
+
+            <TextView
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1.0" />
+
+            <Button
+                android:id="@+id/buttonDelete"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="right"
+                android:background="@drawable/ic_trashcan" />
+        </LinearLayout>
+    </HorizontalScrollView>
+
 </LinearLayout>

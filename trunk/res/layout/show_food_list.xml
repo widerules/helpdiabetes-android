@@ -26,7 +26,7 @@
             android:id="@+id/buttonShowFoodListSearch"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="@drawable/ic_search_no" />
+            android:background="@android:drawable/ic_menu_search" />
 
         <Button
             android:id="@+id/buttonShowFoodListShowSelectedFood"
