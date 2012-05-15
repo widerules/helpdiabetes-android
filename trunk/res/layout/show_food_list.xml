@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!-- Please read info.txt for license and legal information -->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     style="@style/linearLayoutVerticalWithPadding" >
 
@@ -11,7 +12,7 @@
             android:id="@+id/buttonShowFoodListShowCreateFood"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="@drawable/ic_add_yes" />
+            android:background="@drawable/ic_menu_add" />
 
         <EditText
             android:id="@+id/editTextSearch"
@@ -19,6 +20,7 @@
             android:layout_width="0dip"
             android:layout_height="wrap_content"
             android:layout_weight="1.0"
+            android:paddingLeft="0dip"
             android:hint="@string/search"
             android:inputType="text" />
 
@@ -26,13 +28,13 @@
             android:id="@+id/buttonShowFoodListSearch"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="@android:drawable/ic_menu_search" />
+            android:background="@drawable/ic_menu_search" />
 
         <Button
             android:id="@+id/buttonShowFoodListShowSelectedFood"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="@drawable/ic_selection_yes" />
+            android:background="@drawable/ic_menu_forward" />
     </LinearLayout>
 
     <ListView

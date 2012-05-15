@@ -1,3 +1,5 @@
+// Please read info.txt for license and legal information
+
 package be.goossens.oracle.Rest;
 
 import java.text.ParseException;
@@ -5,7 +7,6 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
-import android.content.Context;
 import be.goossens.oracle.slider.TimeLabeler;
 
 /*
@@ -14,19 +15,19 @@ import be.goossens.oracle.slider.TimeLabeler;
 
 public class Functions {
 
-	//This function will get a string as input and transrom that string to xxxx... if its longer then 6
-	public String getShorterString(String input){
-		if(input.length() > 6)
-			return input.substring(0, 4) + "...";
-		else return
-				input;
+	// This function will get a string as input and transrom that string to
+	// xxxx... if its longer then maxLength
+	public String getShorterString(String input, int maxLength) {
+		if (input.length() > maxLength)
+			return input.substring(0, (maxLength - 2)) + "...";
+		else
+			return input;
 	}
-	
-	
+
 	/*
 	 * Round function
 	 */
-	
+
 	public float roundFloats(float input, int numbersBehind) {
 		float p = (float) Math.pow(10, numbersBehind);
 		return Math.round(input * p) / p;
@@ -113,24 +114,24 @@ public class Functions {
 		return hour + ":" + minute;
 	}
 
-	//This method will return a date object with the right date and time
+	// This method will return a date object with the right date and time
 	// The input string willb e in the format yyyy-MM-dd HH:mm:ss
 	// This method is used to order our dbTracking list on time
-	public Date getYearMonthDayHourMinutesAsDateFromString(String date){
+	public Date getYearMonthDayHourMinutesAsDateFromString(String date) {
 		SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-		try { 
+		try {
 			Date value = format.parse(date);
 			return value;
 		} catch (ParseException e) {
 			return null;
 		}
 	}
-	
+
 	// This method will return a date object with the right date
 	// The input string will be in the format yyyy-MM-dd HH:mm:ss
 	public Date getYearMonthDayAsDateFromString(String date) {
 		SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
-		try { 
+		try {
 			Date value = format.parse(date);
 			return value;
 		} catch (ParseException e) {
@@ -183,6 +184,26 @@ public class Functions {
 		} catch (ParseException e) {
 			return null;
 		}
+	}
+
+	// This is used in the tracking activity where we show a exercise type
+	public String getTimeFromSeconds(int endTime) {
+		int hour = endTime / 3600;
+		int minutes = (endTime - (hour * 3600)) / 60;
+
+		String returnHour = "";
+		String returnMinutes = "";
+
+		if (hour < 10)
+			returnHour = "0";
+		returnHour += hour;
+
+		if (minutes < 10)
+			returnMinutes = "0";
+		returnMinutes += minutes;
+
+		return "" + returnHour + ":" + returnMinutes;
+
 	}
 
 	public String getDurationFromSeconds(int startTime, int endTime) {

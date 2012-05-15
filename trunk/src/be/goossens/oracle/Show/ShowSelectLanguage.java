@@ -1,3 +1,5 @@
+// Please read info.txt for license and legal information
+
 package be.goossens.oracle.Show;
 
 import java.util.ArrayList;
@@ -15,6 +17,7 @@ import be.goossens.oracle.R;
 import be.goossens.oracle.Custom.CustomArrayAdapterFoodLanguage;
 import be.goossens.oracle.Objects.DBFoodLanguage;
 import be.goossens.oracle.Rest.DbAdapter;
+import be.goossens.oracle.Rest.DbSettings;
 
 public class ShowSelectLanguage extends Activity {
 
@@ -70,8 +73,7 @@ public class ShowSelectLanguage extends Activity {
 
 	private void clickOnItem(int position) {
 		// update the setting languageID
-		dbHelper.updateSettingsByName(
-				getResources().getString(R.string.setting_language), "" + objects.get(position).getId());
+		dbHelper.updateSettingsByName(DbSettings.setting_language, "" + objects.get(position).getId());
  
 		// close the db
 		dbHelper.close();

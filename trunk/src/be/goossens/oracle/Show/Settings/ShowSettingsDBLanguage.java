@@ -1,3 +1,5 @@
+// Please read info.txt for license and legal information
+
 package be.goossens.oracle.Show.Settings;
 
 import java.util.ArrayList;
@@ -8,29 +10,52 @@ import android.database.Cursor;
 import android.os.Bundle;
 import android.view.KeyEvent;
 import android.view.View;
+import android.view.View.OnClickListener;
+import android.widget.Button;
 import android.widget.ListView;
-import android.widget.Toast;
 import be.goossens.oracle.R;
 import be.goossens.oracle.ActivityGroup.ActivityGroupMeal;
 import be.goossens.oracle.ActivityGroup.ActivityGroupSettings;
 import be.goossens.oracle.Custom.CustomArrayAdapterDBFoodLanguage;
 import be.goossens.oracle.Objects.DBFoodLanguage;
+import be.goossens.oracle.Rest.DataParser;
 import be.goossens.oracle.Rest.DbAdapter;
+import be.goossens.oracle.Rest.DbSettings;
 
 public class ShowSettingsDBLanguage extends ListActivity {
 
 	private List<DBFoodLanguage> objects;
+	private Button btBack;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.show_settings_db_language);
+		
+		btBack = (Button) findViewById(R.id.buttonBack);
+		btBack.setOnClickListener(new OnClickListener() {
+			public void onClick(View v) {
+				ActivityGroupSettings.group.back();
+			}
+		});
+		
 	}
 
 	@Override
 	protected void onResume() {
 		super.onResume();
 		fillListView();
+		
+		// check if we need to show the button next
+				// only need to show first time application starts
+				try {
+					if (getIntent().getExtras().getString(DataParser.whatToDo)
+							.equals(DataParser.doFirstTime)) {
+						//hide the button back
+						btBack.setVisibility(View.GONE);
+					}
+				} catch (Exception e) {
+				}
 	}
 
 	private void fillListView() {
@@ -49,35 +74,41 @@ public class ShowSettingsDBLanguage extends ListActivity {
 										.getColumnIndexOrThrow(DbAdapter.DATABASE_FOODLANGUAGE_ID)),
 						cFoodLanguage.getString(cFoodLanguage
 								.getColumnIndexOrThrow(DbAdapter.DATABASE_FOODLANGUAGE_LANGUAGE))));
-				
-			} while (cFoodLanguage.moveToNext()); 
+
+			} while (cFoodLanguage.moveToNext());
 		}
 		cFoodLanguage.close();
 		db.close();
-		
+
 		CustomArrayAdapterDBFoodLanguage adapter = new CustomArrayAdapterDBFoodLanguage(
-				this, android.R.layout.simple_list_item_1, objects);
- 
+				this, R.layout.row_custom_array_adapter_with_arrow, objects);
+
 		setListAdapter(adapter);
 	}
 
 	@Override
 	protected void onListItemClick(ListView l, View v, int position, long id) {
-		//save the new languageID to the settings
+		// save the new languageID to the settings
 		DbAdapter db = new DbAdapter(this);
 		db.open();
-		db.updateSettingsByName(getResources().getString(R.string.setting_language), "" + objects.get(position).getId());
+		db.updateSettingsByName(DbSettings.setting_language, ""
+						+ objects.get(position).getId());
 		db.close();
 		
-		//restart the activitygroupmeal
-		ActivityGroupMeal.group.restartThisActivity();
-		
-		//go back to settings page
-		ActivityGroupSettings.group.back();
-		
-		super.onListItemClick(l, v, position, id);
+		//try to go back to 
+		//when its the first time we run this application 
+		//we cant go back but we have to finish()
+		try {
+			// restart the activitygroupmeal
+			ActivityGroupMeal.group.restartThisActivity();
+
+			// go back to settings page
+			ActivityGroupSettings.group.back();
+		} catch (Exception e) {
+			finish();
+		}
 	}
-	
+
 	// override the onkeydown so we can go back to the main setting page
 	@Override
 	public boolean onKeyDown(int keyCode, KeyEvent event) {

@@ -1,3 +1,5 @@
+// Please read info.txt for license and legal information
+
 package be.goossens.oracle.Show.Exercise;
 
 import java.util.ArrayList;
@@ -23,7 +25,7 @@ import be.goossens.oracle.Rest.DbAdapter;
 
 public class ShowExerciseTypes extends ListActivity {
 	private List<DBExerciseType> listExerciseTypes;
-	private Button btAdd;
+	private Button btAdd, btBack;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -41,6 +43,13 @@ public class ShowExerciseTypes extends ListActivity {
 			}
 		});
 
+		btBack = (Button) findViewById(R.id.buttonBack);
+		btBack.setOnClickListener(new OnClickListener() {
+			public void onClick(View v) {
+				ActivityGroupSettings.group.back();
+			}
+		});
+		
 	}
 
 	//refresh the name of a object
@@ -55,6 +64,22 @@ public class ShowExerciseTypes extends ListActivity {
 				fillListView();
 				//stop looping
 				return;
+			}
+		}
+	}
+	
+	//This method will delete a object from the list where exercise type id = exerciseID
+	//This method is called from showaddexercisetype when we click on delete button
+	public void deleteFromList(long exerciseID){
+		setListAdapter(null);
+		for(DBExerciseType obj: listExerciseTypes){
+			if(obj.getId() == exerciseID){
+				//delete object
+				listExerciseTypes.remove(obj);
+				//update listadapter
+				fillListView();
+				//stop looping
+				return; 
 			}
 		}
 	}
@@ -95,8 +120,9 @@ public class ShowExerciseTypes extends ListActivity {
 		CustomArrayAdapterDBExerciseType adapter = new CustomArrayAdapterDBExerciseType(
 				this, R.layout.row_custom_array_adapter_with_arrow,
 				listExerciseTypes,
-				ActivityGroupMeal.group.getFoodData().dbFontSize);
-
+				ActivityGroupMeal.group.getFoodData().dbFontSize,
+				ActivityGroupMeal.group.getFoodData().defaultExerciseTypeID);
+ 
 		setListAdapter(adapter);
 	}
 
@@ -159,5 +185,10 @@ public class ShowExerciseTypes extends ListActivity {
 			return false;
 		}
 		return super.onKeyDown(keyCode, event);
+	}
+
+	public void refresh() {
+		fillListExerciseTypes();
+		fillListView();
 	}
 }

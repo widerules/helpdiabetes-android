@@ -1,4 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!-- Please read info.txt for license and legal information -->
+
 <!-- This array list need to stay in the right order, also no other object can be added to this array or the code will crash -->
 <!-- This array list is used in the add exercise event page. this arraylist will fill the spinner for duration -->
 <resources>

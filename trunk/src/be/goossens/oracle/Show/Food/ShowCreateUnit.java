@@ -1,3 +1,5 @@
+// Please read info.txt for license and legal information
+
 package be.goossens.oracle.Show.Food;
 
 /*
@@ -6,7 +8,6 @@ package be.goossens.oracle.Show.Food;
  */
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 import android.app.Activity;
@@ -16,36 +17,36 @@ import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.View.OnKeyListener;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemSelectedListener;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TableRow;
-import android.widget.TextView;
 import android.widget.Toast;
 import be.goossens.oracle.R;
 import be.goossens.oracle.ActivityGroup.ActivityGroupMeal;
-import be.goossens.oracle.Objects.DBValueOrder;
+import be.goossens.oracle.Custom.CustomArrayAdapterCharSequenceShowCreateFood;
+import be.goossens.oracle.Rest.DataParser;
 import be.goossens.oracle.Rest.DbAdapter;
-import be.goossens.oracle.Rest.ValueOrderComparator;
+import be.goossens.oracle.Rest.Functions;
 
 public class ShowCreateUnit extends Activity {
-	private DbAdapter dbHelper;
-	private long foodId;
+	private long foodId, unitId;
 
 	private EditText editTextStandardAmound;
 	private EditText editTextName;
-	private Button buttonAddOrUpdate;
-	private Button buttonDelete;
+	private Button btAdd;
+	private Button btDelete, btBack;
 
 	private Spinner spinnerUnit;
 	private TableRow tableRowSpecialUnit;
 
-	private List<TextView> tvList;
-	private List<EditText> etList;
-	private List<DBValueOrder> listValueOrders;
+	private EditText etCarb, etProt, etFat, etKcal;
+
+	// used to hide the ones we dont need to show
+	private TableRow trCarb, trProt, trFat, trKcal;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -55,95 +56,326 @@ public class ShowCreateUnit extends Activity {
 				R.layout.show_create_unit, null);
 		setContentView(contentView);
 
-		dbHelper = new DbAdapter(this);
-		foodId = getIntent().getExtras().getLong(DbAdapter.DATABASE_FOOD_ID);
-
-		tvList = new ArrayList<TextView>();
-		etList = new ArrayList<EditText>();
-
 		editTextStandardAmound = (EditText) findViewById(R.id.editTextShowCreateUnitFoodUnitStandardAmound);
 		editTextName = (EditText) findViewById(R.id.editTextShowCreateUnitFoodUnitName);
-		buttonAddOrUpdate = (Button) findViewById(R.id.buttonShowCreateUnitAddOrUpdate);
-		buttonDelete = (Button) findViewById(R.id.buttonShowCreateUnitDelete);
+		btAdd = (Button) findViewById(R.id.buttonShowCreateUnitAddOrUpdate);
+		btDelete = (Button) findViewById(R.id.buttonShowCreateUnitDelete);
 		spinnerUnit = (Spinner) findViewById(R.id.spinnerShowCreateUnit);
 		tableRowSpecialUnit = (TableRow) findViewById(R.id.tableRowShowCreateUnitSpecialFoodUnit);
 
-		tvList.add((TextView) findViewById(R.id.textViewShowCreateUnit1));
-		tvList.add((TextView) findViewById(R.id.textViewShowCreateUnit2));
-		tvList.add((TextView) findViewById(R.id.textViewShowCreateUnit3));
-		tvList.add((TextView) findViewById(R.id.textViewShowCreateUnit4));
+		etCarb = (EditText) findViewById(R.id.editTextShowCreateUnit1);
+		etProt = (EditText) findViewById(R.id.editTextShowCreateUnit2);
+		etFat = (EditText) findViewById(R.id.editTextShowCreateUnit3);
+		etKcal = (EditText) findViewById(R.id.editTextShowCreateUnit4);
 
-		etList.add((EditText) findViewById(R.id.editTextShowCreateUnit1));
-		etList.add((EditText) findViewById(R.id.editTextShowCreateUnit2));
-		etList.add((EditText) findViewById(R.id.editTextShowCreateUnit3));
-		etList.add((EditText) findViewById(R.id.editTextShowCreateUnit4));
+		trCarb = (TableRow) findViewById(R.id.tableRowCarb);
+		trProt = (TableRow) findViewById(R.id.tableRowProt);
+		trFat = (TableRow) findViewById(R.id.tableRowFat);
+		trKcal = (TableRow) findViewById(R.id.tableRowKcal);
+
+		btBack = (Button) findViewById(R.id.buttonBack);
+		btBack.setOnClickListener(new OnClickListener() {
+			public void onClick(View v) {
+				ActivityGroupMeal.group.back();
+			}
+		});
+
+		// hide button delete
+		btDelete.setVisibility(View.GONE);
 
 		spinnerUnit.setOnItemSelectedListener(new OnItemSelectedListener() {
-
 			public void onItemSelected(AdapterView<?> arg0, View arg1,
 					int arg2, long arg3) {
 				hideOrShowSpecialFoodUnitTableRow();
 			}
 
 			public void onNothingSelected(AdapterView<?> arg0) {
-				// TODO Auto-generated method stub
-
 			}
 		});
 
-		buttonDelete.setVisibility(View.GONE);
-
-		buttonAddOrUpdate.setOnClickListener(new OnClickListener() {
+		btAdd.setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
-				onClickAdd(v);
+				onClickAdd();
 			}
 		});
 
-		buttonDelete.setOnClickListener(new OnClickListener() {
+		btDelete.setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
-				onClickDelete(v);
+				onClickDelete();
 			}
 		});
+
+		// handle the enter keys
+		etCarb.setOnKeyListener(new OnKeyListener() {
+			public boolean onKey(View v, int keyCode, KeyEvent event) {
+				// filter so we only get the onkey up actions
+				if (event.getAction() != KeyEvent.ACTION_DOWN) {
+					// if the pressed key = enter we go to the next
+					if (event.getKeyCode() == KeyEvent.KEYCODE_ENTER) {
+						etProt.requestFocus();
+					}
+				}
+				// if we dont return false our numbers wont get in the
+				// edittext
+				return false;
+			}
+		});
+
+		etProt.setOnKeyListener(new OnKeyListener() {
+			public boolean onKey(View v, int keyCode, KeyEvent event) {
+				// filter so we only get the onkey up actions
+				if (event.getAction() != KeyEvent.ACTION_DOWN) {
+					// if the pressed key = enter we go to the next
+					if (event.getKeyCode() == KeyEvent.KEYCODE_ENTER) {
+						etFat.requestFocus();
+					}
+				}
+				// if we dont return false our numbers wont get in the
+				// edittext
+				return false;
+			}
+		});
+
+		etFat.setOnKeyListener(new OnKeyListener() {
+			public boolean onKey(View v, int keyCode, KeyEvent event) {
+				// filter so we only get the onkey up actions
+				if (event.getAction() != KeyEvent.ACTION_DOWN) {
+					// if the pressed key = enter we go to the next
+					if (event.getKeyCode() == KeyEvent.KEYCODE_ENTER) {
+						etKcal.requestFocus();
+					}
+				}
+				// if we dont return false our numbers wont get in the
+				// edittext
+				return false;
+			}
+		});
+
+		etKcal.setOnKeyListener(new OnKeyListener() {
+			public boolean onKey(View v, int keyCode, KeyEvent event) {
+				// filter so we only get the onkey up actions
+				if (event.getAction() != KeyEvent.ACTION_DOWN) {
+					// if the pressed key = enter we go to the next
+					if (event.getKeyCode() == KeyEvent.KEYCODE_ENTER) {
+						onClickAdd();
+					}
+				}
+				// if we dont return false our numbers wont get in the
+				// edittext
+				return false;
+			}
+		});
+	}
+
+	// when we click on the button delete
+	private void onClickDelete() {
+		if (weCanDelete()) {
+			// delete the unit
+			DbAdapter db = new DbAdapter(this);
+			db.open();
+			// delete the unit
+			db.deleteFoodUnit(unitId);
+			// mark the food as "own food"
+			db.updateFoodToOwnCreated(foodId);
+
+			db.close();
+
+			// refresh the list
+			ActivityGroupMeal.group.getShowUpdateFood().refresh();
+		}
+
+		// go back
+		ActivityGroupMeal.group.back();
 
 	}
 
-	@Override
-	protected void onResume() {
-		try {
-			super.onResume();
-			dbHelper.open();
-			fillListValueOrders();
-			fillTextViews();
-			fillSpinner();
-			checkUpdateUnit();
-		} catch (Exception e) {
+	// when we click on the button add / update
+	private void onClickAdd() {
+		if (checkValues()) {
+			float standardamount = 0f;
+			String unitName = "";
+			float carb = 0f;
+			float prot = 0f;
+			float fat = 0f;
+			float kcal = 0f;
+
+			if (spinnerUnit.getSelectedItemPosition() == 0) {
+				standardamount = 100;
+				unitName = getResources().getString(R.string.gram);
+			} else if (spinnerUnit.getSelectedItemPosition() == 1) {
+				standardamount = 100;
+				unitName = getResources().getString(R.string.ml);
+			} else {
+				try {
+					standardamount = Float.parseFloat(editTextStandardAmound
+							.getText().toString());
+				} catch (Exception e) {
+					standardamount = 0f;
+				}
+				unitName = editTextName.getText().toString();
+			}
+
+			try {
+				carb = Float.parseFloat(etCarb.getText().toString());
+			} catch (Exception e) {
+				carb = 0f;
+			}
+
+			try {
+				fat = Float.parseFloat(etFat.getText().toString());
+			} catch (Exception e) {
+				fat = 0f;
+			}
+
+			try {
+				kcal = Float.parseFloat(etKcal.getText().toString());
+			} catch (Exception e) {
+				kcal = 0f;
+			}
+
+			// round values
+			Functions functions = new Functions();
+			standardamount = functions.roundFloats(standardamount, 1);
+			carb = functions.roundFloats(carb, 1);
+			prot = functions.roundFloats(prot, 1);
+			fat = functions.roundFloats(fat, 1);
+			kcal = functions.roundFloats(kcal, 1);
+
+			DbAdapter db = new DbAdapter(this);
+			db.open();
+
+			if (unitId <= 0) {
+				// add the unit to the database
+				db.createFoodUnit(foodId, unitName, standardamount, carb, prot,
+						fat, kcal);
+			} else {
+				// update existing unit
+				db.updateFoodUnit(unitId, unitName, standardamount, carb, prot,
+						fat, kcal);
+			}
+
+			// set the food platform to "android"
+			db.updateFoodToOwnCreated(foodId);
+
+			db.close();
+
+			// refresh the list
+			ActivityGroupMeal.group.getShowUpdateFood().refresh();
+
+			// update the values in the activitygroup foodlist from platform to
+			// "android"
+			// so we see a green star
+			ActivityGroupMeal.group.getFoodData()
+					.updateFoodToOwnCreated(foodId);
+
+			// go back
 			ActivityGroupMeal.group.back();
 		}
 	}
 
-	@Override
-	protected void onPause() {
-		super.onPause();
-		dbHelper.close();
+	private boolean checkValues() {
+		if (spinnerUnit.getCount() == spinnerUnit.getSelectedItemPosition() + 1) {
+			// if we selected the last spinner option we have to check if
+			// standardamount and unitname are filled in
+			if (editTextName.getText().length() <= 0) {
+				Toast.makeText(this,
+						getResources().getString(R.string.name_cant_be_empty),
+						Toast.LENGTH_LONG).show();
+				return false;
+			} else if (editTextStandardAmound.getText().length() <= 0) {
+				Toast.makeText(this,
+						getResources().getString(R.string.name_cant_be_empty),
+						Toast.LENGTH_LONG).show();
+				return false;
+			}
+		} else {
+			// if there is a value in everything ( check if the value aint '0'
+			// or '0.'
+			try {
+				float unitStandardAmound = Float
+						.parseFloat(editTextStandardAmound.getText().toString());
+				if (unitStandardAmound <= 0) {
+					Toast.makeText(
+							this,
+							getResources().getString(
+									R.string.name_cant_be_empty),
+							Toast.LENGTH_LONG).show();
+					return false;
+				}
+			} catch (Exception e) {
+				Toast.makeText(this,
+						getResources().getString(R.string.name_cant_be_empty),
+						Toast.LENGTH_LONG).show();
+				return false;
+			}
+		}
+		// if everything went OK we return true
+		return true;
 	}
 
-	private void fillTextViews() {
-		for (int i = 0; i < listValueOrders.size(); i++) {
-			tvList.get(i).setText(listValueOrders.get(i).getValueName());
+	@Override
+	protected void onResume() {
+		super.onResume();
+
+		// set foodId
+		foodId = getIntent().getExtras().getLong(DataParser.idFood);
+
+		// fill the spinner
+		fillSpinner();
+
+		try {
+			unitId = getIntent().getExtras().getLong(DataParser.idUnit);
+
+			if (unitId > 0) {
+				fillExistingValues();
+			}
+		} catch (Exception e) {
+			unitId = -1;
+		}
+
+		hideTheRowsWeDontNeed();
+	}
+
+	private void hideTheRowsWeDontNeed() {
+		// carb
+		if (ActivityGroupMeal.group.getFoodData().showCarb) {
+			trCarb.setVisibility(View.VISIBLE);
+		} else {
+			trCarb.setVisibility(View.GONE);
+		}
+
+		// prot
+		if (ActivityGroupMeal.group.getFoodData().showProt) {
+			trProt.setVisibility(View.VISIBLE);
+		} else {
+			trProt.setVisibility(View.GONE);
+		}
+
+		// fat
+		if (ActivityGroupMeal.group.getFoodData().showFat) {
+			trFat.setVisibility(View.VISIBLE);
+		} else {
+			trFat.setVisibility(View.GONE);
+		}
+
+		// kcal
+		if (ActivityGroupMeal.group.getFoodData().showKcal) {
+			trKcal.setVisibility(View.VISIBLE);
+		} else {
+			trKcal.setVisibility(View.GONE);
 		}
 	}
 
-	private void checkUpdateUnit() {
-		dbHelper.open();
-		// if we are trying to update a unit
-		if (getIntent().getExtras().getLong("unitId") != 0) {
-			// set the text on the button
-			buttonAddOrUpdate
-					.setText(getResources().getString(R.string.update));
+	private void fillExistingValues() {
+		// set text to update
+		btAdd.setText(getResources().getString(R.string.update));
 
-			Cursor cUnit = dbHelper.fetchFoodUnit(getIntent().getExtras()
-					.getLong("unitId"));
-			startManagingCursor(cUnit);
+		DbAdapter db = new DbAdapter(this);
+		db.open();
+
+		Cursor cUnit = db.fetchFoodUnit(unitId);
+		if (cUnit.getCount() > 0) {
+			cUnit.moveToFirst();
 
 			// set the right spinner item
 			if (cUnit
@@ -172,56 +404,45 @@ public class ShowCreateUnit extends Activity {
 					.getColumnIndexOrThrow(DbAdapter.DATABASE_FOODUNIT_NAME)));
 
 			// set the values in the editTextBoxes
-			for (int i = 0; i < listValueOrders.size(); i++) {
-				if (listValueOrders
-						.get(i)
-						.getSettingName()
-						.equals(getResources().getString(
-								R.string.setting_value_order_carb))) {
-					etList.get(i)
-							.setText(
-									cUnit.getString(cUnit
-											.getColumnIndexOrThrow(DbAdapter.DATABASE_FOODUNIT_CARBS)));
-				} else if (listValueOrders
-						.get(i)
-						.getSettingName()
-						.equals(getResources().getString(
-								R.string.setting_value_order_prot))) {
-					etList.get(i)
-							.setText(
-									cUnit.getString(cUnit
-											.getColumnIndexOrThrow(DbAdapter.DATABASE_FOODUNIT_PROTEIN)));
-				} else if (listValueOrders
-						.get(i)
-						.getSettingName()
-						.equals(getResources().getString(
-								R.string.setting_value_order_fat))) {
-					etList.get(i)
-							.setText(
-									cUnit.getString(cUnit
-											.getColumnIndexOrThrow(DbAdapter.DATABASE_FOODUNIT_FAT)));
-				} else if (listValueOrders
-						.get(i)
-						.getSettingName()
-						.equals(getResources().getString(
-								R.string.setting_value_order_kcal))) {
-					etList.get(i)
-							.setText(
-									cUnit.getString(cUnit
-											.getColumnIndexOrThrow(DbAdapter.DATABASE_FOODUNIT_KCAL)));
-				}
-			}
+			etCarb.setText(cUnit.getString(cUnit
+					.getColumnIndexOrThrow(DbAdapter.DATABASE_FOODUNIT_CARBS)));
 
-			checkForButtonDelete();
+			etProt.setText(cUnit.getString(cUnit
+					.getColumnIndexOrThrow(DbAdapter.DATABASE_FOODUNIT_PROTEIN)));
+
+			etFat.setText(cUnit.getString(cUnit
+					.getColumnIndexOrThrow(DbAdapter.DATABASE_FOODUNIT_FAT)));
+			etKcal.setText(cUnit.getString(cUnit
+					.getColumnIndexOrThrow(DbAdapter.DATABASE_FOODUNIT_KCAL)));
+
+		}
+		cUnit.close();
+		db.close();
+
+		setButtonDelete();
+	}
+
+	private void setButtonDelete() {
+		if (weCanDelete()) {
+			btDelete.setVisibility(View.VISIBLE);
 		}
 	}
 
-	private void fillSpinner() {
-		ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(
-				this, R.array.standard_food_units,
-				android.R.layout.simple_spinner_item);
-		spinnerUnit.setAdapter(adapter);
-		adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+	private boolean weCanDelete() {
+		DbAdapter dbHelper = new DbAdapter(this);
+		dbHelper.open();
+
+		// if the unit isnt the last one from the food
+		// and the unit is not in use in template food
+		// and the unit is not in use in meal food
+		if (dbHelper.fetchFoodUnitByFoodId(foodId).getCount() > 1
+				&& dbHelper.fetchTemplateFoodsByUnitID(unitId).getCount() == 0
+				&& dbHelper.fetchMealFoodByFoodUnitID(unitId).getCount() == 0) {
+			return true;
+		}
+
+		dbHelper.close();
+		return false;
 	}
 
 	// This method will show the special food unit table row when the last
@@ -236,253 +457,34 @@ public class ShowCreateUnit extends Activity {
 		}
 	}
 
-	// This method will check if we may delete the unit ( its its not in use )
-	// Then we display the button delete
-	private void checkForButtonDelete() {
-		dbHelper.open();
-		Cursor cFoodUnit = dbHelper.fetchFoodUnit(getIntent().getExtras()
-				.getLong("unitId"));
-		// check if foodUnit is in use in selectedFood
-		if (dbHelper.fetchSelectedFoodByFoodUnitId(
-				getIntent().getExtras().getLong("unitId")).getCount() <= 0) {
-			// if foodUnit is not in use, check if the food has more then 1
-			// foodUnit
-			if (dbHelper
-					.fetchFoodUnitByFoodId(
-							cFoodUnit.getLong(cFoodUnit
-									.getColumnIndexOrThrow(DbAdapter.DATABASE_FOODUNIT_FOODID)))
-					.getCount() > 1) {
-				buttonDelete.setVisibility(View.VISIBLE);
-			}
-		}
+	private List<CharSequence> getArrayList() {
+		List<CharSequence> value = new ArrayList<CharSequence>();
 
+		value.add("100 " + getResources().getString(R.string.gram));
+		value.add("100 " + getResources().getString(R.string.ml));
+		value.add(getResources().getString(R.string.define_own));
+
+		return value;
 	}
 
-	public void onClickAdd(View view) {
-		dbHelper.open();
-		// always check the values so they are not empty or 0
-		if (checkValues()) {
-			float standardAmound = 0f;
-			String unitName = "";
-
-			float carb = 0f;
-			float prot = 0f;
-			float fat = 0f;
-			float kcal = 0f;
-
-			if (spinnerUnit.getSelectedItemPosition() == 0) {
-				standardAmound = 100f;
-				unitName = getResources().getString(R.string.gram);
-			} else if (spinnerUnit.getSelectedItemPosition() == 1) {
-				standardAmound = 100f;
-				unitName = getResources().getString(R.string.ml);
-			} else {
-				standardAmound = Float.parseFloat(editTextStandardAmound
-						.getText().toString());
-				unitName = editTextName.getText().toString();
-			}
-
-			// fill the unit values
-			for (int i = 0; i < listValueOrders.size(); i++) {
-				if (listValueOrders
-						.get(i)
-						.getSettingName()
-						.equals(getResources().getString(
-								R.string.setting_value_order_carb))) {
-					try {
-						carb = Float.parseFloat(etList.get(i).getText()
-								.toString());
-					} catch (Exception e) {
-						carb = 0f;
-					}
-				} else if (listValueOrders
-						.get(i)
-						.getSettingName()
-						.equals(getResources().getString(
-								R.string.setting_value_order_prot))) {
-					try {
-						prot = Float.parseFloat(etList.get(i).getText()
-								.toString());
-					} catch (Exception e) {
-						prot = 0f;
-					}
-				} else if (listValueOrders
-						.get(i)
-						.getSettingName()
-						.equals(getResources().getString(
-								R.string.setting_value_order_fat))) {
-					try {
-						fat = Float.parseFloat(etList.get(i).getText()
-								.toString());
-					} catch (Exception e) {
-						fat = 0f;
-					}
-				} else if (listValueOrders
-						.get(i)
-						.getSettingName()
-						.equals(getResources().getString(
-								R.string.setting_value_order_kcal))) {
-					try {
-						kcal = Float.parseFloat(etList.get(i).getText()
-								.toString());
-					} catch (Exception e) {
-						kcal = 0f;
-					}
-				}
-			}
-
-			// if the intent unitId != 0 then we have to update a unit!
-			if (getIntent().getExtras().getLong("unitId") != 0) {
-				dbHelper.updateFoodUnit(
-						getIntent().getExtras().getLong("unitId"), unitName,
-						standardAmound, carb, prot, fat, kcal);
-			} else {
-
-				// else we create a new unit
-				dbHelper.createFoodUnit(foodId, unitName, standardAmound, carb,
-						prot, fat, kcal);
-			}
-			ActivityGroupMeal.group.back();
-			ActivityGroupMeal.group.refreshShowUpdateOwnFood(1);
-		}
-	}
-
-	private boolean checkValues() {
-		if (spinnerUnit.getCount() == spinnerUnit.getSelectedItemPosition() + 1) {
-			// if we selected the last spinner option we have to check if
-			// standardamount and unitname are filled in
-			if (editTextName.getText().length() <= 0) {
-				Toast.makeText(
-						this,
-						getResources()
-								.getString(R.string.unit_name_is_required),
-						Toast.LENGTH_LONG).show();
-				return false;
-			} else if (editTextStandardAmound.getText().length() <= 0) {
-				Toast.makeText(
-						this,
-						getResources()
-								.getString(R.string.unit_name_is_required),
-						Toast.LENGTH_LONG).show();
-				return false;
-			}
-		} else {
-			// if there is a value in everything ( check if the value aint '0'
-			// or '0.'
-			try {
-				float unitStandardAmound = Float
-						.parseFloat(editTextStandardAmound.getText().toString());
-				if (unitStandardAmound <= 0) {
-					Toast.makeText(
-							this,
-							getResources().getString(
-									R.string.unit_name_is_required),
-							Toast.LENGTH_LONG).show();
-					return false;
-				}
-			} catch (Exception e) {
-				Toast.makeText(
-						this,
-						getResources()
-								.getString(R.string.unit_name_is_required),
-						Toast.LENGTH_LONG).show();
-				return false;
-			}
-		}
-		// if everything went OK we return true
-		return true;
-	}
-
-	// If we press the button delete
-	public void onClickDelete(View view) {
-		dbHelper.open();
-		dbHelper.deleteFoodUnit(getIntent().getExtras().getLong("unitId"));
-		ActivityGroupMeal.group.back();
-		ActivityGroupMeal.group.refreshShowUpdateOwnFood(1);
-	}
-
-	// This method will fill the list of DBValueOrders with the right values
-	private void fillListValueOrders() {
-		dbHelper.open();
-		// make the list empty
-		listValueOrders = new ArrayList<DBValueOrder>();
-
-		// get all the value orders
-		Cursor cSettingValueOrderProt = dbHelper
-				.fetchSettingByName(getResources().getString(
-						R.string.setting_value_order_prot));
-		Cursor cSettingValueOrderCarb = dbHelper
-				.fetchSettingByName(getResources().getString(
-						R.string.setting_value_order_carb));
-		Cursor cSettingValueOrderFat = dbHelper
-				.fetchSettingByName(getResources().getString(
-						R.string.setting_value_order_fat));
-		Cursor cSettingValueOrderKcal = dbHelper
-				.fetchSettingByName(getResources().getString(
-						R.string.setting_value_order_kcal));
-
-		// Move cursors to first object
-		cSettingValueOrderProt.moveToFirst();
-		cSettingValueOrderCarb.moveToFirst();
-		cSettingValueOrderFat.moveToFirst();
-		cSettingValueOrderKcal.moveToFirst();
-
-		// Fill list
-		listValueOrders
-				.add(new DBValueOrder(
-						cSettingValueOrderProt
-								.getInt(cSettingValueOrderProt
-										.getColumnIndexOrThrow(DbAdapter.DATABASE_SETTINGS_VALUE)),
-						cSettingValueOrderProt.getString(cSettingValueOrderProt
-								.getColumnIndexOrThrow(DbAdapter.DATABASE_SETTINGS_NAME)),
-						getResources().getString(R.string.amound_of_protein)));
-
-		listValueOrders
-				.add(new DBValueOrder(
-						cSettingValueOrderCarb
-								.getInt(cSettingValueOrderCarb
-										.getColumnIndexOrThrow(DbAdapter.DATABASE_SETTINGS_VALUE)),
-						cSettingValueOrderCarb.getString(cSettingValueOrderCarb
-								.getColumnIndexOrThrow(DbAdapter.DATABASE_SETTINGS_NAME)),
-						getResources().getString(R.string.amound_of_carbs)));
-
-		listValueOrders
-				.add(new DBValueOrder(
-						cSettingValueOrderFat
-								.getInt(cSettingValueOrderFat
-										.getColumnIndexOrThrow(DbAdapter.DATABASE_SETTINGS_VALUE)),
-						cSettingValueOrderFat.getString(cSettingValueOrderFat
-								.getColumnIndexOrThrow(DbAdapter.DATABASE_SETTINGS_NAME)),
-						getResources().getString(R.string.amound_of_fat)));
-
-		listValueOrders
-				.add(new DBValueOrder(
-						cSettingValueOrderKcal
-								.getInt(cSettingValueOrderKcal
-										.getColumnIndexOrThrow(DbAdapter.DATABASE_SETTINGS_VALUE)),
-						cSettingValueOrderKcal.getString(cSettingValueOrderKcal
-								.getColumnIndexOrThrow(DbAdapter.DATABASE_SETTINGS_NAME)),
-						getResources().getString(R.string.amound_of_kcal)));
-
-		// Close all the cursor
-		cSettingValueOrderProt.close();
-		cSettingValueOrderCarb.close();
-		cSettingValueOrderFat.close();
-		cSettingValueOrderKcal.close();
-
-		// Sort the list on order
-		ValueOrderComparator comparator = new ValueOrderComparator();
-		Collections.sort(listValueOrders, comparator);
+	private void fillSpinner() {
+		CustomArrayAdapterCharSequenceShowCreateFood adapter = new CustomArrayAdapterCharSequenceShowCreateFood(
+				this,
+				R.layout.custom_spinner_array_adapter_charsequence_show_create_food,
+				getArrayList());
+		
+		spinnerUnit.setAdapter(adapter);
+		
+		adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 	}
 
 	@Override
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
-		//if we press the back key
-		if (event.getKeyCode() == KeyEvent.KEYCODE_BACK)
-			//return false so the keydown event from activitygroupmeal will get called
+		// if we press the back key
+		if (event.getKeyCode() == KeyEvent.KEYCODE_BACK) {
 			return false;
-		else
-			return super.onKeyDown(keyCode, event);
-	}
+		}
 
+		return super.onKeyDown(keyCode, event);
+	}
 }

@@ -1,13 +1,13 @@
+// Please read info.txt for license and legal information
+
 package be.goossens.oracle.Show;
 
 import android.app.TabActivity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.ImageView;
 import android.widget.TabHost;
 import android.widget.TabHost.TabContentFactory;
@@ -25,58 +25,66 @@ import be.goossens.oracle.Rest.DataParser;
 public class ShowHomeTab extends TabActivity {
 	private TabHost tabHost;
 	public static TabActivity context;
-	
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.show_home_tab);
-		
+
 		context = this;
-		
+
 		tabHost = getTabHost();
+
 		setupTabHost();
 	}
- 
+
+	// when we press the home button we set startup back to true!
+	@Override
+	protected void onUserLeaveHint() {
+		//mark food data startUp true
+		ActivityGroupMeal.group.getFoodData().startUp = true;
+		super.onUserLeaveHint();
+	}
+
 	private void setupTabHost() {
 		int counter = 0;
-		
+
 		Intent in = new Intent(this, ActivityGroupTracking.class);
 		setupTab(new TextView(this), DataParser.activityIDTracking,
 				R.drawable.ic_tab_tracking, in);
 		counter++;
-		
+
 		in = new Intent(this, ActivityGroupMeal.class);
-		setupTab(new TextView(this), DataParser.activityIDShowFoodList,
+		setupTab(new TextView(this), DataParser.activityIDMeal,
 				R.drawable.ic_tab_meal, in);
 		counter++;
-		
+
 		in = new Intent(this, ActivityGroupExercise.class);
 		setupTab(new TextView(this), DataParser.activityIDExercise,
 				R.drawable.ic_tab_exercise, in);
 		counter++;
-		
+
 		in = new Intent(this, ActivityGroupGlucose.class);
 		setupTab(new TextView(this), DataParser.activityIDGlucose,
 				R.drawable.ic_tab_glucose, in);
 		counter++;
-		
+
 		in = new Intent(this, ActivityGroupMedicine.class);
 		setupTab(new TextView(this), DataParser.activityIDMedicine,
 				R.drawable.ic_tab_medicine, in);
 		counter++;
-		
+
 		in = new Intent(this, ActivityGroupSettings.class);
 		setupTab(new TextView(this), DataParser.activityIDSettings,
 				R.drawable.ic_tab_settings, in);
 		counter++;
-		 
-		for(int i = counter; i >= 0;i--){
-			tabHost.setCurrentTab(i); 
+
+		for (int i = counter; i >= 0; i--) {
+			tabHost.setCurrentTab(i);
 		}
-		
-		//set default tab on show food list
-		goToTab(DataParser.activityIDShowFoodList);
-		
+
+		// set default tab on show food list
+		goToTab(DataParser.activityIDMeal);
 	}
 
 	private void setupTab(final View view, final String tag, final int image,
@@ -103,6 +111,6 @@ public class ShowHomeTab extends TabActivity {
 		ImageView iv = (ImageView) view.findViewById(R.id.imageViewTabs);
 		iv.setImageResource(image);
 		return view;
-
 	}
+
 }

@@ -1,3 +1,5 @@
+// Please read info.txt for license and legal information
+
 package be.goossens.oracle.Custom;
 
 import be.goossens.oracle.Rest.Functions;
@@ -13,7 +15,7 @@ import android.widget.TextView;
 
 public class CustomSimpleCursorAdapterAddFoodToSelectionSpinner extends
 		SimpleCursorAdapter {
-	
+
 	private Context context;
 	private String[] from;
 	private int[] to;
@@ -40,16 +42,17 @@ public class CustomSimpleCursorAdapterAddFoodToSelectionSpinner extends
 		try {
 			TextView tt = (TextView) v.findViewById(to[0]);
 
-			//set text
-			tt.setText(new Functions().getShorterString(cursor.getString(cursor
-					.getColumnIndexOrThrow(from[0]))));
+			// set text
+			tt.setText(new Functions().getShorterString(
+					cursor.getString(cursor.getColumnIndexOrThrow(from[0])), 6));
 
-			//set layout params to fill parent
-			LayoutParams params = new LayoutParams(LayoutParams.FILL_PARENT,LayoutParams.FILL_PARENT);
+			// set layout params to fill parent
+			LayoutParams params = new LayoutParams(LayoutParams.FILL_PARENT,
+					LayoutParams.FILL_PARENT);
 			tt.setLayoutParams(params);
-			//and set gravity to center
+			// and set gravity to center
 			tt.setGravity(Gravity.CENTER);
-			
+
 			cursor.moveToNext();
 		} catch (Exception e) {
 		}

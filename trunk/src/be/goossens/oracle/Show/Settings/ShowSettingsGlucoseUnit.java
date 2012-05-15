@@ -1,35 +1,50 @@
-package be.goossens.oracle.Show.Settings;
+// Please read info.txt for license and legal information
 
-import java.util.ArrayList;
-import java.util.List;
+package be.goossens.oracle.Show.Settings;
 
 import android.app.Activity;
 import android.database.Cursor;
 import android.os.Bundle;
-import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
+import android.widget.Button;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.RadioGroup.OnCheckedChangeListener;
-import android.widget.Toast;
 import be.goossens.oracle.R;
 import be.goossens.oracle.ActivityGroup.ActivityGroupSettings;
+import be.goossens.oracle.Rest.DataParser;
 import be.goossens.oracle.Rest.DbAdapter;
+import be.goossens.oracle.Rest.DbSettings;
 
 public class ShowSettingsGlucoseUnit extends Activity {
 	private DbAdapter dbHelper;
 	private RadioGroup rgGlucoseUnit;
 
+	private Button btNext, btBack;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-
-		View contentView = LayoutInflater.from(getParent()).inflate(
-				R.layout.show_settings_glucose_unit, null);
-		setContentView(contentView);
+		setContentView(R.layout.show_settings_glucose_unit);
 
 		dbHelper = new DbAdapter(this);
 		rgGlucoseUnit = (RadioGroup) findViewById(R.id.radioGroupGlucoseUnit);
+
+		btBack = (Button) findViewById(R.id.buttonBack);
+		btBack.setOnClickListener(new OnClickListener() {
+			public void onClick(View v) {
+				ActivityGroupSettings.group.back();
+			}
+		});
+		
+		btNext = (Button) findViewById(R.id.buttonNext);
+		btNext.setOnClickListener(new OnClickListener() {
+			public void onClick(View v) {
+				// call finish on click button next so we go back to showStart
+				finish();
+			}
+		});
 	}
 
 	@Override
@@ -38,18 +53,29 @@ public class ShowSettingsGlucoseUnit extends Activity {
 		dbHelper.open();
 		fillRadioGroup();
 
-		//set on checked change listener after we filled the radio group!
+		// set on checked change listener after we filled the radio group!
 		rgGlucoseUnit.setOnCheckedChangeListener(new OnCheckedChangeListener() {
 			public void onCheckedChanged(RadioGroup group, int checkedId) {
 				onRadioGroupSelectedChange();
 			}
 		});
+
+		// check if we need to show the button next
+		// only need to show first time application starts
+		try {
+			if (getIntent().getExtras().getString(DataParser.whatToDo)
+					.equals(DataParser.doFirstTime)) {
+				btNext.setVisibility(View.VISIBLE);
+				//hide the button back
+				btBack.setVisibility(View.GONE);
+			}
+		} catch (Exception e) {
+		}
 	}
 
 	private void fillRadioGroup() {
 		Cursor cGlucoseUnits = dbHelper.fetchAllBloodGlucoseUnits();
-		Cursor cSettingGlucoseUnit = dbHelper.fetchSettingByName(getResources()
-				.getString(R.string.setting_glucose_unit));
+		Cursor cSettingGlucoseUnit = dbHelper.fetchSettingByName(DbSettings.setting_glucose_unit);
 		cSettingGlucoseUnit.moveToFirst();
 
 		if (cGlucoseUnits.getCount() > 0) {
@@ -63,7 +89,7 @@ public class ShowSettingsGlucoseUnit extends Activity {
 						.getColumnIndexOrThrow(DbAdapter.DATABASE_BLOODGLUCOSEUNIT_ID)));
 
 				rb.setTextColor(getResources().getColor(R.color.ColorText));
-				
+
 				if (cSettingGlucoseUnit
 						.getLong(cSettingGlucoseUnit
 								.getColumnIndexOrThrow(DbAdapter.DATABASE_SETTINGS_VALUE)) == cGlucoseUnits
@@ -79,17 +105,18 @@ public class ShowSettingsGlucoseUnit extends Activity {
 		cGlucoseUnits.close();
 	}
 
-
 	private void onRadioGroupSelectedChange() {
 		// update the setting glucose unit
-		dbHelper.updateSettingsByName(
-				getResources().getString(R.string.setting_glucose_unit), ""
+		dbHelper.updateSettingsByName(DbSettings.setting_glucose_unit, ""
 						+ rgGlucoseUnit.getCheckedRadioButtonId());
 
-		// go back
-		ActivityGroupSettings.group.back();
+		try {
+			// go back
+			ActivityGroupSettings.group.back();
+		} catch (Exception e) {
+		}
 	}
-	
+
 	@Override
 	protected void onPause() {
 		dbHelper.close();

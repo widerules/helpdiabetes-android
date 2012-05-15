@@ -1,3 +1,5 @@
+// Please read info.txt for license and legal information
+
 /*  
  *  Copyright (C) 2009  Johan Degraeve
  *

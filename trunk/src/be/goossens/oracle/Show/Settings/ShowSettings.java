@@ -1,3 +1,5 @@
+// Please read info.txt for license and legal information
+
 package be.goossens.oracle.Show.Settings;
 
 import java.util.ArrayList;
@@ -16,6 +18,7 @@ import be.goossens.oracle.R;
 import be.goossens.oracle.ActivityGroup.ActivityGroupSettings;
 import be.goossens.oracle.Custom.CustomArrayAdapterCharSequenceSettings;
 import be.goossens.oracle.Show.Exercise.ShowExerciseTypes;
+import be.goossens.oracle.Show.Medicine.ShowMedicineTypes;
 
 public class ShowSettings extends ListActivity {
 
@@ -34,7 +37,9 @@ public class ShowSettings extends ListActivity {
 		fillListView();
 	}
 
-	private void fillListView() {
+	public void fillListView() { 
+		setListAdapter(null);
+		
 		CustomArrayAdapterCharSequenceSettings adapter = new CustomArrayAdapterCharSequenceSettings(
 				this, R.layout.row_custom_array_adapter_charsequence_settings,
 				getCharSequenceList());
@@ -51,11 +56,15 @@ public class ShowSettings extends ListActivity {
 		value.add(getResources().getString(R.string.pref_value_order));
 		value.add(getResources().getString(R.string.pref_text_size));
 		value.add(getResources().getString(R.string.pref_exercise_types));
+		value.add(getResources().getString(R.string.pref_medicine_types));
 		value.add(getResources().getString(R.string.pref_db_language));
+		value.add(getResources().getString(R.string.pref_backup));
+		value.add(getResources().getString(R.string.pref_about) + " ("
+				+ getResources().getString(R.string.Version) + ")");
 
 		return value;
 	}
-
+ 
 	@Override
 	protected void onListItemClick(ListView l, View v, int position, long id) {
 		Intent i = null;
@@ -72,8 +81,7 @@ public class ShowSettings extends ListActivity {
 					ShowSettingsGlucoseUnit.class);
 			break;
 		case 3:
-			i = new Intent(getApplicationContext(),
-					ShowSettingsValueOrder.class);
+			i = new Intent(getApplicationContext(), ShowSettingsValue.class);
 			break;
 		case 4:
 			i = new Intent(getApplicationContext(),
@@ -83,17 +91,44 @@ public class ShowSettings extends ListActivity {
 			i = new Intent(getApplicationContext(), ShowExerciseTypes.class);
 			break;
 		case 6:
+			i = new Intent(getApplicationContext(), ShowMedicineTypes.class);
+			break;
+		case 7:
 			i = new Intent(getApplicationContext(),
 					ShowSettingsDBLanguage.class);
 			break;
+		case 8:
+			i = new Intent(getApplicationContext(), ShowSettingsBackup.class);
+			break;
+		case 9:
+			showPopUpAbout();
 		}
-		i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 
-		View view = ActivityGroupSettings.group.getLocalActivityManager()
-				.startActivity("ShowSetting", i).getDecorView();
+		if (i != null) {
+			i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 
-		ActivityGroupSettings.group.setContentView(view);
+			View view = ActivityGroupSettings.group.getLocalActivityManager()
+					.startActivity("ShowSetting", i).getDecorView();
 
+			ActivityGroupSettings.group.setContentView(view);
+		}
+
+	}
+
+	// when we click on the "about" in the listview
+	private void showPopUpAbout() {
+		// Show a dialog with info
+		new AlertDialog.Builder(ActivityGroupSettings.group)
+				.setTitle(getResources().getString(R.string.pref_about))
+				.setNeutralButton(getResources().getString(R.string.oke), null)
+				.setMessage(
+						getResources().getString(R.string.Version)
+								+ " \n\n"
+								+ getResources().getString(
+										R.string.about_text_copyright)
+								+ " \n\n"
+								+ getResources().getString(R.string.about_text))
+				.show();
 	}
 
 	// if we press the back button on this activity we have to show a popup to

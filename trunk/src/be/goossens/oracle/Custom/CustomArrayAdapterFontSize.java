@@ -1,3 +1,5 @@
+// Please read info.txt for license and legal information
+
 package be.goossens.oracle.Custom;
 
 import java.util.List;
@@ -30,9 +32,10 @@ public class CustomArrayAdapterFontSize extends ArrayAdapter<String> {
 			v = vi.inflate(R.layout.row_custom_array_adapter, null);
 		}
 		TextView tt = (TextView) v.findViewById(R.id.text1);
-		//text size = position + 8 so we start at 8
-		tt.setText(items.get(position).toString() + " " + (position+8));
-		tt.setTextSize((position+8));
+		
+		//text size = position + 15 so we start at 15
+		tt.setText(items.get(position).toString() + " " + (position+15));
+		tt.setTextSize((position+15));
 		return v;
 	}
 

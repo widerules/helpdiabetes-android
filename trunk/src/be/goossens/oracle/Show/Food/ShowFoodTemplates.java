@@ -1,6 +1,9 @@
+// Please read info.txt for license and legal information
+
 package be.goossens.oracle.Show.Food;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 
 import android.app.ListActivity;
 import android.database.Cursor;
@@ -12,17 +15,24 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.widget.AdapterView.AdapterContextMenuInfo;
+import android.widget.Button;
 import android.widget.ListView;
+import android.widget.Toast;
 import be.goossens.oracle.R;
 import be.goossens.oracle.ActivityGroup.ActivityGroupMeal;
 import be.goossens.oracle.Custom.CustomBaseAdapterFoodTemplates;
 import be.goossens.oracle.Objects.DBFood;
 import be.goossens.oracle.Objects.DBFoodTemplate;
 import be.goossens.oracle.Rest.DbAdapter;
+import be.goossens.oracle.Rest.DbSettings;
+import be.goossens.oracle.Rest.Functions;
 
 public class ShowFoodTemplates extends ListActivity {
 	private DbAdapter dbHelper;
+
+	private Button btBack;
 
 	private static final int DELETE_ID = Menu.FIRST;
 
@@ -36,6 +46,13 @@ public class ShowFoodTemplates extends ListActivity {
 
 		dbHelper = new DbAdapter(this);
 		registerForContextMenu(getListView());
+
+		btBack = (Button) findViewById(R.id.buttonBack);
+		btBack.setOnClickListener(new OnClickListener() {
+			public void onClick(View v) {
+				ActivityGroupMeal.group.back();
+			}
+		});
 	}
 
 	@Override
@@ -78,7 +95,12 @@ public class ShowFoodTemplates extends ListActivity {
 			} else {
 				ActivityGroupMeal.group.back();
 				// refresh the page selectedFood
-				ActivityGroupMeal.group.refreshShowSelectedFood(1);
+				if (ActivityGroupMeal.group.getShowSelectedFood() != null) {
+					ActivityGroupMeal.group.getShowSelectedFood().refreshData();
+				} else {
+					Toast.makeText(this, "error refresh data",
+							Toast.LENGTH_SHORT).show();
+				}
 			}
 			break;
 		}
@@ -88,8 +110,7 @@ public class ShowFoodTemplates extends ListActivity {
 	private void fillData() {
 		dbHelper.open();
 		if (dbHelper.fetchAllFoodTemplates().getCount() > 0) {
-			Cursor cSettings = dbHelper.fetchSettingByName(getResources()
-					.getString(R.string.setting_font_size));
+			Cursor cSettings = dbHelper.fetchSettingByName(DbSettings.setting_font_size);
 			cSettings.moveToFirst();
 			CustomBaseAdapterFoodTemplates adapter = new CustomBaseAdapterFoodTemplates(
 					this,
@@ -114,7 +135,7 @@ public class ShowFoodTemplates extends ListActivity {
 		cTemplateFood.moveToFirst();
 		Cursor cUnit = null;
 		do {
-			count++; 
+			count++;
 			cUnit = dbHelper
 					.fetchFoodUnit(cTemplateFood.getLong(cTemplateFood
 							.getColumnIndexOrThrow(DbAdapter.DATABASE_TEMPLATEFOOD_UNITID)));
@@ -124,19 +145,22 @@ public class ShowFoodTemplates extends ListActivity {
 							.getFloat(cTemplateFood
 									.getColumnIndexOrThrow(DbAdapter.DATABASE_TEMPLATEFOOD_AMOUNT)),
 					cUnit.getLong(cUnit
-							.getColumnIndexOrThrow(DbAdapter.DATABASE_FOODUNIT_ID)));
+							.getColumnIndexOrThrow(DbAdapter.DATABASE_FOODUNIT_ID)),
+					new Functions().getDateAsStringFromCalendar(Calendar
+							.getInstance()));
 		} while (cTemplateFood.moveToNext());
 
 		cUnit.close();
 		cTemplateFood.close();
-		ActivityGroupMeal.group.back();
 
 		// update the list in show selected food
-		ActivityGroupMeal.group.refreshShowSelectedFood(1);
+		ActivityGroupMeal.group.getShowSelectedFood().refreshData();
 
 		// update the count selected food
 		ActivityGroupMeal.group.getFoodData().countSelectedFood += count;
-		
+
+		// go back
+		ActivityGroupMeal.group.back();
 	}
 
 	// converts the cursor with all food templates to a arrayList
@@ -169,8 +193,14 @@ public class ShowFoodTemplates extends ListActivity {
 				foods.add(new DBFood(
 						cFood.getInt(cFood
 								.getColumnIndexOrThrow(DbAdapter.DATABASE_FOOD_ID)),
-						cFood.getString(cFood 
-				 				.getColumnIndexOrThrow(DbAdapter.DATABASE_FOOD_NAME)),cTemplateFood.getFloat(cTemplateFood.getColumnIndexOrThrow(DbAdapter.DATABASE_TEMPLATEFOOD_AMOUNT)) + " " + cUnit.getString(cUnit.getColumnIndexOrThrow(DbAdapter.DATABASE_FOODUNIT_NAME)))); 
+						cFood.getString(cFood
+								.getColumnIndexOrThrow(DbAdapter.DATABASE_FOOD_NAME)),
+						cTemplateFood.getFloat(cTemplateFood
+								.getColumnIndexOrThrow(DbAdapter.DATABASE_TEMPLATEFOOD_AMOUNT))
+								+ " "
+								+ cUnit.getString(cUnit
+										.getColumnIndexOrThrow(DbAdapter.DATABASE_FOODUNIT_NAME)),
+						null));
 				cUnit.close();
 				cFood.close();
 			} while (cTemplateFood.moveToNext());
@@ -196,9 +226,10 @@ public class ShowFoodTemplates extends ListActivity {
 
 	@Override
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
-		//if we press the back key
+		// if we press the back key
 		if (event.getKeyCode() == KeyEvent.KEYCODE_BACK)
-			//return false so the keydown event from activitygroupmeal will get called
+			// return false so the keydown event from activitygroupmeal will get
+			// called
 			return false;
 		else
 			return super.onKeyDown(keyCode, event);

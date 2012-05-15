@@ -1,3 +1,5 @@
+// Please read info.txt for license and legal information
+
 package be.goossens.oracle.ActivityGroup;
 
 import java.util.ArrayList;
@@ -10,9 +12,8 @@ import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import be.goossens.oracle.Rest.DataParser;
-import be.goossens.oracle.Show.Exercise.ShowAddExerciseType;
 import be.goossens.oracle.Show.Exercise.ShowExerciseTypes;
-import be.goossens.oracle.Show.Food.ShowFoodList;
+import be.goossens.oracle.Show.Medicine.ShowMedicineTypes;
 import be.goossens.oracle.Show.Settings.ShowSettings;
 import be.goossens.oracle.Show.Settings.ShowSettingsMealTimes;
 
@@ -44,25 +45,22 @@ public class ActivityGroupSettings extends ActivityGroup {
 
 	}
 
-	// let the keyboard dissapear
-	private void keyboardDissapear() {
-		try {
-			InputMethodManager inputManager = (InputMethodManager) this
-					.getSystemService(Context.INPUT_METHOD_SERVICE);
-			inputManager.hideSoftInputFromWindow(this.getCurrentFocus()
-					.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
-		} catch (Exception e) {
-		}
+	private void hideKeyboard() {
+		InputMethodManager inputManager = (InputMethodManager) this
+				.getSystemService(Context.INPUT_METHOD_SERVICE); 
+		inputManager.hideSoftInputFromWindow(getParent().getCurrentFocus().getWindowToken(), 0);
 	}
-
+	
+	//This will hide the keyboard on tab change
 	@Override
-	public void onContentChanged() {
-		keyboardDissapear();
-		super.onContentChanged();
+	protected void onPause() {
+		hideKeyboard();
+		super.onPause();
 	}
 
 	@Override
 	public void setContentView(View view) {
+		hideKeyboard();
 		replaceView(view);
 	}
 
@@ -74,12 +72,22 @@ public class ActivityGroupSettings extends ActivityGroup {
 	}
 
 	public void back() {
+		hideKeyboard();
 		try {
 			// if we set history.size() > 0 and we press back key on home
 			// activity
 			// and then on another activity we wont get back!
 			if (history.size() > 1) {
 				history.remove(history.size() - 1);
+				
+				if(history.size() == 1){
+					try{
+					ShowSettings v = (ShowSettings) history.get(history.size() - 1).getContext();
+					v.fillListView();
+					}catch(Exception e){}
+				}
+				
+				
 				// call the super.setContent view! so set the real view
 				super.setContentView(history.get(history.size() - 1));
 			} else {
@@ -103,6 +111,15 @@ public class ActivityGroupSettings extends ActivityGroup {
 	public ShowExerciseTypes getExerciseTypes() {
 		try {
 			return (ShowExerciseTypes) history.get(1).getContext();
+		} catch (Exception e) {
+			return null;
+		}
+	}
+
+	// The medicine types view will alaways be in history place 1 if it exists
+	public ShowMedicineTypes getMedicineTypes() {
+		try {
+			return (ShowMedicineTypes) history.get(1).getContext();
 		} catch (Exception e) {
 			return null;
 		}
