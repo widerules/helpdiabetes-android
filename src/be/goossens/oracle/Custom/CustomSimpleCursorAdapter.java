@@ -1,3 +1,5 @@
+// Please read info.txt for license and legal information
+
 package be.goossens.oracle.Custom;
 
 import android.content.Context;

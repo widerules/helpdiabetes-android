@@ -1,3 +1,5 @@
+// Please read info.txt for license and legal information
+
 package be.goossens.oracle.Show.Food;
 
 import java.util.ArrayList;
@@ -25,6 +27,7 @@ import be.goossens.oracle.Custom.CustomArrayAdapterDBFood;
 import be.goossens.oracle.Objects.DBFood;
 import be.goossens.oracle.Rest.DataParser;
 import be.goossens.oracle.Rest.DbAdapter;
+import be.goossens.oracle.Rest.DbSettings;
 
 public class ShowManageOwnFood extends ListActivity {
 	private DbAdapter dbHelper;
@@ -34,7 +37,7 @@ public class ShowManageOwnFood extends ListActivity {
 
 	private List<DBFood> listFood;
 
-	private Button btCreateNewFood;
+	private Button btCreateNewFood, btBack;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -47,6 +50,13 @@ public class ShowManageOwnFood extends ListActivity {
 		dbHelper = new DbAdapter(this);
  
 		btCreateNewFood = (Button)findViewById(R.id.buttonCreateNewFood);
+		
+		btBack = (Button) findViewById(R.id.buttonBack);
+		btBack.setOnClickListener(new OnClickListener() {
+			public void onClick(View v) {
+				ActivityGroupMeal.group.back();
+			}
+		});
 		
 		btCreateNewFood.setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
@@ -77,7 +87,7 @@ public class ShowManageOwnFood extends ListActivity {
 						cFood.getInt(cFood
 								.getColumnIndexOrThrow(DbAdapter.DATABASE_FOOD_ID)),
 						cFood.getString(cFood
-								.getColumnIndexOrThrow(DbAdapter.DATABASE_FOOD_NAME)),""));
+								.getColumnIndexOrThrow(DbAdapter.DATABASE_FOOD_NAME)),"",null));
 			} while (cFood.moveToNext());
 		}
 		cFood.close();
@@ -90,8 +100,7 @@ public class ShowManageOwnFood extends ListActivity {
 	}
 
 	private void fillData() {
-		Cursor cSetting = dbHelper.fetchSettingByName(getResources().getString(
-				R.string.setting_font_size));
+		Cursor cSetting = dbHelper.fetchSettingByName(DbSettings.setting_font_size);
 		cSetting.moveToFirst();
 		CustomArrayAdapterDBFood adapter = new CustomArrayAdapterDBFood(
 				this,
@@ -113,9 +122,9 @@ public class ShowManageOwnFood extends ListActivity {
 
 	@Override
 	protected void onListItemClick(ListView l, View v, int position, long id) {
-		Intent i = new Intent(this, ShowUpdateOwnFood.class).addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+		Intent i = new Intent(this, ShowUpdateFood.class).addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 		i.putExtra(DbAdapter.DATABASE_FOOD_ID, Long.parseLong("" + listFood.get(position).getId()));
-		View view = ActivityGroupMeal.group.getLocalActivityManager().startActivity(DataParser.activityIDShowFoodList, i).getDecorView();
+		View view = ActivityGroupMeal.group.getLocalActivityManager().startActivity(DataParser.activityIDMeal, i).getDecorView();
 		ActivityGroupMeal.group.setContentView(view);
 	}
 
@@ -126,7 +135,7 @@ public class ShowManageOwnFood extends ListActivity {
 
 		switch (item.getItemId()) {
 		case UPDATE_ID:
-			Intent i = new Intent(this, ShowUpdateOwnFood.class);
+			Intent i = new Intent(this, ShowUpdateFood.class);
 			i.putExtra(DbAdapter.DATABASE_FOOD_ID, info.id);
 			startActivity(i);
 			break;
@@ -225,7 +234,7 @@ public class ShowManageOwnFood extends ListActivity {
 	// if we press on create new food
 	public void onClickCreateNewFood(View view) {
 		Intent i = new Intent(this, ShowCreateFood.class).addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-		View v = ActivityGroupMeal.group.getLocalActivityManager().startActivity(DataParser.activityIDShowFoodList, i).getDecorView();
+		View v = ActivityGroupMeal.group.getLocalActivityManager().startActivity(DataParser.activityIDMeal, i).getDecorView();
 		ActivityGroupMeal.group.setContentView(v);
 	}
 	

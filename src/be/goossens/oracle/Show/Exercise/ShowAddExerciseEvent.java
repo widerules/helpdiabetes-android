@@ -1,6 +1,10 @@
+// Please read info.txt for license and legal information
+
 package be.goossens.oracle.Show.Exercise;
 
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.List;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -11,20 +15,18 @@ import android.database.Cursor;
 import android.os.Bundle;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
-import android.view.View;
+import android.view.View; 
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.Spinner;
+import android.widget.Spinner; 
 import android.widget.Toast;
 import be.goossens.oracle.R;
 import be.goossens.oracle.ActivityGroup.ActivityGroupExercise;
-import be.goossens.oracle.ActivityGroup.ActivityGroupTracking;
+import be.goossens.oracle.ActivityGroup.ActivityGroupMeal;
 import be.goossens.oracle.Custom.CustomArrayAdapterCharSequenceForASpinner;
-import be.goossens.oracle.Custom.CustomSimpleCursorAdapterForASpinner;
+import be.goossens.oracle.Custom.CustomSimpleArrayAdapterForASpinner;
+import be.goossens.oracle.Objects.DBNameAndID;
 import be.goossens.oracle.Rest.DataParser;
 import be.goossens.oracle.Rest.DbAdapter;
 import be.goossens.oracle.Rest.Functions;
@@ -40,8 +42,8 @@ public class ShowAddExerciseEvent extends Activity {
 	private static final int requestCodeAddExerciseType = 1;
 	private Calendar mCalendar;
 	private Functions functions;
-
-	@Override 
+	private List<DBNameAndID> objects;
+	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		View contentView = LayoutInflater.from(getParent()).inflate(
@@ -116,6 +118,16 @@ public class ShowAddExerciseEvent extends Activity {
 		if (getIntent().getExtras().getString(DataParser.whatToDo)
 				.equals(DataParser.doUpdateExerciseEvent))
 			setExistingValues();
+		
+		setDefaultSpinner();
+	}
+
+	private void setDefaultSpinner() { 
+		for(int i = 0; i < objects.size() ; i++){
+			if(objects.get(i).getId() == ActivityGroupMeal.group.getFoodData().defaultExerciseTypeID){
+				spinnerExerciseTypes.setSelection(i);
+			}
+		}
 	}
 
 	private void setExistingValues() {
@@ -155,26 +167,39 @@ public class ShowAddExerciseEvent extends Activity {
 	}
 
 	private void fillSpinnerSportType() {
+		DbAdapter dbHelper = new DbAdapter(this);
 		dbHelper.open();
-
-		CustomSimpleCursorAdapterForASpinner adapter = new CustomSimpleCursorAdapterForASpinner(
-				this, android.R.layout.simple_spinner_item,
-				dbHelper.fetchAllExerciseTypes(),
-				new String[] { DbAdapter.DATABASE_EXERCISETYPE_NAME },
-				new int[] { android.R.id.text1 });
-
+		objects = new ArrayList<DBNameAndID>();
+		Cursor cExerciseTypes = dbHelper.fetchAllExerciseTypes();
+		if (cExerciseTypes.getCount() > 0) {
+			cExerciseTypes.moveToFirst();
+			do {
+				objects.add(new DBNameAndID(
+						cExerciseTypes
+								.getLong(cExerciseTypes
+										.getColumnIndexOrThrow(DbAdapter.DATABASE_EXERCISETYPE_ID)),
+						cExerciseTypes.getString(cExerciseTypes
+								.getColumnIndexOrThrow(DbAdapter.DATABASE_EXERCISETYPE_NAME)),""));
+			} while (cExerciseTypes.moveToNext());
+		}
+		cExerciseTypes.close();
+		dbHelper.close();
+		
+		CustomSimpleArrayAdapterForASpinner adapter = new CustomSimpleArrayAdapterForASpinner(
+				this, android.R.layout.simple_spinner_item, objects,25);
+		
 		spinnerExerciseTypes.setAdapter(adapter);
-  
+		 
 		adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 	}
 
 	private void fillSpinnerDuration() {
-		CustomArrayAdapterCharSequenceForASpinner adapter =
-				new CustomArrayAdapterCharSequenceForASpinner(
-						this, android.R.layout.simple_spinner_item, getResources().getStringArray(R.array.standard_duration));
-		
+		CustomArrayAdapterCharSequenceForASpinner adapter = new CustomArrayAdapterCharSequenceForASpinner(
+				this, android.R.layout.simple_spinner_item, getResources()
+						.getStringArray(R.array.standard_duration));
+
 		spinnerDuration.setAdapter(adapter);
-		
+
 		adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 	}
 
@@ -214,7 +239,7 @@ public class ShowAddExerciseEvent extends Activity {
 				// do endtime += starttime becaus the endTime is the startTime +
 				// the just calculated seconds
 				endTime += startTime;
-
+  
 				// create exerciseEvent
 				dbHelper.createExerciseEvent(
 						etDescription.getText().toString(), startTime, endTime,
@@ -224,9 +249,6 @@ public class ShowAddExerciseEvent extends Activity {
 			}
 
 			etDescription.setText("");
-
-			// refresh tracking list
-			ActivityGroupTracking.group.showTrackingRefreshList();
 
 			// Go to tracking tab when clicked on add
 			ShowHomeTab parentActivity;
@@ -241,27 +263,6 @@ public class ShowAddExerciseEvent extends Activity {
 				DataParser.idExerciseEvent));
 		setResult(RESULT_OK);
 		finish();
-	}
-
-	// create menu
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		MenuInflater inflater = getMenuInflater();
-		inflater.inflate(R.menu.exercise_event_menu, menu);
-		return super.onCreateOptionsMenu(menu);
-	}
-
-	// on menu item selected
-	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-		Intent i = null;
-		switch (item.getItemId()) {
-		case R.id.menuManageSportTypes:
-			i = new Intent(this, ShowExerciseTypes.class);
-			startActivityForResult(i, requestCodeAddExerciseType);
-			break;
-		}
-		return super.onOptionsItemSelected(item);
 	}
 
 	// if we come back from addExerciseType we have to update the spinner

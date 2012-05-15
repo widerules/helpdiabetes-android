@@ -1,7 +1,9 @@
+// Please read info.txt for license and legal information
+
 package be.goossens.oracle.Show.Tracking;
 
 import java.util.ArrayList;
-import java.util.Collection;
+import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
@@ -9,55 +11,81 @@ import java.util.List;
 import android.app.AlertDialog;
 import android.app.ListActivity;
 import android.content.DialogInterface;
+import android.content.DialogInterface.OnClickListener;
 import android.database.Cursor;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.KeyEvent;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 import be.goossens.oracle.R;
 import be.goossens.oracle.ActivityGroup.ActivityGroupMeal;
 import be.goossens.oracle.ActivityGroup.ActivityGroupTracking;
 import be.goossens.oracle.Custom.CustomArrayAdapterDBTracking;
-import be.goossens.oracle.Objects.DBMedicineEvent;
-import be.goossens.oracle.Objects.DBloodGlucoseEvent;
+import be.goossens.oracle.Objects.DBBloodGlucoseEvent;
 import be.goossens.oracle.Objects.DBExerciseEvent;
+import be.goossens.oracle.Objects.DBFoodUnit;
 import be.goossens.oracle.Objects.DBMealEvent;
+import be.goossens.oracle.Objects.DBMealFood;
+import be.goossens.oracle.Objects.DBMedicineEvent;
 import be.goossens.oracle.Objects.DBTracking;
 import be.goossens.oracle.Rest.DataParser;
 import be.goossens.oracle.Rest.DbAdapter;
 import be.goossens.oracle.Rest.Functions;
 import be.goossens.oracle.Rest.TimeComparator;
+import be.goossens.oracle.Show.ShowHomeTab;
 
 public class ShowTracking extends ListActivity {
 	private List<DBTracking> listTracking;
 	private CustomArrayAdapterDBTracking adapter;
 	private TextView tvFetchingData;
-	private boolean threadFinished;
-
+	private boolean thereAreMoreItems;
+	private Calendar calendarTime;
+	private Button btMore;
+	private boolean setSelectedItemToLastOne;
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.show_tracking);
+
+		calendarTime = Calendar.getInstance();
+		
+		calendarMinusOneMonth();
+
+		btMore = (Button) findViewById(R.id.buttonMore);
+		//standard hide the button
+		btMore.setVisibility(View.GONE);
+		
 		listTracking = new ArrayList<DBTracking>();
 		adapter = null;
 		tvFetchingData = (TextView) findViewById(R.id.textViewFetchingData);
+
+		btMore.setOnClickListener(new View.OnClickListener() {
+			public void onClick(View v) {
+				setSelectedItemToLastOne = true;
+				calendarMinusOneMonth();
+				refresh();
+			}
+		});
 	}
 
 	@Override
 	protected void onResume() {
 		super.onResume();
-
-		if (!threadFinished) {
-			threadFinished = true;
-			tvFetchingData.setVisibility(View.VISIBLE);
-			new DoInBackground().execute();
-		}
+		tvFetchingData.setVisibility(View.VISIBLE);
+		new DoInBackground().execute();
 	}
 
-	public void refreshData() {
+	private void refresh() {
+		// hide button see more
+		btMore.setVisibility(View.GONE);
+
 		setListAdapter(null);
+		tvFetchingData.setVisibility(View.VISIBLE);
 		new DoInBackground().execute();
 	}
 
@@ -72,6 +100,15 @@ public class ShowTracking extends ListActivity {
 		protected void onPostExecute(Void result) {
 			fillListView();
 			tvFetchingData.setVisibility(View.GONE);
+ 
+			// when there is more to show then show the button
+			if (thereAreMoreItems)
+				btMore.setVisibility(View.VISIBLE);
+
+			if(setSelectedItemToLastOne){
+				setSelection(listTracking.size());
+			}
+			
 			super.onPostExecute(result);
 		}
 	}
@@ -87,9 +124,16 @@ public class ShowTracking extends ListActivity {
 		}
 
 		adapter = new CustomArrayAdapterDBTracking(this, 0, listTracking,
-				ActivityGroupMeal.group.getFoodData().dbFontSize);
+				ActivityGroupMeal.group.getFoodData().dbFontSize,
+				ActivityGroupMeal.group.getFoodData().defaultValue);
+
 		setListAdapter(adapter);
 
+	}
+
+	private void calendarMinusOneMonth() {
+		// do - 1 month standard
+		calendarTime.add(Calendar.MONTH, -1);
 	}
 
 	// This method will fill the listTracking with all the data from the db
@@ -108,9 +152,19 @@ public class ShowTracking extends ListActivity {
 		if (cDates.getCount() > 0) {
 			cDates.moveToFirst();
 			do {
-				listDates
-						.add(new Functions().getYearMonthDayAsDateFromString(cDates.getString(cDates
-								.getColumnIndexOrThrow(new DataParser().timestamp))));
+				Date tempDate = new Functions()
+						.getYearMonthDayAsDateFromString(cDates.getString(cDates
+								.getColumnIndexOrThrow(new DataParser().timestamp)));
+				 
+				if (tempDate.after(calendarTime.getTime()) || tempDate.equals(calendarTime.getTime())) { 
+					thereAreMoreItems = false;
+					listDates.add(tempDate);
+				} else {
+					// if we get here there are more items so we flag the
+					// boolean to show button " see more "
+					thereAreMoreItems = true;
+				}
+
 			} while (cDates.moveToNext());
 		}
 		cDates.close();
@@ -173,9 +227,69 @@ public class ShowTracking extends ListActivity {
 			// For each date get the meal event
 			Cursor cMealEvents = dbHelper.fetchMealEventsByDate(new Functions()
 					.getYearMonthDayAsStringFromDate(date));
+
 			if (cMealEvents.getCount() > 0) {
 				cMealEvents.moveToFirst();
 				do {
+					List<DBMealFood> listDBMealFood = new ArrayList<DBMealFood>();
+					Cursor cMealFood = dbHelper
+							.fetchMealFoodByMealEventID(cMealEvents.getLong(cMealEvents
+									.getColumnIndexOrThrow(DbAdapter.DATABASE_MEALEVENT_ID)));
+					if (cMealFood.getCount() > 0) {
+						cMealFood.moveToFirst();
+						do {
+							// fill the list with meal foods
+
+							// to do so we first get the unit that belongs to
+							// this mealfood
+							Cursor cUnit = dbHelper
+									.fetchFoodUnit(cMealFood.getLong(cMealFood
+											.getColumnIndexOrThrow(DbAdapter.DATABASE_MEALFOOD_FOODUNITID)));
+							cUnit.moveToFirst();
+							Cursor cFood = dbHelper
+									.fetchFood(cUnit.getLong(cUnit
+											.getColumnIndexOrThrow(DbAdapter.DATABASE_FOODUNIT_FOODID)));
+							cFood.moveToFirst();
+
+							// fill cmealfood
+							listDBMealFood
+									.add(new DBMealFood(
+											cMealFood
+													.getLong(cMealFood
+															.getColumnIndexOrThrow(DbAdapter.DATABASE_MEALFOOD_ID)),
+											cFood.getString(cFood
+													.getColumnIndexOrThrow(DbAdapter.DATABASE_FOOD_NAME)),
+											cMealFood.getFloat(cMealFood
+													.getColumnIndexOrThrow(DbAdapter.DATABASE_MEALFOOD_AMOUNT)),
+											new DBFoodUnit(
+													cUnit.getLong(cUnit
+															.getColumnIndexOrThrow(DbAdapter.DATABASE_FOODUNIT_ID)),
+													cUnit.getString(cUnit
+															.getColumnIndexOrThrow(DbAdapter.DATABASE_FOODUNIT_NAME)),
+													cUnit.getString(cUnit
+															.getColumnIndexOrThrow(DbAdapter.DATABASE_FOODUNIT_DESCRIPTION)),
+													cUnit.getFloat(cUnit
+															.getColumnIndexOrThrow(DbAdapter.DATABASE_FOODUNIT_STANDARDAMOUNT)),
+													cUnit.getFloat(cUnit
+															.getColumnIndexOrThrow(DbAdapter.DATABASE_FOODUNIT_KCAL)),
+													cUnit.getFloat(cUnit
+															.getColumnIndexOrThrow(DbAdapter.DATABASE_FOODUNIT_PROTEIN)),
+													cUnit.getFloat(cUnit
+															.getColumnIndexOrThrow(DbAdapter.DATABASE_FOODUNIT_CARBS)),
+													cUnit.getFloat(cUnit
+															.getColumnIndexOrThrow(DbAdapter.DATABASE_FOODUNIT_FAT)),
+													cUnit.getFloat(cUnit
+															.getColumnIndexOrThrow(DbAdapter.DATABASE_FOODUNIT_VISIBLE)),
+													cUnit.getInt(cUnit
+															.getColumnIndexOrThrow(DbAdapter.DATABASE_FOODUNIT_FOODID)))));
+
+							cFood.close();
+							cUnit.close();
+
+						} while (cMealFood.moveToNext());
+					}
+					cMealFood.close();
+
 					// new DBTracking(exerciseEvent, mealEvent,
 					// bloodGlucoseEvent, medicineEvent, timestamp, noRecors)
 					listTempDBTracking
@@ -195,7 +309,7 @@ public class ShowTracking extends ListActivity {
 													.getColumnIndexOrThrow(DbAdapter.DATABASE_MEALEVENT_EVENTDATETIME)),
 											cMealEvents.getLong(cMealEvents
 													.getColumnIndexOrThrow(DbAdapter.DATABASE_MEALEVENT_USERID)),
-											null),
+											listDBMealFood),
 									null,
 									null,
 									new Functions()
@@ -224,7 +338,7 @@ public class ShowTracking extends ListActivity {
 							.add(new DBTracking(
 									null,
 									null,
-									new DBloodGlucoseEvent(
+									new DBBloodGlucoseEvent(
 											cGlucoseEvent
 													.getLong(cGlucoseEvent
 															.getColumnIndexOrThrow(DbAdapter.DATABASE_BLOODGLUCOSEEVENT_ID)),
@@ -293,10 +407,10 @@ public class ShowTracking extends ListActivity {
 				} while (cMedicineEvent.moveToNext());
 			}
 			cMedicineEvent.close();
- 
+
 			// order the temp list on timestamp
-			Collections.sort(listTempDBTracking, new TimeComparator()); 
-			
+			Collections.sort(listTempDBTracking, new TimeComparator());
+
 			// add the temp list to the real list
 			listTracking.addAll(listTracking.size(), listTempDBTracking);
 		}
@@ -305,12 +419,288 @@ public class ShowTracking extends ListActivity {
 
 	@Override
 	protected void onListItemClick(ListView l, View v, int position, long id) {
-		/*
-		 * if (listTracking.get(position).getTimestamp() != null) {
-		 * Toast.makeText(this, "" +
-		 * listTracking.get(position).getTimestamp().getTime(),
-		 * Toast.LENGTH_LONG).show(); }
-		 */
+		// click on medine event
+		if (listTracking.get(position).getMedicineEvent() != null) {
+			showPopUpDeleteMedicineEvent(listTracking.get(position)
+					.getMedicineEvent());
+		} else if (listTracking.get(position).getExerciseEvent() != null) {
+			showPopUpDeleteExerciseEvent(listTracking.get(position)
+					.getExerciseEvent());
+		} else if (listTracking.get(position).getBloodGlucoseEvent() != null) {
+			showPopUpDeleteGlucoseEvent(listTracking.get(position)
+					.getBloodGlucoseEvent());
+		} else if (listTracking.get(position).getMealEvent() != null) {
+
+			float totalValue = 0;
+			String text = " \n ";
+			String defaultValueText = "";
+
+			for (DBMealFood mealFood : listTracking.get(position)
+					.getMealEvent().getMealFood()) {
+				float calculatedValue = 0f;
+
+				switch (ActivityGroupMeal.group.getFoodData().defaultValue) {
+				case 1:
+					calculatedValue = ((mealFood.getUnit().getCarbs() / mealFood
+							.getUnit().getStandardamound()) * mealFood
+							.getAmount());
+					defaultValueText = getResources().getString(
+							R.string.short_carbs);
+					break;
+				case 2:
+					calculatedValue = ((mealFood.getUnit().getProtein() / mealFood
+							.getUnit().getStandardamound()) * mealFood
+							.getAmount());
+					defaultValueText = getResources().getString(
+							R.string.amound_of_protein);
+					break;
+				case 3:
+					calculatedValue = ((mealFood.getUnit().getFat() / mealFood
+							.getUnit().getStandardamound()) * mealFood
+							.getAmount());
+					defaultValueText = getResources().getString(
+							R.string.amound_of_fat);
+					break;
+				case 4:
+					calculatedValue = ((mealFood.getUnit().getKcal() / mealFood
+							.getUnit().getStandardamound()) * mealFood
+							.getAmount());
+					defaultValueText = getResources().getString(
+							R.string.short_kcal);
+					break;
+				}
+
+				totalValue += calculatedValue;
+
+				// round calculatedValue
+				calculatedValue = new Functions().roundFloats(calculatedValue,
+						1);
+
+				text += "" + mealFood.getAmount() + " "
+						+ mealFood.getUnit().getName() + " "
+						+ mealFood.getFoodName() + " (" + calculatedValue + " "
+						+ defaultValueText + ") \n ";
+			}
+
+			// Round total value
+			totalValue = new Functions().roundFloats(totalValue, 1);
+
+			showPopUpWhatToDoWithMealEvent(listTracking.get(position)
+					.getMealEvent().getId(), totalValue + " "
+					+ defaultValueText + " \n" + text);
+		}
+	}
+
+	private void showPopUpDeleteGlucoseEvent(final DBBloodGlucoseEvent event) {
+		// Show a dialog
+		new AlertDialog.Builder(ActivityGroupTracking.group)
+				.setTitle(getResources().getString(R.string.delete))
+				.setPositiveButton(getResources().getString(R.string.yes),
+						new DialogInterface.OnClickListener() {
+							public void onClick(DialogInterface dialog,
+									int which) {
+								// on click positive button
+								// Delete from database
+								deleteGlucoseEventFromDatabase(event.getId());
+								// refresh list
+								refresh();
+							}
+						})
+				.setNegativeButton(getResources().getString(R.string.cancel),
+						new DialogInterface.OnClickListener() {
+							public void onClick(DialogInterface dialog,
+									int which) {
+								// on click negative button do nothing
+							}
+						})
+				.setMessage(
+						""
+								+ new Functions().getTimeFromString(event
+										.getTimeStamp()) + " \n"
+								+ event.getAmount() + " " + event.getUnit())
+				.show();
+	}
+
+	private void showPopUpDeleteExerciseEvent(final DBExerciseEvent event) {
+		// Show a dialog
+		new AlertDialog.Builder(ActivityGroupTracking.group)
+				.setTitle(getResources().getString(R.string.delete))
+				.setPositiveButton(getResources().getString(R.string.yes),
+						new DialogInterface.OnClickListener() {
+							public void onClick(DialogInterface dialog,
+									int which) {
+								// on click positive button
+								// Delete from database
+								deleteExerciseEventFromDatabase(event.getId());
+								// refresh list
+								refresh();
+							}
+						})
+				.setNegativeButton(getResources().getString(R.string.cancel),
+						new DialogInterface.OnClickListener() {
+							public void onClick(DialogInterface dialog,
+									int which) {
+								// on click negative button do nothing
+							}
+						})
+				.setMessage(
+						""
+								+ new Functions().getTimeFromString(event
+										.getTimeStamp())
+								+ " - "
+								+ new Functions().getTimeFromSeconds(event
+										.getEndTime()) + " \n"
+								+ event.getDescription()).show();
+	}
+
+	private void showPopUpDeleteMedicineEvent(
+			final DBMedicineEvent medicineEvent) {
+		// Show a dialog
+		new AlertDialog.Builder(ActivityGroupTracking.group)
+				.setTitle(getResources().getString(R.string.delete))
+				.setPositiveButton(getResources().getString(R.string.yes),
+						new DialogInterface.OnClickListener() {
+							public void onClick(DialogInterface dialog,
+									int which) {
+								// on click positive button
+								// Delete from database
+								deleteMedicineEventFromDatabase(medicineEvent
+										.getId());
+								// refresh list
+								refresh();
+							}
+						})
+				.setNegativeButton(getResources().getString(R.string.cancel),
+						new DialogInterface.OnClickListener() {
+							public void onClick(DialogInterface dialog,
+									int which) {
+								// on click negative button do nothing
+							}
+						})
+				.setMessage(
+						""
+								+ new Functions()
+										.getTimeFromString(medicineEvent
+												.getTimeStamp()) + " \n"
+								+ medicineEvent.getAmount() + " "
+								+ medicineEvent.getMedicineTypeUnit() + " "
+								+ medicineEvent.getMedicineTypeName()).show();
+	}
+
+	private void deleteGlucoseEventFromDatabase(long id) {
+		DbAdapter db = new DbAdapter(this);
+		db.open();
+		db.deleteBloodGlucoseEventByID(id);
+		db.close();
+	}
+
+	private void deleteExerciseEventFromDatabase(long id) {
+		DbAdapter db = new DbAdapter(this);
+		db.open();
+		db.deleteExerciseEventByID(id);
+		db.close();
+	}
+
+	private void deleteMedicineEventFromDatabase(long id) {
+		DbAdapter db = new DbAdapter(this);
+		db.open();
+		db.deleteMedicineEventByID(id);
+		db.close();
+	}
+
+	private void showPopUpWhatToDoWithMealEvent(final long mealID, String text) {
+		AlertDialog.Builder builder = new AlertDialog.Builder(
+				ActivityGroupTracking.group);
+		builder.setMessage(text)
+				.setPositiveButton(
+						getResources().getString(R.string.addToSelection),
+						new OnClickListener() {
+							public void onClick(DialogInterface dialog,
+									int which) {
+								addMealEventToSelections(mealID);
+								// go to selected food tab ?
+								goToFoodTab();
+							}
+						})
+				.setNeutralButton(getResources().getString(R.string.cancel),
+						null)
+				.setNegativeButton(getResources().getString(R.string.delete),
+						new OnClickListener() {
+							public void onClick(DialogInterface dialog,
+									int which) {
+								// delete from database
+								deleteMealEventFromDatabase(mealID);
+
+								// refresh the list
+								refresh();
+							}
+						}).show();
+	}
+
+	private void goToFoodTab() {
+		try {
+			// flag to start show selected food
+			// ActivityGroupMeal.group.goToSeletedFood();
+
+			// Go to tracking tab when clicked on add
+			ShowHomeTab parentActivity;
+			parentActivity = (ShowHomeTab) this.getParent().getParent();
+			parentActivity.goToTab(DataParser.activityIDMeal);
+
+			// show sucess message
+			Toast.makeText(this,
+					getResources().getString(R.string.sucesfull_added),
+					Toast.LENGTH_LONG).show();
+		} catch (Exception e) {
+			showPopUp(e.toString());
+		}
+	}
+
+	private void showPopUp(String string) {
+		// Show a dialog with a inputbox to insert the template name
+		new AlertDialog.Builder(ActivityGroupTracking.group).setTitle("Error")
+				.setMessage(string)
+				.setNeutralButton(getResources().getString(R.string.oke), null)
+				.show();
+	}
+
+	private void deleteMealEventFromDatabase(long mealID) {
+		DbAdapter db = new DbAdapter(this);
+		db.open();
+		Cursor cMealFoods = db.fetchMealFoodByMealEventID(mealID);
+		if (cMealFoods.getCount() > 0) {
+			cMealFoods.moveToFirst();
+			do {
+				db.deleteMealFoodByID(cMealFoods.getLong(cMealFoods
+						.getColumnIndexOrThrow(DbAdapter.DATABASE_MEALFOOD_ID)));
+			} while (cMealFoods.moveToNext());
+		}
+		cMealFoods.close();
+		db.deleteMealEventByID(mealID);
+		db.close();
+	}
+
+	private void addMealEventToSelections(long mealID) {
+		DbAdapter db = new DbAdapter(this);
+		db.open();
+		Cursor cMealFoods = db.fetchMealFoodByMealEventID(mealID);
+		cMealFoods.moveToFirst();
+
+		do {
+			db.createSelectedFood(
+					cMealFoods
+							.getFloat(cMealFoods
+									.getColumnIndexOrThrow(DbAdapter.DATABASE_MEALFOOD_AMOUNT)),
+					cMealFoods.getLong(cMealFoods
+							.getColumnIndexOrThrow(DbAdapter.DATABASE_MEALFOOD_FOODUNITID)),
+					new Functions().getDateAsStringFromCalendar(Calendar
+							.getInstance()));
+
+			ActivityGroupMeal.group.getFoodData().countSelectedFood++;
+		} while (cMealFoods.moveToNext());
+
+		cMealFoods.close();
+		db.close();
 	}
 
 	@Override

@@ -1,10 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    android:installLocation="auto"
     package="be.goossens.oracle"
     android:versionCode="1"
     android:versionName="1.0" >
 
-    <uses-sdk android:minSdkVersion="4" />
+    <uses-sdk android:minSdkVersion="4" android:targetSdkVersion="8" />
+
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
     <application
         android:icon="@drawable/ic_launcher"
@@ -29,9 +32,9 @@
         </activity>
         <activity android:name=".Show.Settings.ShowSettingsMealTimes" >
         </activity>
-        <activity android:name=".Show.Food.ShowUpdateOwnFood" >
+        <activity android:name=".Show.Food.ShowUpdateFood" >
         </activity>
-        <activity android:name=".Show.Settings.ShowSettingsValueOrder" >
+        <activity android:name=".Show.Settings.ShowSettingsValue" >
         </activity>
         <activity android:name=".Show.Settings.ShowSettingsFontSizeLists" >
         </activity>
@@ -72,9 +75,20 @@
         </activity>
         <activity android:name=".Show.Settings.ShowSettingsGlucoseUnit" >
         </activity>
-        <activity android:name=".Show.Medicine.ShowAddMedicineEvent"></activity>
-        <activity android:name=".Show.Food.ShowLoadingFoodData"></activity>
-        <activity android:name=".Show.Settings.ShowSettingsDBLanguage"></activity>
+        <activity android:name=".Show.Medicine.ShowAddMedicineEvent" >
+        </activity>
+        <activity android:name=".Show.Food.ShowLoadingFoodData" >
+        </activity>
+        <activity android:name=".Show.Settings.ShowSettingsDBLanguage" >
+        </activity>
+        <activity android:name=".Show.Medicine.ShowMedicineTypes" >
+        </activity>
+        <activity android:name=".Show.Medicine.ShowAddMedicineType" >
+        </activity>
+        <activity android:name=".Show.Settings.ShowSettingsBackup" >
+        </activity>
+        <activity android:name=".Show.Settings.ShowSettingsDefaultMedicineType" >
+        </activity>
     </application>
 
 </manifest>

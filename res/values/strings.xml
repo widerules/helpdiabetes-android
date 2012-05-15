@@ -1,187 +1,150 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!-- Please read info.txt for license and legal information -->
 <resources>
-
-    <!-- General -->
-    <string name="app_name">HelpDiabetes</string>
-    <string name="add">Toevoegen</string>
-    <string name="update">Aanpassen</string>
-    <string name="menu_delete">Verwijderen</string>
-    <string name="delete_all">Wis alles</string>
-    <string name="yes">Ja</string>
-    <string name="no">Nee</string>
-    <string name="btup">+</string>
-    <string name="btdown">-</string>
-    <string name="loading">laden</string>
-    <string name="hide">Verberg</string>
-    <string name="Name">Naam</string>
-    <string name="unit">Eenheid</string>
-    <string name="name_cant_be_empty">Naam mag niet leeg zijn</string>
-    <string name="unit_cant_be_empty">Eenheid mag niet leeg zijn</string>
+    <string name="add">Add</string>
+    <string name="update">Update</string>
+    <string name="menu_delete">Delete</string>
+    <string name="delete_all">Clear</string>
+    <string name="yes">Yes</string>
+    <string name="no">No</string>
+    <string name="loading">loading</string>
+    <string name="hide">Hide</string>
+    <string name="Name">Name</string>
+    <string name="unit">Unit</string>
+    <string name="name_cant_be_empty">Name cant be empty</string>
+    <string name="unit_cant_be_empty">Unit cant be empty</string>
     <string name="short_kcal">Kcals</string>
-    <string name="short_carbs">Kh</string>
-    <string name="save">Opslaan</string>
+    <string name="short_carbs">carbs</string>
+    <string name="save">Save</string>
     <string name="oke">Oke</string>
-    <string name="cancel">Annuleren</string>
-    <string name="visibility">Zichtbaarheid</string>
-    <string name="visible">Zichtbaar</string>
-    <string name="invisible">Onzichtbaar</string>
-    <string name="next">Volgende</string>
-
-    <!-- Exit application dialog -->
-    <string name="sureToExit">Bent u zeker dat u wilt afsluiten ?</string>
-
-    <!-- Show start -->
-    <string name="checkingDatabase">Database initialiseren</string>
-    <string name="retrievingFood">Producten ophalen</string>
-    <string name="are_you_diabetes_patient">Bent u diabetes patient?</string>
-
-    <!-- Page titels -->
-    <string name="titelTracking">Historiek</string>
-    <string name="titelCreateFood">Nieuw voedingsmiddel</string>
-    <string name="titelUpdateFood">Voedingsmiddel</string>
-    <string name="titelCreateUnit">Voedingsmiddel Eenheid</string>
-    <string name="titelAddFood">Nieuwe selectie</string>
-    <string name="titelAddExercise">Activiteit</string>
-    <string name="titelAddGlucose">Bloedglucose</string>
-    <string name="titelSettings">Instellingen</string>
-    <string name="titelAddMedicine">Medicatie</string>
-
-    <!-- Settings strings used as title on the setting pages and as text in the list of settings -->
-    <string name="pref_insuline_ratio">Insuline-KH Ratio</string>
-    <string name="pref_meal_times">Maaltijd tijden</string>
-    <string name="pref_value_order">Voorkeur voedingswaarde</string>
-    <string name="pref_text_size">Lettergrootte</string>
-    <string name="pref_glucose_unit">Bloedglucose-eenheid</string>
-    <string name="pref_exercise_types">Activiteit types</string>
-    <string name="pref_medicine_types">Medicijn types</string>
-    <string name="pref_db_language">Taal voedingstabel</string>
-
-    <!-- setting sub titles -->
-    <string name="pref_add_exercise_type">Activiteit type toevoegen</string>
-    <string name="pref_add_medicine_type">Medicijn type toevoegen</string>
-
-    <!-- ShowTracking -->
-    <string name="showTracking">Rapporten</string>
-    <string name="noTrackingValues">Er zijn nog geen rapporten</string>
-
-    <!-- ShowSelectedFood -->
-    <string name="showSelectedFoodPopupAddAmountToTemplate">Wilt u de aantallen mee bewaren?</string>
+    <string name="cancel">Cancel</string>
+    <string name="visibility">Visibility</string>
+    <string name="visible">Visible</string>
+    <string name="invisible">Invisible</string>
+    <string name="next">Next</string>
+    <string name="sureToExit">Are you sure you want to exit ?</string>
+    <string name="checkingDatabase">Database Loading</string>
+    <string name="retrievingFood">Products loading</string>
+    <string name="are_you_diabetes_patient">Helpdiabetes can automaticly calucate insuline. \n Do you want to use this function?</string>
+    <string name="titelTracking">Log</string>
+    <string name="titelCreateFood">New food</string>
+    <string name="titelUpdateFood">Food</string>
+    <string name="titelCreateUnit">Food unit</string>
+    <string name="titelAddFood">New selection</string>
+    <string name="titelAddExercise">Event</string>
+    <string name="titelAddGlucose">Glucose</string>
+    <string name="titelSettings">Settings</string>
+    <string name="titelAddMedicine">Medication</string>
+    <string name="titelTemplate">Templates</string>
+    <string name="pref_insuline_ratio">Insulin-carb ratio</string>
+    <string name="pref_meal_times">Meal Time Slots</string>
+    <string name="pref_value_order">Food composition</string>
+    <string name="pref_text_size">Font Size</string>
+    <string name="pref_glucose_unit">Glucose-unit</string>
+    <string name="pref_exercise_types">Activity types</string>
+    <string name="pref_medicine_types">Medicine types</string>
+    <string name="pref_db_language">Language database</string>
+    <string name="pref_backup">Backup</string>
+    <string name="pref_about">About</string>
+    <string name="pref_add_exercise_type">Add activity type</string>
+    <string name="pref_add_medicine_type">Add medicine type</string>
+    <string name="showTracking">Logs</string>
+    <string name="noTrackingValues">There are no logs</string>
+    <string name="addToSelection">Add to selection</string>
+    <string name="showSelectedFoodPopupAddAmountToTemplate">Save amounts?</string>
     <string name="insuline">Insuline</string>
-    <string name="insulineRatio">KH/1E</string>
+    <string name="insulineRatio">carbs/1E</string>
     <string name="insulineUnit">E</string>
-    <string name="showSelectedFoodUnitsInsuline">eenheden insuline</string>
+    <string name="showSelectedFoodUnitsInsuline">units insuline</string>
     <string name="showSelectedFoodUInsulineRatio">Insuline ratio</string>
-    <string name="showSelectedFoodEatSelectedFood">toevoegen aan rapport</string>
-    <string name="total">Totaal selecties</string>
-    <string name="sureToDeleteSelectedFood">Bent u zeker dat u alle selecties wilt verwijderen?</string>
-
-    <!-- ShowFoodList -->
-    <string name="showFoodListButtonSelections">Selecties</string>
-    <string name="search">Zoeken</string>
-    <string name="options">Opties</string>
-
-    <!-- These values are used to equal to ShowCreateFoodSpinnerResource.xml -->
-    <!-- If you update them here you have to update them there to! -->
-    <!-- These values are also used to set "gram" as default on the spinner of add food to selection -->
-    <string name="gram">gram</string>
-    <string name="ml">ml</string>
-
-    <!-- ShowUpdateFood -->
-    <string name="update_food_name">Productnaam aanpassen</string>
-
-    <!-- ShowCreateUnit & ShowCreateFood -->
-    <string name="unit_amount_cant_be_zero">Eenheid moet groter dan 0 zijn</string>
-
-    <!-- ShowExerciseEvents -->
-    <string name="exercise_events">Sport activiteiten</string>
-    <string name="add_exercise_events">Sport activiteit toevoegen</string>
-    <string name="menu_update_exercise_type">Intensiteiten updaten</string>
-
-    <!-- show add food to selection -->
-    <string name="add_and_add_another">Toevoegen en terug naar lijst</string>
-    <string name="add_and_go_to_selected">Toevoegen en naar overzicht gaan</string>
-
-    <!-- ShowAddExerciseEvents -->
-    <string name="description">Beschrijving</string>
-    <string name="start_time">Begin tijd</string>
-    <string name="end_time">Duur</string>
+    <string name="showSelectedFoodEatSelectedFood">Add to logs</string>
+    <string name="total">Total selections</string>
+    <string name="sureToDeleteSelectedFood">Are you sure to clear selections?</string>
+    <string name="addSelectionToTracking">Add selection to logs?</string>
+    <string name="howMuch">How much</string>
+    <string name="didUUse">did u use?</string>
+    <string name="changeTime">Change time</string>
+    <string name="search">Search</string>
+    <string name="options">Options</string>
+    <string name="update_food_name">Update product name</string>
+    <string name="unit_amount_cant_be_zero">Units need to be more then 0</string>
+    <string name="add_exercise_events">Add exercise activity</string>
+    <string name="menu_update_exercise_type">Update intensity</string>
+    <string name="add_and_add_another">Add and back to list</string>
+    <string name="add_and_go_to_selected">Add and to selections</string>
+    <string name="description">Description</string>
+    <string name="start_time">Start time</string>
+    <string name="end_time">Duration</string>
     <string name="exercise_type">Type</string>
-    <string name="description_cant_be_empty">Beschrijving mag niet leeg zijn</string>
-
-    <!-- ShowAddBloodGlucoseEvent -->
-    <string name="amountCantBeZero">Waarde mag niet 0 zijn!</string>
-
-    <!-- ShowAddExerciseType -->
-    <string name="exercise_type_cant_be_empty">Type mag niet leeg zijn</string>
-    <string name="date">Datum</string>
-
-    <!-- Layout -->
-    <string name="endOfListView">></string>
-
-    <!-- Not sorted yet -->
-    <string name="creating_data">Aanmaken gegevens</string>
-    <string name="amound_of_kcal">Kilocalorien</string>
-    <string name="amound_of_carbs">Koolhydraten</string>
-    <string name="amound_of_protein">Eiwit</string>
-    <string name="amound_of_fat">Vet</string>
-    <string name="items_selected">items geselecteerd</string>
-    <string name="multiplie">X</string>
-    <string name="cant_add_more_then_five_digits">U kan niet meer dan 5 digits ingeven!</string>
-    <string name="cant_delete_food_caus_food_is_in_use">Dit eten kan niet verwijderd worden (Het word nog gebruikt)!</string>
-    <string name="cant_delete_food_unit_caus_food_unit_is_in_use">Deze eenheid kan niet verwijderd worden (Hij word nog gebruikt)!</string>
-    <string name="cant_delete_food_unit_caus_food_unit_is_last_one">Deze eenheid kan niet verwijderd worden (Het is de laatste van dit eten)!</string>
-    <string name="value_cant_be_more_then_ninety_nine">De waarde mag niet meer dan 9999 zijn!</string>
-    <string name="selected_food_aint_added">Geselecteerd eten niet toegevoegd</string>
-    <string name="value_amount_cant_be_zero">waarde aantal mag niet 0 zijn</string>
-    <string name="settings">Instellingen</string>
-    <string name="update_own_food">Update eigen producten</string>
-    <string name="create_new_food">eten</string>
-    <string name="food_name">Productnaam</string>
-    <string name="part">stuk</string>
-    <string name="one">1</string>
-    <string name="hundred">100</string>
-    <string name="food_name_is_required">Naam eten mag niet leeg zijn</string>
-    <string name="save_food_name">Eten naam wijzigen</string>
-    <string name="kcal_is_required">kilocalories mag niet leeg zijn</string>
-    <string name="prot_is_required">eiwit mag niet leeg zijn</string>
-    <string name="carbs_is_required">koolhydraten mag niet leeg zijn</string>
-    <string name="fat_is_required">Vet mag niet leeg zijn</string>
-    <string name="food_name_succesfull_dated">Eten naam is succesvol aangepast</string>
-    <string name="add_unit">Eenheid toevoegen</string>
-    <string name="units">Hoeveelheden</string>
-    <string name="selections_are_empty">Selecties is leeg</string>
-    <string name="saved">Opgeslagen</string>
-    <string name="do_you_want_to_delete_the_selections">Wilt u de selecties leeg maken?</string>
-    <string name="add_food_to_template_error">U moet minimum 2 etenswaren geselecteerd hebben</string>
-    <string name="delete">verwijder</string>
-    <string name="template_name">Template naam</string>
-    <string name="save_as_template">bewaar template</string>
-    <string name="Load_template">laad template</string>
-    <string name="template_load_empty">Er zijn geen templates</string>
-    <string name="template_name_cant_be_empty">Template naam mag niet leeg zijn</string>
-
-    <!-- Slider -->
-    <string name="dateSliderTitle">Geselecteerde datum</string>
-
-    <!-- Settings meal time -->
-    <string name="pref_breakfastratio_title">Ontbijt</string>
-    <string name="pref_lunchratio_title">Middag</string>
-    <string name="pref_snackratio_title">Vieruurtje</string>
-    <string name="pref_dinnerratio_title">Avondmaal</string>
-    <string name="starts_at">begint om</string>
-    
-    <!-- Settings insuline KH ratio -->
-	<string name="if_value_zero_dont_calc_insuline">Als de waarde 0 is word er geen insuline berekend!</string>
-
-    <!-- Settings value order -->
-    <string name="standard_cant_be_hidden">Default kan niet onzichtbaar gezet worden</string>
-
-    <!-- Settings font size list -->
-    <string name="fontSize">Tekst grootte</string>
-    <string name="selected_wanted_size">Selecteer de gewenste grootte</string>
-
-    <!-- Setting medicine types -->
+    <string name="description_cant_be_empty">Description cant be empty</string>
+    <string name="amountCantBeZero">Value cant be empty!</string>
+    <string name="exercise_type_cant_be_empty">Type cant be empty</string>
+    <string name="date">Date</string>
+    <string name="amound_of_kcal">Kilocalories</string>
+    <string name="amound_of_carbs">Carbohydrates</string>
+    <string name="amound_of_protein">Protein</string>
+    <string name="amound_of_fat">Fat</string>
+    <string name="cant_delete_food_caus_food_is_in_use">This food cant be deleted (it is still in use)</string>
+    <string name="create_new_food">Food</string>
+    <string name="food_name">Food name</string>
+    <string name="food_name_is_required">Food name cant be empty</string>
+    <string name="units">Units</string>
+    <string name="selections_are_empty">Selections are empty</string>
+    <string name="saved">Save</string>
+    <string name="do_you_want_to_delete_the_selections">Clear selections?</string>
+    <string name="add_food_to_template_error">Minimum 2 products need to be selected</string>
+    <string name="delete">Delete</string>
+    <string name="template_name">Template name</string>
+    <string name="save_as_template">Save template</string>
+    <string name="Load_template">Load template</string>
+    <string name="template_load_empty">There are no templates</string>
+    <string name="template_name_cant_be_empty">Template name cant be empty</string>
+    <string name="dateSliderTitle">Selected date</string>
+    <string name="pref_breakfastratio_title">Breakfast</string>
+    <string name="pref_lunchratio_title">Noon</string>
+    <string name="pref_snackratio_title">Snack</string>
+    <string name="pref_dinnerratio_title">Dinner</string>
+    <string name="starts_at">starts at</string>
+    <string name="if_value_zero_dont_calc_insuline">If the value is zero the insuline wont be calculated!</string>
+    <string name="standard_cant_be_hidden">Default cant be hidden</string>
+    <string name="fontSize">font size</string>
+    <string name="selected_wanted_size">Selected the wanted size</string>
     <string name="standard">default</string>
-    <string name="standard_is_used_for">Default word gebruikt om geselecteerd eten aan de rapport pagina toe te voegen</string>
-
+    <string name="make_standard">Mark as default</string>
+    <string name="standard_is_used_for">Default is used to add selected food to log</string>
+    <string name="about_text">Dit programa is vrije software: je mag het herdistribueren en/of wijzigen onder de voorwaarden van de GNU Algemene Publieke Licentie zoals gepubliceerd door de Free Software Foundation, onder versie 3 van de Licentie of (naar jouw keuze) elke latere versie. Dit programma is gedistribueerd in de hoop dat het nuttig zal zijn maar ZONDER ENIGE GARANTIE: zelfs zonder de impliciete garanties die GEBRUIKELIJK ZIJN IN DE HANDEL of voor BRUIKBAARHEID VOOR EEN SPECIFIEK DOEL. Zie de GNU Algemene Publieke Licentie voor meer details. Je hoort een kopie van de GNU Algemene Publieke Licentie te hebben ontvangen samen met dit programma. Als dat niet het geval is, zie http://www.gnu.org/licenses/gpl.txt.</string>
+    <string name="copyDatabaseToSD">Backup database 2 SD</string>
+    <string name="foodToExcel">export products 2 csv</string>
+    <string name="excelToDB">import products from csv</string>
+    <string name="select_standard_medicine_type">Selected the default medicine type</string>
+    <string name="define_own">Define own</string>
+    
+    <!-- These 3 items are used in add food and add food unit 
+    They are the source for the spinner and the edit text -->
+    <string name="gram">grams</string>
+    <string name="ml">fl oz</string>
+    <string name="part">piece</string>
+    
+    <!-- Update: 14-05-2012 --> 
+    <string name="file_name">File name</string>
+    <string name="no_own_food">No own created/updated food</string>
+    <string name="could_not_write">Could not write to sd</string>
+    <string name="succesfull_wrote_to_sd">Succesfull wrote to sd</string>
+    <string name="succesfull_wrote_csv_file">Succesfull created csv file</string>
+    <string name="sucessfull_copied_records_to_database">Succesfull imported products</string>
+    <string name="could_not_read_from_sd">Could not read from sd</string>
+    <string name="selections_aint_empty">there is still selected food!</string>
+    <string name="dont_add_medicine">Dont add medicine</string>
+    <string name="sucesfull_added">Products added to selection</string>
+    
+     <!-- Update: 15-05-2012 -->
+     <string name="warning">Warning</string>
+     <string name="app_will_exit">The application will now exit. \n Please manually start it again.</string>
+     <string name="something_went_wrong">Something went wrong</string>
+     <string name="succesfull_copied">Succesfull copied database from sd to phone</string>
+     <string name="databaseFromSDToPhone">Restore database from SD</string>
+     <string name="deleteCurrentDatabase">This function will delete the current database and override it with the database from the SD card \n\nAll existing data from the current database will be erased</string>
+     <string name="seeMore">See more</string> 
+     <string name="noFilesFound">No csv files found on root of SD card</string>
+     <string name="chooseFile">Choose file</string>
 </resources>

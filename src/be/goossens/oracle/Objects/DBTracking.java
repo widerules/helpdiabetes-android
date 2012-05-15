@@ -1,3 +1,5 @@
+// Please read info.txt for license and legal information
+
 package be.goossens.oracle.Objects;
 
 import java.util.Date;
@@ -5,9 +7,12 @@ import java.util.Date;
 public class DBTracking {
 	private DBExerciseEvent exerciseEvent;
 	private DBMealEvent mealEvent;
-	private DBloodGlucoseEvent bloodGlucoseEvent;
+	private DBBloodGlucoseEvent bloodGlucoseEvent;
 	private DBMedicineEvent medicineEvent;
 	private Date timestamp;
+	
+	// This String is used when there are no records
+	// This String will be displayed
 	private String noRecors;
 	
 	// we need this record to see if we really need to show the timestamp or
@@ -15,7 +20,7 @@ public class DBTracking {
 	private boolean showTimeStamp;
 
 	public DBTracking(DBExerciseEvent exerciseEvent, DBMealEvent mealEvent,
-			DBloodGlucoseEvent bloodGlucoseEvent,
+			DBBloodGlucoseEvent bloodGlucoseEvent,
 			DBMedicineEvent medicineEvent, Date timestamp,
 			boolean showTimeStamp, String noRecors) {
 		super();
@@ -60,11 +65,11 @@ public class DBTracking {
 		this.mealEvent = mealEvent;
 	}
 
-	public DBloodGlucoseEvent getBloodGlucoseEvent() {
+	public DBBloodGlucoseEvent getBloodGlucoseEvent() {
 		return bloodGlucoseEvent;
 	}
 
-	public void setBloodGlucoseEvent(DBloodGlucoseEvent bloodGlucoseEvent) {
+	public void setBloodGlucoseEvent(DBBloodGlucoseEvent bloodGlucoseEvent) {
 		this.bloodGlucoseEvent = bloodGlucoseEvent;
 	}
 

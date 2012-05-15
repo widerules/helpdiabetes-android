@@ -1,5 +1,7 @@
-package be.goossens.oracle.Objects;
+// Please read info.txt for license and legal information
 
+package be.goossens.oracle.Objects;
+ 
 public class DBExerciseType {
 
 	private long id;

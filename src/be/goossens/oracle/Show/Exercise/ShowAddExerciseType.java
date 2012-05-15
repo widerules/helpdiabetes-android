@@ -1,3 +1,5 @@
+// Please read info.txt for license and legal information
+
 package be.goossens.oracle.Show.Exercise;
 
 /*
@@ -17,13 +19,15 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 import be.goossens.oracle.R;
+import be.goossens.oracle.ActivityGroup.ActivityGroupMeal;
 import be.goossens.oracle.ActivityGroup.ActivityGroupSettings;
 import be.goossens.oracle.Rest.DataParser;
 import be.goossens.oracle.Rest.DbAdapter;
+import be.goossens.oracle.Rest.DbSettings;
 
 public class ShowAddExerciseType extends Activity {
 	private EditText etName;
-	private Button btAdd, btDelete;
+	private Button btAdd, btDelete, btBack, btStandard;
 	private long excistingExerciseTypeID;
 
 	@Override
@@ -34,10 +38,17 @@ public class ShowAddExerciseType extends Activity {
 				R.layout.show_add_exercise_type, null);
 		setContentView(contentView);
 
-		setContentView(R.layout.show_add_exercise_type);
 		etName = (EditText) findViewById(R.id.editTextShowAddExerciseTypeName);
 		btAdd = (Button) findViewById(R.id.buttonAdd);
 		btDelete = (Button) findViewById(R.id.buttonDelete);
+		btStandard = (Button) findViewById(R.id.buttonStandard);
+		btBack = (Button) findViewById(R.id.buttonBack);
+
+		btBack.setOnClickListener(new OnClickListener() {
+			public void onClick(View v) {
+				ActivityGroupSettings.group.back();
+			}
+		});
 
 		// standard hide the button delete
 		btDelete.setVisibility(View.GONE);
@@ -48,6 +59,41 @@ public class ShowAddExerciseType extends Activity {
 				onClickAdd();
 			}
 		});
+
+		btDelete.setOnClickListener(new OnClickListener() {
+
+			public void onClick(View v) {
+				onClickDelete();
+			}
+		});
+
+		btStandard.setOnClickListener(new OnClickListener() {
+			public void onClick(View v) {
+				onClickStandard();
+			}
+		});
+
+	}
+
+	private void onClickStandard() {
+		// hide button delete
+		btDelete.setVisibility(View.GONE);
+
+		// hide button standard
+		btStandard.setVisibility(View.GONE);
+
+		// update default in db
+		DbAdapter db = new DbAdapter(this);
+		db.open();
+		db.updateSettingsByName(DbSettings.setting_default_exercise_type_ID, ""
+				+ excistingExerciseTypeID);
+		db.close();
+
+		// update default medicine type ID in food data
+		ActivityGroupMeal.group.getFoodData().defaultExerciseTypeID = excistingExerciseTypeID;
+
+		// update show exercise types
+		ActivityGroupSettings.group.getExerciseTypes().refresh();
 	}
 
 	@Override
@@ -59,11 +105,64 @@ public class ShowAddExerciseType extends Activity {
 		try {
 			excistingExerciseTypeID = getIntent().getExtras().getLong(
 					DataParser.idExerciseType);
+
+			// fill the textview with the current exercise type we selected
 			fillEditText();
+
+			// update the button remove the text add with update
+			btAdd.setText(getResources().getString(R.string.update));
+
+			// check if we can show the delete button
+			showDeleteButton();
+
+			// check if we can show the button mark as default
+			showDefaultButton();
+
 		} catch (NullPointerException e) {
 			excistingExerciseTypeID = -1;
 		}
+	}
 
+	private void showDefaultButton() {
+		if (excistingExerciseTypeID == ActivityGroupMeal.group.getFoodData().defaultExerciseTypeID) {
+			// hide when the item is already default
+			btStandard.setVisibility(View.GONE);
+		}
+	}
+
+	// This method is called when we clicked on a already existing exercise type
+	// This method will check if we can show the delete button for this exercise
+	// type ( if it is not in use and not the last one )
+	private void showDeleteButton() {
+		// if the exercise type is not in use in exercise events
+		// and the exercise type is not the last one
+		if (canWeDeleteExerciseType()) {
+			btDelete.setVisibility(View.VISIBLE);
+		}
+	}
+
+	// This method is called when this activity starts to check if we can show
+	// the delete button
+	// This method is also called when we press on the button delete to check if
+	// we can still delete the exercise type
+	private boolean canWeDeleteExerciseType() {
+		DbAdapter db = new DbAdapter(this);
+		db.open();
+
+		// if the exercise type is not in use in exercise events
+		// and the exercise type is not the last one
+		if (db.fetchExerciseEventByExerciseTypeID(excistingExerciseTypeID)
+				.getCount() == 0 
+				&& db.fetchAllExerciseTypes().getCount() > 1
+				&& excistingExerciseTypeID != ActivityGroupMeal.group
+						.getFoodData().defaultExerciseTypeID) {
+			// we can return true to delete the exercise type
+			return true;
+		}
+		db.close();
+
+		// else we return false
+		return false;
 	}
 
 	private void fillEditText() {
@@ -71,15 +170,17 @@ public class ShowAddExerciseType extends Activity {
 		db.open();
 		Cursor cExerciseType = db
 				.fetchExerciseTypeByID(excistingExerciseTypeID);
-		cExerciseType.moveToFirst();
-		etName.setText(cExerciseType.getString(cExerciseType
-				.getColumnIndexOrThrow(DbAdapter.DATABASE_EXERCISETYPE_NAME)));
+		// if we found the item in the database
+		if (cExerciseType.getCount() > 0) {
+			cExerciseType.moveToFirst();
+			etName.setText(cExerciseType.getString(cExerciseType
+					.getColumnIndexOrThrow(DbAdapter.DATABASE_EXERCISETYPE_NAME)));
+		} else {
+			// when the item didnt exists in the datase
+			excistingExerciseTypeID = -1;
+		}
 		cExerciseType.close();
 		db.close();
-	}
-
-	public void test(String txt) {
-		Toast.makeText(this, txt, Toast.LENGTH_LONG).show();
 	}
 
 	// on click button add
@@ -87,10 +188,9 @@ public class ShowAddExerciseType extends Activity {
 		if (etName.length() > 0) {
 			DbAdapter db = new DbAdapter(this);
 			db.open();
-			
-			//create new one
+
+			// create new one
 			if (excistingExerciseTypeID == -1) {
-				
 
 				// create the exercise type
 				long exerciseType = db.createExerciseType(etName.getText()
@@ -98,7 +198,8 @@ public class ShowAddExerciseType extends Activity {
 
 				db.close();
 
-				// add the created item to the list of food on the exercise
+				// add the created item to the list of exercise types on the
+				// exercise
 				// TYPES
 				// activity
 				ActivityGroupSettings.group.getExerciseTypes()
@@ -107,13 +208,17 @@ public class ShowAddExerciseType extends Activity {
 				// go back to the list
 				ActivityGroupSettings.group.back();
 			} else {
-				//update one
-				db.updateExerciseTypeByID(excistingExerciseTypeID, etName.getText().toString(), "");
-				
-				//refresh the list
-				ActivityGroupSettings.group.getExerciseTypes().refreshObject(excistingExerciseTypeID, etName.getText().toString());
-				
-				//go back 
+				// update one
+				db.updateExerciseTypeByID(excistingExerciseTypeID, etName
+						.getText().toString(), "");
+
+				db.close();
+
+				// refresh the list
+				ActivityGroupSettings.group.getExerciseTypes().refreshObject(
+						excistingExerciseTypeID, etName.getText().toString());
+
+				// go back
 				ActivityGroupSettings.group.back();
 			}
 		} else {
@@ -123,6 +228,28 @@ public class ShowAddExerciseType extends Activity {
 							R.string.exercise_type_cant_be_empty),
 					Toast.LENGTH_LONG).show();
 		}
+	}
+
+	// on click button delete
+	private void onClickDelete() {
+		// first check if the exercise type is in use ( when the user opens this
+		// screen , then adds a exercise event and comes back
+		// the button delete will be visible while we cant delete the exercise
+		// type! )
+		if (canWeDeleteExerciseType()) {
+			// delete it from the database
+			DbAdapter db = new DbAdapter(this);
+			db.open();
+			db.deleteExerciseTypeByID(excistingExerciseTypeID);
+			db.close();
+
+			// delete it from the list
+			ActivityGroupSettings.group.getExerciseTypes().deleteFromList(
+					excistingExerciseTypeID);
+		}
+
+		// Go back
+		ActivityGroupSettings.group.back();
 	}
 
 	@Override

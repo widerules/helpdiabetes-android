@@ -1,3 +1,5 @@
+// Please read info.txt for license and legal information
+
 package be.goossens.oracle.Custom;
 
 import java.util.List;
@@ -11,6 +13,7 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 import be.goossens.oracle.R;
+import be.goossens.oracle.Objects.DBMealFood;
 import be.goossens.oracle.Objects.DBTracking;
 import be.goossens.oracle.Rest.Functions;
 
@@ -18,14 +21,16 @@ public class CustomArrayAdapterDBTracking extends ArrayAdapter<DBTracking> {
 	private Context context;
 	private int fontSize;
 	private List<DBTracking> objects;
-	int test;
+	private int defaultValue;
 
 	public CustomArrayAdapterDBTracking(Context context,
-			int textViewResourceId, List<DBTracking> objects, int fontSize) {
+			int textViewResourceId, List<DBTracking> objects, int fontSize,
+			int defaultValue) {
 		super(context, textViewResourceId, objects);
 		this.context = context;
 		this.fontSize = fontSize;
 		this.objects = objects;
+		this.defaultValue = defaultValue;
 	}
 
 	@Override
@@ -45,9 +50,11 @@ public class CustomArrayAdapterDBTracking extends ArrayAdapter<DBTracking> {
 			tv.setTextColor(context.getResources().getColor(R.color.ColorText));
 			tv.setText(objects.get(position).getNoRecords());
 		} else {
-			// if the timestamp != 0 and boolean showtimestamp == true then we have to display the date in the
+			// if the timestamp != 0 and boolean showtimestamp == true then we
+			// have to display the date in the
 			// record
-			if (objects.get(position).getTimestamp() != null && objects.get(position).getShowTimeStamp()) {
+			if (objects.get(position).getTimestamp() != null
+					&& objects.get(position).getShowTimeStamp()) {
 				v = vi.inflate(R.layout.row_custom_array_adapter_tracking_date,
 						null);
 				TextView tv = (TextView) v.findViewById(R.id.textViewTracking1);
@@ -65,7 +72,7 @@ public class CustomArrayAdapterDBTracking extends ArrayAdapter<DBTracking> {
 				// event
 				if (objects.get(position).getExerciseEvent() != null) {
 					v = vi.inflate(
-							R.layout.row_custom_array_adapter_tracking_tracking,
+							R.layout.row_custom_array_adapter_tracking_exercise,
 							null);
 
 					ImageView iv = (ImageView) v
@@ -75,31 +82,32 @@ public class CustomArrayAdapterDBTracking extends ArrayAdapter<DBTracking> {
 					TextView tv2 = (TextView) v
 							.findViewById(R.id.textViewTracking2);
 
-					TextView tv3 = (TextView) v
-							.findViewById(R.id.textViewTracking3);
-
 					TextView tv4 = (TextView) v
 							.findViewById(R.id.textViewTracking4);
 
 					iv.setImageDrawable(context.getResources().getDrawable(
 							R.drawable.ic_tab_exercise_selected));
 
+					// show timestamp - endtime
 					tv1.setText(new Functions().getTimeFromString(objects
-							.get(position).getExerciseEvent().getTimeStamp()));
+							.get(position).getExerciseEvent().getTimeStamp())
+							+ " - "
+							+ new Functions().getTimeFromSeconds(objects
+									.get(position).getExerciseEvent()
+									.getEndTime()));
 
 					tv2.setText(objects.get(position).getExerciseEvent()
 							.getDescription());
-					tv3.setText(new Functions().getDurationFromSeconds(objects
-							.get(position).getExerciseEvent().getStartTime(),
-							objects.get(position).getExerciseEvent()
-									.getEndTime()));
+
 
 					tv4.setText(objects.get(position).getExerciseEvent()
 							.getType());
 
 					tv4.setTextColor(context.getResources().getColor(
 							R.color.colorSport));
-
+					
+					tv1.setTextSize(fontSize);
+					tv2.setTextSize(fontSize);
 					tv4.setTextSize(fontSize);
 
 					tv4.setGravity(Gravity.RIGHT);
@@ -110,31 +118,108 @@ public class CustomArrayAdapterDBTracking extends ArrayAdapter<DBTracking> {
 
 					ImageView iv = (ImageView) v
 							.findViewById(R.id.imageViewTracking);
-
 					TextView tv1 = (TextView) v
 							.findViewById(R.id.textViewTracking1);
 					TextView tv2 = (TextView) v
 							.findViewById(R.id.textViewTracking2);
 
+					TextView tv4 = (TextView) v
+							.findViewById(R.id.textViewTracking4);
+
 					iv.setImageDrawable(context.getResources().getDrawable(
 							R.drawable.ic_tab_meal_selected));
 
+					// show timestamp
 					tv1.setText(new Functions().getTimeFromString(objects
 							.get(position).getMealEvent().getEventDateTime()));
 
-					tv2.setText(""
-							+ objects.get(position).getMealEvent()
-									.getCalculatedInsulineAmount()
-							+ " "
-							+ context.getResources().getString(
-									R.string.showSelectedFoodUnitsInsuline));
+					float totalCalc = 0f;
+					String text = "";
 
-					tv2.setTextSize(fontSize);
+					// for each mealfood get calculated value
+					for (DBMealFood mealfood : objects.get(position)
+							.getMealEvent().getMealFood()) {
+						// do (getUnit().getValue / getUnit().getStandardAmound)
+						// * mealFood.getAmount()
 
-					tv2.setTextColor(context.getResources().getColor(
+						// default value = 1 = carb , 2 = prot , 3 = fat, 4 =
+						// kcal
+						switch (defaultValue) {
+						case 1:
+							totalCalc += ((mealfood.getUnit().getCarbs() / mealfood
+									.getUnit().getStandardamound()) * mealfood
+									.getAmount());
+							break;
+						case 2:
+							totalCalc += ((mealfood.getUnit().getProtein() / mealfood
+									.getUnit().getStandardamound()) * mealfood
+									.getAmount());
+							break;
+						case 3:
+							totalCalc += ((mealfood.getUnit().getFat() / mealfood
+									.getUnit().getStandardamound()) * mealfood
+									.getAmount());
+							break;
+						case 4:
+							totalCalc += ((mealfood.getUnit().getKcal() / mealfood
+									.getUnit().getStandardamound()) * mealfood
+									.getAmount());
+							break;
+						}
+
+						// add the list of food
+						// max 10 chars
+						// text += "" + new
+						// Functions().getShorterString(mealfood.getFoodName(),
+						// 10) + " \n ";
+						text += "" + mealfood.getFoodName() + " \n ";
+					}
+
+					// Round the totalCalc
+					totalCalc = new Functions().roundFloats(totalCalc, 1);
+
+					// remove last \n from the text so we dont lose space in the
+					// list
+					try {
+					text = text.substring(0, text.length() - 2);
+					} catch (StringIndexOutOfBoundsException e) {
+					}
+					 
+					String value = "";
+
+					// get right value
+					switch (defaultValue) {
+					case 1:
+						value = context.getResources().getString(
+								R.string.short_carbs);
+						break;
+					case 2:
+						value = context.getResources().getString(
+								R.string.amound_of_protein);
+						break;
+					case 3:
+						value = context.getResources().getString(
+								R.string.amound_of_fat);
+						break;
+					case 4:
+						value = context.getResources().getString(
+								R.string.short_kcal);
+						break;
+					}
+
+					// tv2 is for the food list
+					tv2.setText(text);
+
+					// tv4 is for the default total value
+					tv4.setText(totalCalc + " " + value);
+					tv1.setTextSize(fontSize); 
+					tv2.setTextSize(fontSize - 3); 
+					tv4.setTextSize(fontSize);
+
+					tv4.setTextColor(context.getResources().getColor(
 							R.color.colorFood));
 
-					tv2.setGravity(Gravity.RIGHT);
+					tv4.setGravity(Gravity.RIGHT);
 
 				} else if (objects.get(position).getBloodGlucoseEvent() != null) {
 					v = vi.inflate(
@@ -166,7 +251,7 @@ public class CustomArrayAdapterDBTracking extends ArrayAdapter<DBTracking> {
 							R.color.colorGlucose));
 
 					tv2.setGravity(Gravity.RIGHT);
-
+					tv1.setTextSize(fontSize);
 					tv2.setTextSize(fontSize);
 				} else if (objects.get(position).getMedicineEvent() != null) {
 					v = vi.inflate(
@@ -200,7 +285,7 @@ public class CustomArrayAdapterDBTracking extends ArrayAdapter<DBTracking> {
 							R.color.colorMedicine));
 
 					tv2.setGravity(Gravity.RIGHT);
-
+					tv1.setTextSize(fontSize);
 					tv2.setTextSize(fontSize);
 				} else {
 					v = vi.inflate(

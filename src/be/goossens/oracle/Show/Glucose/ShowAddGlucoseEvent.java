@@ -1,3 +1,5 @@
+// Please read info.txt for license and legal information
+
 package be.goossens.oracle.Show.Glucose;
 
 import java.util.Calendar;
@@ -20,10 +22,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 import be.goossens.oracle.R;
 import be.goossens.oracle.ActivityGroup.ActivityGroupGlucose;
-import be.goossens.oracle.ActivityGroup.ActivityGroupMeal;
-import be.goossens.oracle.ActivityGroup.ActivityGroupTracking;
 import be.goossens.oracle.Rest.DataParser;
 import be.goossens.oracle.Rest.DbAdapter;
+import be.goossens.oracle.Rest.DbSettings;
 import be.goossens.oracle.Rest.Functions;
 import be.goossens.oracle.Show.ShowHomeTab;
 import be.goossens.oracle.slider.DateSlider;
@@ -139,7 +140,7 @@ public class ShowAddGlucoseEvent extends Activity {
 				return false;
 			}
 		});
- 
+
 		updateTimeAndTimeTextView(mCalendar);
 	}
 
@@ -152,8 +153,7 @@ public class ShowAddGlucoseEvent extends Activity {
 
 	private void fillTextViewGlucoseUnit() {
 		dbHelper.open();
-		Cursor cSetting = dbHelper.fetchSettingByName(getResources().getString(
-				R.string.setting_glucose_unit));
+		Cursor cSetting = dbHelper.fetchSettingByName(DbSettings.setting_glucose_unit);
 		cSetting.moveToFirst();
 
 		glucoseUnitID = cSetting.getLong(cSetting
@@ -205,15 +205,18 @@ public class ShowAddGlucoseEvent extends Activity {
 	}
 
 	private void onClickAdd() {
+		try {
+			amount = Float.parseFloat(etAmount.getText().toString());
+		} catch (Exception e) {
+			amount = 0;
+		}
+		  
 		if (amount > 0) {
 			dbHelper.open();
 
 			dbHelper.createBloodGlucoseEvent(amount,
 					functions.getDateAsStringFromCalendar(mCalendar),
 					glucoseUnitID);
-
-			// refresh tracking list
-			ActivityGroupTracking.group.showTrackingRefreshList();
 
 			// / Go to tracking tab when clicked on add
 			ShowHomeTab parentActivity;
@@ -272,43 +275,39 @@ public class ShowAddGlucoseEvent extends Activity {
 		}
 		etAmount.setText("" + amount);
 	}
-	
-	
+
 	// if we press the back button on this activity we have to show a popup to
-		// exit
-		@Override
-		public boolean onKeyDown(int keyCode, KeyEvent event) {
-			if (event.getKeyCode() == KeyEvent.KEYCODE_BACK) {
-				showPopUpToExitApplication();
-				// when we return true here we wont call the onkeydown from
-				// activitygroup
-				return true;
-			} else
-				return super.onKeyDown(keyCode, event);
-		}
+	// exit
+	@Override
+	public boolean onKeyDown(int keyCode, KeyEvent event) {
+		if (event.getKeyCode() == KeyEvent.KEYCODE_BACK) {
+			showPopUpToExitApplication();
+			// when we return true here we wont call the onkeydown from
+			// activitygroup
+			return true;
+		} else
+			return super.onKeyDown(keyCode, event);
+	}
 
-		private void showPopUpToExitApplication() {
-			DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
+	private void showPopUpToExitApplication() {
+		DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
 
-				public void onClick(DialogInterface dialog, int which) {
-					switch (which) {
-					case DialogInterface.BUTTON_POSITIVE:
-						// exit application on click button positive
-						ActivityGroupGlucose.group.killApplication();
-						break;
-					}
+			public void onClick(DialogInterface dialog, int which) {
+				switch (which) {
+				case DialogInterface.BUTTON_POSITIVE:
+					// exit application on click button positive
+					ActivityGroupGlucose.group.killApplication();
+					break;
 				}
-			};
+			}
+		};
 
-			AlertDialog.Builder builder = new AlertDialog.Builder(
-					ActivityGroupGlucose.group);
-			builder.setMessage(
-					getResources().getString(R.string.sureToExit))
-					.setPositiveButton(
-							getResources().getString(R.string.yes),
-							dialogClickListener)
-					.setNegativeButton(
-							getResources().getString(R.string.no),
-							dialogClickListener).show();
-		}
+		AlertDialog.Builder builder = new AlertDialog.Builder(
+				ActivityGroupGlucose.group);
+		builder.setMessage(getResources().getString(R.string.sureToExit))
+				.setPositiveButton(getResources().getString(R.string.yes),
+						dialogClickListener)
+				.setNegativeButton(getResources().getString(R.string.no),
+						dialogClickListener).show();
+	}
 }

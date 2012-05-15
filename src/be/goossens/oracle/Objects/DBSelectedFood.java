@@ -1,3 +1,5 @@
+// Please read info.txt for license and legal information
+
 package be.goossens.oracle.Objects;
 
 /*
@@ -8,18 +10,16 @@ package be.goossens.oracle.Objects;
 public class DBSelectedFood {
 	private long id;
 	private float amound;
-	private long unitID;
 	private String foodName;
-	private String unitName;
+	private DBFoodUnit unit;
 
-	public DBSelectedFood(long id, float amound, long unitID, String foodName,
-			String unitName) {
+	public DBSelectedFood(long id, float amound, String foodName,
+			DBFoodUnit unit) {
 		super();
 		this.id = id;
 		this.amound = amound;
-		this.unitID = unitID;
 		this.foodName = foodName;
-		this.unitName = unitName;
+		this.unit = unit;
 	}
 
 	public long getId() {
@@ -38,14 +38,6 @@ public class DBSelectedFood {
 		this.amound = amound;
 	}
 
-	public long getUnitID() {
-		return unitID;
-	}
-
-	public void setUnitID(long unitID) {
-		this.unitID = unitID;
-	}
-
 	public String getFoodName() {
 		return foodName;
 	}
@@ -54,15 +46,15 @@ public class DBSelectedFood {
 		this.foodName = foodName;
 	}
 
-	public String getUnitName() {
-		return unitName;
+	public DBFoodUnit getUnit() {
+		return unit;
 	}
 
-	public void setUnitName(String unitName) {
-		this.unitName = unitName;
+	public void setUnit(DBFoodUnit unit) {
+		this.unit = unit;
 	}
-	
-	public String toString(){
+
+	public String toString() {
 		return foodName;
 	}
 

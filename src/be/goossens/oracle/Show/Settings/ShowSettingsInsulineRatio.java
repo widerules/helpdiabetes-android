@@ -1,3 +1,5 @@
+// Please read info.txt for license and legal information
+
 package be.goossens.oracle.Show.Settings;
 
 import java.util.ArrayList;
@@ -14,7 +16,9 @@ import android.widget.Button;
 import android.widget.EditText;
 import be.goossens.oracle.R;
 import be.goossens.oracle.ActivityGroup.ActivityGroupSettings;
+import be.goossens.oracle.Rest.DataParser;
 import be.goossens.oracle.Rest.DbAdapter;
+import be.goossens.oracle.Rest.DbSettings;
 
 public class ShowSettingsInsulineRatio extends Activity {
 	private DbAdapter dbHelper;
@@ -22,7 +26,7 @@ public class ShowSettingsInsulineRatio extends Activity {
 			insulineRatioSnack, insulineRatioDinner;
 	private boolean firstKeyPressBreakfast, firstKeyPressLunch,
 			firstKeyPressSnack, firstKeyPressDinner;
-	private Button btUpdate;
+	private Button btUpdate, btNext, btBack;
 
 	// create a edittext list to run true the array and set a onkey listener on
 	// every edittext
@@ -41,6 +45,13 @@ public class ShowSettingsInsulineRatio extends Activity {
 		insulineRatioDinner = (EditText) findViewById(R.id.editTextShowPreferencesDinnerRatio);
 
 		btUpdate = (Button) findViewById(R.id.buttonUpdate);
+
+		btBack = (Button) findViewById(R.id.buttonBack);
+		btBack.setOnClickListener(new OnClickListener() {
+			public void onClick(View v) {
+				ActivityGroupSettings.group.back();
+			}
+		});
 
 		firstKeyPressBreakfast = true;
 		firstKeyPressLunch = true;
@@ -80,6 +91,34 @@ public class ShowSettingsInsulineRatio extends Activity {
 		}
 
 		fillData();
+
+		btNext = (Button) findViewById(R.id.buttonNext);
+		btNext.setOnClickListener(new OnClickListener() {
+			public void onClick(View v) {
+				// update values
+				updateValues();
+				// call finish on click button next so we go back to showStart
+				finish();
+			}
+		});
+	}
+
+	@Override
+	protected void onResume() {
+		super.onResume();
+
+		// check if we need to show the button next
+		// only need to show first time application starts
+		try {
+			if (getIntent().getExtras().getString(DataParser.whatToDo)
+					.equals(DataParser.doFirstTime)) {
+				btNext.setVisibility(View.VISIBLE);
+				// hide the button back
+				btBack.setVisibility(View.GONE);
+			}
+		} catch (Exception e) {
+			btUpdate.setVisibility(View.VISIBLE);
+		}
 	}
 
 	public void goToNextEditText() {
@@ -94,15 +133,16 @@ public class ShowSettingsInsulineRatio extends Activity {
 				return;
 			}
 		}
-		//if we get here we clicked enter on the last edit text
+		// if we get here we clicked enter on the last edit text
 		// if we do that we trigger the onclick Update button
 		onClickUpdate(null);
 	}
- 
+
 	@Override
 	public boolean dispatchKeyEvent(KeyEvent event) {
-		//only check if we need to clear the box if we didnt press the enter button
-		//becaus enter button will go to the next edittext
+		// only check if we need to clear the box if we didnt press the enter
+		// button
+		// becaus enter button will go to the next edittext
 		if (event.getKeyCode() != KeyEvent.KEYCODE_ENTER) {
 			if (insulineRatioBreakfast.isFocused()) {
 				if (firstKeyPressBreakfast) {
@@ -137,32 +177,28 @@ public class ShowSettingsInsulineRatio extends Activity {
 		float dinnerRatio = 0;
 
 		Cursor cSettingInsulineRatioBreakfast = dbHelper
-				.fetchSettingByName(getResources().getString(
-						R.string.setting_insuline_ratio_breakfast));
+				.fetchSettingByName(DbSettings.setting_insuline_ratio_breakfast);
 		cSettingInsulineRatioBreakfast.moveToFirst();
 		breakfastRatio = cSettingInsulineRatioBreakfast
 				.getFloat(cSettingInsulineRatioBreakfast
 						.getColumnIndexOrThrow(DbAdapter.DATABASE_SETTINGS_VALUE));
 
 		Cursor cSettinginsulineratioLunch = dbHelper
-				.fetchSettingByName(getResources().getString(
-						R.string.setting_insuline_ratio_lunch));
+				.fetchSettingByName(DbSettings.setting_insuline_ratio_lunch);
 		cSettinginsulineratioLunch.moveToFirst();
 		lunchRatio = cSettinginsulineratioLunch
 				.getFloat(cSettinginsulineratioLunch
 						.getColumnIndexOrThrow(DbAdapter.DATABASE_SETTINGS_VALUE));
 
 		Cursor cSettingInsulineRatioSnack = dbHelper
-				.fetchSettingByName(getResources().getString(
-						R.string.setting_insuline_ratio_snack));
+				.fetchSettingByName(DbSettings.setting_insuline_ratio_snack);
 		cSettingInsulineRatioSnack.moveToFirst();
 		snackRatio = cSettingInsulineRatioSnack
 				.getFloat(cSettingInsulineRatioSnack
 						.getColumnIndexOrThrow(DbAdapter.DATABASE_SETTINGS_VALUE));
 
 		Cursor cSettingInsulineRatioDinner = dbHelper
-				.fetchSettingByName(getResources().getString(
-						R.string.setting_insuline_ratio_dinner));
+				.fetchSettingByName(DbSettings.setting_insuline_ratio_dinner);
 		cSettingInsulineRatioDinner.moveToFirst();
 		dinnerRatio = cSettingInsulineRatioDinner
 				.getFloat(cSettingInsulineRatioDinner
@@ -181,6 +217,15 @@ public class ShowSettingsInsulineRatio extends Activity {
 
 	// on click update
 	public void onClickUpdate(View view) {
+		updateValues();
+		// go back
+		try {
+			ActivityGroupSettings.group.back();
+		} catch (Exception e) {
+		}
+	}
+
+	private void updateValues() {
 		float breakfastRatio = 0;
 		float lunchRatio = 0;
 		float snackRatio = 0;
@@ -222,22 +267,14 @@ public class ShowSettingsInsulineRatio extends Activity {
 		dbHelper.open();
 
 		dbHelper.updateSettingsByName(
-				getResources().getString(
-						R.string.setting_insuline_ratio_breakfast), ""
+				DbSettings.setting_insuline_ratio_breakfast, ""
 						+ breakfastRatio);
-		dbHelper.updateSettingsByName(
-				getResources().getString(R.string.setting_insuline_ratio_lunch),
+		dbHelper.updateSettingsByName(DbSettings.setting_insuline_ratio_lunch,
 				"" + lunchRatio);
-		dbHelper.updateSettingsByName(
-				getResources().getString(R.string.setting_insuline_ratio_snack),
+		dbHelper.updateSettingsByName(DbSettings.setting_insuline_ratio_snack,
 				"" + snackRatio);
-		dbHelper.updateSettingsByName(
-				getResources()
-						.getString(R.string.setting_insuline_ratio_dinner), ""
-						+ dinnerRatio);
-
-		// go back
-		ActivityGroupSettings.group.back();
+		dbHelper.updateSettingsByName(DbSettings.setting_insuline_ratio_dinner,
+				"" + dinnerRatio);
 	}
 
 	@Override

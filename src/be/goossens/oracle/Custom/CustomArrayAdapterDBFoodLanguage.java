@@ -1,3 +1,5 @@
+// Please read info.txt for license and legal information
+
 package be.goossens.oracle.Custom;
 
 import java.util.List;
@@ -36,11 +38,22 @@ public class CustomArrayAdapterDBFoodLanguage extends
 			v = vi.inflate(layout, null);
 		}
 
-		TextView tt = (TextView) v.findViewById(android.R.id.text1);
-
+		TextView tt = (TextView) v.findViewById(R.id.text1);
+		TextView ttTwo = (TextView) v.findViewById(R.id.text2);
+		
 		tt.setText(objects.get(position).getLanguage());
-
-		tt.setTextColor(context.getResources().getColor(R.color.ColorText));
+	
+		if (position % 2 == 0) {
+			tt.setBackgroundColor(context.getResources().getColor(
+					R.color.ColorListViewOne));
+			ttTwo.setBackgroundColor(context.getResources().getColor(
+					R.color.ColorListViewOne));
+		} else { 
+			tt.setBackgroundColor(context.getResources().getColor( 
+					R.color.ColorListViewTwo));
+			ttTwo.setBackgroundColor(context.getResources().getColor( 
+					R.color.ColorListViewTwo));
+		} 
 
 		return v;
 	}

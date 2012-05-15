@@ -1,3 +1,5 @@
+// Please read info.txt for license and legal information
+
 package be.goossens.oracle.ActivityGroup;
 
 import java.util.ArrayList;
@@ -9,7 +11,6 @@ import android.os.Bundle;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.Toast;
 import be.goossens.oracle.Rest.DataParser;
 import be.goossens.oracle.Show.Tracking.ShowTracking;
 
@@ -39,25 +40,22 @@ public class ActivityGroupTracking extends ActivityGroup {
 		}
 	}
 
-	// let the keyboard dissapear
-	private void keyboardDissapear() {
-		try {
-			InputMethodManager inputManager = (InputMethodManager) this
-					.getSystemService(Context.INPUT_METHOD_SERVICE);
-			inputManager.hideSoftInputFromWindow(this.getCurrentFocus()
-					.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
-		} catch (Exception e) {
-		}
+	private void hideKeyboard() {
+		InputMethodManager inputManager = (InputMethodManager) this
+				.getSystemService(Context.INPUT_METHOD_SERVICE); 
+		inputManager.hideSoftInputFromWindow(getParent().getCurrentFocus().getWindowToken(), 0);
 	}
-
+	
+	//This will hide the keyboard on tab change
 	@Override
-	public void onContentChanged() {
-		keyboardDissapear();
-		super.onContentChanged();
+	protected void onPause() {
+		hideKeyboard();
+		super.onPause();
 	}
 
 	@Override
 	public void setContentView(View view) {
+		hideKeyboard();
 		replaceView(view);
 	}
 
@@ -69,6 +67,7 @@ public class ActivityGroupTracking extends ActivityGroup {
 	}
 
 	public void back() {
+		hideKeyboard();
 		try {
 			// if we set history.size() > 0 and we press back key on home
 			// activity
@@ -83,15 +82,6 @@ public class ActivityGroupTracking extends ActivityGroup {
 		} catch (Exception e) {
 			if (history.size() >= 0)
 				super.setContentView(history.get(0));
-		}
-	}
-
-	public void showTrackingRefreshList() {
-		try {
-			View v = history.get(0);
-			ShowTracking currentActivity = (ShowTracking) v.getContext();
-			currentActivity.refreshData();
-		} catch (Exception e) {
 		}
 	}
 

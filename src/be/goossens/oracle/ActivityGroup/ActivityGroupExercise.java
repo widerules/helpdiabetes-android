@@ -1,3 +1,5 @@
+// Please read info.txt for license and legal information
+
 package be.goossens.oracle.ActivityGroup;
 
 import java.util.ArrayList;
@@ -9,7 +11,6 @@ import android.os.Bundle;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.Toast;
 import be.goossens.oracle.Rest.DataParser;
 import be.goossens.oracle.Show.Exercise.ShowAddExerciseEvent;
 
@@ -33,32 +34,31 @@ public class ActivityGroupExercise extends ActivityGroup {
 			// Start the root activity within the group and get its view
 			View view = getLocalActivityManager().startActivity(
 					DataParser.activityIDExercise,
-					new Intent(this, ShowAddExerciseEvent.class)
-							.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP).putExtra(DataParser.whatToDo, DataParser.doCreateExerciseEvent))
-					.getDecorView();
+					new Intent(this, ShowAddExerciseEvent.class).addFlags(
+							Intent.FLAG_ACTIVITY_CLEAR_TOP).putExtra(
+							DataParser.whatToDo,
+							DataParser.doCreateExerciseEvent)).getDecorView();
 			replaceView(view);
 		}
 	}
 
-	// let the keyboard dissapear
-	private void keyboardDissapear() {
-		try {
-			InputMethodManager inputManager = (InputMethodManager) this
-					.getSystemService(Context.INPUT_METHOD_SERVICE);
-			inputManager.hideSoftInputFromWindow(this.getCurrentFocus()
-					.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
-		} catch (Exception e) {
-		}
+	private void hideKeyboard() {
+		InputMethodManager inputManager = (InputMethodManager) this
+				.getSystemService(Context.INPUT_METHOD_SERVICE);
+		inputManager.hideSoftInputFromWindow(getParent().getCurrentFocus()
+				.getWindowToken(), 0);
 	}
 
+	// This will hide the keyboard on tab change
 	@Override
-	public void onContentChanged() {
-		keyboardDissapear();
-		super.onContentChanged();
+	protected void onPause() {
+		hideKeyboard();
+		super.onPause();
 	}
 
 	@Override
 	public void setContentView(View view) {
+		hideKeyboard();
 		replaceView(view);
 	}
 
@@ -70,6 +70,7 @@ public class ActivityGroupExercise extends ActivityGroup {
 	}
 
 	public void back() {
+		hideKeyboard();
 		try {
 			// if we set history.size() > 0 and we press back key on home
 			// activity
@@ -79,7 +80,7 @@ public class ActivityGroupExercise extends ActivityGroup {
 				// call the super.setContent view! so set the real view
 				super.setContentView(history.get(history.size() - 1));
 			} else {
-				
+
 			}
 		} catch (Exception e) {
 			if (history.size() >= 0)
@@ -97,12 +98,12 @@ public class ActivityGroupExercise extends ActivityGroup {
 
 	@Override
 	public void finish() {
-		
+
 	}
-	
+
 	// this method will kill the application
-		public void killApplication() {
-			// finish the tab activity so everything will close
-			this.getParent().finish();
-		}
+	public void killApplication() {
+		// finish the tab activity so everything will close
+		this.getParent().finish();
+	}
 }

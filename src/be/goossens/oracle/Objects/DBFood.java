@@ -1,22 +1,29 @@
+// Please read info.txt for license and legal information
+
 package be.goossens.oracle.Objects;
 
+
 public class DBFood {
-	private int id;
+	private long id;
 	private String name;
 	private String amount;
 	
-	public DBFood(int id, String name,String amount) {
+	//stores the selected unit for the tracking page
+	private DBFoodUnit unit;
+
+	public DBFood(long id, String name, String amount, DBFoodUnit unit) {
 		super();
 		this.id = id;
 		this.name = name;
 		this.amount = amount;
+		this.unit = unit;
 	}
 
-	public int getId() {
+	public long getId() {
 		return id;
 	}
 
-	public void setId(int id) {
+	public void setId(long id) {
 		this.id = id;
 	}
 
@@ -36,6 +43,12 @@ public class DBFood {
 		this.amount = amount;
 	}
 
-	
-	
+	public DBFoodUnit getUnit() {
+		return unit;
+	}
+
+	public void setUnit(DBFoodUnit unit) {
+		this.unit = unit;
+	}
+
 }

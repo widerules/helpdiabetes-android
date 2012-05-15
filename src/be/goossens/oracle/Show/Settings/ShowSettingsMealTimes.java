@@ -1,3 +1,5 @@
+// Please read info.txt for license and legal information
+
 package be.goossens.oracle.Show.Settings;
 
 import java.util.ArrayList;
@@ -9,12 +11,15 @@ import android.database.Cursor;
 import android.os.Bundle;
 import android.view.KeyEvent;
 import android.view.View;
+import android.view.View.OnClickListener;
+import android.widget.Button;
 import android.widget.ListView;
 import be.goossens.oracle.R;
 import be.goossens.oracle.ActivityGroup.ActivityGroupSettings;
-import be.goossens.oracle.Custom.CustomArrayAdapter;
 import be.goossens.oracle.Custom.CustomArrayAdapterSettingsMealTimes;
+import be.goossens.oracle.Rest.DataParser;
 import be.goossens.oracle.Rest.DbAdapter;
+import be.goossens.oracle.Rest.DbSettings;
 import be.goossens.oracle.Rest.Functions;
 import be.goossens.oracle.slider.DateSlider;
 import be.goossens.oracle.slider.TimeSlider;
@@ -23,6 +28,7 @@ public class ShowSettingsMealTimes extends ListActivity {
 	private DbAdapter dbHelper;
 	private int selectedMeal;
 	private Functions functions;
+	private Button btBack, btNext;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -31,13 +37,42 @@ public class ShowSettingsMealTimes extends ListActivity {
 		dbHelper = new DbAdapter(this);
 		functions = new Functions();
 		selectedMeal = 0;
+
+		btBack = (Button) findViewById(R.id.buttonBack);
+		btBack.setOnClickListener(new OnClickListener() {
+			public void onClick(View v) {
+				ActivityGroupSettings.group.back();
+			}
+		}); 
+
+		btNext = (Button) findViewById(R.id.buttonNext);
+		btNext.setOnClickListener(new OnClickListener() {
+			public void onClick(View v) {
+				// call finish on click button next so we go back to showStart
+				finish();
+			}
+		});
 	}
 
 	@Override
 	public void onResume() {
 		super.onResume();
+		
+		try {
+			if (getIntent().getExtras().getString(DataParser.whatToDo)
+					.equals(DataParser.doFirstTime)) {
+				
+				btNext.setVisibility(View.VISIBLE);
+				// hide the button back
+				btBack.setVisibility(View.GONE);
+			}
+		} catch (NullPointerException e) {
+		}
+		
 		dbHelper.open();
 		fillData();
+
+		
 	}
 
 	// This function will return a arraylist with the times
@@ -47,20 +82,16 @@ public class ShowSettingsMealTimes extends ListActivity {
 
 		// get the times out the database
 		// breakfast
-		Cursor cBreakfastTime = dbHelper.fetchSettingByName(getResources()
-				.getString(R.string.setting_meal_time_breakfast));
+		Cursor cBreakfastTime = dbHelper.fetchSettingByName(DbSettings.setting_meal_time_breakfast);
 		cBreakfastTime.moveToFirst();
 		// lunch
-		Cursor cLunchTime = dbHelper.fetchSettingByName(getResources()
-				.getString(R.string.setting_meal_time_lunch));
+		Cursor cLunchTime = dbHelper.fetchSettingByName(DbSettings.setting_meal_time_lunch);
 		cLunchTime.moveToFirst();
 		// snack
-		Cursor cSnackTime = dbHelper.fetchSettingByName(getResources()
-				.getString(R.string.setting_meal_time_snack));
+		Cursor cSnackTime = dbHelper.fetchSettingByName(DbSettings.setting_meal_time_snack);
 		cSnackTime.moveToFirst();
 		// dinner
-		Cursor cDinnerTime = dbHelper.fetchSettingByName(getResources()
-				.getString(R.string.setting_meal_time_dinner));
+		Cursor cDinnerTime = dbHelper.fetchSettingByName(DbSettings.setting_meal_time_dinner);
 		cDinnerTime.moveToFirst();
 
 		// Fill the list with the times
@@ -107,23 +138,19 @@ public class ShowSettingsMealTimes extends ListActivity {
 			switch (selectedMeal) {
 			case 0:
 				// update breakfast in db
-				settingName = getResources().getString(
-						R.string.setting_meal_time_breakfast);
+				settingName = DbSettings.setting_meal_time_breakfast;
 				break;
 			case 1:
 				// update lunch in db
-				settingName = getResources().getString(
-						R.string.setting_meal_time_lunch);
+				settingName = DbSettings.setting_meal_time_lunch;
 				break;
 			case 2:
 				// update snack in db
-				settingName = getResources().getString(
-						R.string.setting_meal_time_snack);
+				settingName = DbSettings.setting_meal_time_snack;
 				break;
 			case 3:
 				// update dinner in db
-				settingName = getResources().getString(
-						R.string.setting_meal_time_dinner);
+				settingName = DbSettings.setting_meal_time_dinner;
 				break;
 			}
 
@@ -141,23 +168,19 @@ public class ShowSettingsMealTimes extends ListActivity {
 		Date date = new Date();
 
 		Cursor cSettingTime = null;
- 
+
 		switch (id) {
 		case 0:
-			cSettingTime = dbHelper.fetchSettingByName(getResources()
-					.getString(R.string.setting_meal_time_breakfast));
+			cSettingTime = dbHelper.fetchSettingByName(DbSettings.setting_meal_time_breakfast);
 			break;
 		case 1:
-			cSettingTime = dbHelper.fetchSettingByName(getResources()
-					.getString(R.string.setting_meal_time_lunch));
+			cSettingTime = dbHelper.fetchSettingByName(DbSettings.setting_meal_time_lunch);
 			break;
 		case 2:
-			cSettingTime = dbHelper.fetchSettingByName(getResources()
-					.getString(R.string.setting_meal_time_snack));
+			cSettingTime = dbHelper.fetchSettingByName(DbSettings.setting_meal_time_snack);
 			break;
 		case 3:
-			cSettingTime = dbHelper.fetchSettingByName(getResources()
-					.getString(R.string.setting_meal_time_dinner));
+			cSettingTime = dbHelper.fetchSettingByName(DbSettings.setting_meal_time_dinner);
 			break;
 		}
 
@@ -171,9 +194,12 @@ public class ShowSettingsMealTimes extends ListActivity {
 		cSettingTime.close();
 
 		c.setTime(date);
-
-		return new TimeSlider(ActivityGroupSettings.group, mTimeSetListener, c,
-				15);
+		try {
+			return new TimeSlider(ActivityGroupSettings.group,
+					mTimeSetListener, c, 15);
+		} catch (NullPointerException e) {
+			return new TimeSlider(this, mTimeSetListener, c, 15);
+		}
 	};
 
 	@Override
@@ -184,8 +210,7 @@ public class ShowSettingsMealTimes extends ListActivity {
 
 	private void fillData() {
 		CustomArrayAdapterSettingsMealTimes adapter = new CustomArrayAdapterSettingsMealTimes(
-				this,
-				R.layout.row_custom_array_adapter_setting_meal_times,
+				this, R.layout.row_custom_array_adapter_setting_meal_times,
 				createArrayList());
 		setListAdapter(adapter);
 	}

@@ -1,3 +1,5 @@
+// Please read info.txt for license and legal information
+
 package be.goossens.oracle.Show.Food;
 
 import java.util.ArrayList;
@@ -16,9 +18,6 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.View.OnLongClickListener;
@@ -37,6 +36,7 @@ import be.goossens.oracle.ActivityGroup.ActivityGroupMeal;
 import be.goossens.oracle.Objects.DBFoodComparable;
 import be.goossens.oracle.Rest.DataParser;
 import be.goossens.oracle.Rest.DbAdapter;
+import be.goossens.oracle.Rest.DbSettings;
 import be.goossens.oracle.Rest.ExcelCharacter;
 import be.goossens.oracle.Rest.FoodComparator;
 
@@ -140,12 +140,13 @@ public class ShowFoodList extends ListActivity {
 
 	// This method will show the gray or the highlighted search button
 	private void checkSearchButton() {
-		if (editTextSearch.length() > 0) {
+		// if we are searching with a listfilter we show the cross
+		if (listWithFilter) {
 			btSearch.setBackgroundDrawable(getResources().getDrawable(
-					R.drawable.ic_search_yes));
+					R.drawable.ic_menu_close_clear_cancel));
 		} else {
 			btSearch.setBackgroundDrawable(getResources().getDrawable(
-					R.drawable.ic_search_no));
+					R.drawable.ic_menu_search));
 		}
 	}
 
@@ -155,11 +156,24 @@ public class ShowFoodList extends ListActivity {
 			checkSearchButton();
 			setListAdapter(null);
 			updateListAdapter();
+
+			// set right selected item
+			if (customArrayAdapterFoodList != null
+					&& ActivityGroupMeal.group.getFoodData().listFood.size() > 0
+					&& !listWithFilter)
+				setSelection(customArrayAdapterFoodList
+						.getFirstMatchingItem(editTextSearch.getText()
+								.toString()));
+
 		} else if (!listWithFilter) {
 			if (editTextSearch.length() > 0) {
 				listWithFilter = true;
+
+				// hide the keyboard
+				ActivityGroupMeal.group.hideKeyboard();
+
 				btSearch.setBackgroundDrawable(getResources().getDrawable(
-						android.R.drawable.ic_delete));
+						R.drawable.ic_menu_close_clear_cancel));
 				tvLoading.setVisibility(View.VISIBLE);
 				setListAdapter(null);
 				// start asynctask to get food
@@ -186,59 +200,135 @@ public class ShowFoodList extends ListActivity {
 	}
 
 	protected void onResume() {
-		if (ActivityGroupMeal.group.newFoodID != 0) {
-			// when we come here we just created a new fooditem from
-			// showCreateFood
-			// set the listadapter = null
-			setListAdapter(null);
-
-			// set the loading textview
-			tvLoading.setVisibility(View.VISIBLE);
-
-			// run a asynctask to add the foodItem to the list and order the
-			// objects
-			new AsyncAddOneFoodItemToList()
-					.execute(ActivityGroupMeal.group.newFoodID);
-
-			// set the newFoodID = 0
-			ActivityGroupMeal.group.newFoodID = 0;
-		} else {
-			// when we come here our asynctask is donne with fetching data from
-			// the database
-			tvLoading.setVisibility(View.VISIBLE);
-			// so we update the listadapter
-			updateListAdapter();
-		}
-
-		// when deleteFoodIdFromList != 0 we have to delete that object from the
-		// list
-		if (ActivityGroupMeal.group.deleteFoodIDFromList != 0) {
-			ActivityGroupMeal.group.getFoodData().listFood
-					.remove(getPositionOfFOODID(ActivityGroupMeal.group.deleteFoodIDFromList));
-			ActivityGroupMeal.group.deleteFoodIDFromList = 0;
-			// update list adapter
-			updateListAdapter();
-		}
-
-		// if we added a food item to the selectedFood list this boolean = true
-		if (ActivityGroupMeal.group.addedFoodItemToList) {
-			ActivityGroupMeal.group.addedFoodItemToList = false;
-			// do selectedFood + 1;
-			ActivityGroupMeal.group.getFoodData().countSelectedFood++;
-			// and let it blink
-			animateButton();
-		}
-
-		// update button with ic
-		updateButton();
-
-		btSearch.requestFocus();
-
 		super.onResume();
+
+		if (!ActivityGroupMeal.group.goToSelectedFood) {
+			if (ActivityGroupMeal.group.newFoodID != 0) {
+				// when we come here we just created a new fooditem from
+				// showCreateFood
+				// set the listadapter = null
+				setListAdapter(null);
+
+				// set the loading textview
+				tvLoading.setVisibility(View.VISIBLE);
+
+				// run a asynctask to add the foodItem to the list and order the
+				// objects
+				new AsyncAddOneFoodItemToList()
+						.execute(ActivityGroupMeal.group.newFoodID);
+
+				// set the newFoodID = 0
+				ActivityGroupMeal.group.newFoodID = 0;
+			} else {
+				// when we come here our asynctask is donne with fetching data
+				// from
+				// the database
+				tvLoading.setVisibility(View.VISIBLE);
+				// so we update the listadapter
+				updateListAdapter();
+			}
+
+			// when deleteFoodIdFromList != 0 we have to delete that object from
+			// the
+			// list
+			if (ActivityGroupMeal.group.deleteFoodIDFromList != 0) {
+				tvLoading.setVisibility(View.VISIBLE);
+				setListAdapter(null);
+
+				long deleteFoodId = ActivityGroupMeal.group.deleteFoodIDFromList;
+				ActivityGroupMeal.group.deleteFoodIDFromList = 0;
+
+				// start asynctask to delete the items from the list , recreate
+				// the
+				// list and update the listadapter
+				new AsyncDeleteItemFromList().execute(deleteFoodId);
+			}
+
+			// if we added a food item to the selectedFood list this boolean =
+			// true
+			if (ActivityGroupMeal.group.addedFoodItemToList) {
+				ActivityGroupMeal.group.addedFoodItemToList = false;
+				// do selectedFood + 1;
+				ActivityGroupMeal.group.getFoodData().countSelectedFood++;
+				// and let it blink
+				animateButton();
+			}
+
+			// if we updated a food name we have to reorder the list
+			if (ActivityGroupMeal.group.recreatelist) {
+				ActivityGroupMeal.group.recreatelist = false;
+				setListAdapter(null);
+				tvLoading.setVisibility(View.VISIBLE);
+				new AsyncRecreateTotalList().execute();
+			}
+
+			// update button with ic
+			updateButton();
+
+			btSearch.requestFocus();
+
+			// if lastSearchString != "" we set that string in the search box
+			// and go to the right item.
+			if (!ActivityGroupMeal.group.lastSearchString.equals("")) {
+				// becaus edit text search has a on text change listeren we will
+				// automaticly go to the right item.
+				editTextSearch
+						.setText(ActivityGroupMeal.group.lastSearchString);
+			}
+
+			/*
+			 * //check if we are startup
+			 * if(ActivityGroupMeal.group.getFoodData().startUp){
+			 * Toast.makeText(this,
+			 * getResources().getString(R.string.selections_aint_empty),
+			 * Toast.LENGTH_LONG).show();
+			 * ActivityGroupMeal.group.getFoodData().startUp = false; }
+			 */ 
+
+		} else {
+			ActivityGroupMeal.group.goToSelectedFood = false;
+			goToPageSelectedFood();
+		}
 	};
+
+	private class AsyncRecreateTotalList extends AsyncTask<Void, Void, Void> {
+
+		@Override
+		protected Void doInBackground(Void... params) {
+			// sort the 2 lists again and recreate our total list
+			ActivityGroupMeal.group.getFoodData().recreateTotalList();
+			return null;
+		}
+
+		@Override
+		protected void onPostExecute(Void result) {
+			// update the list adapter
+			updateListAdapter();
+			super.onPostExecute(result);
+		}
+
+	}
 
 	private void animateButton() {
 		btSelections.setAnimation(animation);
+	}
+
+	private class AsyncDeleteItemFromList extends AsyncTask<Long, Void, Long> {
+
+		@Override
+		protected Long doInBackground(Long... params) {
+			// delete item from the lists
+			ActivityGroupMeal.group.getFoodData().deleteFoodFromList(params[0]);
+			// recreate the main list
+			ActivityGroupMeal.group.getFoodData().recreateTotalList();
+			return params[0];
+		}
+
+		@Override
+		protected void onPostExecute(Long result) {
+			// update list adapter
+			updateListAdapter();
+		}
 	}
 
 	private class AsyncAddOneFoodItemToList extends AsyncTask<Long, Void, Long> {
@@ -296,21 +386,23 @@ public class ShowFoodList extends ListActivity {
 	}
 
 	public void onClickCreateNewFood(View view) {
+		// store last search string
+		ActivityGroupMeal.group.lastSearchString = editTextSearch.getText()
+				.toString();
 		// Go to new page to create new food
 		Intent i = new Intent(this, ShowCreateFood.class)
 				.putExtra(DataParser.foodSearchValue,
 						editTextSearch.getText().toString()).addFlags(
 						Intent.FLAG_ACTIVITY_CLEAR_TOP);
 		View v = ActivityGroupMeal.group.getLocalActivityManager()
-				.startActivity(DataParser.activityIDShowFoodList, i)
-				.getDecorView();
+				.startActivity(DataParser.activityIDMeal, i).getDecorView();
 		ActivityGroupMeal.group.setContentView(v);
 	}
 
 	public void updateListAdapterWithFilter() {
 		dbHelper.open();
-		Cursor cSettings = dbHelper.fetchSettingByName(getResources()
-				.getString(R.string.setting_font_size));
+		Cursor cSettings = dbHelper
+				.fetchSettingByName(DbSettings.setting_font_size);
 
 		cSettings.moveToFirst();
 
@@ -341,8 +433,8 @@ public class ShowFoodList extends ListActivity {
 	private void fillObjectsWithFilter() {
 		listDBFoodComparableWithFilter = new ArrayList<DBFoodComparable>();
 		dbHelper.open();
-		Cursor cSettings = dbHelper.fetchSettingByName(getResources()
-				.getString(R.string.setting_language));
+		Cursor cSettings = dbHelper
+				.fetchSettingByName(DbSettings.setting_language);
 		cSettings.moveToFirst();
 
 		// get all the food items
@@ -386,16 +478,21 @@ public class ShowFoodList extends ListActivity {
 	}
 
 	public void updateButton() {
-		if (ActivityGroupMeal.group.getFoodData().countSelectedFood == 0) {
-			btSelections.setBackgroundDrawable(getResources().getDrawable(
-					R.drawable.ic_selection_no));
-		} else {
-			btSelections.setBackgroundDrawable(getResources().getDrawable(
-					R.drawable.ic_selection_yes));
-		}
+		/*
+		 * if (ActivityGroupMeal.group.getFoodData().countSelectedFood == 0) {
+		 * btSelections.setBackgroundDrawable(getResources().getDrawable(
+		 * R.drawable.ic_selection_no)); } else {
+		 * btSelections.setBackgroundDrawable(getResources().getDrawable(
+		 * R.drawable.ic_selection_yes)); }
+		 */
 	}
 
 	public void goToPageAddFoodToSelection(int positionOfFood) {
+		// save the current search text so when we press on cancel we set it
+		// back.
+		ActivityGroupMeal.group.lastSearchString = editTextSearch.getText()
+				.toString();
+
 		Intent i = null;
 
 		if (!listWithFilter) {
@@ -421,8 +518,7 @@ public class ShowFoodList extends ListActivity {
 		}
 		View view = ActivityGroupMeal.group.getLocalActivityManager()
 
-		.startActivity(DataParser.activityIDShowAddFoodToSelection, i)
-				.getDecorView();
+		.startActivity(DataParser.activityIDMeal, i).getDecorView();
 		ActivityGroupMeal.group.setContentView(view);
 	}
 
@@ -464,32 +560,11 @@ public class ShowFoodList extends ListActivity {
 						dialogClickListener).show();
 	}
 
-	// Menu
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		MenuInflater inflater = getMenuInflater();
-		inflater.inflate(R.menu.food_event_menu, menu);
-		return true;
-	}
-
-	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-		Intent i = null;
-		switch (item.getItemId()) {
-		// if we press in the menu on update own food
-		case R.id.menuManageOwnFood:
-			i = new Intent(this, ShowManageOwnFood.class)
-					.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-			View v = ActivityGroupMeal.group.getLocalActivityManager()
-					.startActivity(DataParser.activityIDShowFoodList, i)
-					.getDecorView();
-			ActivityGroupMeal.group.setContentView(v);
-			break;
-		}
-		return true;
-	}
-
 	public void onClickShowSelectedFood(View view) {
+		// store last search string
+		ActivityGroupMeal.group.lastSearchString = editTextSearch.getText()
+				.toString();
+		// go to page selected food
 		goToPageSelectedFood();
 	}
 
@@ -497,11 +572,10 @@ public class ShowFoodList extends ListActivity {
 		Intent i = new Intent(this, ShowSelectedFood.class)
 				.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 		View v = ActivityGroupMeal.group.getLocalActivityManager()
-				.startActivity(DataParser.activityIDShowFoodList, i)
-				.getDecorView();
+				.startActivity(DataParser.activityIDMeal, i).getDecorView();
 		ActivityGroupMeal.group.setContentView(v);
 	}
- 
+
 	@Override
 	protected void onPause() {
 		dbHelper.close();
@@ -523,13 +597,14 @@ public class ShowFoodList extends ListActivity {
 		db.open();
 
 		// to hold the foodID we are changing
-		DBFoodComparable food = ActivityGroupMeal.group.getFoodData().listFood.get(position);
+		DBFoodComparable food = ActivityGroupMeal.group.getFoodData().listFood
+				.get(position);
 
 		// when the favorite == 0
 		// we have to add the favorite to the listFavoriteFood
 		// sort the 2 listviews and recreate the total listview
 		if (food.getIsfavorite() == 0) {
-			// update the value in database 
+			// update the value in database
 			db.updateFoodIsFavorite(food.getId(), 1);
 
 			// set the foodobjects favorite = 1
@@ -539,14 +614,18 @@ public class ShowFoodList extends ListActivity {
 
 			// set favorite = 1 in the listviews with all the food ( otherwise
 			// we dont see a gold star )
-			ActivityGroupMeal.group.getFoodData().setIsFavoriteFromFoodListAll(food.getId(), 1);
+			ActivityGroupMeal.group.getFoodData().setIsFavoriteFromFoodListAll(
+					food.getId(), 1);
 		} else {
 			// else we set isfavorite = 0 in the database
 			db.updateFoodIsFavorite(food.getId(), 0);
 			// we delete the favorite food from the favorite list
-			ActivityGroupMeal.group.getFoodData().deleteFoodFromFavoriteList(food.getId());
-			// and we set the favorite = 0 in the listviews ( so we dont see a golden star anymore )
-			ActivityGroupMeal.group.getFoodData().setIsFavoriteFromFoodListAll(food.getId(), 0);
+			ActivityGroupMeal.group.getFoodData().deleteFoodFromFavoriteList(
+					food.getId());
+			// and we set the favorite = 0 in the listviews ( so we dont see a
+			// golden star anymore )
+			ActivityGroupMeal.group.getFoodData().setIsFavoriteFromFoodListAll(
+					food.getId(), 0);
 		}
 
 		// close db connection
@@ -554,11 +633,12 @@ public class ShowFoodList extends ListActivity {
 
 		// start a asyntask to recreate the total list and update the
 		// listadapter
-		new AsyncRecreateTotalList().execute(food.getId());
+		new AsyncRecreateTotalListAndGoToSelectedFoodId().execute(food.getId());
 
 	}
 
-	private class AsyncRecreateTotalList extends AsyncTask<Long, Void, Long> {
+	private class AsyncRecreateTotalListAndGoToSelectedFoodId extends
+			AsyncTask<Long, Void, Long> {
 
 		@Override
 		protected Long doInBackground(Long... params) {
@@ -580,7 +660,6 @@ public class ShowFoodList extends ListActivity {
 
 			super.onPostExecute(result);
 		}
-
 	}
 
 	// get the position of a given foodID
@@ -604,35 +683,50 @@ public class ShowFoodList extends ListActivity {
 		setSelection(getPositionOfFOODID(foodID));
 	}
 
-	// This dialog shows the hide option for a food item
+	// This dialog will be shown when we long click on a item in the list
 	private void showDialogLongClickListItem(final int position) {
+		// create a list to show options
+		CharSequence[] items = new CharSequence[2];
+		items[0] = getResources().getString(R.string.update);
+		items[1] = getResources().getString(R.string.hide);
 
 		AlertDialog.Builder builder = new AlertDialog.Builder(
 				ActivityGroupMeal.group);
 		builder.setTitle(getResources().getString(R.string.options));
-		builder.setItems(
-				getResources().getStringArray(
-						R.array.showFoodListResourceOptions),
-				new DialogInterface.OnClickListener() {
-					public void onClick(DialogInterface dialog, int which) {
-						switch (which) {
-						case 0:
-							dbHelper.open();
-							// set visible = 0 for food item in database
-							dbHelper.updateFoodSetInVisible(ActivityGroupMeal.group
-									.getFoodData().listFood.get(position)
-									.getId());
+		builder.setItems(items, new DialogInterface.OnClickListener() {
+			public void onClick(DialogInterface dialog, int which) {
+				switch (which) {
+				// when we click on update
+				case 0:
+					Intent i = new Intent(ActivityGroupMeal.group,
+							ShowUpdateFood.class).addFlags(
+							Intent.FLAG_ACTIVITY_CLEAR_TOP).putExtra(
+							DataParser.idFood,
+							ActivityGroupMeal.group.getFoodData().listFood.get(
+									position).getId());
+					View view = ActivityGroupMeal.group
+							.getLocalActivityManager()
+							.startActivity(DataParser.activityIDMeal, i)
+							.getDecorView();
+					ActivityGroupMeal.group.setContentView(view);
+					break;
+				// when we click on hide
+				case 1:
+					dbHelper.open();
+					// set visible = 0 for food item in database
+					dbHelper.updateFoodSetInVisible(ActivityGroupMeal.group
+							.getFoodData().listFood.get(position).getId());
 
-							// delete selected fooditem from list
-							ActivityGroupMeal.group.getFoodData().listFood
-									.remove(position);
+					// delete selected fooditem from list
+					ActivityGroupMeal.group.getFoodData().listFood
+							.remove(position);
 
-							// update list
-							customArrayAdapterFoodList.notifyDataSetChanged();
-							break;
-						}
-					}
-				});
+					// update list
+					customArrayAdapterFoodList.notifyDataSetChanged();
+					break;
+				}
+			}
+		});
 
 		builder.create().show();
 	}
@@ -660,7 +754,11 @@ public class ShowFoodList extends ListActivity {
 			lastIndex = new int[maximuSearchStringLength + 1];
 
 			firstIndex[0] = 0;
-			lastIndex[0] = foodItemList.size() - 1;
+			try {
+				lastIndex[0] = foodItemList.size() - 1;
+			} catch (Exception e) {
+				lastIndex[0] = 0;
+			}
 		}
 
 		@Override
@@ -677,72 +775,87 @@ public class ShowFoodList extends ListActivity {
 			TextView ttTwo = (TextView) v.findViewById(R.id.text2);
 			ImageView iv = (ImageView) v.findViewById(R.id.imageViewFavorite);
 
-			tt.setText(foodItemList.get(position).getName());
+			// only set text and image when foodID != -1
+			// it will be -1 for the "item" between favorite and all
+			if (foodItemList.get(position).getId() != -1) {
+				tt.setText(foodItemList.get(position).getName());
+				ttTwo.setText(getResources().getString(R.string.endOfListView));
 
-			tt.setTextSize(fontSize);
-			ttTwo.setTextSize(fontSize);
+				tt.setTextSize(fontSize);
+				ttTwo.setTextSize(fontSize);
 
-			// first see if the food is favorite
-			if (foodItemList.get(position).getIsfavorite() != 0) {
-				iv.setImageDrawable(ctx.getResources().getDrawable(
-						R.drawable.ic_star_yellow));
-				// else see if the food is no standard
-			} else if (!foodItemList.get(position).getPlatform().equals("s")) {
-				iv.setImageDrawable(ctx.getResources().getDrawable(
-						R.drawable.ic_star_green));
+				// first see if the food is favorite
+				if (foodItemList.get(position).getIsfavorite() != 0) {
+					iv.setImageDrawable(ctx.getResources().getDrawable(
+							R.drawable.ic_star_yellow));
+					// else see if the food is no standard
+				} else if (!foodItemList.get(position).getPlatform()
+						.equals("s")) {
+					iv.setImageDrawable(ctx.getResources().getDrawable(
+							R.drawable.ic_star_green));
+				} else {
+					// else mark food as normal
+					iv.setImageDrawable(ctx.getResources().getDrawable(
+							R.drawable.ic_star_bw));
+				}
+
+				// when we click on a star
+				iv.setOnClickListener(new OnClickListener() {
+					public void onClick(View v) {
+						changeFavorite(position);
+					}
+				});
+
+				// when we click on a textview!
+				tt.setOnClickListener(new OnClickListener() {
+					public void onClick(View v) {
+						goToPageAddFoodToSelection(position);
+					}
+				});
+
+				ttTwo.setOnClickListener(new OnClickListener() {
+					public void onClick(View v) {
+						goToPageAddFoodToSelection(position);
+					}
+				});
+
+				// when we long click on a textview!
+				tt.setOnLongClickListener(new OnLongClickListener() {
+					public boolean onLongClick(View v) {
+						showDialogLongClickListItem(position);
+						return false;
+					}
+				});
+
+				ttTwo.setOnLongClickListener(new OnLongClickListener() {
+					public boolean onLongClick(View v) {
+						showDialogLongClickListItem(position);
+						return false;
+					}
+				});
+
+				if (position % 2 == 0) {
+					tt.setBackgroundColor(ctx.getResources().getColor(
+							R.color.ColorListViewOne));
+					ttTwo.setBackgroundColor(ctx.getResources().getColor(
+							R.color.ColorListViewOne));
+				} else {
+					tt.setBackgroundColor(ctx.getResources().getColor(
+							R.color.ColorListViewTwo));
+					ttTwo.setBackgroundColor(ctx.getResources().getColor(
+							R.color.ColorListViewTwo));
+				}
 			} else {
-				// else mark food as normal
-				iv.setImageDrawable(ctx.getResources().getDrawable(
-						R.drawable.ic_star_bw));
-			}
+				// when we are on the item that is between favorite and all
+				tt.setText("");
+				ttTwo.setText("");
+				iv.setImageDrawable(null);
 
-			// when we click on a star
-			iv.setOnClickListener(new OnClickListener() {
-				public void onClick(View v) {
-					changeFavorite(position);
-				}
-			});
-
-			// when we click on a textview!
-			tt.setOnClickListener(new OnClickListener() {
-				public void onClick(View v) {
-					goToPageAddFoodToSelection(position);
-				}
-			});
-
-			ttTwo.setOnClickListener(new OnClickListener() {
-				public void onClick(View v) {
-					goToPageAddFoodToSelection(position);
-				}
-			});
-
-			// when we long click on a textview!
-			tt.setOnLongClickListener(new OnLongClickListener() {
-				public boolean onLongClick(View v) {
-					showDialogLongClickListItem(position);
-					return false;
-				}
-			});
-
-			ttTwo.setOnLongClickListener(new OnLongClickListener() {
-				public boolean onLongClick(View v) {
-					showDialogLongClickListItem(position);
-					return false;
-				}
-			});
-
-			if (position % 2 == 0) {
 				tt.setBackgroundColor(ctx.getResources().getColor(
-						R.color.ColorListViewOne));
+						R.color.ColorTransparant));
 				ttTwo.setBackgroundColor(ctx.getResources().getColor(
-						R.color.ColorListViewOne));
-			} else {
-				tt.setBackgroundColor(ctx.getResources().getColor(
-						R.color.ColorListViewTwo));
-				ttTwo.setBackgroundColor(ctx.getResources().getColor(
-						R.color.ColorListViewTwo));
+						R.color.ColorTransparant));
 			}
-
 			return v;
 		}
 

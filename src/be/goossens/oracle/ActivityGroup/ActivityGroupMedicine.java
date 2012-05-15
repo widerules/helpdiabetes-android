@@ -1,3 +1,5 @@
+// Please read info.txt for license and legal information
+
 package be.goossens.oracle.ActivityGroup;
 
 import java.util.ArrayList;
@@ -31,31 +33,29 @@ public class ActivityGroupMedicine extends ActivityGroup {
 			// Start the root activity within the group and get its view
 			View view = getLocalActivityManager().startActivity(
 					DataParser.activityIDMedicine,
-					new Intent(this, ShowAddMedicineEvent.class).addFlags(
-							Intent.FLAG_ACTIVITY_CLEAR_TOP)).getDecorView();
+					new Intent(this, ShowAddMedicineEvent.class)
+							.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP))
+					.getDecorView();
 			replaceView(view);
 		}
 	}
 
-	// let the keyboard dissapear
-	private void keyboardDissapear() {
-		try {
-			InputMethodManager inputManager = (InputMethodManager) this
-					.getSystemService(Context.INPUT_METHOD_SERVICE);
-			inputManager.hideSoftInputFromWindow(this.getCurrentFocus()
-					.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
-		} catch (Exception e) {
-		}
+	private void hideKeyboard() {
+		InputMethodManager inputManager = (InputMethodManager) this
+				.getSystemService(Context.INPUT_METHOD_SERVICE); 
+		inputManager.hideSoftInputFromWindow(getParent().getCurrentFocus().getWindowToken(), 0);
 	}
-
+	
+	//This will hide the keyboard on tab change
 	@Override
-	public void onContentChanged() {
-		keyboardDissapear();
-		super.onContentChanged();
+	protected void onPause() {
+		hideKeyboard();
+		super.onPause();
 	}
 
 	@Override
 	public void setContentView(View view) {
+		hideKeyboard();
 		replaceView(view);
 	}
 
@@ -67,6 +67,7 @@ public class ActivityGroupMedicine extends ActivityGroup {
 	}
 
 	public void back() {
+		hideKeyboard();
 		try {
 			// if we set history.size() > 0 and we press back key on home
 			// activity
@@ -96,10 +97,10 @@ public class ActivityGroupMedicine extends ActivityGroup {
 	public void finish() {
 
 	}
-	
+
 	// this method will kill the application
-		public void killApplication() {
-			// finish the tab activity so everything will close
-			this.getParent().finish();
-		}
+	public void killApplication() {
+		// finish the tab activity so everything will close
+		this.getParent().finish();
+	}
 }

@@ -1,116 +1,129 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    style="@style/linearLayoutVerticalWithPadding"
+<!-- Please read info.txt for license and legal information -->
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent" 
     android:background="@drawable/bg" >
 
-    <TextView
-        android:id="@+id/textView3"
-        style="@style/defaultFontTitle"
-        android:text="@string/pref_insuline_ratio" />
-
-    <TableLayout
-        android:id="@+id/tableLayout1"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content" >
-
-        <TableRow
-            android:id="@+id/tableRow1"
-            style="@style/styleTableRowGravityCenter" >
-
-            <TextView
-                android:id="@+id/textView2"
-                style="@style/textViewInTableAlignRight"
-                android:text="@string/pref_breakfastratio_title" />
-
-            <EditText
-                android:id="@+id/editTextShowPreferencesBreakfastRatio"
-                style="@style/editTextInTableText"
-                android:digits="1234567890."
-                android:inputType="phone" >
-            </EditText>
-        </TableRow>
-
-        <TableRow
-            android:id="@+id/tableRow2"
-            style="@style/styleTableRowGravityCenter" >
-
-            <TextView
-                android:id="@+id/textView4"
-                style="@style/textViewInTableAlignRight"
-                android:text="@string/pref_lunchratio_title" />
-
-            <EditText
-                android:id="@+id/editTextShowPreferencesLunchRatio"
-                style="@style/editTextInTableText"
-                android:digits="1234567890."
-                android:inputType="phone" >
-            </EditText>
-        </TableRow>
-
-        <TableRow
-            android:id="@+id/tableRow3"
-            style="@style/styleTableRowGravityCenter" >
-
-            <TextView
-                android:id="@+id/textView5"
-                style="@style/textViewInTableAlignRight"
-                android:text="@string/pref_snackratio_title" />
-
-            <EditText
-                android:id="@+id/editTextShowPreferencesSnackRatio"
-                style="@style/editTextInTableText"
-                android:digits="1234567890."
-                android:inputType="phone" />
-        </TableRow>
-
-        <TableRow
-            android:id="@+id/tableRow4"
-            style="@style/styleTableRowGravityCenter" >
-
-            <TextView
-                android:id="@+id/textView6"
-                style="@style/textViewInTableAlignRight"
-                android:text="@string/pref_dinnerratio_title" />
-
-            <EditText
-                android:id="@+id/editTextShowPreferencesDinnerRatio"
-                style="@style/editTextInTableText"
-                android:digits="1234567890."
-                android:inputType="phone" />
-        </TableRow>
-    </TableLayout>
-
-    <LinearLayout style="@style/linearLayoutForButtonAdd" >
-
-        <Button
-            android:id="@+id/buttonUpdate"
-            style="@style/buttonAdd"
-            android:text="@string/update"
-            android:visibility="gone" />
-    </LinearLayout>
-
-    <TextView
-        style="@style/defaultFontNormal"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/if_value_zero_dont_calc_insuline" />
-
     <LinearLayout
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        android:orientation="horizontal" >
+        style="@style/linearLayoutVerticalWithPadding"
+         >
 
-        <View
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal" >
+
+            <Button
+                android:id="@+id/buttonBack"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/ic_menu_back" />
+
+            <TextView
+                android:id="@+id/textView3"
+                style="@style/defaultFontTitle"
+                android:layout_weight="1.0"
+                android:text="@string/pref_insuline_ratio" />
+
+            <Button
+                android:id="@+id/buttonNext"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/ic_menu_forward"
+                android:visibility="gone" />
+        </LinearLayout>
+
+        <TableLayout
+            android:id="@+id/tableLayout1"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content" >
+
+            <TableRow
+                android:id="@+id/tableRow1"
+                style="@style/styleTableRowGravityCenter" >
+
+                <TextView
+                    android:id="@+id/textView2"
+                    style="@style/textViewInTableAlignRight"
+                    android:text="@string/pref_breakfastratio_title" />
+
+                <EditText
+                    android:id="@+id/editTextShowPreferencesBreakfastRatio"
+                    style="@style/editTextInTableText"
+                    android:digits="1234567890."
+                    android:inputType="phone" >
+                </EditText>
+            </TableRow>
+
+            <TableRow
+                android:id="@+id/tableRow2"
+                style="@style/styleTableRowGravityCenter" >
+
+                <TextView
+                    android:id="@+id/textView4"
+                    style="@style/textViewInTableAlignRight"
+                    android:text="@string/pref_lunchratio_title" />
+
+                <EditText
+                    android:id="@+id/editTextShowPreferencesLunchRatio"
+                    style="@style/editTextInTableText"
+                    android:digits="1234567890."
+                    android:inputType="phone" >
+                </EditText>
+            </TableRow>
+
+            <TableRow
+                android:id="@+id/tableRow3"
+                style="@style/styleTableRowGravityCenter" >
+
+                <TextView
+                    android:id="@+id/textView5"
+                    style="@style/textViewInTableAlignRight"
+                    android:text="@string/pref_snackratio_title" />
+
+                <EditText
+                    android:id="@+id/editTextShowPreferencesSnackRatio"
+                    style="@style/editTextInTableText"
+                    android:digits="1234567890."
+                    android:inputType="phone" />
+            </TableRow>
+
+            <TableRow
+                android:id="@+id/tableRow4"
+                style="@style/styleTableRowGravityCenter" >
+
+                <TextView
+                    android:id="@+id/textView6"
+                    style="@style/textViewInTableAlignRight"
+                    android:text="@string/pref_dinnerratio_title" />
+
+                <EditText
+                    android:id="@+id/editTextShowPreferencesDinnerRatio"
+                    style="@style/editTextInTableText"
+                    android:digits="1234567890."
+                    android:inputType="phone" />
+            </TableRow>
+        </TableLayout>
+
+        <LinearLayout style="@style/linearLayoutForButtonAdd" >
+
+            <Button
+                android:id="@+id/buttonUpdate"
+                style="@style/buttonAdd"
+                android:text="@string/update"
+                android:visibility="gone" />
+        </LinearLayout>
+        
+         <View
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
             android:layout_weight="1.0" />
 
-        <Button
-            android:id="@+id/buttonNext"
+        <TextView
             style="@style/defaultFontNormal"
-            android:layout_gravity="bottom|right"
-            android:text="@string/next"
-            android:visibility="gone" />
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/if_value_zero_dont_calc_insuline" />
     </LinearLayout>
-
-</LinearLayout>
+</ScrollView>

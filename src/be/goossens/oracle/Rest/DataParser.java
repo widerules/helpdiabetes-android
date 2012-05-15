@@ -1,3 +1,5 @@
+// Please read info.txt for license and legal information
+
 package be.goossens.oracle.Rest;
 
 /*
@@ -9,7 +11,13 @@ public class DataParser {
 	// public static final String
 	public static final String fromWhereWeCome = "fromWherWeCome";
 	public static final String whatToDo = "whatToDo";
- 
+  
+	//used first time app starts app
+	public static final String doFirstTime = "doFirstTime";
+	
+	// food.platform name for own created food //
+	public static final String foodPlatform = "android";
+	
 	// Food //
 	public static final String weComeFromShowFoodList = "weComeFromShowFoodList";
 	public static final String weComeFRomShowSelectedFood = "weComeFRomSelectedFood";
@@ -37,6 +45,9 @@ public class DataParser {
 	public static final String doCreateExerciseType = "createExerciseType";
 	public static final String idExerciseType = "exerciseTypeID";
 
+	// Medicine type //
+	public static final String idMedicineType = "medicineTypeID";
+	
 	// used to parse the tabHost object //
 	public static final String tabhost = "tabhost";
 
@@ -47,9 +58,7 @@ public class DataParser {
 	public static final String timestamp = "eventDateTimeFromDB";
 	
 	// Activity IDs //
-	public static final String activityIDShowFoodList = "showActivityShowFoodList";
-	public static final String activityIDShowAddFoodToSelection = "showActivityShowAddFoodToSelection";
-	
+	public static final String activityIDMeal = "showActivityMeal";	
 	public static final String activityIDTracking = "showActivityTracking";
 	public static final String activityIDGlucose = "showActivityGlucose";
 	public static final String activityIDMedicine = "showActivityMedicine";

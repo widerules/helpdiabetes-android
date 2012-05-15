@@ -1,24 +1,24 @@
+// Please read info.txt for license and legal information
+
 package be.goossens.oracle.ActivityGroup;
 
 import java.util.ArrayList;
-import java.util.List;
 
+import android.R;
 import android.app.ActivityGroup;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.Toast;
-import be.goossens.oracle.Objects.DBFoodComparable;
 import be.goossens.oracle.Rest.DataParser;
-import be.goossens.oracle.Show.Food.ShowLoadingFoodData;
 import be.goossens.oracle.Show.Food.ShowFoodList;
-import be.goossens.oracle.Show.Food.ShowManageOwnFood;
+import be.goossens.oracle.Show.Food.ShowLoadingFoodData;
 import be.goossens.oracle.Show.Food.ShowSelectedFood;
-import be.goossens.oracle.Show.Food.ShowUpdateOwnFood;
+import be.goossens.oracle.Show.Food.ShowUpdateFood;
 
 public class ActivityGroupMeal extends ActivityGroup {
 
@@ -45,11 +45,29 @@ public class ActivityGroupMeal extends ActivityGroup {
 	// showFoodList
 	public long deleteFoodIDFromList;
 
+	// If this boolean is true we recreate the list before we updatelistadapter
+	// in showfoodlist
+	public boolean recreatelist;
+
+	// when we pressed on add tracking meal event to selected food we flag this
+	// boolean true
+	// showfoodlist wll start the activity
+	public boolean goToSelectedFood;
+
+	// when we click on a item in the list we store the search string in here
+	// when we come back to show food list and this string != "" we store this
+	// string in the search box
+	// and go to the right item in the list
+	public String lastSearchString;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		this.history = new ArrayList<View>();
 		group = this;
+
+		// Initialize stuff
+		lastSearchString = "";
 
 		// make a root activity when the history size = 0
 		if (history.size() == 0) {
@@ -57,17 +75,31 @@ public class ActivityGroupMeal extends ActivityGroup {
 		}
 	}
 
+	public void hideKeyboard() {
+		InputMethodManager inputManager = (InputMethodManager) this
+				.getSystemService(Context.INPUT_METHOD_SERVICE);
+		inputManager.hideSoftInputFromWindow(getParent().getCurrentFocus()
+				.getWindowToken(), 0);
+	}
+
+	// This will hide the keyboard on tab change
+	@Override
+	protected void onPause() {
+		hideKeyboard();
+		super.onPause();
+	}
+
 	public void restartThisActivity() {
-		//clear history
+		// clear history
 		history = null;
-		
-		//inialize list
+
+		// inialize list
 		history = new ArrayList<View>();
-		
+
 		// Start the root activity within the group and get its view
 		// This activity is the activity that hold our objects for showFoodList
 		View view = getLocalActivityManager().startActivity(
-		 		DataParser.activityIDShowFoodList,
+				DataParser.activityIDMeal,
 				new Intent(this, ShowLoadingFoodData.class)
 						.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP))
 				.getDecorView();
@@ -110,39 +142,27 @@ public class ActivityGroupMeal extends ActivityGroup {
 
 	@Override
 	public void setContentView(View view) {
-		// every time we switch from view we hide the keyboard
-		keyboardDissapear();
-
+		hideKeyboard();
 		replaceView(view);
-	}
-
-	// let the keyboard dissapear
-	public void keyboardDissapear() {
-		// get a inputManager
-		InputMethodManager inputManager = (InputMethodManager) this
-				.getSystemService(Context.INPUT_METHOD_SERVICE);
-
-		// try to hide the keyboard
-		// when it fail we will get a nullpointerexception
-		// example: it will fail when we are running a asynctask
-		// and the user press on a other tab
-		try {
-			inputManager.hideSoftInputFromInputMethod(this.getCurrentFocus()
-					.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
-		} catch (NullPointerException e) {
-		}
 	}
 
 	private void replaceView(View view) {
 		// Adds the old one to history
 		history.add(view);
+
 		// changes this group view to the new view
 		super.setContentView(view);
+
+		Animation hyperSpaceJump = AnimationUtils.loadAnimation(this,
+				R.anim.fade_in);
+		view.startAnimation(hyperSpaceJump);
 	}
 
 	public void back() {
+		hideKeyboard();
 		// if the size > 2 then we are in a activity that is not the home
 		// activity ( show food list )
+
 		if (history.size() > 2) {
 			// remove the view from the history list
 			history.remove(history.size() - 1);
@@ -155,17 +175,51 @@ public class ActivityGroupMeal extends ActivityGroup {
 				history.remove(history.size() - 1);
 				// add it again
 				View view = getLocalActivityManager().startActivity(
-						DataParser.activityIDShowFoodList,
+						DataParser.activityIDMeal,
 						new Intent(this, ShowFoodList.class)
 								.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP))
 						.getDecorView();
-				replaceView(view);
+
+				history.add(view);
+			} else if (history.size() == 3) {
+				try {
+					getShowSelectedFood().refreshData();
+				} catch (Exception e) {
+
+				}
+			}
+
+			View view = history.get(history.size() - 1);
+
+			//dont put animation on the home screen ( show food list )
+			if (history.size() != 2) {
+				Animation slideOut = AnimationUtils.loadAnimation(this,
+						R.anim.fade_out);
+				view.startAnimation(slideOut);
 			}
 
 			// call the super.setContent view! so set the real view
-			super.setContentView(history.get(history.size() - 1));
+			super.setContentView(view);
 
 		}
+	}
+
+	// This is called when we updated the foodname and pressed the back key from
+	// showupdatefood
+	// This will restart the showfoodlist activity to show the new ordered
+	// foodlist
+	public void restartShowFoodList() {
+		history.remove(history.size() - 1);
+		// add it again
+		View view = getLocalActivityManager().startActivity(
+				DataParser.activityIDMeal,
+				new Intent(this, ShowFoodList.class)
+						.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP))
+				.getDecorView();
+		replaceView(view);
+
+		// call the super.setContent view! so set the real view
+		super.setContentView(history.get(history.size() - 1));
 	}
 
 	// when we didnt overide the onkeydown method in the activity this onkeydown
@@ -182,65 +236,43 @@ public class ActivityGroupMeal extends ActivityGroup {
 			return super.onKeyDown(keyCode, event);
 	}
 
-	private View getView(int sizeMinusNumber) {
-		return history.get(history.size() - sizeMinusNumber);
+	// show update food
+	public ShowUpdateFood getShowUpdateFood() {
+		try {
+			View v = history.get(history.size() - 2);
+			return (ShowUpdateFood) v.getContext();
+		} catch (Exception e) {
+			return null;
+		}
 	}
 
-	// showFoodList refresh listview
-		public void showFoodListUpdateListAdapter() {
+	public ShowSelectedFood getShowSelectedFood() {
+		try {
+			View v = history.get(history.size() - 2);
+			return (ShowSelectedFood) v.getContext();
+		} catch (Exception e) {
+
 			try {
-				View v = history.get(0);
-				ShowFoodList currentActivity = (ShowFoodList) v.getContext();
-				currentActivity.setNewFontSize();
-			} catch (Exception e) {
+				// this will be returnd when we delete a template and we refresh
+				// the data
+				View o = history.get(history.size() - 1);
+				return (ShowSelectedFood) o.getContext();
+			} catch (Exception l) {
+				return null;
 			}
 		}
-	
-	// showFoodList refresh listview
-	public void refreshFoodListFontSize() {
-		try {
-			View v = history.get(0);
-			ShowLoadingFoodData currentActivity = (ShowLoadingFoodData) v.getContext();
-			currentActivity.setNewFontSize();
-		} catch (Exception e) {
-		}
+
 	}
 
-	// show mange own food
-	public void refreshShowManageOwnFood(int sizeMinusNumber) {
-		try {
-			View v = getView(sizeMinusNumber);
-			ShowManageOwnFood currentActivity = (ShowManageOwnFood) v
-					.getContext();
-			currentActivity.onResume();
-		} catch (Exception e) {
+	public void goToSeletedFood() {
+		// clear the history until we are back at our showFoodList
+		if (history.size() > 2) {
+			while (history.size() > 2) {
+				back();
+			}
 		}
-	}
-
-	// show selected food
-	public void refreshShowSelectedFood(int sizeMinusNumber) {
-		try {
-			View v = getView(sizeMinusNumber);
-			ShowSelectedFood currentActivity = (ShowSelectedFood) v
-					.getContext();
-			currentActivity.onResume();
-		} catch (Exception e) {
-		}
-	}
-
-	// show update own food
-	public void refreshShowUpdateOwnFood(int sizeMinusNumber) {
-		try {
-			View v = getView(sizeMinusNumber);
-			ShowUpdateOwnFood currentActivity = (ShowUpdateOwnFood) v
-					.getContext();
-			currentActivity.onResume();
-		} catch (Exception e) {
-		}
-	}
-
-	@Override
-	public void finish() {
-
+		// flag a boolean here to start show selected food when we go to show
+		// food list
+		goToSelectedFood = true;
 	}
 }

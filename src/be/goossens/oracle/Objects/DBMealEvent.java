@@ -1,3 +1,5 @@
+// Please read info.txt for license and legal information
+
 package be.goossens.oracle.Objects;
 
 import java.util.List;
@@ -9,6 +11,8 @@ public class DBMealEvent {
 	private float calculatedInsulineAmount;
 	private String eventDateTime;
 	private long userID;
+	
+	//a list of mealfood
 	private List<DBMealFood> mealFood;
 
 	public DBMealEvent(long id, float insulineRatio, float corretionFactor,

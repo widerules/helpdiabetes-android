@@ -1,12 +1,16 @@
+// Please read info.txt for license and legal information
+
 package be.goossens.oracle.Rest;
 
 import java.io.BufferedInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.nio.channels.FileChannel;
 import java.util.zip.ZipInputStream;
 
 import android.content.ContentValues;
@@ -16,6 +20,7 @@ import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.os.Environment;
 import be.goossens.oracle.R;
 
 /*
@@ -24,8 +29,10 @@ import be.goossens.oracle.R;
 
 public class DbAdapter extends SQLiteOpenHelper {
 	// The android default system path to my application database
-	private static String DB_PATH = "/data/data/be.goossens.oracle/databases/";
-	private static String DB_NAME = "dbhelpdiabetes";
+	private static String DB_PATH_PART_ONE = "/data";
+	public static String DB_PATH_PART_TWO = "/data/be.goossens.oracle/databases/";
+	private static String DB_PATH = DB_PATH_PART_ONE + DB_PATH_PART_TWO;
+	public static String DB_NAME = "dbhelpdiabetes";
 	private static final int DATABASE_VERSION = 3;
 	private SQLiteDatabase mDb;
 	private final Context mCtx;
@@ -65,7 +72,7 @@ public class DbAdapter extends SQLiteOpenHelper {
 	private static final String DATABASE_MEALFOOD_TABLE = "MealFood";
 	public static final String DATABASE_MEALFOOD_ID = "_id";
 	public static final String DATABASE_MEALFOOD_MEALEVENTID = "MealEventID";
-	public static final String DATABASE_MEALFOOD_FOODID = "FoodID";
+	public static final String DATABASE_MEALFOOD_FOODUNITID = "FoodUnitID";
 	public static final String DATABASE_MEALFOOD_AMOUNT = "Amount";
 
 	// MealEvent
@@ -133,6 +140,7 @@ public class DbAdapter extends SQLiteOpenHelper {
 	public static final String DATABASE_SELECTEDFOOD_ID = "_id";
 	public static final String DATABASE_SELECTEDFOOD_AMOUNT = "amount";
 	public static final String DATABASE_SELECTEDFOOD_UNITID = "unitid";
+	public static final String DATABASE_SELECTEDFOOD_EVENTDATETIME = "EventDateTime";
 
 	// Food
 	public static final String DATABASE_FOOD_TABLE = "food";
@@ -203,6 +211,7 @@ public class DbAdapter extends SQLiteOpenHelper {
 			checkDB = SQLiteDatabase.openDatabase(myPath, null,
 					SQLiteDatabase.OPEN_READONLY);
 			checkDB.close();
+			// return true;
 			return true;
 		} catch (SQLiteException e) {
 			// The database does not exists
@@ -235,7 +244,6 @@ public class DbAdapter extends SQLiteOpenHelper {
 			myOutput.close();
 			is.close();
 		}
-
 	}
 
 	@Override
@@ -284,7 +292,46 @@ public class DbAdapter extends SQLiteOpenHelper {
 						+ "date('" + date + "')", null, null, null, null);
 	}
 
+	// get medicine events by medicineTypeID
+	public Cursor fetchMedicineEventByMedicineTypeID(long id) {
+		return mDb.query(DATABASE_MEDICINEEVENT_TABLE,
+				new String[] { DATABASE_MEDICINEEVENT_ID,
+						DATABASE_MEDICINEEVENT_AMOUNT,
+						DATABASE_MEDICINEEVENT_MEDICINETYPEID,
+						DATABASE_MEDICINEEVENT_TIMESTAMP,
+						DATABASE_MEDICINEEVENT_USERID },
+				DATABASE_MEDICINEEVENT_MEDICINETYPEID + "=" + id, null, null,
+				null, null);
+	}
+
 	// Medicine Type Functions
+	// create
+	public long createMedicineType(String name, String unit) {
+		ContentValues initialValues = new ContentValues();
+
+		initialValues.put(DATABASE_MEDICINETYPE_MEDICINETYPE, "");
+		initialValues.put(DATABASE_MEDICINETYPE_MEDICINENAME, name);
+		initialValues.put(DATABASE_MEDICINETYPE_MEDICINEUNIT, unit);
+		initialValues.put(DATABASE_MEDICINETYPE_VISIBLE, 1);
+
+		return mDb.insert(DATABASE_MEDICINETYPE_TABLE, null, initialValues);
+	}
+
+	// update medicine type by id
+	public boolean updateMedicineTypeByID(long id, String name, String unit) {
+		ContentValues initialValues = new ContentValues();
+		initialValues.put(DATABASE_MEDICINETYPE_MEDICINENAME, name);
+		initialValues.put(DATABASE_MEDICINETYPE_MEDICINEUNIT, unit);
+		return mDb.update(DATABASE_MEDICINETYPE_TABLE, initialValues,
+				DATABASE_MEDICINETYPE_ID + "=" + id, null) > 0;
+	}
+
+	// delete medicine type by ID
+	public boolean deleteMedicineTypeByID(long id) {
+		return mDb.delete(DATABASE_MEDICINETYPE_TABLE, DATABASE_MEDICINETYPE_ID
+				+ "=" + id, null) > 0;
+	}
+
 	// get all medicine types
 	public Cursor fetchAllMedicineTypes() {
 		return mDb.query(DATABASE_MEDICINETYPE_TABLE, new String[] {
@@ -303,6 +350,12 @@ public class DbAdapter extends SQLiteOpenHelper {
 				DATABASE_MEDICINETYPE_MEDICINEUNIT,
 				DATABASE_MEDICINETYPE_VISIBLE }, DATABASE_MEDICINETYPE_ID
 				+ " = " + medicineTypeID, null, null, null, null);
+	}
+
+	// delete medicine event by ID
+	public boolean deleteMedicineEventByID(long id) {
+		return mDb.delete(DATABASE_MEDICINEEVENT_TABLE,
+				DATABASE_MEDICINEEVENT_ID + "=" + id, null) > 0;
 	}
 
 	// BloodGlucose Events Functions
@@ -365,6 +418,12 @@ public class DbAdapter extends SQLiteOpenHelper {
 						null, null);
 	}
 
+	// delete blood glucose by id
+	public boolean deleteBloodGlucoseEventByID(long id) {
+		return mDb.delete(DATABASE_BLOODGLUCOSEEVENT_TABLE,
+				DATABASE_BLOODGLUCOSEEVENT_ID + "=" + id, null) > 0;
+	}
+
 	// Food Language Functions
 	// get all food languages
 	public Cursor fetchAllFoodLanguages() {
@@ -376,12 +435,28 @@ public class DbAdapter extends SQLiteOpenHelper {
 
 	// Meal Food Functions
 	// create
-	public long createMealFood(long mealEventID, int foodID, float amount) {
+	public long createMealFood(long mealEventID, long foodUnitID, float amount) {
 		ContentValues initialValues = new ContentValues();
 		initialValues.put(DATABASE_MEALFOOD_MEALEVENTID, mealEventID);
-		initialValues.put(DATABASE_MEALFOOD_FOODID, foodID);
+		initialValues.put(DATABASE_MEALFOOD_FOODUNITID, foodUnitID);
 		initialValues.put(DATABASE_MEALFOOD_AMOUNT, amount);
 		return mDb.insert(DATABASE_MEALFOOD_TABLE, null, initialValues);
+	}
+
+	public Cursor fetchMealFoodByMealEventID(long mealEventID) {
+		return mDb.query(DATABASE_MEALFOOD_TABLE, new String[] {
+				DATABASE_MEALFOOD_ID, DATABASE_MEALFOOD_AMOUNT,
+				DATABASE_MEALFOOD_FOODUNITID, DATABASE_MEALFOOD_MEALEVENTID },
+				DATABASE_MEALFOOD_MEALEVENTID + "=" + mealEventID, null, null,
+				null, null);
+	}
+
+	public Cursor fetchMealFoodByFoodUnitID(long foodUnitID) {
+		return mDb.query(DATABASE_MEALFOOD_TABLE, new String[] {
+				DATABASE_MEALFOOD_ID, DATABASE_MEALFOOD_AMOUNT,
+				DATABASE_MEALFOOD_FOODUNITID, DATABASE_MEALFOOD_MEALEVENTID },
+				DATABASE_MEALFOOD_FOODUNITID + "=" + foodUnitID, null, null,
+				null, null);
 	}
 
 	// Meal Event Functions
@@ -410,6 +485,16 @@ public class DbAdapter extends SQLiteOpenHelper {
 	}
 
 	// get all meal events by timestamp
+	public Cursor fetchMealEventsByID(long id) {
+		return mDb.query(DATABASE_MEALEVENT_TABLE, new String[] {
+				DATABASE_MEALEVENT_ID, DATABASE_MEALEVENT_INSULINERATIO,
+				DATABASE_MEALEVENT_CORRECTIONFACTOR,
+				DATABASE_MEALEVENT_CALCULATEDINSULINEAMOUNT,
+				DATABASE_MEALEVENT_EVENTDATETIME, DATABASE_MEALEVENT_USERID },
+				DATABASE_MEALEVENT_ID + "=" + id, null, null, null, null);
+	}
+
+	// get all meal events by timestamp
 	public Cursor fetchMealEventsByDate(String date) {
 		return mDb.query(DATABASE_MEALEVENT_TABLE, new String[] {
 				DATABASE_MEALEVENT_ID, DATABASE_MEALEVENT_INSULINERATIO,
@@ -418,6 +503,18 @@ public class DbAdapter extends SQLiteOpenHelper {
 				DATABASE_MEALEVENT_EVENTDATETIME, DATABASE_MEALEVENT_USERID },
 				"date(" + DATABASE_MEALEVENT_EVENTDATETIME + ") " + " = "
 						+ "date('" + date + "')", null, null, null, null);
+	}
+
+	// delete meal event by ID
+	public boolean deleteMealEventByID(long id) {
+		return mDb.delete(DATABASE_MEALEVENT_TABLE, DATABASE_MEALEVENT_ID + "="
+				+ id, null) > 0;
+	}
+
+	// delete meal food by ID
+	public boolean deleteMealFoodByID(long id) {
+		return mDb.delete(DATABASE_MEALFOOD_TABLE, DATABASE_MEALFOOD_ID + "="
+				+ id, null) > 0;
 	}
 
 	// Exercise Type Functions
@@ -499,6 +596,19 @@ public class DbAdapter extends SQLiteOpenHelper {
 				DATABASE_EXERCISEEVENT_EXERCISETYPEID,
 				DATABASE_EXERCISEEVENT_USERID }, DATABASE_EXERCISEEVENT_ID
 				+ "=" + id, null, null, null, null);
+	}
+
+	// get exercise event by exercise type id
+	public Cursor fetchExerciseEventByExerciseTypeID(long id) {
+		return mDb.query(DATABASE_EXERCISEEVENT_TABLE, new String[] {
+				DATABASE_EXERCISEEVENT_ID, DATABASE_EXERCISEEVENT_DESCRIPTION,
+				DATABASE_EXERCISEEVENT_STARTTIME,
+				DATABASE_EXERCISEEVENT_STOPTIME,
+				DATABASE_EXERCISEEVENT_EVENTDATETIME,
+				DATABASE_EXERCISEEVENT_EXERCISETYPEID,
+				DATABASE_EXERCISEEVENT_USERID },
+				DATABASE_EXERCISEEVENT_EXERCISETYPEID + "=" + id, null, null,
+				null, null);
 	}
 
 	// get exercise event by date
@@ -673,10 +783,12 @@ public class DbAdapter extends SQLiteOpenHelper {
 	}
 
 	// SELECTED FOOD Functions
-	public long createSelectedFood(float amound, long unitId) {
+	public long createSelectedFood(float amound, long unitId,
+			String eventDateTime) {
 		ContentValues initialValues = new ContentValues();
 		initialValues.put(DATABASE_SELECTEDFOOD_AMOUNT, amound);
 		initialValues.put(DATABASE_SELECTEDFOOD_UNITID, unitId);
+		initialValues.put(DATABASE_SELECTEDFOOD_EVENTDATETIME, eventDateTime);
 		return mDb.insert(DATABASE_SELECTEDFOOD_TABLE, null, initialValues);
 	}
 
@@ -684,7 +796,9 @@ public class DbAdapter extends SQLiteOpenHelper {
 	public Cursor fetchAllSelectedFood() {
 		return mDb.query(DATABASE_SELECTEDFOOD_TABLE, new String[] {
 				DATABASE_SELECTEDFOOD_ID, DATABASE_SELECTEDFOOD_AMOUNT,
-				DATABASE_SELECTEDFOOD_UNITID }, null, null, null, null, null);
+				DATABASE_SELECTEDFOOD_UNITID,
+				DATABASE_SELECTEDFOOD_EVENTDATETIME }, null, null, null, null,
+				null);
 	}
 
 	// get selected food by foodUnitId
@@ -692,8 +806,10 @@ public class DbAdapter extends SQLiteOpenHelper {
 			throws SQLException {
 		Cursor mCursor = mDb.query(DATABASE_SELECTEDFOOD_TABLE, new String[] {
 				DATABASE_SELECTEDFOOD_ID, DATABASE_SELECTEDFOOD_AMOUNT,
-				DATABASE_SELECTEDFOOD_UNITID }, DATABASE_SELECTEDFOOD_UNITID
-				+ "=" + foodUnitId, null, null, null, null);
+				DATABASE_SELECTEDFOOD_UNITID,
+				DATABASE_SELECTEDFOOD_EVENTDATETIME },
+				DATABASE_SELECTEDFOOD_UNITID + "=" + foodUnitId, null, null,
+				null, null);
 		if (mCursor != null) {
 			mCursor.moveToFirst();
 		}
@@ -704,8 +820,9 @@ public class DbAdapter extends SQLiteOpenHelper {
 	public Cursor fetchSelectedFood(Long id) throws SQLException {
 		Cursor mCursor = mDb.query(DATABASE_SELECTEDFOOD_TABLE, new String[] {
 				DATABASE_SELECTEDFOOD_ID, DATABASE_SELECTEDFOOD_AMOUNT,
-				DATABASE_SELECTEDFOOD_UNITID }, DATABASE_SELECTEDFOOD_ID + "="
-				+ id, null, null, null, null);
+				DATABASE_SELECTEDFOOD_UNITID,
+				DATABASE_SELECTEDFOOD_EVENTDATETIME }, DATABASE_SELECTEDFOOD_ID
+				+ "=" + id, null, null, null, null);
 		if (mCursor != null) {
 			mCursor.moveToFirst();
 		}
@@ -737,7 +854,7 @@ public class DbAdapter extends SQLiteOpenHelper {
 		initialValues.put(DATABASE_FOOD_USERID, "0");
 		initialValues.put(DATABASE_FOOD_CATEGORYID, "1");
 		initialValues.put(DATABASE_FOOD_FOODLANGUAGEID, foodLanguageID);
-		initialValues.put(DATABASE_FOOD_PLATFORM, "android");
+		initialValues.put(DATABASE_FOOD_PLATFORM, DataParser.foodPlatform);
 		return mDb.insert(DATABASE_FOOD_TABLE, null, initialValues);
 	}
 
@@ -747,6 +864,19 @@ public class DbAdapter extends SQLiteOpenHelper {
 				DATABASE_FOOD_NAME, DATABASE_FOOD_ISFAVORITE,
 				DATABASE_FOOD_VISIBLE, DATABASE_FOOD_PLATFORM }, null, null,
 				DATABASE_FOOD_NAME, null, null);
+	}
+
+	// get food from current foodlanguage and platform != 's'
+	public Cursor fetchFoodByLanguageIDAndPlatformNotStandard(long languageID) {
+		return mDb.rawQuery("select * from food where "
+				+ DATABASE_FOOD_FOODLANGUAGEID + "=" + languageID + " and "
+				+ DATABASE_FOOD_PLATFORM + " not like 's'", null);
+	}
+
+	public Cursor fetchFoodByLanguageIDInQuery(long languageID) {
+		return mDb.rawQuery("select * from food where "
+				+ DATABASE_FOOD_FOODLANGUAGEID + "=" + languageID + " and "
+				+ DATABASE_FOOD_VISIBLE + " = 1", null);
 	}
 
 	// get food by language ID
@@ -807,8 +937,8 @@ public class DbAdapter extends SQLiteOpenHelper {
 		return mDb.query(DATABASE_FOOD_TABLE, new String[] { DATABASE_FOOD_ID,
 				DATABASE_FOOD_NAME, DATABASE_FOOD_ISFAVORITE,
 				DATABASE_FOOD_VISIBLE, DATABASE_FOOD_PLATFORM },
-				DATABASE_FOOD_PLATFORM + " LIKE 'android' ", null, null, null,
-				null);
+				DATABASE_FOOD_PLATFORM + " LIKE '" + DataParser.foodPlatform
+						+ "' ", null, null, null, null);
 	}
 
 	// Delete food
@@ -818,9 +948,19 @@ public class DbAdapter extends SQLiteOpenHelper {
 	}
 
 	// Update food name
+	// mark the food item as 'android'
 	public boolean updateFoodName(long id, String foodname) {
 		ContentValues initialValues = new ContentValues();
 		initialValues.put(DATABASE_FOOD_NAME, foodname);
+		initialValues.put(DATABASE_FOOD_PLATFORM, DataParser.foodPlatform);
+		return mDb.update(DATABASE_FOOD_TABLE, initialValues, DATABASE_FOOD_ID
+				+ "=" + id, null) > 0;
+	}
+
+	// mark the food item as 'android'
+	public boolean updateFoodToOwnCreated(long id) {
+		ContentValues initialValues = new ContentValues();
+		initialValues.put(DATABASE_FOOD_PLATFORM, DataParser.foodPlatform);
 		return mDb.update(DATABASE_FOOD_TABLE, initialValues, DATABASE_FOOD_ID
 				+ "=" + id, null) > 0;
 	}
@@ -848,11 +988,12 @@ public class DbAdapter extends SQLiteOpenHelper {
 		ContentValues initialValues = new ContentValues();
 		initialValues.put(DATABASE_FOODUNIT_FOODID, foodId);
 		initialValues.put(DATABASE_FOODUNIT_NAME, name);
-		initialValues.put(DATABASE_FOODUNIT_STANDARDAMOUNT, standardAmount);
-		initialValues.put(DATABASE_FOODUNIT_CARBS, carbs);
-		initialValues.put(DATABASE_FOODUNIT_PROTEIN, prot);
-		initialValues.put(DATABASE_FOODUNIT_FAT, fat);
-		initialValues.put(DATABASE_FOODUNIT_KCAL, kcal);
+		initialValues
+				.put(DATABASE_FOODUNIT_STANDARDAMOUNT, "" + standardAmount);
+		initialValues.put(DATABASE_FOODUNIT_CARBS, "" + carbs);
+		initialValues.put(DATABASE_FOODUNIT_PROTEIN, "" + prot);
+		initialValues.put(DATABASE_FOODUNIT_FAT, "" + fat);
+		initialValues.put(DATABASE_FOODUNIT_KCAL, "" + kcal);
 		initialValues.put(DATABASE_FOODUNIT_VISIBLE, 1);
 		return mDb.insert(DATABASE_FOODUNIT_TABLE, null, initialValues);
 	}
@@ -888,8 +1029,8 @@ public class DbAdapter extends SQLiteOpenHelper {
 	}
 
 	// get all foodUnit by foodId
-	public Cursor fetchFoodUnitByFoodId(Long foodId) throws SQLException {
-		Cursor mCursor = mDb.query(true, DATABASE_FOODUNIT_TABLE, new String[] {
+	public Cursor fetchFoodUnitByFoodId(Long foodId) {
+		return mDb.query(true, DATABASE_FOODUNIT_TABLE, new String[] {
 				DATABASE_FOODUNIT_ID, DATABASE_FOODUNIT_FOODID,
 				DATABASE_FOODUNIT_NAME, DATABASE_FOODUNIT_DESCRIPTION,
 				DATABASE_FOODUNIT_STANDARDAMOUNT, DATABASE_FOODUNIT_CARBS,
@@ -897,11 +1038,6 @@ public class DbAdapter extends SQLiteOpenHelper {
 				DATABASE_FOODUNIT_KCAL, DATABASE_FOODUNIT_VISIBLE },
 				DATABASE_FOODUNIT_FOODID + "=" + foodId, null, null, null,
 				null, null);
-
-		if (mCursor != null) {
-			mCursor.moveToFirst();
-		}
-		return mCursor;
 	}
 
 	// Delete foodUnit
@@ -916,13 +1052,41 @@ public class DbAdapter extends SQLiteOpenHelper {
 		ContentValues initialValues = new ContentValues();
 		initialValues.put(DATABASE_FOODUNIT_NAME, name);
 		initialValues.put(DATABASE_FOODUNIT_DESCRIPTION, "");
-		initialValues.put(DATABASE_FOODUNIT_STANDARDAMOUNT, standardAmount);
-		initialValues.put(DATABASE_FOODUNIT_CARBS, carbs);
-		initialValues.put(DATABASE_FOODUNIT_PROTEIN, prot);
-		initialValues.put(DATABASE_FOODUNIT_FAT, fat);
-		initialValues.put(DATABASE_FOODUNIT_KCAL, kcal);
+		initialValues
+				.put(DATABASE_FOODUNIT_STANDARDAMOUNT, "" + standardAmount);
+		initialValues.put(DATABASE_FOODUNIT_CARBS, "" + carbs);
+		initialValues.put(DATABASE_FOODUNIT_PROTEIN, "" + prot);
+		initialValues.put(DATABASE_FOODUNIT_FAT, "" + fat);
+		initialValues.put(DATABASE_FOODUNIT_KCAL, "" + kcal);
 		return mDb.update(DATABASE_FOODUNIT_TABLE, initialValues,
 				DATABASE_FOODUNIT_ID + "=" + unitId, null) > 0;
+	}
+
+	// backup stuff
+	public boolean copyDatabaseToSD() {
+		try {
+			File sd = Environment.getExternalStorageDirectory();
+			File data = Environment.getDataDirectory();
+
+			if (sd.canWrite()) {
+				String currentDBPath = DB_PATH_PART_TWO + DB_NAME;
+
+				File currentDB = new File(data, currentDBPath);
+				File backupDB = new File(sd, DB_NAME);
+
+				FileChannel src = new FileInputStream(currentDB).getChannel();
+				FileChannel dst = new FileOutputStream(backupDB).getChannel();
+				dst.transferFrom(src, 0, src.size());
+				src.close();
+				dst.close();
+				return true;
+
+			} else {
+				return false;
+			}
+		} catch (Exception e) {
+			return false;
+		}
 	}
 
 	@Override
@@ -934,6 +1098,6 @@ public class DbAdapter extends SQLiteOpenHelper {
 	@Override
 	public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
 		// TODO Auto-generated method stub
-
 	}
+
 }

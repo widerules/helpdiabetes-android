@@ -1,7 +1,9 @@
+// Please read info.txt for license and legal information
+
 package be.goossens.oracle.Objects;
 
 public class DBFoodUnit {
-	private int id;
+	private long id;
 	private String name;
 	private String description;
 	private float standardamound;
@@ -11,7 +13,8 @@ public class DBFoodUnit {
 	private float fat;
 	private float visible;
 	private int foodid;
-	public DBFoodUnit(int id, String name, String description,
+	
+	public DBFoodUnit(long id, String name, String description,
 			float standardamound, float kcal, float protein, float carbs,
 			float fat, float visible, int foodid) {
 		super();
@@ -32,10 +35,10 @@ public class DBFoodUnit {
 	}
 
 
-	public int getId() {
+	public long getId() {
 		return id;
 	}
-	public void setId(int id) {
+	public void setId(long id) {
 		this.id = id;
 	}
 	public String getName() {

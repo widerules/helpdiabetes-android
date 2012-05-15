@@ -1,15 +1,26 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!-- Please read info.txt for license and legal information -->
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent" >
 
-    <LinearLayout
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        style="@style/linearLayoutVerticalWithPadding" >
+    <LinearLayout style="@style/linearLayoutVerticalWithPadding" >
 
-        <TextView
-            style="@style/defaultFontTitle"
-            android:text="@string/titelAddFood" />
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal" >
+
+            <Button
+                android:id="@+id/buttonBack"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/ic_menu_back" />
+
+            <TextView
+                style="@style/defaultFontTitle"
+                android:text="@string/titelAddFood" />
+        </LinearLayout>
 
         <TextView
             android:id="@+id/textViewSelectedFood"
@@ -33,8 +44,8 @@
                 android:layout_width="fill_parent"
                 android:layout_height="fill_parent"
                 android:layout_weight="1.0"
-                android:digits="1234567890."
-                android:inputType="phone"
+                android:digits="1234567890.,"
+                android:inputType="phone" 
                 android:maxLength="7"
                 android:numeric="decimal" />
 
@@ -47,110 +58,117 @@
                 android:visibility="gone" />
         </LinearLayout>
 
-        <TableLayout
-            android:id="@+id/tableLayout1"
+        <LinearLayout
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:stretchColumns="*" >
+            android:orientation="horizontal" >
 
-            <TableRow
-                android:id="@+id/tableRow1"
-                style="@style/styleTableRowGravityCenter" >
+            <TextView android:layout_width="fill_parent" android:layout_height="fill_parent" android:layout_weight="1.0"/>
+            
+            <TableLayout
+                android:id="@+id/tableLayout1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:shrinkColumns="*" >
 
-                <TextView
-                    android:id="@+id/textViewShowAddFoodRowOneFieldOne"
-                    style="@style/textViewInTableAlignRight" />
+                <TableRow
+                    android:id="@+id/tableRow1"
+                    style="@style/styleTableRowGravityCenter" >
 
-                <TextView
-                    android:id="@+id/textViewShowAddFoodRowOneFieldTwo"
-                    style="@style/textViewInTableAlignRight" />
+                    <TextView
+                        android:id="@+id/textViewShowAddFoodRowOneFieldOne"
+                        style="@style/textViewInTableAlignRight" />
 
-                <TextView
-                    android:id="@+id/textViewShowAddFoodRowOneFieldThree"
-                    style="@style/textViewInTableAlignRight"
-                    android:paddingLeft="10dip" />
-            </TableRow>
+                    <TextView
+                        android:id="@+id/textViewShowAddFoodRowOneFieldTwo"
+                        style="@style/textViewInTableAlignRight" />
 
-            <View
-                android:layout_height="2dip"
-                android:background="#FF909090" />
+                    <TextView
+                        android:id="@+id/textViewShowAddFoodRowOneFieldThree"
+                        style="@style/textViewInTableAlignRight"
+                        android:paddingLeft="10dip" />
+                </TableRow>
 
-            <TableRow
-                android:id="@+id/tableRowCarb"
-                style="@style/styleTableRowGravityCenter" >
+                <TableRow
+                    android:id="@+id/tableRowCarb"
+                    style="@style/styleTableRowGravityCenter" >
 
-                <TextView
-                    android:id="@+id/textViewShowAddFoodRowTwoFieldOne"
-                    style="@style/textViewInTableAlignRight"
-                    android:text="@string/short_carbs" />
+                    <TextView
+                        android:id="@+id/textViewShowAddFoodRowTwoFieldOne"
+                        style="@style/textViewInTableAlignRight"
+                        android:text="@string/short_carbs" />
 
-                <TextView
-                    android:id="@+id/textViewShowAddFoodRowTwoFieldTwo"
-                    style="@style/textViewInTableAlignRight" />
+                    <TextView
+                        android:id="@+id/textViewShowAddFoodRowTwoFieldTwo"
+                        style="@style/textViewInTableAlignRight" />
 
-                <TextView
-                    android:id="@+id/textViewShowAddFoodRowTwoFieldThree"
-                    style="@style/textViewInTableAlignRight"
-                    android:paddingLeft="10dip" />
-            </TableRow>
+                    <TextView
+                        android:id="@+id/textViewShowAddFoodRowTwoFieldThree"
+                        style="@style/textViewInTableAlignRight"
+                        android:paddingLeft="10dip" />
+                </TableRow>
 
-            <TableRow
-                android:id="@+id/tableRowProt"
-                style="@style/styleTableRowGravityCenter" >
+                <TableRow
+                    android:id="@+id/tableRowProt"
+                    style="@style/styleTableRowGravityCenter" >
 
-                <TextView
-                    android:id="@+id/textViewShowAddFoodRowThreeFieldOne"
-                    style="@style/textViewInTableAlignRight"
-                    android:text="@string/amound_of_protein" />
+                    <TextView
+                        android:id="@+id/textViewShowAddFoodRowThreeFieldOne"
+                        style="@style/textViewInTableAlignRight"
+                        android:text="@string/amound_of_protein" />
 
-                <TextView
-                    android:id="@+id/textViewShowAddFoodRowThreeFieldTwo"
-                    style="@style/textViewInTableAlignRight" />
+                    <TextView
+                        android:id="@+id/textViewShowAddFoodRowThreeFieldTwo"
+                        style="@style/textViewInTableAlignRight" />
 
-                <TextView
-                    android:id="@+id/textViewShowAddFoodRowThreeFieldThree"
-                    style="@style/textViewInTableAlignRight"
-                    android:paddingLeft="10dip" />
-            </TableRow>
+                    <TextView
+                        android:id="@+id/textViewShowAddFoodRowThreeFieldThree"
+                        style="@style/textViewInTableAlignRight"
+                        android:paddingLeft="10dip" />
+                </TableRow>
 
-            <TableRow
-                android:id="@+id/tableRowFat"
-                style="@style/styleTableRowGravityCenter" >
+                <TableRow
+                    android:id="@+id/tableRowFat"
+                    style="@style/styleTableRowGravityCenter" >
 
-                <TextView
-                    android:id="@+id/textViewShowAddFoodRowFourFieldOne"
-                    style="@style/textViewInTableAlignRight"
-                    android:text="@string/amound_of_fat" />
+                    <TextView
+                        android:id="@+id/textViewShowAddFoodRowFourFieldOne"
+                        style="@style/textViewInTableAlignRight"
+                        android:text="@string/amound_of_fat" />
 
-                <TextView
-                    android:id="@+id/textViewShowAddFoodRowFourFieldTwo"
-                    style="@style/textViewInTableAlignRight" />
+                    <TextView
+                        android:id="@+id/textViewShowAddFoodRowFourFieldTwo"
+                        style="@style/textViewInTableAlignRight" />
 
-                <TextView
-                    android:id="@+id/textViewShowAddFoodRowFourFieldThree"
-                    style="@style/textViewInTableAlignRight"
-                    android:paddingLeft="10dip" />
-            </TableRow>
+                    <TextView
+                        android:id="@+id/textViewShowAddFoodRowFourFieldThree"
+                        style="@style/textViewInTableAlignRight"
+                        android:paddingLeft="10dip" />
+                </TableRow>
 
-            <TableRow
-                android:id="@+id/tableRowKcal"
-                style="@style/styleTableRowGravityCenter" >
+                <TableRow
+                    android:id="@+id/tableRowKcal"
+                    style="@style/styleTableRowGravityCenter" >
 
-                <TextView
-                    android:id="@+id/textViewShowAddFoodRowFiveFieldOne"
-                    style="@style/textViewInTableAlignRight"
-                    android:text="@string/short_kcal" />
+                    <TextView
+                        android:id="@+id/textViewShowAddFoodRowFiveFieldOne"
+                        style="@style/textViewInTableAlignRight"
+                        android:text="@string/short_kcal" />
 
-                <TextView
-                    android:id="@+id/textViewShowAddFoodRowFiveFieldTwo"
-                    style="@style/textViewInTableAlignRight" />
+                    <TextView
+                        android:id="@+id/textViewShowAddFoodRowFiveFieldTwo"
+                        style="@style/textViewInTableAlignRight" />
 
-                <TextView
-                    android:id="@+id/textViewShowAddFoodRowFiveFieldThree"
-                    style="@style/textViewInTableAlignRight"
-                    android:paddingLeft="10dip" />
-            </TableRow>
-        </TableLayout>
+                    <TextView
+                        android:id="@+id/textViewShowAddFoodRowFiveFieldThree"
+                        style="@style/textViewInTableAlignRight"
+                        android:paddingLeft="10dip" />
+                </TableRow>
+            </TableLayout>
+            
+            <TextView android:layout_width="fill_parent" android:layout_height="fill_parent" android:layout_weight="1.0"/>
+            
+        </LinearLayout>
 
         <LinearLayout
             android:id="@+id/LinearLayoutBtUpdate"
@@ -183,14 +201,6 @@
                 android:id="@+id/buttonShowAddFoodAddAndGoToOverview"
                 style="@style/buttonAdd"
                 android:text="@string/add_and_go_to_selected" />
-        </LinearLayout>
-
-        <LinearLayout style="@style/linearLayoutForButtonAdd" >
-
-            <Button
-                android:id="@+id/buttonShowAddFoodCancel"
-                style="@style/buttonAdd"
-                android:text="@string/cancel" />
         </LinearLayout>
 
         <LinearLayout

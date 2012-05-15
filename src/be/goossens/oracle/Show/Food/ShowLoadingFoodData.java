@@ -1,3 +1,5 @@
+// Please read info.txt for license and legal information
+
 package be.goossens.oracle.Show.Food;
 
 /*
@@ -22,23 +24,17 @@ import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.TextView;
-import android.widget.Toast;
 import be.goossens.oracle.R;
 import be.goossens.oracle.ActivityGroup.ActivityGroupMeal;
 import be.goossens.oracle.Objects.DBFoodComparable;
 import be.goossens.oracle.Rest.DataParser;
 import be.goossens.oracle.Rest.DbAdapter;
+import be.goossens.oracle.Rest.DbSettings;
 import be.goossens.oracle.Rest.FoodComparator;
 
 public class ShowLoadingFoodData extends Activity {
-
 	// used to show fetching data from database
 	private TextView tv2;
-
-	// this is used to see if we need to get stuff from the database
-	// when its the first time we come here this boolean is false
-	// in the onresume we handle this object
-	public boolean notFirstTime;
 
 	// This boolean is used to see if we are finish with gething our data from
 	// the database
@@ -68,6 +64,18 @@ public class ShowLoadingFoodData extends Activity {
 	public int countSelectedFood;
 	public int dbFontSize;
 
+	// default value to show
+	public int defaultValue;
+	// booleans so see if we need to show the value
+	public boolean showCarb, showProt, showFat, showKcal;
+	// used to hold the default medicine
+	public long defaultMedicineTypeID;
+	// used to hold the default exerciseTypeID;
+	public long defaultExerciseTypeID;
+	
+	//used to hold the startup
+	public boolean startUp;
+	 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -86,21 +94,14 @@ public class ShowLoadingFoodData extends Activity {
 	@Override
 	protected void onResume() {
 
-		// if not notFirst time ( so its the first time )
-		// we only do this 1x when we start activity
-		if (!notFirstTime) {
-			// we set notFirstTime to true
-			notFirstTime = true;
+		// set the values fontsize, languageid and countSelectedFood
+		setValues();
 
-			// set the values fontsize, languageid and countSelectedFood
-			setValues();
-
-			// check to see if we have already food items in selectedFood
-			// if yes we have to show popup to delete them
-			// In the end of this method we will start the asynctask to get our
-			// food
-			checkToShowPopUpDeleteSelectedFoodItems();
-		}
+		// check to see if we have already food items in selectedFood
+		// if yes we have to show popup to delete them
+		// In the end of this method we will start the asynctask to get our
+		// food
+		checkToShowPopUpDeleteSelectedFoodItems();
 
 		super.onResume();
 	}
@@ -109,8 +110,21 @@ public class ShowLoadingFoodData extends Activity {
 		DbAdapter db = new DbAdapter(context);
 		db.open();
 
-		// if selectedFood > 0
-		if (db.fetchAllSelectedFood().getCount() > 0) {
+		boolean startUp = false;
+
+		Cursor cSetting = db.fetchSettingByName(DbSettings.setting_startUp);
+		cSetting.moveToFirst();
+
+		if (cSetting.getInt(cSetting
+				.getColumnIndexOrThrow(DbAdapter.DATABASE_SETTINGS_VALUE)) == 1) {
+			startUp = true;
+		}
+
+		// if selectedFood > 0 && we are starting up!
+		if (db.fetchAllSelectedFood().getCount() > 0 && startUp) {
+			// mark startup as false
+			db.updateSettingsByName(DbSettings.setting_startUp, "0");
+			
 			// create popup to show
 			DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
 
@@ -186,7 +200,103 @@ public class ShowLoadingFoodData extends Activity {
 		setCountSelectedFood(db);
 		setFoodLanguageID(db);
 		setFontSize(db);
+		setDefaultValue(db);
+		setShowValues(db);
+		setDefaultMedicineTypeID(db);
+		setDefaultExerciseTypeID(db);
 		db.close();
+	}
+
+	private void setDefaultExerciseTypeID(DbAdapter db) {
+		Cursor cSetting = db.fetchSettingByName(DbSettings.setting_default_exercise_type_ID);
+		if (cSetting.getCount() > 0) {
+			cSetting.moveToFirst();
+			defaultExerciseTypeID = cSetting.getLong(cSetting
+					.getColumnIndexOrThrow(DbAdapter.DATABASE_SETTINGS_VALUE));
+		} else {
+			defaultExerciseTypeID = 1;
+		}
+		cSetting.close();
+	}
+	
+	private void setDefaultMedicineTypeID(DbAdapter db) {
+		Cursor cSetting = db.fetchSettingByName(DbSettings.setting_default_medicine_type_ID);
+		if (cSetting.getCount() > 0) {
+			cSetting.moveToFirst();
+			defaultMedicineTypeID = cSetting.getLong(cSetting
+					.getColumnIndexOrThrow(DbAdapter.DATABASE_SETTINGS_VALUE));
+		} else {
+			defaultMedicineTypeID = 1;
+		}
+		cSetting.close();
+	}
+
+	private void setShowValues(DbAdapter db) {
+
+		// carb togle button
+		Cursor cSettingCarb = db.fetchSettingByName(DbSettings.setting_value_carb_onoff);
+		if (cSettingCarb.getCount() > 0) {
+			cSettingCarb.moveToFirst();
+			if (cSettingCarb.getInt(cSettingCarb
+					.getColumnIndexOrThrow(DbAdapter.DATABASE_SETTINGS_VALUE)) == 1) {
+				showCarb = true;
+			} else {
+				showCarb = false;
+			}
+		}
+		cSettingCarb.close();
+
+		// prot togle button
+		Cursor cSettingProt = db.fetchSettingByName(DbSettings.setting_value_prot_onoff);
+		if (cSettingProt.getCount() > 0) {
+			cSettingProt.moveToFirst();
+			if (cSettingProt.getInt(cSettingProt
+					.getColumnIndexOrThrow(DbAdapter.DATABASE_SETTINGS_VALUE)) == 1) {
+				showProt = true;
+			} else {
+				showProt = false;
+			}
+		}
+		cSettingProt.close();
+
+		// fat togle button
+		Cursor cSettingFat = db.fetchSettingByName(DbSettings.setting_value_fat_onoff);
+		if (cSettingFat.getCount() > 0) {
+			cSettingFat.moveToFirst();
+			if (cSettingFat.getInt(cSettingFat
+					.getColumnIndexOrThrow(DbAdapter.DATABASE_SETTINGS_VALUE)) == 1) {
+				showFat = true;
+			} else {
+				showFat = false;
+			}
+		}
+		cSettingFat.close();
+
+		// kcal togle button
+		Cursor cSettingKcal = db.fetchSettingByName(DbSettings.setting_value_kcal_onoff);
+		if (cSettingKcal.getCount() > 0) {
+			cSettingKcal.moveToFirst();
+			if (cSettingKcal.getInt(cSettingKcal
+					.getColumnIndexOrThrow(DbAdapter.DATABASE_SETTINGS_VALUE)) == 1) {
+				showKcal = true;
+			} else {
+				showKcal = false;
+			}
+		}
+		cSettingKcal.close();
+
+	}
+
+	private void setDefaultValue(DbAdapter db) {
+		Cursor cSetting = db.fetchSettingByName(DbSettings.setting_value_default);
+		if (cSetting.getCount() > 0) {
+			cSetting.moveToFirst();
+			defaultValue = cSetting.getInt(cSetting
+					.getColumnIndexOrThrow(DbAdapter.DATABASE_SETTINGS_VALUE));
+		} else {
+			defaultValue = 1;
+		}
+		cSetting.close();
 	}
 
 	private void setCountSelectedFood(DbAdapter db) {
@@ -194,8 +304,7 @@ public class ShowLoadingFoodData extends Activity {
 	}
 
 	private void setFontSize(DbAdapter db) {
-		Cursor cSetting = db.fetchSettingByName(getResources().getString(
-				R.string.setting_font_size));
+		Cursor cSetting = db.fetchSettingByName(DbSettings.setting_font_size);
 		if (cSetting.getCount() > 0) {
 			cSetting.moveToFirst();
 			dbFontSize = cSetting.getInt(cSetting
@@ -217,14 +326,13 @@ public class ShowLoadingFoodData extends Activity {
 		setFontSize(db);
 		db.close();
 		// refresh the foodlist
-		ActivityGroupMeal.group.showFoodListUpdateListAdapter();
+		ActivityGroupMeal.group.getShowFoodList().setNewFontSize();
 	}
 
 	private void setFoodLanguageID(DbAdapter db) {
 
 		// First get the food language id
-		Cursor cSetting = db.fetchSettingByName(getResources().getString(
-				R.string.setting_language));
+		Cursor cSetting = db.fetchSettingByName(DbSettings.setting_language);
 		// there will always be 1 record
 		if (cSetting.getCount() > 0) {
 			// move the cursor to the first record
@@ -262,7 +370,9 @@ public class ShowLoadingFoodData extends Activity {
 			dbHelper.open();
 
 			// get all the food items with the right languageID and visible = 1
-			Cursor cAllFood = dbHelper.fetchFoodByLanguageID(foodLanguageID);
+			// Cursor cAllFood = dbHelper.fetchFoodByLanguageID(foodLanguageID);
+			Cursor cAllFood = dbHelper
+					.fetchFoodByLanguageIDInQuery(foodLanguageID);
 			// if we have records
 			if (cAllFood.getCount() > 0) {
 				// move to first record
@@ -296,7 +406,8 @@ public class ShowLoadingFoodData extends Activity {
 
 			// get all the food items with the right languageID and visible = 1
 			// and favorite = 1
-			Cursor cFavoriteFood = dbHelper.fetchFoodByLanguageIDAndFavorite(foodLanguageID);
+			Cursor cFavoriteFood = dbHelper
+					.fetchFoodByLanguageIDAndFavorite(foodLanguageID);
 			// if we have records
 			if (cFavoriteFood.getCount() > 0) {
 				// move to first record
@@ -351,7 +462,7 @@ public class ShowLoadingFoodData extends Activity {
 				Intent i = new Intent(context, ShowFoodList.class)
 						.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 				View v = ActivityGroupMeal.group.getLocalActivityManager()
-						.startActivity(DataParser.activityIDShowFoodList, i)
+						.startActivity(DataParser.activityIDMeal, i)
 						.getDecorView();
 				ActivityGroupMeal.group.setContentView(v);
 			}
@@ -361,40 +472,108 @@ public class ShowLoadingFoodData extends Activity {
 
 	// this method will sort the 2 lists and recreate the total list
 	public void recreateTotalList() {
-		FoodComparator comparator = new FoodComparator();
-		
-		// sort all the food items
-		Collections.sort(listAllFood, comparator);
-		
-		// sort all the favorite food items
-		Collections.sort(listFavoriteFood, comparator);
+		try {
+			FoodComparator comparator = new FoodComparator();
+
+			// sort all the favorite food items
+			Collections.sort(listFavoriteFood, comparator);
+
+			// sort all the food items
+			Collections.sort(listAllFood, comparator);
+
+			// set list to empty
+			listFood = null;
+			// Initialise the total list of food
+			listFood = new ArrayList<DBFoodComparable>();
+			// put the favorites and the list with all food in this list
+			listFood.addAll(listFood.size(), listFavoriteFood);
+
+			// add one item to the list to make the line between favorite and
+			// normal
+			// bigger when the favorite list count > 0!
+			if (listFavoriteFood.size() > 0)
+				listFood.add(new DBFoodComparable(-1, "", 0L, 0, 0L, 0L, 0, ""));
  
-		// set list to empty
-		listFood = null;
-		// Initialise the total list of food 
-		listFood = new ArrayList<DBFoodComparable>();
-		// put the favorites and the list with all food in this list
-		listFood.addAll(listFood.size(), listFavoriteFood);
-		listFood.addAll(listFood.size(), listAllFood);
+			listFood.addAll(listFood.size(), listAllFood);
+		} catch (Exception e) {
+		}
 	}
- 
+
 	// This method is called from showfoodlist when we change favorite
 	public void setIsFavoriteFromFoodListAll(long foodID, int isFavorite) {
-		for(DBFoodComparable obj : listAllFood){
-			if(obj.getId() == foodID){
-				listAllFood.get(listAllFood.indexOf(obj)).setIsfavorite(isFavorite);
+		for (DBFoodComparable obj : listAllFood) {
+			if (obj.getId() == foodID) {
+				listAllFood.get(listAllFood.indexOf(obj)).setIsfavorite(
+						isFavorite);
 				return;
 			}
 		}
 	}
- 
+
+	// This method is called from showupdatefood when we delete food out the
+	// database
+	public void deleteFoodFromList(long foodID) {
+		deleteFoodFromFavoriteList(foodID);
+		deleteFoodFromAllList(foodID);
+	}
+
+	public void deleteFoodFromAllList(long foodID) {
+		for (DBFoodComparable obj : listAllFood) {
+			if (obj.getId() == foodID) {
+				listAllFood.remove(obj);
+				return;
+			}
+		}
+	}
+
 	// This method is called from showfoodlist when we unmark a fooditem as
 	// favorite
 	public void deleteFoodFromFavoriteList(long foodID) {
-		for(DBFoodComparable obj : listFavoriteFood){
-			if(obj.getId() == foodID){
+		for (DBFoodComparable obj : listFavoriteFood) {
+			if (obj.getId() == foodID) {
 				listFavoriteFood.remove(obj);
 				return;
+			}
+		}
+	}
+
+	// This method is called from showfoodlist when we changed a food name in
+	// showupdatefood
+	// in this method we change the foodname to the given name with the given ID
+	// update: we also mark the food as "own created" -> to do so we set
+	// platform on "android"
+	public void updateFoodName(long foodID, String foodName) {
+		// check for every object in the favorites
+		for (DBFoodComparable obj : listFavoriteFood) {
+			if (obj.getId() == foodID) {
+
+				listFavoriteFood.get(listFavoriteFood.indexOf(obj)).setName(
+						foodName);
+
+				listFavoriteFood.get(listFavoriteFood.indexOf(obj))
+						.setPlatform(DataParser.foodPlatform);
+			}
+		}
+		// check for every object in the normal list
+		for (DBFoodComparable obj : listAllFood) {
+			if (obj.getId() == foodID) {
+
+				listAllFood.get(listAllFood.indexOf(obj)).setName(foodName);
+
+				listAllFood.get(listAllFood.indexOf(obj)).setPlatform(
+						DataParser.foodPlatform);
+			}
+		}
+	}
+
+	// for every food object in the normal list we set the platform to "android"
+	// so we get a green star
+	public void updateFoodToOwnCreated(long foodID) {
+		// check for every object in the normal list
+		for (DBFoodComparable obj : listAllFood) {
+			if (obj.getId() == foodID) {
+				listAllFood.get(listAllFood.indexOf(obj)).setPlatform(
+						DataParser.foodPlatform);
 			}
 		}
 	}

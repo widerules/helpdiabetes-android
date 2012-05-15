@@ -1,17 +1,19 @@
+// Please read info.txt for license and legal information
+
 package be.goossens.oracle.Objects;
 
 public class DBMealFood {
 	private long id;
-	private long mealEventId;
-	private long foodId;
+	private String foodName;
 	private float amount;
-
-	public DBMealFood(long id, long mealEventId, long foodId, float amount) {
+	private DBFoodUnit unit;
+	
+	public DBMealFood(long id, String food, float amount, DBFoodUnit unit) {
 		super();
 		this.id = id;
-		this.mealEventId = mealEventId;
-		this.foodId = foodId;
+		this.foodName = food;
 		this.amount = amount;
+		this.unit = unit;
 	}
 
 	public long getId() {
@@ -22,22 +24,6 @@ public class DBMealFood {
 		this.id = id;
 	}
 
-	public long getMealEventId() {
-		return mealEventId;
-	}
-
-	public void setMealEventId(long mealEventId) {
-		this.mealEventId = mealEventId;
-	}
-
-	public long getFoodId() {
-		return foodId;
-	}
-
-	public void setFoodId(long foodId) {
-		this.foodId = foodId;
-	}
-
 	public float getAmount() {
 		return amount;
 	}
@@ -46,4 +32,22 @@ public class DBMealFood {
 		this.amount = amount;
 	}
 
+	public String getFoodName() {
+		return foodName;
+	}
+
+	public void setFoodName(String foodName) {
+		this.foodName = foodName;
+	}
+
+	public DBFoodUnit getUnit() {
+		return unit;
+	}
+
+	public void setUnit(DBFoodUnit unit) {
+		this.unit = unit;
+	}
+
+	
+	
 }

@@ -1,11 +1,11 @@
+// Please read info.txt for license and legal information
+
 package be.goossens.oracle.Show.Food;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 import android.app.Activity;
-import android.database.Cursor;
 import android.os.Bundle;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -18,31 +18,28 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TableRow;
-import android.widget.TextView;
 import android.widget.Toast;
 import be.goossens.oracle.R;
 import be.goossens.oracle.ActivityGroup.ActivityGroupMeal;
 import be.goossens.oracle.Custom.CustomArrayAdapterCharSequenceShowCreateFood;
-import be.goossens.oracle.Objects.DBValueOrder;
 import be.goossens.oracle.Rest.DataParser;
 import be.goossens.oracle.Rest.DbAdapter;
-import be.goossens.oracle.Rest.ValueOrderComparator;
 
 public class ShowCreateFood extends Activity {
 	private EditText editTextfoodName;
 	private EditText editTextUnitStandardAmound;
 	private EditText editTextUnitName;
-	private Button btAdd;
-
-	private List<TextView> tvList;
-	private List<EditText> etList;
+	private Button btAdd, btBack;
 
 	private Spinner spinnerUnit;
 	private TableRow tableRowSpecialFoodUnit;
 
 	private DbAdapter dbHelper;
 
-	private List<DBValueOrder> listValueOrders;
+	private EditText etCarb, etProt, etFat, etKcal;
+
+	// used to hide the ones we dont need to show
+	private TableRow trCarb, trProt, trFat, trKcal;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -54,9 +51,6 @@ public class ShowCreateFood extends Activity {
 
 		dbHelper = new DbAdapter(this);
 
-		tvList = new ArrayList<TextView>();
-		etList = new ArrayList<EditText>();
-
 		spinnerUnit = (Spinner) findViewById(R.id.spinnerShowCreateFoodUnit);
 		tableRowSpecialFoodUnit = (TableRow) findViewById(R.id.tableRowSpecialFoodUnit);
 		editTextfoodName = (EditText) findViewById(R.id.editTextFoodName);
@@ -64,16 +58,23 @@ public class ShowCreateFood extends Activity {
 		editTextUnitName = (EditText) findViewById(R.id.editTextFoodUnitName);
 		btAdd = (Button) findViewById(R.id.buttonAdd);
 
-		tvList.add((TextView) findViewById(R.id.textViewShowCreateFood1));
-		tvList.add((TextView) findViewById(R.id.textViewShowCreateFood2));
-		tvList.add((TextView) findViewById(R.id.textViewShowCreateFood3));
-		tvList.add((TextView) findViewById(R.id.textViewShowCreateFood4));
+		etCarb = (EditText) findViewById(R.id.editTextShowCreateFood1);
+		etProt = (EditText) findViewById(R.id.editTextShowCreateFood2);
+		etFat = (EditText) findViewById(R.id.editTextShowCreateFood3);
+		etKcal = (EditText) findViewById(R.id.editTextShowCreateFood4);
 
-		etList.add((EditText) findViewById(R.id.editTextShowCreateFood1));
-		etList.add((EditText) findViewById(R.id.editTextShowCreateFood2));
-		etList.add((EditText) findViewById(R.id.editTextShowCreateFood3));
-		etList.add((EditText) findViewById(R.id.editTextShowCreateFood4));
+		trCarb = (TableRow) findViewById(R.id.tableRowCarb);
+		trProt = (TableRow) findViewById(R.id.tableRowProt);
+		trFat = (TableRow) findViewById(R.id.tableRowFat);
+		trKcal = (TableRow) findViewById(R.id.tableRowKcal);
 
+		btBack = (Button) findViewById(R.id.buttonBack);
+		btBack.setOnClickListener(new OnClickListener() {
+			public void onClick(View v) {
+				ActivityGroupMeal.group.back();
+			}
+		});
+		
 		spinnerUnit.setOnItemSelectedListener(new OnItemSelectedListener() {
 
 			public void onItemSelected(AdapterView<?> arg0, View arg1,
@@ -94,39 +95,66 @@ public class ShowCreateFood extends Activity {
 			}
 		});
 
-		for (int i = 0; i < etList.size(); i++) {
-			etList.get(i).setOnKeyListener(new OnKeyListener() {
-
-				public boolean onKey(View v, int keyCode, KeyEvent event) {
-					// filter so we only get the onkey up actions
-					if (event.getAction() != KeyEvent.ACTION_DOWN) {
-						// if the pressed key = enter we go to the next
-						if (event.getKeyCode() == KeyEvent.KEYCODE_ENTER) {
-							goToNextEditText();
-						} 
+		etCarb.setOnKeyListener(new OnKeyListener() {
+			public boolean onKey(View v, int keyCode, KeyEvent event) {
+				// filter so we only get the onkey up actions
+				if (event.getAction() != KeyEvent.ACTION_DOWN) {
+					// if the pressed key = enter we go to the next
+					if (event.getKeyCode() == KeyEvent.KEYCODE_ENTER) {
+						etProt.requestFocus();
 					}
-					//if we dont return false our numbers wont get in the edittext
-					return false;
 				}
-			});
-		}
-	}
-
-	public void goToNextEditText() {
-		// change focus to next
-		// but do size-1 so we dont try to change from edittext so one outside
-		// the list that doesnt exists
-		for (int i = 0; i < etList.size() - 1; i++) {
-			if (this.getCurrentFocus() == etList.get(i)) {
-				// set focus
-				etList.get(i + 1).requestFocus();
-				// stop this method
-				return;
+				// if we dont return false our numbers wont get in the
+				// edittext
+				return false;
 			}
-		}
-		// if we get here we clicked enter on the last edit text
-		// if we do that we create the food and go back to the list
-		onClickAdd(null);
+		});
+
+		etProt.setOnKeyListener(new OnKeyListener() {
+			public boolean onKey(View v, int keyCode, KeyEvent event) {
+				// filter so we only get the onkey up actions
+				if (event.getAction() != KeyEvent.ACTION_DOWN) {
+					// if the pressed key = enter we go to the next
+					if (event.getKeyCode() == KeyEvent.KEYCODE_ENTER) {
+						etFat.requestFocus();
+					}
+				}
+				// if we dont return false our numbers wont get in the
+				// edittext
+				return false;
+			}
+		});
+
+		etFat.setOnKeyListener(new OnKeyListener() {
+			public boolean onKey(View v, int keyCode, KeyEvent event) {
+				// filter so we only get the onkey up actions
+				if (event.getAction() != KeyEvent.ACTION_DOWN) {
+					// if the pressed key = enter we go to the next
+					if (event.getKeyCode() == KeyEvent.KEYCODE_ENTER) {
+						etKcal.requestFocus();
+					}
+				}
+				// if we dont return false our numbers wont get in the
+				// edittext
+				return false;
+			}
+		});
+
+		etKcal.setOnKeyListener(new OnKeyListener() {
+			public boolean onKey(View v, int keyCode, KeyEvent event) {
+				// filter so we only get the onkey up actions
+				if (event.getAction() != KeyEvent.ACTION_DOWN) {
+					// if the pressed key = enter we go to the next
+					if (event.getKeyCode() == KeyEvent.KEYCODE_ENTER) {
+						onClickAdd(null);
+					}
+				}
+				// if we dont return false our numbers wont get in the
+				// edittext
+				return false;
+			}
+		});
+
 	}
 
 	// This method will show the special food unit table row when the last
@@ -148,20 +176,43 @@ public class ShowCreateFood extends Activity {
 		super.onResume();
 		dbHelper.open();
 		fillTextViewFoodName();
-		fillListValueOrders();
 		fillSpinner();
-		fillTextViews();
+		hideTheRowsWeDontNeed();
+	}
+
+	private void hideTheRowsWeDontNeed() {
+		// carb
+		if (ActivityGroupMeal.group.getFoodData().showCarb) {
+			trCarb.setVisibility(View.VISIBLE);
+		} else {
+			trCarb.setVisibility(View.GONE);
+		}
+
+		// prot
+		if (ActivityGroupMeal.group.getFoodData().showProt) {
+			trProt.setVisibility(View.VISIBLE);
+		} else {
+			trProt.setVisibility(View.GONE);
+		}
+
+		// fat
+		if (ActivityGroupMeal.group.getFoodData().showFat) {
+			trFat.setVisibility(View.VISIBLE);
+		} else {
+			trFat.setVisibility(View.GONE);
+		}
+
+		// kcal
+		if (ActivityGroupMeal.group.getFoodData().showKcal) {
+			trKcal.setVisibility(View.VISIBLE);
+		} else {
+			trKcal.setVisibility(View.GONE);
+		}
 	}
 
 	private void fillTextViewFoodName() {
 		editTextfoodName.setText(getIntent().getExtras().getString(
 				DataParser.foodSearchValue));
-	}
-
-	private void fillTextViews() {
-		for (int i = 0; i < listValueOrders.size(); i++) {
-			tvList.get(i).setText(listValueOrders.get(i).getValueName());
-		}
 	}
 
 	private void fillSpinner() {
@@ -175,11 +226,11 @@ public class ShowCreateFood extends Activity {
 
 	private List<CharSequence> getArrayList() {
 		List<CharSequence> value = new ArrayList<CharSequence>();
-		String[] arr = getResources().getStringArray(
-				R.array.standard_food_units);
-		for (int i = 0; i < arr.length; i++) {
-			value.add(arr[i]);
-		}
+		
+		value.add("100 " + getResources().getString(R.string.gram));
+		value.add("100 " + getResources().getString(R.string.ml));
+		value.add(getResources().getString(R.string.define_own));
+		
 		return value;
 	}
 
@@ -219,53 +270,28 @@ public class ShowCreateFood extends Activity {
 				unitName = editTextUnitName.getText().toString();
 			}
 
-			// fill the right unit values
-			for (int i = 0; i < listValueOrders.size(); i++) {
-				if (listValueOrders
-						.get(i)
-						.getSettingName()
-						.equals(getResources().getString(
-								R.string.setting_value_order_carb))) {
-					try {
-						carbs = Float.parseFloat(etList.get(i).getText()
-								.toString());
-					} catch (Exception e) {
-						carbs = 0f;
-					}
-				} else if (listValueOrders
-						.get(i)
-						.getSettingName()
-						.equals(getResources().getString(
-								R.string.setting_value_order_prot))) {
-					try {
-						prot = Float.parseFloat(etList.get(i).getText()
-								.toString());
-					} catch (Exception e) {
-						prot = 0f;
-					}
-				} else if (listValueOrders
-						.get(i)
-						.getSettingName()
-						.equals(getResources().getString(
-								R.string.setting_value_order_fat))) {
-					try {
-						fat = Float.parseFloat(etList.get(i).getText()
-								.toString());
-					} catch (Exception e) {
-						fat = 0f;
-					}
-				} else if (listValueOrders
-						.get(i)
-						.getSettingName()
-						.equals(getResources().getString(
-								R.string.setting_value_order_kcal))) {
-					try {
-						kcal = Float.parseFloat(etList.get(i).getText()
-								.toString());
-					} catch (Exception e) {
-						kcal = 0f;
-					}
-				}
+			try {
+				carbs = Float.parseFloat(etCarb.getText().toString());
+			} catch (Exception e) {
+				carbs = 0f;
+			}
+
+			try {
+				prot = Float.parseFloat(etProt.getText().toString());
+			} catch (Exception e) {
+				prot = 0f;
+			}
+
+			try {
+				fat = Float.parseFloat(etFat.getText().toString());
+			} catch (Exception e) {
+				fat = 0f;
+			}
+
+			try {
+				kcal = Float.parseFloat(etKcal.getText().toString());
+			} catch (Exception e) {
+				kcal = 0f;
 			}
 
 			dbHelper.createFoodUnit(foodId, unitName, standardAmound, carbs,
@@ -292,10 +318,8 @@ public class ShowCreateFood extends Activity {
 			// standardamount and unitName are filled in
 			if (editTextUnitStandardAmound.getText().length() <= 0
 					|| editTextUnitName.getText().length() <= 0) {
-				Toast.makeText(
-						this,
-						getResources()
-								.getString(R.string.unit_name_is_required),
+				Toast.makeText(this,
+						getResources().getString(R.string.unit_cant_be_empty),
 						Toast.LENGTH_LONG).show();
 				return false;
 			}
@@ -320,80 +344,6 @@ public class ShowCreateFood extends Activity {
 		}
 		// if everything went OK we return true
 		return true;
-	}
-
-	// This method will fill the list of DBValueOrders with the right values
-	private void fillListValueOrders() {
-		dbHelper.open();
-		// make the list empty
-		listValueOrders = new ArrayList<DBValueOrder>();
-
-		// get all the value orders
-		Cursor cSettingValueOrderProt = dbHelper
-				.fetchSettingByName(getResources().getString(
-						R.string.setting_value_order_prot));
-		Cursor cSettingValueOrderCarb = dbHelper
-				.fetchSettingByName(getResources().getString(
-						R.string.setting_value_order_carb));
-		Cursor cSettingValueOrderFat = dbHelper
-				.fetchSettingByName(getResources().getString(
-						R.string.setting_value_order_fat));
-		Cursor cSettingValueOrderKcal = dbHelper
-				.fetchSettingByName(getResources().getString(
-						R.string.setting_value_order_kcal));
-
-		// Move cursors to first object
-		cSettingValueOrderProt.moveToFirst();
-		cSettingValueOrderCarb.moveToFirst();
-		cSettingValueOrderFat.moveToFirst();
-		cSettingValueOrderKcal.moveToFirst();
-
-		// Fill list
-		listValueOrders
-				.add(new DBValueOrder(
-						cSettingValueOrderProt
-								.getInt(cSettingValueOrderProt
-										.getColumnIndexOrThrow(DbAdapter.DATABASE_SETTINGS_VALUE)),
-						cSettingValueOrderProt.getString(cSettingValueOrderProt
-								.getColumnIndexOrThrow(DbAdapter.DATABASE_SETTINGS_NAME)),
-						getResources().getString(R.string.amound_of_protein)));
-
-		listValueOrders
-				.add(new DBValueOrder(
-						cSettingValueOrderCarb
-								.getInt(cSettingValueOrderCarb
-										.getColumnIndexOrThrow(DbAdapter.DATABASE_SETTINGS_VALUE)),
-						cSettingValueOrderCarb.getString(cSettingValueOrderCarb
-								.getColumnIndexOrThrow(DbAdapter.DATABASE_SETTINGS_NAME)),
-						getResources().getString(R.string.amound_of_carbs)));
-
-		listValueOrders
-				.add(new DBValueOrder(
-						cSettingValueOrderFat
-								.getInt(cSettingValueOrderFat
-										.getColumnIndexOrThrow(DbAdapter.DATABASE_SETTINGS_VALUE)),
-						cSettingValueOrderFat.getString(cSettingValueOrderFat
-								.getColumnIndexOrThrow(DbAdapter.DATABASE_SETTINGS_NAME)),
-						getResources().getString(R.string.amound_of_fat)));
-
-		listValueOrders
-				.add(new DBValueOrder(
-						cSettingValueOrderKcal
-								.getInt(cSettingValueOrderKcal
-										.getColumnIndexOrThrow(DbAdapter.DATABASE_SETTINGS_VALUE)),
-						cSettingValueOrderKcal.getString(cSettingValueOrderKcal
-								.getColumnIndexOrThrow(DbAdapter.DATABASE_SETTINGS_NAME)),
-						getResources().getString(R.string.amound_of_kcal)));
-
-		// Close all the cursor
-		cSettingValueOrderProt.close();
-		cSettingValueOrderCarb.close();
-		cSettingValueOrderFat.close();
-		cSettingValueOrderKcal.close();
-
-		// Sort the list on order
-		ValueOrderComparator comparator = new ValueOrderComparator();
-		Collections.sort(listValueOrders, comparator);
 	}
 
 	@Override
