@@ -3,33 +3,68 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     style="@style/linearLayoutVerticalWithPadding" >
 
-    <TextView
-        style="@style/defaultFontTitle"
-        android:text="@string/titelTracking"
-        />
-    
-    <TextView
-        android:id="@+id/textViewFetchingData"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/loading"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:textColor="@color/ColorText"
-        android:visibility="gone" />
+    <LinearLayout style="@style/llTitel" >
+
+         <Button
+            style="@style/buttonBack"
+            android:visibility="invisible" />
+        
+        <TextView
+            style="@style/defaultFontTitle"
+            android:text="@string/titelTracking" />
+        
+         <Button
+            style="@style/buttonForward"
+            android:visibility="invisible" />
+        
+    </LinearLayout>
 
     <ListView
         android:id="@+android:id/list"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
         android:layout_weight="1.0"
-        android:cacheColorHint="#00000000" >
+        android:cacheColorHint="#00000000"
+        android:fastScrollEnabled="true" >
     </ListView>
 
-    <LinearLayout style="@style/linearLayoutForButtonAdd" >
+    <LinearLayout
+        android:id="@+id/LinearLayoutButtons"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content" >
+
         <Button
             android:id="@+id/buttonMore"
-            style="@style/buttonAdd"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1.0"
             android:text="@string/seeMore" />
+
+        <Button
+            android:id="@+id/buttonSearch"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/ic_menu_search" />
     </LinearLayout>
-    
+
+    <LinearLayout
+        android:id="@+id/LinearLayoutSearch"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content" >
+
+        <EditText
+            android:id="@+id/editText1"
+            style="@style/styleEditText"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1.0"
+            android:hint="@string/food_name" />
+
+        <Button
+            android:id="@+id/buttonSearchNext"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/searchNext" />
+    </LinearLayout>
+
 </LinearLayout>

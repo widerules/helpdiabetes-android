@@ -24,7 +24,6 @@
     <string name="next">Next</string>
     <string name="sureToExit">Are you sure you want to exit ?</string>
     <string name="checkingDatabase">Database Loading</string>
-    <string name="retrievingFood">Products loading</string>
     <string name="are_you_diabetes_patient">Helpdiabetes can automaticly calucate insuline. \n Do you want to use this function?</string>
     <string name="titelTracking">Log</string>
     <string name="titelCreateFood">New food</string>
@@ -118,14 +117,7 @@
     <string name="excelToDB">import products from csv</string>
     <string name="select_standard_medicine_type">Selected the default medicine type</string>
     <string name="define_own">Define own</string>
-    
-    <!-- These 3 items are used in add food and add food unit 
-    They are the source for the spinner and the edit text -->
-    <string name="gram">grams</string>
-    <string name="ml">fl oz</string>
     <string name="part">piece</string>
-    
-    <!-- Update: 14-05-2012 --> 
     <string name="file_name">File name</string>
     <string name="no_own_food">No own created/updated food</string>
     <string name="could_not_write">Could not write to sd</string>
@@ -136,15 +128,15 @@
     <string name="selections_aint_empty">there is still selected food!</string>
     <string name="dont_add_medicine">Dont add medicine</string>
     <string name="sucesfull_added">Products added to selection</string>
-    
-     <!-- Update: 15-05-2012 -->
-     <string name="warning">Warning</string>
-     <string name="app_will_exit">The application will now exit. \n Please manually start it again.</string>
-     <string name="something_went_wrong">Something went wrong</string>
-     <string name="succesfull_copied">Succesfull copied database from sd to phone</string>
-     <string name="databaseFromSDToPhone">Restore database from SD</string>
-     <string name="deleteCurrentDatabase">This function will delete the current database and override it with the database from the SD card \n\nAll existing data from the current database will be erased</string>
-     <string name="seeMore">See more</string> 
-     <string name="noFilesFound">No csv files found on root of SD card</string>
-     <string name="chooseFile">Choose file</string>
+    <string name="warning">Warning</string>
+    <string name="app_will_exit">The application will now exit. \n Please manually start it again.</string>
+    <string name="something_went_wrong">Something went wrong</string>
+    <string name="succesfull_copied">Succesfull copied database from sd to phone</string>
+    <string name="databaseFromSDToPhone">Restore database from SD</string>
+    <string name="deleteCurrentDatabase">This function will delete the current database and override it with the database from the SD card \n\nAll existing data from the current database will be erased</string>
+    <string name="seeMore">See more</string>
+    <string name="noFilesFound">No csv files found on root of SD card</string>
+    <string name="chooseFile">Choose file</string>
+    <string name="calculated">Calculated:</string>
+    <string name="searchNext">Find next</string>
 </resources>

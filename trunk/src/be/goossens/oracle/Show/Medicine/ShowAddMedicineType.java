@@ -104,8 +104,6 @@ public class ShowAddMedicineType extends Activity {
 			// fill the textview with the current medicine type we selected
 			fillEditTexts();
 
-			btAdd.setText(getResources().getString(R.string.update));
-
 			// check if we can show the delete button
 			showDeleteButton();
 			
@@ -114,6 +112,9 @@ public class ShowAddMedicineType extends Activity {
 
 		} catch (NullPointerException e) {
 			existingMedicineTypeID = -1;
+			
+			//hide the button mark default when we create a new one
+			btStandard.setVisibility(View.GONE); 
 		}
 	}
 

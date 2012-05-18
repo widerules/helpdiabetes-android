@@ -68,7 +68,7 @@ public class ShowHomeTab extends TabActivity {
 		setupTab(new TextView(this), DataParser.activityIDGlucose,
 				R.drawable.ic_tab_glucose, in);
 		counter++;
-
+ 
 		in = new Intent(this, ActivityGroupMedicine.class);
 		setupTab(new TextView(this), DataParser.activityIDMedicine,
 				R.drawable.ic_tab_medicine, in);
@@ -79,9 +79,9 @@ public class ShowHomeTab extends TabActivity {
 				R.drawable.ic_tab_settings, in);
 		counter++;
 
-		for (int i = counter; i >= 0; i--) {
-			tabHost.setCurrentTab(i);
-		}
+		//for (int i = counter; i >= 0; i--) {
+		//	tabHost.setCurrentTab(i);
+		//} 
 
 		// set default tab on show food list
 		goToTab(DataParser.activityIDMeal);

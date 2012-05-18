@@ -8,17 +8,28 @@
         android:id="@+id/linearLayout1"
         style="@style/linearLayoutVerticalWithPadding" >
 
-        <TextView
-            style="@style/defaultFontTitle"
-            android:text="@string/titelAddGlucose" />
+        <LinearLayout style="@style/llTitel" >
+
+            <Button
+                style="@style/buttonBack"
+                android:visibility="invisible" />
+
+            <TextView
+                style="@style/defaultFontTitle"
+                android:text="@string/titelAddGlucose" />
+
+            <Button
+                android:id="@+id/buttonAdd"
+                style="@style/buttonForward" />
+        </LinearLayout>
 
         <Button
             android:id="@+id/buttonUpdateDateAndHour"
             style="@style/defaultFontNormal"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:text="@string/update"
-            android:layout_marginBottom="25dip" />
+            android:layout_marginBottom="25dip"
+            android:text="@string/update" />
 
         <TableLayout
             android:layout_width="fill_parent"
@@ -34,8 +45,7 @@
                     style="@style/defaultFontNormal"
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
-                    android:text="@string/btup"
-                     />
+                    android:text="@string/btup" />
             </TableRow>
 
             <TableRow
@@ -72,13 +82,5 @@
                     android:text="@string/btdown" />
             </TableRow>
         </TableLayout>
-
-        <LinearLayout style="@style/linearLayoutForButtonAdd" >
-
-            <Button
-                android:id="@+id/buttonAdd"
-                style="@style/buttonAdd" />
-        </LinearLayout>
     </LinearLayout>
-
 </ScrollView>

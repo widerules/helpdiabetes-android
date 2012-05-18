@@ -30,6 +30,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 import be.goossens.oracle.R;
 import be.goossens.oracle.ActivityGroup.ActivityGroupMeal;
+import be.goossens.oracle.ActivityGroup.ActivityGroupTracking;
 import be.goossens.oracle.Custom.CustomBaseAdapterSelectedFood;
 import be.goossens.oracle.Custom.CustomExpandableListAdapter;
 import be.goossens.oracle.Objects.DBFoodUnit;
@@ -161,7 +162,7 @@ public class ShowSelectedFood extends ListActivity {
 								.getColumnIndexOrThrow(DbAdapter.DATABASE_SELECTEDFOOD_UNITID)));
 				// move the foodUnit to the first object in the cursor
 				cUnit.moveToFirst();
-
+ 
 				// create the mealFood
 				dbHelper.createMealFood(
 						lMealEventID,
@@ -194,6 +195,9 @@ public class ShowSelectedFood extends ListActivity {
 		// set selectedFoodCount = 0
 		ActivityGroupMeal.group.getFoodData().countSelectedFood = 0;
 
+		//reset the tracking activity
+		ActivityGroupTracking.group.restartThisActivity();
+		
 		// Go to tracking activity
 		ShowHomeTab parentActivity;
 		parentActivity = (ShowHomeTab) this.getParent().getParent();
@@ -234,6 +238,9 @@ public class ShowSelectedFood extends ListActivity {
 
 									// add food to tracking
 									addSelectedFoodToTracking();
+
+									// mark tracking page for refresh
+									//ActivityGroupTracking.group.getShowTracking().refresh = true;
 
 									// show medicine event
 									showPopUpToCreateMedicineEvent(tempCalculatedInsulineAmount);
@@ -461,43 +468,39 @@ public class ShowSelectedFood extends ListActivity {
 				cUnit.moveToFirst();
 
 				// add the calculated kcal to the total
-				subKcal = cUnit
+				subKcal = ((cSelectedFood
+						.getFloat(cSelectedFood
+								.getColumnIndexOrThrow(DbAdapter.DATABASE_SELECTEDFOOD_AMOUNT)) / cUnit
 						.getFloat(cUnit
-								.getColumnIndexOrThrow(DbAdapter.DATABASE_FOODUNIT_KCAL))
-						* cSelectedFood
-								.getFloat(cSelectedFood
-										.getColumnIndexOrThrow(DbAdapter.DATABASE_SELECTEDFOOD_AMOUNT));
-				// add the calculated carbs to the total
-				subCarbs = cUnit
+								.getColumnIndexOrThrow(DbAdapter.DATABASE_FOODUNIT_STANDARDAMOUNT))) * cUnit
 						.getFloat(cUnit
-								.getColumnIndexOrThrow(DbAdapter.DATABASE_FOODUNIT_CARBS))
-						* cSelectedFood
-								.getFloat(cSelectedFood
-										.getColumnIndexOrThrow(DbAdapter.DATABASE_SELECTEDFOOD_AMOUNT));
-				// add the calculated protein to the total
-				subProtein = cUnit
-						.getFloat(cUnit
-								.getColumnIndexOrThrow(DbAdapter.DATABASE_FOODUNIT_PROTEIN))
-						* cSelectedFood
-								.getFloat(cSelectedFood
-										.getColumnIndexOrThrow(DbAdapter.DATABASE_SELECTEDFOOD_AMOUNT));
-				// add the calculated fat to the total
-				subFat = cUnit
-						.getFloat(cUnit
-								.getColumnIndexOrThrow(DbAdapter.DATABASE_FOODUNIT_FAT))
-						* cSelectedFood
-								.getFloat(cSelectedFood
-										.getColumnIndexOrThrow(DbAdapter.DATABASE_SELECTEDFOOD_AMOUNT));
+								.getColumnIndexOrThrow(DbAdapter.DATABASE_FOODUNIT_KCAL)));
 
-				// Update when the unit standardamound == 100
-				if (cUnit
-						.getInt(cUnit
-								.getColumnIndexOrThrow(DbAdapter.DATABASE_FOODUNIT_STANDARDAMOUNT)) == 100) {
-					subKcal = subKcal / 100;
-					subCarbs = subCarbs / 100;
-					subProtein = subProtein / 100;
-					subFat = subFat / 100;
-				}
+				// add the calculated carbs to the total
+				subCarbs = ((cSelectedFood
+						.getFloat(cSelectedFood
+								.getColumnIndexOrThrow(DbAdapter.DATABASE_SELECTEDFOOD_AMOUNT)) / cUnit
+						.getFloat(cUnit
+								.getColumnIndexOrThrow(DbAdapter.DATABASE_FOODUNIT_STANDARDAMOUNT))) * cUnit
+						.getFloat(cUnit
+								.getColumnIndexOrThrow(DbAdapter.DATABASE_FOODUNIT_CARBS)));
+
+				// add the calculated protein to the total
+				subProtein = ((cSelectedFood
+						.getFloat(cSelectedFood
+								.getColumnIndexOrThrow(DbAdapter.DATABASE_SELECTEDFOOD_AMOUNT)) / cUnit
+						.getFloat(cUnit
+								.getColumnIndexOrThrow(DbAdapter.DATABASE_FOODUNIT_STANDARDAMOUNT))) * cUnit
+						.getFloat(cUnit
+								.getColumnIndexOrThrow(DbAdapter.DATABASE_FOODUNIT_PROTEIN)));
+				// add the calculated fat to the total
+				subFat = ((cSelectedFood
+						.getFloat(cSelectedFood
+								.getColumnIndexOrThrow(DbAdapter.DATABASE_SELECTEDFOOD_AMOUNT)) / cUnit
+						.getFloat(cUnit
+								.getColumnIndexOrThrow(DbAdapter.DATABASE_FOODUNIT_STANDARDAMOUNT))) * cUnit
+						.getFloat(cUnit
+								.getColumnIndexOrThrow(DbAdapter.DATABASE_FOODUNIT_FAT)));
 
 				totalKcal += subKcal;
 				totalCarbs += subCarbs;
@@ -668,13 +671,13 @@ public class ShowSelectedFood extends ListActivity {
 						+ ") \n ";
 			}
 		}
-		
+
 		if (expandableListview != null) {
 			// set calculated default
 			switch (ActivityGroupMeal.group.getFoodData().defaultValue) {
 			case 1:
 				if (expandableListview != null)
-				adapter.setDefaultCalculated("" + totalCarbs);
+					adapter.setDefaultCalculated("" + totalCarbs);
 				adapter.setDefaultCalculatedText(getResources().getString(
 						R.string.amound_of_carbs));
 				break;
@@ -697,9 +700,9 @@ public class ShowSelectedFood extends ListActivity {
 						R.string.amound_of_kcal));
 				break;
 			}
-			
+
 			adapter.setDefaultValue(ActivityGroupMeal.group.getFoodData().defaultValue);
-			
+
 			expandableListview.setAdapter(adapter);
 		} else if (tvTotalNames != null && tvTotalValues != null) {
 			tvTotalNames.setText(tvNameText);

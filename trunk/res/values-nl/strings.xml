@@ -25,7 +25,6 @@
     <string name="next">Volgende</string>
     <string name="sureToExit">Bent u zeker dat u wilt afsluiten ?</string>
     <string name="checkingDatabase">Database initialiseren</string>
-    <string name="retrievingFood">Producten ophalen</string>
     <string name="are_you_diabetes_patient">Helpdiabetes kan automatisch insuline dosissen berekenen. \nWilt u gebruik maken van deze functie?</string>
     <string name="titelTracking">Historiek</string>
     <string name="titelCreateFood">Nieuw voedingsmiddel</string>
@@ -122,8 +121,6 @@
     <string name="define_own">Definier eigen</string>
 
     <!-- Standard amound for adding units -->
-    <string name="gram">gram</string>
-    <string name="ml">ml</string>
     <string name="part">stuk</string>
 
     <!-- Update: 14-05-2012 --> 
@@ -148,4 +145,6 @@
      <string name="seeMore">Laad meer</string>
      <string name="noFilesFound">Geen csv bestanden gevonden op root van SD kaartje</string>
      <string name="chooseFile">Kies de gewenste file</string>
+     <string name="calculated">Berekend:</string>
+     <string name="searchNext">Vind volgende</string>
 </resources>

@@ -13,9 +13,11 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.ListView;
+import android.widget.Toast;
 import be.goossens.oracle.R;
 import be.goossens.oracle.ActivityGroup.ActivityGroupMeal;
 import be.goossens.oracle.ActivityGroup.ActivityGroupSettings;
+import be.goossens.oracle.ActivityGroup.ActivityGroupTracking;
 import be.goossens.oracle.Custom.CustomArrayAdapterDBFoodLanguage;
 import be.goossens.oracle.Objects.DBFoodLanguage;
 import be.goossens.oracle.Rest.DataParser;
@@ -26,36 +28,36 @@ public class ShowSettingsDBLanguage extends ListActivity {
 
 	private List<DBFoodLanguage> objects;
 	private Button btBack;
-	
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.show_settings_db_language);
-		
+
 		btBack = (Button) findViewById(R.id.buttonBack);
 		btBack.setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
 				ActivityGroupSettings.group.back();
 			}
 		});
-		
+
 	}
 
 	@Override
 	protected void onResume() {
 		super.onResume();
 		fillListView();
-		
+
 		// check if we need to show the button next
-				// only need to show first time application starts
-				try {
-					if (getIntent().getExtras().getString(DataParser.whatToDo)
-							.equals(DataParser.doFirstTime)) {
-						//hide the button back
-						btBack.setVisibility(View.GONE);
-					}
-				} catch (Exception e) {
-				}
+		// only need to show first time application starts
+		try {
+			if (getIntent().getExtras().getString(DataParser.whatToDo)
+					.equals(DataParser.doFirstTime)) {
+				// hide the button back
+				btBack.setVisibility(View.GONE);
+			}
+		} catch (Exception e) {
+		}
 	}
 
 	private void fillListView() {
@@ -89,23 +91,35 @@ public class ShowSettingsDBLanguage extends ListActivity {
 	@Override
 	protected void onListItemClick(ListView l, View v, int position, long id) {
 		// save the new languageID to the settings
-		DbAdapter db = new DbAdapter(this);
-		db.open();
-		db.updateSettingsByName(DbSettings.setting_language, ""
-						+ objects.get(position).getId());
-		db.close();
+		DbAdapter databaseHelper = new DbAdapter(this);
+		databaseHelper.open(); 
+		databaseHelper.updateSettingsByName(DbSettings.setting_language,
+				"" + objects.get(position).getId()); 
+		databaseHelper.close();
 		
-		//try to go back to 
-		//when its the first time we run this application 
-		//we cant go back but we have to finish()
-		try {
-			// restart the activitygroupmeal
-			ActivityGroupMeal.group.restartThisActivity();
+		// try to go back to
+		// when its the first time we run this application
+		// we cant go back but we have to finish()
+		try {  
+			if (getIntent().getExtras().getString(DataParser.whatToDo)
+					.equals(DataParser.doFirstTime)) {
+				finish();
+			} else {
+				// restart the activity tracking
+				ActivityGroupTracking.group.restartThisActivity();
+ 
+				// go back to settings page
+				ActivityGroupSettings.group.back();
+			}
+		} catch (Exception e) { 
+			// restart the activity tracking
+			ActivityGroupTracking.group.restartThisActivity();
 
+			//restart the activity meal
+			ActivityGroupMeal.group.restartThisActivity();
+			
 			// go back to settings page
 			ActivityGroupSettings.group.back();
-		} catch (Exception e) {
-			finish();
 		}
 	}
 

@@ -19,7 +19,7 @@ public class ActivityGroupExercise extends ActivityGroup {
 	// keep this in a static variable to make it accessible for all the nesten
 	// activities, let them manipulate the view
 	public static ActivityGroupExercise group;
-
+ 
 	// Need to keep track of the history so the back button works properly
 	private ArrayList<View> history;
 

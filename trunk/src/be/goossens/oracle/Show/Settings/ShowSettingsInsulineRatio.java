@@ -26,7 +26,7 @@ public class ShowSettingsInsulineRatio extends Activity {
 			insulineRatioSnack, insulineRatioDinner;
 	private boolean firstKeyPressBreakfast, firstKeyPressLunch,
 			firstKeyPressSnack, firstKeyPressDinner;
-	private Button btUpdate, btNext, btBack;
+	private Button btNext, btBack;
 
 	// create a edittext list to run true the array and set a onkey listener on
 	// every edittext
@@ -43,8 +43,6 @@ public class ShowSettingsInsulineRatio extends Activity {
 		insulineRatioLunch = (EditText) findViewById(R.id.editTextShowPreferencesLunchRatio);
 		insulineRatioSnack = (EditText) findViewById(R.id.editTextShowPreferencesSnackRatio);
 		insulineRatioDinner = (EditText) findViewById(R.id.editTextShowPreferencesDinnerRatio);
-
-		btUpdate = (Button) findViewById(R.id.buttonUpdate);
 
 		btBack = (Button) findViewById(R.id.buttonBack);
 		btBack.setOnClickListener(new OnClickListener() {
@@ -64,12 +62,6 @@ public class ShowSettingsInsulineRatio extends Activity {
 		listEditTexts.add(insulineRatioLunch);
 		listEditTexts.add(insulineRatioSnack);
 		listEditTexts.add(insulineRatioDinner);
-
-		btUpdate.setOnClickListener(new OnClickListener() {
-			public void onClick(View v) {
-				onClickUpdate(v);
-			}
-		});
 
 		// create for every edittext in the list a onkeylistener
 		for (int i = 0; i < listEditTexts.size(); i++) {
@@ -95,10 +87,18 @@ public class ShowSettingsInsulineRatio extends Activity {
 		btNext = (Button) findViewById(R.id.buttonNext);
 		btNext.setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
-				// update values
-				updateValues();
-				// call finish on click button next so we go back to showStart
-				finish();
+				try {
+					//see if we are here from startup page
+					if (getIntent().getExtras().getString(DataParser.whatToDo)
+							.equals(DataParser.doFirstTime)) {
+						updateValues();
+						finish();
+					} else {
+						onClickUpdate();
+					}
+				} catch (Exception e) {
+					onClickUpdate();
+				} 
 			}
 		});
 	}
@@ -112,12 +112,10 @@ public class ShowSettingsInsulineRatio extends Activity {
 		try {
 			if (getIntent().getExtras().getString(DataParser.whatToDo)
 					.equals(DataParser.doFirstTime)) {
-				btNext.setVisibility(View.VISIBLE);
 				// hide the button back
 				btBack.setVisibility(View.GONE);
 			}
 		} catch (Exception e) {
-			btUpdate.setVisibility(View.VISIBLE);
 		}
 	}
 
@@ -135,7 +133,7 @@ public class ShowSettingsInsulineRatio extends Activity {
 		}
 		// if we get here we clicked enter on the last edit text
 		// if we do that we trigger the onclick Update button
-		onClickUpdate(null);
+		onClickUpdate();
 	}
 
 	@Override
@@ -216,7 +214,7 @@ public class ShowSettingsInsulineRatio extends Activity {
 	}
 
 	// on click update
-	public void onClickUpdate(View view) {
+	public void onClickUpdate() {
 		updateValues();
 		// go back
 		try {

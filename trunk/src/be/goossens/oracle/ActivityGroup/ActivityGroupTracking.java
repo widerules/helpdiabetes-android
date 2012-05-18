@@ -12,7 +12,7 @@ import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import be.goossens.oracle.Rest.DataParser;
-import be.goossens.oracle.Show.Tracking.ShowTracking;
+import be.goossens.oracle.Show.Tracking.ShowLoadingTrackingData;
 
 public class ActivityGroupTracking extends ActivityGroup {
 	// keep this in a static variable to make it accessible for all the nesten
@@ -33,7 +33,7 @@ public class ActivityGroupTracking extends ActivityGroup {
 			// Start the root activity within the group and get its view
 			View view = getLocalActivityManager().startActivity(
 					DataParser.activityIDTracking,
-					new Intent(this, ShowTracking.class)
+					new Intent(this, ShowLoadingTrackingData.class)
 							.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP))
 					.getDecorView();
 			replaceView(view);
@@ -42,11 +42,27 @@ public class ActivityGroupTracking extends ActivityGroup {
 
 	private void hideKeyboard() {
 		InputMethodManager inputManager = (InputMethodManager) this
-				.getSystemService(Context.INPUT_METHOD_SERVICE); 
-		inputManager.hideSoftInputFromWindow(getParent().getCurrentFocus().getWindowToken(), 0);
+				.getSystemService(Context.INPUT_METHOD_SERVICE);
+		inputManager.hideSoftInputFromWindow(getParent().getCurrentFocus()
+				.getWindowToken(), 0);
 	}
-	
-	//This will hide the keyboard on tab change
+
+	public void restartThisActivity() {
+		// clear history
+		history = null;
+		// inialize list
+		history = new ArrayList<View>();
+
+		// start the root activity withing the group and get its view
+		View view = getLocalActivityManager().startActivity(
+				DataParser.activityIDTracking,
+				new Intent(this, ShowLoadingTrackingData.class)
+						.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP))
+				.getDecorView();
+		replaceView(view);
+	}
+
+	// This will hide the keyboard on tab change
 	@Override
 	protected void onPause() {
 		hideKeyboard();
@@ -96,6 +112,23 @@ public class ActivityGroupTracking extends ActivityGroup {
 	@Override
 	public void finish() {
 
+	}
+
+	// public ShowTracking getShowTracking() {
+	// try {
+	// View v = history.get(1);
+	// return (ShowTracking) v.getContext();
+	// } catch (Exception e) {
+	// return null;
+	// }
+	// }
+
+	public ShowLoadingTrackingData getTrackingData() {
+		try {
+			return (ShowLoadingTrackingData) history.get(0).getContext();
+		} catch (Exception e) {
+			return null;
+		}
 	}
 
 	// this method will kill the application

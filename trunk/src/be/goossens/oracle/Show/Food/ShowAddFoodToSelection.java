@@ -14,7 +14,6 @@ import java.util.List;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
-import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.text.Editable;
@@ -28,7 +27,6 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TableRow;
 import android.widget.TextView;
@@ -47,12 +45,7 @@ public class ShowAddFoodToSelection extends Activity {
 	private TextView textViewSelectedFood;
 	private EditText editTextFoodAmound;
 	private Spinner spinnerFoodUnits;
-	private Button btUpdate, btDelete;
-	// buttons from version 24
-	private Button btAddFoodAndGoToList, btAddFoodAndGoToOverview, btBack;
-	// linearlayouts to hide the buttons or show the buttons!
-	private LinearLayout llUpdate, llAddAndGoToList, llAddAndGoToOverview,
-			llDelete;
+	private Button btAdd, btBack, btDelete;
 
 	// The table textview
 	private TextView tvRowOneFieldTwo, tvRowOneFieldThree, tvOneItemInSpinner,
@@ -91,7 +84,6 @@ public class ShowAddFoodToSelection extends Activity {
 		tvOneItemInSpinner = (TextView) findViewById(R.id.textViewOneValue);
 
 		spinnerFoodUnits = (Spinner) findViewById(R.id.spinnerFoodUnit);
-		btUpdate = (Button) findViewById(R.id.buttonUpdate);
 		btDelete = (Button) findViewById(R.id.buttonShowAddFoodDelete);
 
 		tvRowTwoFieldTwo = (TextView) findViewById(R.id.textViewShowAddFoodRowTwoFieldTwo);
@@ -116,26 +108,12 @@ public class ShowAddFoodToSelection extends Activity {
 		trKcal = (TableRow) findViewById(R.id.tableRowKcal);
 
 		// new buttons for bether navigation
-		btAddFoodAndGoToList = (Button) findViewById(R.id.buttonShowAddFoodAddAndAddAnother);
-		btAddFoodAndGoToOverview = (Button) findViewById(R.id.buttonShowAddFoodAddAndGoToOverview);
-
-		// linearlayouts to hide the buttons we dont need
-		llUpdate = (LinearLayout) findViewById(R.id.LinearLayoutBtUpdate);
-		llDelete = (LinearLayout) findViewById(R.id.LinearLayoutBtDelete);
-		llAddAndGoToList = (LinearLayout) findViewById(R.id.LinearLayoutBtAddAndAddAnother);
-		llAddAndGoToOverview = (LinearLayout) findViewById(R.id.LinearLayoutBtAddAndGoToOverview);
+		btAdd = (Button) findViewById(R.id.buttonShowAddFoodAddAndAddAnother);
 
 		btBack = (Button) findViewById(R.id.buttonBack);
 		btBack.setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
 				ActivityGroupMeal.group.back();
-			}
-		});
-
-		// set on click listener for buttonAddOrUpdate
-		btUpdate.setOnClickListener(new OnClickListener() {
-			public void onClick(View v) {
-				onClickButtonUpdate();
 			}
 		});
 
@@ -176,9 +154,10 @@ public class ShowAddFoodToSelection extends Activity {
 						} else {
 							// add food
 							addFood();
-							// go back
-							ActivityGroupMeal.group.back();
 						}
+
+						// go back
+						ActivityGroupMeal.group.back();
 					}
 				} // if we dont return false our numbers wont get in the
 					// edittext
@@ -213,42 +192,23 @@ public class ShowAddFoodToSelection extends Activity {
 					}
 				});
 
-		btAddFoodAndGoToList.setOnClickListener(new OnClickListener() {
+		btAdd.setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
 				// set search string back to ""
 				ActivityGroupMeal.group.lastSearchString = "";
-				// add food
-				addFood();
-				// go back
-				ActivityGroupMeal.group.back();
-			}
-		});
 
-		btAddFoodAndGoToOverview.setOnClickListener(new OnClickListener() {
-			public void onClick(View v) {
-				// set search string back to ""
-				ActivityGroupMeal.group.lastSearchString = "";
-				// add food
-				addFood();
-
-				try {
-					// start activity show selected food
-					Intent i = new Intent(ctx, ShowSelectedFood.class)
-							.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-					View k = ActivityGroupMeal.group.getLocalActivityManager()
-							.startActivity(DataParser.activityIDMeal, i)
-							.getDecorView();
-					ActivityGroupMeal.group.setContentView(k);
-
-					// remove this activity from history
-					// the history to remove is the size -2 becaus -1 is the
-					// showselectedfood
-					ActivityGroupMeal.group.history
-							.remove(ActivityGroupMeal.group.history.size() - 2);
-				} catch (Exception e) {
-					showPopUp(e.toString());
+				// if we come from show selected food we have to update
+				if (getIntent().getExtras()
+						.getString(DataParser.fromWhereWeCome)
+						.equals(DataParser.weComeFRomShowSelectedFood)) {
+					onClickButtonUpdate();
+				} else {
+					// else we add a new food item to the selected food list
+					addFood();
 				}
 
+				// go back
+				ActivityGroupMeal.group.back();
 			}
 		});
 	}
@@ -264,15 +224,15 @@ public class ShowAddFoodToSelection extends Activity {
 	private float getInsertedAmund() {
 		float returnValue = 0f;
 		String stringFoodAmound = "";
-		
+
 		try {
-			//replace "," by "."
+			// replace "," by "."
 			stringFoodAmound = editTextFoodAmound.getText().toString();
 			stringFoodAmound = stringFoodAmound.replace(",", ".");
 		} catch (Exception f) {
 		}
 
-		try { 
+		try {
 			returnValue = Float.parseFloat(stringFoodAmound);
 			returnValue = functions.roundFloats(returnValue, 1);
 		} catch (Exception e) {
@@ -300,7 +260,7 @@ public class ShowAddFoodToSelection extends Activity {
 		/*
 		 * If we come from showSelectedFood we have to: 1. fill in the spinner
 		 * with the right unit 2. set the right amount 3. Show the button to
-		 * delete the food 4. show the button update
+		 * delete the food
 		 */
 
 		if (getIntent().getExtras().getString(DataParser.fromWhereWeCome)
@@ -318,43 +278,19 @@ public class ShowAddFoodToSelection extends Activity {
 							+ cSelectedFood.getFloat(cSelectedFood
 									.getColumnIndexOrThrow(DbAdapter.DATABASE_SELECTEDFOOD_AMOUNT)));
 			// 3. show the button to delete the food
-			llDelete.setVisibility(View.VISIBLE);
-			// 4. show the button update
-			llUpdate.setVisibility(View.VISIBLE);
+			btDelete.setVisibility(View.VISIBLE);
 			// 5. setStandardAmount = false so that we see our food amount and
 			// not "" or standardamount
 			setStandardAmount = false;
 			cSelectedFood.close();
-		} else if (getIntent().getExtras()
-				.getString(DataParser.fromWhereWeCome)
-				.equals(DataParser.weComeFromShowFoodTemplates)) {
-			// This code is outdated! we never come here anymore caus add food
-			// from template will auto add it!
-
-			// if we come from the page to load a template
-			// 1. fill the spinner with the right unit
-			setSelectedFoodUnitItemInSpinnerSelected(getIntent().getExtras()
-					.getInt(DataParser.idUnit));
-			// 2. set the righ amount in the editText
-			if (getIntent().getExtras().getFloat(DataParser.foodAmount) > 0) {
-				editTextFoodAmound.setText(""
-						+ getIntent().getExtras().getFloat(
-								DataParser.foodAmount));
-			}
-			// setStandardAmound = false so that we see our food amound and not
-			// "" or standardAmount
-			setStandardAmount = false;
 		} else {
 			// if we dont come from showSelectedFood or showFoodTemplates
+			// hide the button delete
+			btDelete.setVisibility(View.GONE);
 
 			// we have to see if we have a "gram" value , if yes we have to set
 			// the gram as default
 			setSelectedItemOnSpinnerToGramOrMl();
-
-			// show the buttons add and go to list , add and go to overview and
-			// cancle
-			llAddAndGoToList.setVisibility(View.VISIBLE);
-			llAddAndGoToOverview.setVisibility(View.VISIBLE);
 		}
 
 		// if we only have 1 item , we have to hide the spinner and show a
@@ -471,11 +407,11 @@ public class ShowAddFoodToSelection extends Activity {
 				if (cUnits
 						.getString(
 								cUnits.getColumnIndexOrThrow(DbAdapter.DATABASE_FOODUNIT_NAME))
-						.equals(getResources().getString(R.string.gram))
+						.equals(ActivityGroupMeal.group.getFoodData().dbTopOneCommonFoodUnit)
 						|| cUnits
 								.getString(
 										cUnits.getColumnIndexOrThrow(DbAdapter.DATABASE_FOODUNIT_NAME))
-								.equals(getResources().getString(R.string.ml))) {
+								.equals(ActivityGroupMeal.group.getFoodData().dbTopTwoCommonFoodUnit)) {
 					try {
 						spinnerFoodUnits.setSelection(cUnits.getPosition());
 						// move to last so we stop looping
@@ -525,7 +461,6 @@ public class ShowAddFoodToSelection extends Activity {
 		// First get the amount inserted
 		float amount = getInsertedAmund();
 
-		// calculate al the standard fields
 		float calcCarbs = 0f;
 		float calcKcal = 0f;
 		float calcFat = 0f;
@@ -539,28 +474,28 @@ public class ShowAddFoodToSelection extends Activity {
 					.getSelectedItemId());
 			cUnit.moveToFirst();
 
-			calcCarbs = amount
-					* cUnit.getFloat(cUnit
-							.getColumnIndexOrThrow(DbAdapter.DATABASE_FOODUNIT_CARBS));
-			calcKcal = amount
-					* cUnit.getFloat(cUnit
-							.getColumnIndexOrThrow(DbAdapter.DATABASE_FOODUNIT_KCAL));
-			calcFat = amount
-					* cUnit.getFloat(cUnit
-							.getColumnIndexOrThrow(DbAdapter.DATABASE_FOODUNIT_FAT));
-			calcProtein = amount
-					* cUnit.getFloat(cUnit
-							.getColumnIndexOrThrow(DbAdapter.DATABASE_FOODUNIT_PROTEIN));
-
-			// if standardamount == 100 we have to / 100 every calculated stuff
-			if (cUnit
+			// new formule: ((amound / standardamound) * foodcompositionValue)
+			calcCarbs = ((amount / cUnit
 					.getFloat(cUnit
-							.getColumnIndexOrThrow(DbAdapter.DATABASE_FOODUNIT_STANDARDAMOUNT)) == 100) {
-				calcCarbs = calcCarbs / 100;
-				calcKcal = calcKcal / 100;
-				calcFat = calcFat / 100;
-				calcProtein = calcProtein / 100;
-			}
+							.getColumnIndexOrThrow(DbAdapter.DATABASE_FOODUNIT_STANDARDAMOUNT))) * cUnit
+					.getFloat(cUnit
+							.getColumnIndexOrThrow(DbAdapter.DATABASE_FOODUNIT_CARBS)));
+
+			calcKcal = ((amount / cUnit
+					.getFloat(cUnit
+							.getColumnIndexOrThrow(DbAdapter.DATABASE_FOODUNIT_STANDARDAMOUNT))) * cUnit
+					.getFloat(cUnit
+							.getColumnIndexOrThrow(DbAdapter.DATABASE_FOODUNIT_KCAL)));
+			calcFat = ((amount / cUnit
+					.getFloat(cUnit
+							.getColumnIndexOrThrow(DbAdapter.DATABASE_FOODUNIT_STANDARDAMOUNT))) * cUnit
+					.getFloat(cUnit
+							.getColumnIndexOrThrow(DbAdapter.DATABASE_FOODUNIT_FAT)));
+			calcProtein = ((amount / cUnit
+					.getFloat(cUnit
+							.getColumnIndexOrThrow(DbAdapter.DATABASE_FOODUNIT_STANDARDAMOUNT))) * cUnit
+					.getFloat(cUnit
+							.getColumnIndexOrThrow(DbAdapter.DATABASE_FOODUNIT_PROTEIN)));
 
 			// Round the calculated floats
 			calcCarbs = functions.roundFloats(calcCarbs, 1);
@@ -676,9 +611,6 @@ public class ShowAddFoodToSelection extends Activity {
 
 		// and refresh the list in showSelectedFood
 		ActivityGroupMeal.group.getShowSelectedFood().refreshData();
-
-		// go back
-		ActivityGroupMeal.group.back();
 	}
 
 	private void addFood() {

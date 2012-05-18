@@ -10,28 +10,19 @@
          >
 
         <LinearLayout
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal" >
+           style="@style/llTitel" >
 
             <Button
                 android:id="@+id/buttonBack"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:background="@drawable/ic_menu_back" />
+                style="@style/buttonBack" />
 
             <TextView
-                android:id="@+id/textView3"
                 style="@style/defaultFontTitle"
-                android:layout_weight="1.0"
                 android:text="@string/pref_insuline_ratio" />
 
             <Button
                 android:id="@+id/buttonNext"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:background="@drawable/ic_menu_forward"
-                android:visibility="gone" />
+                style="@style/buttonForward" />
         </LinearLayout>
 
         <TableLayout
@@ -105,15 +96,6 @@
                     android:inputType="phone" />
             </TableRow>
         </TableLayout>
-
-        <LinearLayout style="@style/linearLayoutForButtonAdd" >
-
-            <Button
-                android:id="@+id/buttonUpdate"
-                style="@style/buttonAdd"
-                android:text="@string/update"
-                android:visibility="gone" />
-        </LinearLayout>
         
          <View
             android:layout_width="fill_parent"

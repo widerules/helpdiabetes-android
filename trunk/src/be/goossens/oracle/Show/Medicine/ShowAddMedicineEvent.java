@@ -25,6 +25,7 @@ import android.widget.TextView;
 import be.goossens.oracle.R;
 import be.goossens.oracle.ActivityGroup.ActivityGroupMeal;
 import be.goossens.oracle.ActivityGroup.ActivityGroupMedicine;
+import be.goossens.oracle.ActivityGroup.ActivityGroupTracking;
 import be.goossens.oracle.Custom.CustomSimpleArrayAdapterForASpinner;
 import be.goossens.oracle.Objects.DBNameAndID;
 import be.goossens.oracle.Rest.DataParser;
@@ -45,7 +46,7 @@ public class ShowAddMedicineEvent extends Activity {
 	private Functions functions;
 
 	private List<DBNameAndID> objects;
-	
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -69,13 +70,13 @@ public class ShowAddMedicineEvent extends Activity {
 				showDialog(0);
 			}
 		});
-
+ 
 		btAdd.setOnClickListener(new OnClickListener() {
 
 			public void onClick(View v) {
 				onClickBtAdd();
-			}
-		});
+			} 
+		}); 
 
 		// update the tvUnit when we select a other medicine type
 		spMedicine.setOnItemSelectedListener(new OnItemSelectedListener() {
@@ -88,10 +89,25 @@ public class ShowAddMedicineEvent extends Activity {
 			}
 
 			public void onNothingSelected(AdapterView<?> arg0) {
-
+  
+			} 
+		});
+ 
+		etAmount.setOnKeyListener(new View.OnKeyListener() {
+			public boolean onKey(View v, int keyCode, KeyEvent event) {
+				// filter so we only get the onkey up actions
+				if (event.getAction() != KeyEvent.ACTION_DOWN) {
+					// if the pressed key = enter we do the add code
+					if (event.getKeyCode() == KeyEvent.KEYCODE_ENTER) {
+						onClickBtAdd();
+					}
+				}
+				// if we dont return false our text wont get in the
+				// edittext
+				return false;
 			}
 		});
-
+		
 	}
 
 	// when we click on the button add
@@ -114,6 +130,8 @@ public class ShowAddMedicineEvent extends Activity {
 
 		db.close();
 
+		ActivityGroupTracking.group.restartThisActivity();
+
 		// clear the edittext
 		etAmount.setText("");
 
@@ -129,10 +147,10 @@ public class ShowAddMedicineEvent extends Activity {
 		setDefaultSpinner();
 		super.onResume();
 	}
- 
+
 	private void setDefaultSpinner() {
-		for(int i = 0 ; i < objects.size();i++){
-			if(objects.get(i).getId() == ActivityGroupMeal.group.getFoodData().defaultMedicineTypeID){
+		for (int i = 0; i < objects.size(); i++) {
+			if (objects.get(i).getId() == ActivityGroupMeal.group.getFoodData().defaultMedicineTypeID) {
 				spMedicine.setSelection(i);
 			}
 		}
@@ -160,7 +178,7 @@ public class ShowAddMedicineEvent extends Activity {
 		db.close();
 
 		CustomSimpleArrayAdapterForASpinner adapter = new CustomSimpleArrayAdapterForASpinner(
-				this, android.R.layout.simple_spinner_item, objects,25);
+				this, android.R.layout.simple_spinner_item, objects, 25);
 
 		spMedicine.setAdapter(adapter);
 
