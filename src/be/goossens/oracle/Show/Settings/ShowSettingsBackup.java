@@ -263,10 +263,10 @@ public class ShowSettingsBackup extends ListActivity {
 
 	// asynctask to copy database from sd to phone
 	private class AsyncCopyDBFromSDToPhone extends
-			AsyncTask<String, Void, Boolean> {
+			AsyncTask<String, Void, String> {
 
 		@Override
-		protected Boolean doInBackground(String... params) {
+		protected String doInBackground(String... params) {
 			try {
 				File sd = Environment.getExternalStorageDirectory();
 				File data = Environment.getDataDirectory();
@@ -283,22 +283,22 @@ public class ShowSettingsBackup extends ListActivity {
 				src.close();
 				dst.close();
 
-				return true;
+				return null;
 			} catch (Exception e) {
-				return false;
+				return e.toString();
 			}
 		}
 
 		@Override
-		protected void onPostExecute(Boolean result) {
+		protected void onPostExecute(String result) {
 			pd.dismiss();
 			
-			if (result) {
+			if (result == null) {
 				// show popup to exit application
 				showPopUpToExit();
 			} else {
 				makeToast(getResources().getString(
-						R.string.something_went_wrong));
+						R.string.something_went_wrong) + "\n" + result);
 			}
 			super.onPostExecute(result);
 		}

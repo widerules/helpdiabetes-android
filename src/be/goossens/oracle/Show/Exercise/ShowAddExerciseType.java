@@ -109,9 +109,6 @@ public class ShowAddExerciseType extends Activity {
 			// fill the textview with the current exercise type we selected
 			fillEditText();
 
-			// update the button remove the text add with update
-			btAdd.setText(getResources().getString(R.string.update));
-
 			// check if we can show the delete button
 			showDeleteButton();
 
@@ -119,7 +116,10 @@ public class ShowAddExerciseType extends Activity {
 			showDefaultButton();
 
 		} catch (NullPointerException e) {
-			excistingExerciseTypeID = -1;
+			excistingExerciseTypeID = -1; 
+
+			// hide button set standard when we create a new one
+			btStandard.setVisibility(View.GONE);
 		}
 	}
 
@@ -152,7 +152,7 @@ public class ShowAddExerciseType extends Activity {
 		// if the exercise type is not in use in exercise events
 		// and the exercise type is not the last one
 		if (db.fetchExerciseEventByExerciseTypeID(excistingExerciseTypeID)
-				.getCount() == 0 
+				.getCount() == 0
 				&& db.fetchAllExerciseTypes().getCount() > 1
 				&& excistingExerciseTypeID != ActivityGroupMeal.group
 						.getFoodData().defaultExerciseTypeID) {

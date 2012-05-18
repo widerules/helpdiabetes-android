@@ -14,6 +14,7 @@ import android.widget.ListView;
 import be.goossens.oracle.R;
 import be.goossens.oracle.ActivityGroup.ActivityGroupMeal;
 import be.goossens.oracle.ActivityGroup.ActivityGroupSettings;
+import be.goossens.oracle.ActivityGroup.ActivityGroupTracking;
 import be.goossens.oracle.Custom.CustomArrayAdapterFontSize;
 import be.goossens.oracle.Rest.DbAdapter;
 import be.goossens.oracle.Rest.DbSettings;
@@ -71,6 +72,10 @@ public class ShowSettingsFontSizeLists extends ListActivity {
 		saveSize((position+15));
 		//refresh the list of food 
 		ActivityGroupMeal.group.getFoodData().setNewFontSize();
+		
+		//refresh the history page
+		ActivityGroupTracking.group.restartThisActivity();
+		
 		//go back
 		ActivityGroupSettings.group.back();
 	}

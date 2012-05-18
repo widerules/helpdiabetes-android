@@ -3,9 +3,19 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     style="@style/linearLayoutVerticalWithPadding" >
 
-    <TextView
-        style="@style/defaultFontTitle"
-        android:text="@string/titelSettings" />
+    <LinearLayout style="@style/llTitel" >
+        <Button
+            style="@style/buttonBack"
+            android:visibility="invisible" />
+
+        <TextView
+            style="@style/defaultFontTitle"
+            android:text="@string/titelSettings" />
+
+        <Button
+            style="@style/buttonForward"
+            android:visibility="invisible" />
+    </LinearLayout>
 
     <ListView
         android:id="@+android:id/list"

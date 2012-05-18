@@ -31,7 +31,7 @@ public class ShowSettingsDefaultMedicineType extends ListActivity {
 	protected void onResume() {
 		super.onResume();
 		fillListView();
-	}
+	}  
 
 	private void fillListView() {
 		setListAdapter(null);

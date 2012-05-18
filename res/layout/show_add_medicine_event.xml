@@ -5,18 +5,29 @@
     android:layout_height="fill_parent" >
 
     <LinearLayout style="@style/linearLayoutVerticalWithPadding" >
- 
-        <TextView
-            style="@style/defaultFontTitle"
-            android:text="@string/titelAddMedicine" />
+
+        <LinearLayout style="@style/llTitel" >
+
+            <Button
+                style="@style/buttonBack"
+                android:visibility="invisible" />
+
+            <TextView
+                style="@style/defaultFontTitle"
+                android:text="@string/titelAddMedicine" />
+
+            <Button
+                android:id="@+id/buttonAdd"
+                style="@style/buttonForward" />
+        </LinearLayout>
 
         <Button
             android:id="@+id/buttonUpdateDateAndHour"
             style="@style/defaultFontNormal"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:text="@string/update"
-            android:layout_marginBottom="25dip" />
+            android:layout_marginBottom="25dip"
+            android:text="@string/update" />
 
         <Spinner
             android:id="@+id/SpinnerMedicine"
@@ -32,23 +43,16 @@
                 style="@style/styleEditText"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="1.0" 
+                android:layout_weight="1.0"
                 android:digits="1234567890."
                 android:inputType="phone"
                 android:numeric="decimal" />
 
             <TextView
                 android:id="@+id/textViewMedicineUnit"
-                style="@style/defaultFontNormal" 
+                style="@style/defaultFontNormal"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
-        </LinearLayout>
-
-        <LinearLayout style="@style/linearLayoutForButtonAdd" >
-
-            <Button
-                android:id="@+id/buttonAdd"
-                style="@style/buttonAdd" />
         </LinearLayout>
     </LinearLayout>
 

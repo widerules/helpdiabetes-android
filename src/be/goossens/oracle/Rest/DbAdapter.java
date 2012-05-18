@@ -267,7 +267,13 @@ public class DbAdapter extends SQLiteOpenHelper {
 				+ DATABASE_MEDICINEEVENT_TIMESTAMP + " from "
 				+ DATABASE_MEDICINEEVENT_TABLE + ") order by 1 desc", null);
 	}
-
+ 
+	//get all unit with the counts from current languageid
+	//select count(*), foodunit.name from foodunit inner join food on foodunit.foodid = food._id where food.foodlanguageid = 1 group by foodunit.name order by 1 desc
+	public Cursor fetchAllUnitsFromCurrentDBLangauge(long foodlangaugeID){  
+		return mDb.rawQuery("select count(*), foodunit.name from foodunit inner join food on foodunit.foodid = food._id where food.foodlanguageid = " + foodlangaugeID + " group by foodunit.name order by 1 desc", null);
+	}
+	
 	// Medicine Events Functions
 	// create
 	public long createMedicineEvent(float amount, String timestamp,
@@ -279,7 +285,7 @@ public class DbAdapter extends SQLiteOpenHelper {
 				.put(DATABASE_MEDICINEEVENT_MEDICINETYPEID, medicineTypeID);
 		return mDb.insert(DATABASE_MEDICINEEVENT_TABLE, null, initialValues);
 	}
-
+ 
 	// get medicine events by timestamp
 	public Cursor fetchMedicineEventByDate(String date) {
 		return mDb.query(DATABASE_MEDICINEEVENT_TABLE,

@@ -47,11 +47,12 @@ public class ActivityGroupSettings extends ActivityGroup {
 
 	private void hideKeyboard() {
 		InputMethodManager inputManager = (InputMethodManager) this
-				.getSystemService(Context.INPUT_METHOD_SERVICE); 
-		inputManager.hideSoftInputFromWindow(getParent().getCurrentFocus().getWindowToken(), 0);
+				.getSystemService(Context.INPUT_METHOD_SERVICE);
+		inputManager.hideSoftInputFromWindow(getParent().getCurrentFocus()
+				.getWindowToken(), 0);
 	}
-	
-	//This will hide the keyboard on tab change
+
+	// This will hide the keyboard on tab change
 	@Override
 	protected void onPause() {
 		hideKeyboard();
@@ -73,21 +74,34 @@ public class ActivityGroupSettings extends ActivityGroup {
 
 	public void back() {
 		hideKeyboard();
+
 		try {
 			// if we set history.size() > 0 and we press back key on home
 			// activity
 			// and then on another activity we wont get back!
 			if (history.size() > 1) {
 				history.remove(history.size() - 1);
-				
-				if(history.size() == 1){
-					try{
-					ShowSettings v = (ShowSettings) history.get(history.size() - 1).getContext();
-					v.fillListView();
-					}catch(Exception e){}
+ 
+				//if we are back on our standard setting page we remove and add it again
+				//this is for a bug that we dnot get the popup to exit app
+				if (history.size() == 1) {
+					try {
+						// remove the view from the list
+						history.remove(history.size() - 1);
+
+						// add it again
+						View view = getLocalActivityManager()
+								.startActivity(
+										DataParser.activityIDSettings,
+										new Intent(this, ShowSettings.class)
+												.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP))
+								.getDecorView();
+
+						history.add(view);
+					} catch (Exception e) {
+					}
 				}
-				
-				
+
 				// call the super.setContent view! so set the real view
 				super.setContentView(history.get(history.size() - 1));
 			} else {

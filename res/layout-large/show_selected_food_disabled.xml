@@ -15,21 +15,27 @@
 
         <Button
             android:id="@+id/buttonAddSelectedFoodToTracking"
-            style="@style/buttonForward" />
+           style="@style/buttonForward" />
     </LinearLayout>
 
-    <ExpandableListView
-        android:id="@+id/expandableListview"
+    <LinearLayout
+        android:id="@+id/linearLayout2"
         android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:cacheColorHint="#00000000"
-        android:divider="@null"
-        android:dividerHeight="0dip" >
-    </ExpandableListView>
+        android:layout_height="wrap_content" >
 
-    <TextView
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content" />
+        <TextView
+            android:id="@+id/textViewShowTotalValues"
+            style="@style/defaultFontNormal"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="right" />
+
+        <TextView
+            android:id="@+id/textViewShowTotalNames"
+            style="@style/defaultFontNormal"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content" />
+    </LinearLayout>
 
     <ListView
         android:id="@+android:id/list"
@@ -72,7 +78,10 @@
 
             <Button
                 android:id="@+id/buttonDelete"
-                style="@style/buttonTrashCan" />
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="right"
+                android:background="@drawable/ic_menu_delete" />
         </LinearLayout>
     </HorizontalScrollView>
 

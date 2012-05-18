@@ -3,24 +3,35 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     style="@style/linearLayoutVerticalWithPadding" >
 
-    <TextView
-        style="@style/defaultFontTitle"
-        android:text="@string/titelAddExercise" />
+    <LinearLayout style="@style/llTitel" >
+
+        <Button
+            style="@style/buttonBack"
+            android:visibility="invisible" />
+
+        <TextView
+            style="@style/defaultFontTitle"
+            android:text="@string/titelAddExercise" />
+
+        <Button
+            android:id="@+id/buttonAdd"
+            style="@style/buttonForward"/>
+    </LinearLayout>
 
     <Button
         android:id="@+id/buttonUpdateDateAndHour"
         style="@style/defaultFontNormal"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:text="@string/update"
-        android:layout_marginBottom="25dip" />
-    
+        android:layout_marginBottom="25dip"
+        android:text="@string/update" />
+
     <Spinner
         android:id="@+id/spinnerDuration"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content" />
 
-    <Spinner 
+    <Spinner
         android:id="@+id/spinnerSportType"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content" />
@@ -32,13 +43,6 @@
         android:layout_height="wrap_content"
         android:hint="@string/description"
         android:inputType="text" />
-
-    <LinearLayout style="@style/linearLayoutForButtonAdd" >
-
-        <Button
-            android:id="@+id/buttonAdd"
-            style="@style/buttonAdd" />
-    </LinearLayout>
 
     <Button
         android:id="@+id/buttonDelete"

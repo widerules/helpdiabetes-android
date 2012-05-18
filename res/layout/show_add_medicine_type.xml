@@ -3,27 +3,27 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     style="@style/linearLayoutVerticalWithPadding" >
 
-    <LinearLayout
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal" >
+    <LinearLayout style="@style/llTitel" >
 
         <Button
             android:id="@+id/buttonBack"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="@drawable/ic_menu_back" />
+            style="@style/buttonBack" />
 
         <TextView
             style="@style/defaultFontTitle"
             android:text="@string/pref_add_medicine_type" />
+
+        <Button
+            android:id="@+id/buttonAdd"
+            style="@style/buttonForward" />
     </LinearLayout>
 
     <LinearLayout
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
         android:gravity="center"
-        android:orientation="vertical" >
+        android:orientation="vertical"
+        android:layout_weight="1.0" >
 
         <EditText
             android:id="@+id/editText1"
@@ -46,25 +46,26 @@
         <LinearLayout style="@style/linearLayoutForButtonAdd" >
 
             <Button
-                android:id="@+id/buttonAdd"
-                style="@style/buttonAdd" />
-        </LinearLayout>
-
-         <LinearLayout style="@style/linearLayoutForButtonAdd" >
-
-            <Button
                 android:id="@+id/buttonStandard"
                 style="@style/buttonAdd"
                 android:text="@string/make_standard" />
         </LinearLayout>
-        
-        <LinearLayout style="@style/linearLayoutForButtonAdd" >
+    </LinearLayout>
 
-            <Button
-                android:id="@+id/buttonDelete"
-                style="@style/buttonAdd"
-                android:text="@string/delete" />
-        </LinearLayout>
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal" >
+
+        <TextView
+            android:layout_width="0dip"
+            android:layout_height="wrap_content"
+            android:layout_weight="1.0" />
+
+        <Button
+            android:id="@+id/buttonDelete"
+            style="@style/buttonTrashCan"
+            android:layout_gravity="bottom|right" />
     </LinearLayout>
 
 </LinearLayout>

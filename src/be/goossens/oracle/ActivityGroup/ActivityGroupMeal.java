@@ -28,7 +28,7 @@ public class ActivityGroupMeal extends ActivityGroup {
 
 	// Need to keep track of the history so the back button works properly
 	public ArrayList<View> history;
-
+ 
 	// if newFoodID != 0 the showFoodList will add the id to the list, order the
 	// objects, go to the ID and set it back to 0
 	// This long != 0 when showCreateFood created a new foodItem
@@ -139,7 +139,7 @@ public class ActivityGroupMeal extends ActivityGroup {
 	public void onContentChanged() {
 		super.onContentChanged();
 	}
-
+	
 	@Override
 	public void setContentView(View view) {
 		hideKeyboard();
@@ -152,10 +152,9 @@ public class ActivityGroupMeal extends ActivityGroup {
 
 		// changes this group view to the new view
 		super.setContentView(view);
-
-		Animation hyperSpaceJump = AnimationUtils.loadAnimation(this,
-				R.anim.fade_in);
-		view.startAnimation(hyperSpaceJump);
+		 
+		//Animation hyperSpaceJump = AnimationUtils.loadAnimation(this, R.anim.slide_in_left); 
+		//view.startAnimation(hyperSpaceJump);
 	}
 
 	public void back() {
@@ -188,15 +187,14 @@ public class ActivityGroupMeal extends ActivityGroup {
 
 				}
 			}
-
+ 
 			View view = history.get(history.size() - 1);
 
 			//dont put animation on the home screen ( show food list )
-			if (history.size() != 2) {
-				Animation slideOut = AnimationUtils.loadAnimation(this,
-						R.anim.fade_out);
-				view.startAnimation(slideOut);
-			}
+			//if (history.size() != 2) { 
+			//	Animation slideOut = AnimationUtils.loadAnimation(this,	R.anim.slide_out_right);
+			//	view.startAnimation(slideOut);
+			//}
 
 			// call the super.setContent view! so set the real view
 			super.setContentView(view);

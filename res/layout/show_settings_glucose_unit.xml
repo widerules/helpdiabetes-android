@@ -5,28 +5,20 @@
     android:background="@drawable/bg" >
 
     <LinearLayout
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal" >
+        style="@style/llTitel" >
 
         <Button
             android:id="@+id/buttonBack"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="@drawable/ic_menu_back" />
+            style="@style/buttonBack" />
 
         <TextView
-            android:id="@+id/textView1"
             style="@style/defaultFontTitle"
-            android:layout_weight="1.0"
             android:text="@string/pref_glucose_unit" />
 
         <Button
             android:id="@+id/buttonNext"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="@drawable/ic_menu_forward"
-            android:visibility="gone" />
+            style="@style/buttonForward"
+            android:visibility="invisible" />
     </LinearLayout>
 
     <RadioGroup

@@ -23,7 +23,6 @@ import android.os.Bundle;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.TextView;
 import be.goossens.oracle.R;
 import be.goossens.oracle.ActivityGroup.ActivityGroupMeal;
 import be.goossens.oracle.Objects.DBFoodComparable;
@@ -33,9 +32,6 @@ import be.goossens.oracle.Rest.DbSettings;
 import be.goossens.oracle.Rest.FoodComparator;
 
 public class ShowLoadingFoodData extends Activity {
-	// used to show fetching data from database
-	private TextView tv2;
-
 	// This boolean is used to see if we are finish with gething our data from
 	// the database
 	// The first time the application starts showFoodList will check this
@@ -72,10 +68,13 @@ public class ShowLoadingFoodData extends Activity {
 	public long defaultMedicineTypeID;
 	// used to hold the default exerciseTypeID;
 	public long defaultExerciseTypeID;
-	
-	//used to hold the startup
+
+	// used to hold the startup
 	public boolean startUp;
-	 
+
+	public String dbTopOneCommonFoodUnit;
+	public String dbTopTwoCommonFoodUnit;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -85,18 +84,11 @@ public class ShowLoadingFoodData extends Activity {
 				R.layout.show_start, null);
 		setContentView(contentView);
 
-		tv2 = (TextView) findViewById(R.id.textView2);
-		tv2.setText(getResources().getString(R.string.retrievingFood));
-
 		context = this;
 	}
 
 	@Override
 	protected void onResume() {
-
-		// set the values fontsize, languageid and countSelectedFood
-		setValues();
-
 		// check to see if we have already food items in selectedFood
 		// if yes we have to show popup to delete them
 		// In the end of this method we will start the asynctask to get our
@@ -124,7 +116,7 @@ public class ShowLoadingFoodData extends Activity {
 		if (db.fetchAllSelectedFood().getCount() > 0 && startUp) {
 			// mark startup as false
 			db.updateSettingsByName(DbSettings.setting_startUp, "0");
-			
+
 			// create popup to show
 			DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
 
@@ -204,11 +196,31 @@ public class ShowLoadingFoodData extends Activity {
 		setShowValues(db);
 		setDefaultMedicineTypeID(db);
 		setDefaultExerciseTypeID(db);
+		setCommonFoodUnitTypes(db);
 		db.close();
 	}
+ 
+	public void setCommonFoodUnitTypes(DbAdapter db) {
+		dbTopOneCommonFoodUnit = "gram";
+		dbTopTwoCommonFoodUnit = "ml";
 
+		/*Cursor cTemp = db.fetchAllUnitsFromCurrentDBLangauge(foodLanguageID);
+		if (cTemp.getCount() > 1) {
+			cTemp.moveToFirst();
+			dbTopOneCommonFoodUnit = cTemp.getString(1);
+			cTemp.moveToNext();
+			dbTopTwoCommonFoodUnit = cTemp.getString(1);
+		} else { 
+			dbTopOneCommonFoodUnit = "gram";
+			dbTopTwoCommonFoodUnit = "ml";
+		}
+		cTemp.close();*/
+
+	}
+ 
 	private void setDefaultExerciseTypeID(DbAdapter db) {
-		Cursor cSetting = db.fetchSettingByName(DbSettings.setting_default_exercise_type_ID);
+		Cursor cSetting = db
+				.fetchSettingByName(DbSettings.setting_default_exercise_type_ID);
 		if (cSetting.getCount() > 0) {
 			cSetting.moveToFirst();
 			defaultExerciseTypeID = cSetting.getLong(cSetting
@@ -218,9 +230,10 @@ public class ShowLoadingFoodData extends Activity {
 		}
 		cSetting.close();
 	}
-	
+
 	private void setDefaultMedicineTypeID(DbAdapter db) {
-		Cursor cSetting = db.fetchSettingByName(DbSettings.setting_default_medicine_type_ID);
+		Cursor cSetting = db
+				.fetchSettingByName(DbSettings.setting_default_medicine_type_ID);
 		if (cSetting.getCount() > 0) {
 			cSetting.moveToFirst();
 			defaultMedicineTypeID = cSetting.getLong(cSetting
@@ -234,7 +247,8 @@ public class ShowLoadingFoodData extends Activity {
 	private void setShowValues(DbAdapter db) {
 
 		// carb togle button
-		Cursor cSettingCarb = db.fetchSettingByName(DbSettings.setting_value_carb_onoff);
+		Cursor cSettingCarb = db
+				.fetchSettingByName(DbSettings.setting_value_carb_onoff);
 		if (cSettingCarb.getCount() > 0) {
 			cSettingCarb.moveToFirst();
 			if (cSettingCarb.getInt(cSettingCarb
@@ -247,7 +261,8 @@ public class ShowLoadingFoodData extends Activity {
 		cSettingCarb.close();
 
 		// prot togle button
-		Cursor cSettingProt = db.fetchSettingByName(DbSettings.setting_value_prot_onoff);
+		Cursor cSettingProt = db
+				.fetchSettingByName(DbSettings.setting_value_prot_onoff);
 		if (cSettingProt.getCount() > 0) {
 			cSettingProt.moveToFirst();
 			if (cSettingProt.getInt(cSettingProt
@@ -260,7 +275,8 @@ public class ShowLoadingFoodData extends Activity {
 		cSettingProt.close();
 
 		// fat togle button
-		Cursor cSettingFat = db.fetchSettingByName(DbSettings.setting_value_fat_onoff);
+		Cursor cSettingFat = db
+				.fetchSettingByName(DbSettings.setting_value_fat_onoff);
 		if (cSettingFat.getCount() > 0) {
 			cSettingFat.moveToFirst();
 			if (cSettingFat.getInt(cSettingFat
@@ -273,7 +289,8 @@ public class ShowLoadingFoodData extends Activity {
 		cSettingFat.close();
 
 		// kcal togle button
-		Cursor cSettingKcal = db.fetchSettingByName(DbSettings.setting_value_kcal_onoff);
+		Cursor cSettingKcal = db
+				.fetchSettingByName(DbSettings.setting_value_kcal_onoff);
 		if (cSettingKcal.getCount() > 0) {
 			cSettingKcal.moveToFirst();
 			if (cSettingKcal.getInt(cSettingKcal
@@ -288,7 +305,8 @@ public class ShowLoadingFoodData extends Activity {
 	}
 
 	private void setDefaultValue(DbAdapter db) {
-		Cursor cSetting = db.fetchSettingByName(DbSettings.setting_value_default);
+		Cursor cSetting = db
+				.fetchSettingByName(DbSettings.setting_value_default);
 		if (cSetting.getCount() > 0) {
 			cSetting.moveToFirst();
 			defaultValue = cSetting.getInt(cSetting
@@ -358,6 +376,9 @@ public class ShowLoadingFoodData extends Activity {
 		protected Void doInBackground(Void... params) {
 			// we are not finished gething our data
 			finishedGethingData = false;
+
+			// set the values fontsize, languageid and countSelectedFood
+			setValues();
 
 			// create new dbHelper object
 			DbAdapter dbHelper = new DbAdapter(context);
@@ -465,6 +486,7 @@ public class ShowLoadingFoodData extends Activity {
 						.startActivity(DataParser.activityIDMeal, i)
 						.getDecorView();
 				ActivityGroupMeal.group.setContentView(v);
+
 			}
 			super.onPostExecute(result);
 		}
@@ -493,7 +515,7 @@ public class ShowLoadingFoodData extends Activity {
 			// bigger when the favorite list count > 0!
 			if (listFavoriteFood.size() > 0)
 				listFood.add(new DBFoodComparable(-1, "", 0L, 0, 0L, 0L, 0, ""));
- 
+
 			listFood.addAll(listFood.size(), listAllFood);
 		} catch (Exception e) {
 		}

@@ -201,10 +201,10 @@ public class ShowCreateUnit extends Activity {
 
 			if (spinnerUnit.getSelectedItemPosition() == 0) {
 				standardamount = 100;
-				unitName = getResources().getString(R.string.gram);
+				unitName = ActivityGroupMeal.group.getFoodData().dbTopOneCommonFoodUnit;
 			} else if (spinnerUnit.getSelectedItemPosition() == 1) {
 				standardamount = 100;
-				unitName = getResources().getString(R.string.ml);
+				unitName = ActivityGroupMeal.group.getFoodData().dbTopTwoCommonFoodUnit;
 			} else {
 				try {
 					standardamount = Float.parseFloat(editTextStandardAmound
@@ -220,7 +220,13 @@ public class ShowCreateUnit extends Activity {
 			} catch (Exception e) {
 				carb = 0f;
 			}
-
+ 
+			try {
+				prot = Float.parseFloat(etProt.getText().toString());
+			} catch (Exception e) {
+				prot = 0f;
+			}
+			
 			try {
 				fat = Float.parseFloat(etFat.getText().toString());
 			} catch (Exception e) {
@@ -230,8 +236,10 @@ public class ShowCreateUnit extends Activity {
 			try {
 				kcal = Float.parseFloat(etKcal.getText().toString());
 			} catch (Exception e) {
-				kcal = 0f;
+				kcal = 0f; 
 			}
+
+			
 
 			// round values
 			Functions functions = new Functions();
@@ -243,7 +251,7 @@ public class ShowCreateUnit extends Activity {
 
 			DbAdapter db = new DbAdapter(this);
 			db.open();
-
+			 
 			if (unitId <= 0) {
 				// add the unit to the database
 				db.createFoodUnit(foodId, unitName, standardamount, carb, prot,
@@ -334,6 +342,8 @@ public class ShowCreateUnit extends Activity {
 		}
 
 		hideTheRowsWeDontNeed();
+		
+		setButtonDelete();
 	}
 
 	private void hideTheRowsWeDontNeed() {
@@ -367,9 +377,6 @@ public class ShowCreateUnit extends Activity {
 	}
 
 	private void fillExistingValues() {
-		// set text to update
-		btAdd.setText(getResources().getString(R.string.update));
-
 		DbAdapter db = new DbAdapter(this);
 		db.open();
 
@@ -384,12 +391,12 @@ public class ShowCreateUnit extends Activity {
 				if (cUnit
 						.getString(
 								cUnit.getColumnIndexOrThrow(DbAdapter.DATABASE_FOODUNIT_NAME))
-						.equals(getResources().getString(R.string.gram)))
+						.equals(ActivityGroupMeal.group.getFoodData().dbTopOneCommonFoodUnit))
 					spinnerUnit.setSelection(0);
 				else if (cUnit
 						.getString(
 								cUnit.getColumnIndexOrThrow(DbAdapter.DATABASE_FOODUNIT_NAME))
-						.equals(getResources().getString(R.string.ml)))
+						.equals(ActivityGroupMeal.group.getFoodData().dbTopTwoCommonFoodUnit))
 					spinnerUnit.setSelection(1);
 				else
 					spinnerUnit.setSelection(spinnerUnit.getCount() - 1);
@@ -435,9 +442,11 @@ public class ShowCreateUnit extends Activity {
 		// if the unit isnt the last one from the food
 		// and the unit is not in use in template food
 		// and the unit is not in use in meal food
+		// update: and the unit is not used in selected food!!!
 		if (dbHelper.fetchFoodUnitByFoodId(foodId).getCount() > 1
 				&& dbHelper.fetchTemplateFoodsByUnitID(unitId).getCount() == 0
-				&& dbHelper.fetchMealFoodByFoodUnitID(unitId).getCount() == 0) {
+				&& dbHelper.fetchMealFoodByFoodUnitID(unitId).getCount() == 0 
+				&& dbHelper.fetchSelectedFoodByFoodUnitId(unitId).getCount() == 0) {
 			return true;
 		}
 
@@ -460,8 +469,8 @@ public class ShowCreateUnit extends Activity {
 	private List<CharSequence> getArrayList() {
 		List<CharSequence> value = new ArrayList<CharSequence>();
 
-		value.add("100 " + getResources().getString(R.string.gram));
-		value.add("100 " + getResources().getString(R.string.ml));
+		value.add("100 " + ActivityGroupMeal.group.getFoodData().dbTopOneCommonFoodUnit);
+		value.add("100 " + ActivityGroupMeal.group.getFoodData().dbTopTwoCommonFoodUnit);
 		value.add(getResources().getString(R.string.define_own));
 
 		return value;
@@ -472,9 +481,9 @@ public class ShowCreateUnit extends Activity {
 				this,
 				R.layout.custom_spinner_array_adapter_charsequence_show_create_food,
 				getArrayList());
-		
+
 		spinnerUnit.setAdapter(adapter);
-		
+
 		adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 	}
 

@@ -5,7 +5,7 @@
     <!-- Default fonts -->
     <style name="defaultFontNormal">
         <item name="android:textColor">@color/ColorText</item>
-        <item name="android:textSize">18dip</item> 
+        <item name="android:textSize">18dip</item>
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
     </style>
@@ -13,7 +13,42 @@
     <style name="defaultFontTitle" parent="defaultFontNormal">
         <item name="android:textStyle">bold</item>
         <item name="android:layout_width">fill_parent</item>
+        <item name="android:layout_height">fill_parent</item>
+        <item name="android:textColor">@color/colorTracking</item>
+        <item name="android:layout_weight">1.0</item>
+        <item name="android:gravity">center</item>
+    </style>
+
+     <style name="llTitel">
+        <item name="android:layout_width">fill_parent</item>
         <item name="android:layout_height">wrap_content</item>
+        <item name="android:orientation">horizontal</item>
+        <item name="android:background">@color/ColorBackgroundTrackingDate</item>
+        <item name="android:layout_marginBottom">10dip</item>
+    </style>
+    
+    <!-- Buttons -->
+    <style name="buttonTitel" parent="button">
+        <item name="android:layout_gravity">center_horizontal</item>
+    </style>
+
+    <style name="buttonBack" parent="buttonTitel">
+        <item name="android:background">@drawable/ic_menu_back</item>
+    </style>
+
+    <style name="buttonForward" parent="buttonTitel">
+        <item name="android:background">@drawable/ic_menu_forward</item>
+    </style>
+    
+    <style name="LinearLayoutTrashCan">
+        <item name="android:layout_width">fill_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+    </style>
+    
+    <style name="buttonTrashCan">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:background">@drawable/ic_menu_delete</item>
     </style>
 
     <!-- editText -->
@@ -59,7 +94,7 @@
         <item name="android:paddingTop">0dip</item>
     </style>
 
-    <!--  linearlayout that goes around buttonAdd -->
+    <!-- linearlayout that goes around buttonAdd -->
     <style name="linearLayoutForButtonAdd">
         <item name="android:layout_width">fill_parent</item>
         <item name="android:layout_height">wrap_content</item>
@@ -67,18 +102,18 @@
         <item name="android:weightSum">1.0</item>
         <item name="android:gravity">center_horizontal</item>
     </style>
-    
+
     <!-- buttons -->
-    <style name="button" parent="defaultFontNormal"> 
+    <style name="button" parent="defaultFontNormal">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
     </style>
 
-    <style name="buttonAdd" parent="button"> 
+    <style name="buttonAdd" parent="button">
         <item name="android:layout_weight">0.7</item>
         <item name="android:text">@string/add</item>
     </style>
-    
+
     <!-- listviews -->
     <style name="listViewItemOne" parent="defaultFontNormal">
         <item name="android:layout_width">fill_parent</item>

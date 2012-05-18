@@ -15,15 +15,16 @@ import android.database.Cursor;
 import android.os.Bundle;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
-import android.view.View; 
+import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.Spinner; 
+import android.widget.Spinner;
 import android.widget.Toast;
 import be.goossens.oracle.R;
 import be.goossens.oracle.ActivityGroup.ActivityGroupExercise;
 import be.goossens.oracle.ActivityGroup.ActivityGroupMeal;
+import be.goossens.oracle.ActivityGroup.ActivityGroupTracking;
 import be.goossens.oracle.Custom.CustomArrayAdapterCharSequenceForASpinner;
 import be.goossens.oracle.Custom.CustomSimpleArrayAdapterForASpinner;
 import be.goossens.oracle.Objects.DBNameAndID;
@@ -43,6 +44,7 @@ public class ShowAddExerciseEvent extends Activity {
 	private Calendar mCalendar;
 	private Functions functions;
 	private List<DBNameAndID> objects;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -55,7 +57,7 @@ public class ShowAddExerciseEvent extends Activity {
 		spinnerExerciseTypes = (Spinner) findViewById(R.id.spinnerSportType);
 		spinnerDuration = (Spinner) findViewById(R.id.spinnerDuration);
 		etDescription = (EditText) findViewById(R.id.editText1);
-
+ 
 		btAdd = (Button) findViewById(R.id.buttonAdd);
 		btDelete = (Button) findViewById(R.id.buttonDelete);
 		btUpdateDateAndHour = (Button) findViewById(R.id.buttonUpdateDateAndHour);
@@ -76,6 +78,21 @@ public class ShowAddExerciseEvent extends Activity {
 		btUpdateDateAndHour.setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
 				showDialog(0);
+			}
+		}); 
+		
+		etDescription.setOnKeyListener(new View.OnKeyListener() {
+			public boolean onKey(View v, int keyCode, KeyEvent event) {
+				// filter so we only get the onkey up actions
+				if (event.getAction() != KeyEvent.ACTION_DOWN) {
+					// if the pressed key = enter we do the add code
+					if (event.getKeyCode() == KeyEvent.KEYCODE_ENTER) {
+						onClickAdd(null);
+					}
+				}
+				// if we dont return false our text wont get in the
+				// edittext
+				return false;
 			}
 		});
 	}
@@ -118,13 +135,13 @@ public class ShowAddExerciseEvent extends Activity {
 		if (getIntent().getExtras().getString(DataParser.whatToDo)
 				.equals(DataParser.doUpdateExerciseEvent))
 			setExistingValues();
-		
+
 		setDefaultSpinner();
 	}
 
-	private void setDefaultSpinner() { 
-		for(int i = 0; i < objects.size() ; i++){
-			if(objects.get(i).getId() == ActivityGroupMeal.group.getFoodData().defaultExerciseTypeID){
+	private void setDefaultSpinner() {
+		for (int i = 0; i < objects.size(); i++) {
+			if (objects.get(i).getId() == ActivityGroupMeal.group.getFoodData().defaultExerciseTypeID) {
 				spinnerExerciseTypes.setSelection(i);
 			}
 		}
@@ -179,17 +196,18 @@ public class ShowAddExerciseEvent extends Activity {
 								.getLong(cExerciseTypes
 										.getColumnIndexOrThrow(DbAdapter.DATABASE_EXERCISETYPE_ID)),
 						cExerciseTypes.getString(cExerciseTypes
-								.getColumnIndexOrThrow(DbAdapter.DATABASE_EXERCISETYPE_NAME)),""));
+								.getColumnIndexOrThrow(DbAdapter.DATABASE_EXERCISETYPE_NAME)),
+						""));
 			} while (cExerciseTypes.moveToNext());
 		}
 		cExerciseTypes.close();
 		dbHelper.close();
-		
+
 		CustomSimpleArrayAdapterForASpinner adapter = new CustomSimpleArrayAdapterForASpinner(
-				this, android.R.layout.simple_spinner_item, objects,25);
-		
+				this, android.R.layout.simple_spinner_item, objects, 25);
+
 		spinnerExerciseTypes.setAdapter(adapter);
-		 
+
 		adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 	}
 
@@ -239,12 +257,14 @@ public class ShowAddExerciseEvent extends Activity {
 				// do endtime += starttime becaus the endTime is the startTime +
 				// the just calculated seconds
 				endTime += startTime;
-  
+
 				// create exerciseEvent
 				dbHelper.createExerciseEvent(
 						etDescription.getText().toString(), startTime, endTime,
 						spinnerExerciseTypes.getSelectedItemId(),
 						functions.getDateAsStringFromCalendar(mCalendar));
+
+				ActivityGroupTracking.group.restartThisActivity();
 
 			}
 

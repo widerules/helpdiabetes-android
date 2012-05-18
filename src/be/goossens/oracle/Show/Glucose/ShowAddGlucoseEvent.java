@@ -22,6 +22,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 import be.goossens.oracle.R;
 import be.goossens.oracle.ActivityGroup.ActivityGroupGlucose;
+import be.goossens.oracle.ActivityGroup.ActivityGroupTracking;
 import be.goossens.oracle.Rest.DataParser;
 import be.goossens.oracle.Rest.DbAdapter;
 import be.goossens.oracle.Rest.DbSettings;
@@ -141,6 +142,21 @@ public class ShowAddGlucoseEvent extends Activity {
 			}
 		});
 
+		etAmount.setOnKeyListener(new View.OnKeyListener() {
+			public boolean onKey(View v, int keyCode, KeyEvent event) {
+				// filter so we only get the onkey up actions
+				if (event.getAction() != KeyEvent.ACTION_DOWN) {
+					// if the pressed key = enter we do the add code
+					if (event.getKeyCode() == KeyEvent.KEYCODE_ENTER) {
+						onClickAdd();
+					}
+				}
+				// if we dont return false our text wont get in the
+				// edittext
+				return false;
+			}
+		});
+		
 		updateTimeAndTimeTextView(mCalendar);
 	}
 
@@ -153,7 +169,8 @@ public class ShowAddGlucoseEvent extends Activity {
 
 	private void fillTextViewGlucoseUnit() {
 		dbHelper.open();
-		Cursor cSetting = dbHelper.fetchSettingByName(DbSettings.setting_glucose_unit);
+		Cursor cSetting = dbHelper
+				.fetchSettingByName(DbSettings.setting_glucose_unit);
 		cSetting.moveToFirst();
 
 		glucoseUnitID = cSetting.getLong(cSetting
@@ -210,13 +227,15 @@ public class ShowAddGlucoseEvent extends Activity {
 		} catch (Exception e) {
 			amount = 0;
 		}
-		  
+ 
 		if (amount > 0) {
 			dbHelper.open();
 
 			dbHelper.createBloodGlucoseEvent(amount,
 					functions.getDateAsStringFromCalendar(mCalendar),
 					glucoseUnitID);
+
+			ActivityGroupTracking.group.restartThisActivity();
 
 			// / Go to tracking tab when clicked on add
 			ShowHomeTab parentActivity;

@@ -11,6 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import be.goossens.oracle.R;
 import be.goossens.oracle.Objects.DBMealFood;
@@ -86,7 +87,7 @@ public class CustomArrayAdapterDBTracking extends ArrayAdapter<DBTracking> {
 							.findViewById(R.id.textViewTracking4);
 
 					iv.setImageDrawable(context.getResources().getDrawable(
-							R.drawable.ic_tab_exercise_selected));
+							R.drawable.ic_tab_exercise_unselected));
 
 					// show timestamp - endtime
 					tv1.setText(new Functions().getTimeFromString(objects
@@ -99,18 +100,29 @@ public class CustomArrayAdapterDBTracking extends ArrayAdapter<DBTracking> {
 					tv2.setText(objects.get(position).getExerciseEvent()
 							.getDescription());
 
-
 					tv4.setText(objects.get(position).getExerciseEvent()
 							.getType());
 
 					tv4.setTextColor(context.getResources().getColor(
 							R.color.colorSport));
-					
+
 					tv1.setTextSize(fontSize);
-					tv2.setTextSize(fontSize);
+					tv2.setTextSize(fontSize - 3);
 					tv4.setTextSize(fontSize);
 
 					tv4.setGravity(Gravity.RIGHT);
+
+					//add background
+					LinearLayout ll = (LinearLayout) v
+							.findViewById(R.id.LinearLayoutForColor);
+					if (position % 2 == 0) {
+						ll.setBackgroundColor(context.getResources().getColor(
+								R.color.ColorListViewOne));
+					} else {
+						ll.setBackgroundColor(context.getResources().getColor(
+								R.color.ColorListViewTwo));
+					}
+
 				} else if (objects.get(position).getMealEvent() != null) {
 					v = vi.inflate(
 							R.layout.row_custom_array_adapter_tracking_meal,
@@ -126,8 +138,14 @@ public class CustomArrayAdapterDBTracking extends ArrayAdapter<DBTracking> {
 					TextView tv4 = (TextView) v
 							.findViewById(R.id.textViewTracking4);
 
+					TextView tv5 = (TextView) v
+							.findViewById(R.id.textViewTracking5);
+
+					TextView tv6 = (TextView) v
+							.findViewById(R.id.textViewTracking6);
+
 					iv.setImageDrawable(context.getResources().getDrawable(
-							R.drawable.ic_tab_meal_selected));
+							R.drawable.ic_tab_meal_unselected));
 
 					// show timestamp
 					tv1.setText(new Functions().getTimeFromString(objects
@@ -181,10 +199,10 @@ public class CustomArrayAdapterDBTracking extends ArrayAdapter<DBTracking> {
 					// remove last \n from the text so we dont lose space in the
 					// list
 					try {
-					text = text.substring(0, text.length() - 2);
+						text = text.substring(0, text.length() - 2);
 					} catch (StringIndexOutOfBoundsException e) {
 					}
-					 
+
 					String value = "";
 
 					// get right value
@@ -210,17 +228,58 @@ public class CustomArrayAdapterDBTracking extends ArrayAdapter<DBTracking> {
 					// tv2 is for the food list
 					tv2.setText(text);
 
+					// only if taken insuline ratio != 0!
+					if (objects.get(position).getMealEvent().getInsulineRatio() != 0) {
+						tv5.setVisibility(View.VISIBLE);
+						tv6.setVisibility(View.VISIBLE);
+						// tv5 is for the calculated amound of insuline
+						tv5.setText("\n"
+								+ context.getResources().getString(
+										R.string.calculated)
+								+ " "
+								+ objects.get(position).getMealEvent()
+										.getCalculatedInsulineAmount()
+								+ " "
+								+ context.getResources().getString(
+										R.string.insulineUnit));
+						// tv6 is for the taken insuline ratio
+						tv6.setText("à "
+								+ objects.get(position).getMealEvent()
+										.getInsulineRatio()
+								+ " "
+								+ context.getResources().getString(
+										R.string.insulineRatio));
+					} else {
+						tv5.setVisibility(View.GONE);
+						tv6.setVisibility(View.GONE);
+					}
+
 					// tv4 is for the default total value
 					tv4.setText(totalCalc + " " + value);
-					tv1.setTextSize(fontSize); 
-					tv2.setTextSize(fontSize - 3); 
+ 
+					tv1.setTextSize(fontSize);
+					tv2.setTextSize(fontSize - 3);
 					tv4.setTextSize(fontSize);
+					tv5.setTextSize(fontSize - 3);
+					tv6.setTextSize(fontSize - 3);
 
 					tv4.setTextColor(context.getResources().getColor(
 							R.color.colorFood));
 
 					tv4.setGravity(Gravity.RIGHT);
 
+					
+					//add background
+					LinearLayout ll = (LinearLayout) v
+							.findViewById(R.id.LinearLayoutForColor);
+					if (position % 2 == 0) {
+						ll.setBackgroundColor(context.getResources().getColor(
+								R.color.ColorListViewOne));
+					} else {
+						ll.setBackgroundColor(context.getResources().getColor(
+								R.color.ColorListViewTwo));
+					}
+			 		
 				} else if (objects.get(position).getBloodGlucoseEvent() != null) {
 					v = vi.inflate(
 							R.layout.row_custom_array_adapter_tracking_glucose,
@@ -234,12 +293,12 @@ public class CustomArrayAdapterDBTracking extends ArrayAdapter<DBTracking> {
 							.findViewById(R.id.textViewTracking2);
 
 					iv.setImageDrawable(context.getResources().getDrawable(
-							R.drawable.ic_tab_glucose_selected));
+							R.drawable.ic_tab_glucose_unselected));
 
 					tv1.setText(new Functions().getTimeFromString(objects
 							.get(position).getBloodGlucoseEvent()
 							.getTimeStamp()));
-
+ 
 					tv2.setText(""
 							+ objects.get(position).getBloodGlucoseEvent()
 									.getAmount()
@@ -253,6 +312,18 @@ public class CustomArrayAdapterDBTracking extends ArrayAdapter<DBTracking> {
 					tv2.setGravity(Gravity.RIGHT);
 					tv1.setTextSize(fontSize);
 					tv2.setTextSize(fontSize);
+					
+					//add background
+					LinearLayout ll = (LinearLayout) v
+							.findViewById(R.id.LinearLayoutForColor);
+					if (position % 2 == 0) {
+						ll.setBackgroundColor(context.getResources().getColor(
+								R.color.ColorListViewOne));
+					} else {
+						ll.setBackgroundColor(context.getResources().getColor(
+								R.color.ColorListViewTwo));
+					}
+					
 				} else if (objects.get(position).getMedicineEvent() != null) {
 					v = vi.inflate(
 							R.layout.row_custom_array_adapter_tracking_medicine,
@@ -266,9 +337,9 @@ public class CustomArrayAdapterDBTracking extends ArrayAdapter<DBTracking> {
 							.findViewById(R.id.textViewTracking2);
 
 					iv.setImageDrawable(context.getResources().getDrawable(
-							R.drawable.ic_tab_medicine_selected));
+							R.drawable.ic_tab_medicine_unselected));
 
-					tv1.setText(new Functions().getTimeFromString(objects
+					tv1.setText(new Functions().getTimeFromString(objects 
 							.get(position).getMedicineEvent().getTimeStamp()));
 
 					tv2.setText(""
@@ -287,6 +358,18 @@ public class CustomArrayAdapterDBTracking extends ArrayAdapter<DBTracking> {
 					tv2.setGravity(Gravity.RIGHT);
 					tv1.setTextSize(fontSize);
 					tv2.setTextSize(fontSize);
+					
+					//add background
+					LinearLayout ll = (LinearLayout) v
+							.findViewById(R.id.LinearLayoutForColor);
+					if (position % 2 == 0) {
+						ll.setBackgroundColor(context.getResources().getColor(
+								R.color.ColorListViewOne));
+					} else {
+						ll.setBackgroundColor(context.getResources().getColor(
+								R.color.ColorListViewTwo));
+					}
+					
 				} else {
 					v = vi.inflate(
 							R.layout.row_custom_array_adapter_tracking_date,

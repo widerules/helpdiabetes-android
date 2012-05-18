@@ -4,9 +4,6 @@ package be.goossens.oracle.Show.Tracking;
 
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Collections;
-import java.util.Date;
-import java.util.List;
 
 import android.app.AlertDialog;
 import android.app.ListActivity;
@@ -15,11 +12,14 @@ import android.content.DialogInterface.OnClickListener;
 import android.database.Cursor;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.ListView;
-import android.widget.TextView;
 import android.widget.Toast;
 import be.goossens.oracle.R;
 import be.goossens.oracle.ActivityGroup.ActivityGroupMeal;
@@ -27,415 +27,261 @@ import be.goossens.oracle.ActivityGroup.ActivityGroupTracking;
 import be.goossens.oracle.Custom.CustomArrayAdapterDBTracking;
 import be.goossens.oracle.Objects.DBBloodGlucoseEvent;
 import be.goossens.oracle.Objects.DBExerciseEvent;
-import be.goossens.oracle.Objects.DBFoodUnit;
-import be.goossens.oracle.Objects.DBMealEvent;
 import be.goossens.oracle.Objects.DBMealFood;
 import be.goossens.oracle.Objects.DBMedicineEvent;
 import be.goossens.oracle.Objects.DBTracking;
 import be.goossens.oracle.Rest.DataParser;
 import be.goossens.oracle.Rest.DbAdapter;
 import be.goossens.oracle.Rest.Functions;
-import be.goossens.oracle.Rest.TimeComparator;
 import be.goossens.oracle.Show.ShowHomeTab;
 
 public class ShowTracking extends ListActivity {
-	private List<DBTracking> listTracking;
 	private CustomArrayAdapterDBTracking adapter;
-	private TextView tvFetchingData;
-	private boolean thereAreMoreItems;
-	private Calendar calendarTime;
 	private Button btMore;
-	private boolean setSelectedItemToLastOne;
-	
+
+	// search function
+	private Button btSearch, btSearchNext;
+	private EditText et;
+	private LinearLayout llSearch, llButtons;
+
+	private int searchPosition;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.show_tracking);
 
-		calendarTime = Calendar.getInstance();
-		
-		calendarMinusOneMonth();
-
+		// search function
+		btSearch = (Button) findViewById(R.id.buttonSearch);
+		btSearchNext = (Button) findViewById(R.id.buttonSearchNext);
 		btMore = (Button) findViewById(R.id.buttonMore);
-		//standard hide the button
-		btMore.setVisibility(View.GONE);
-		
-		listTracking = new ArrayList<DBTracking>();
+		llSearch = (LinearLayout) findViewById(R.id.LinearLayoutSearch);
+		llButtons = (LinearLayout) findViewById(R.id.LinearLayoutButtons);
+		et = (EditText) findViewById(R.id.editText1);
+
+		// hide the search part
+		llSearch.setVisibility(View.GONE);
+
+		// standard hide the button
+		llButtons.setVisibility(View.GONE);
+
 		adapter = null;
-		tvFetchingData = (TextView) findViewById(R.id.textViewFetchingData);
+
+		searchPosition = 0;
 
 		btMore.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
-				setSelectedItemToLastOne = true;
-				calendarMinusOneMonth();
-				refresh();
+				setListAdapter(null);
+
+				// start a background thread to add the next month (where are
+				// values in)
+				// so if the current month is 07 and in the month 06 are no date
+				// we go on searching in 05 for data , etc ...
+				new AsyncGetNextMonthOfData().execute();
 			}
 		});
+
+		btSearch.setOnClickListener(new View.OnClickListener() {
+			public void onClick(View v) {
+				if (llSearch.getVisibility() == View.VISIBLE) {
+					llSearch.setVisibility(View.GONE);
+					// set the search mark
+					btSearch.setBackgroundDrawable(getResources().getDrawable(
+							R.drawable.ic_menu_search));
+				} else {
+					llSearch.setVisibility(View.VISIBLE);
+					// set the "X" mark
+					btSearch.setBackgroundDrawable(getResources().getDrawable(
+							R.drawable.ic_menu_close_clear_cancel));
+				}
+			}
+		});
+
+		btSearchNext.setOnClickListener(new View.OnClickListener() {
+
+			public void onClick(View v) {
+				onClickFindNext();
+				setNext();
+			}
+
+		});
+
+		et.addTextChangedListener(new TextWatcher() {
+			public void onTextChanged(CharSequence s, int start, int before,
+					int count) {
+
+			}
+
+			public void beforeTextChanged(CharSequence s, int start, int count,
+					int after) {
+				// reset search posotion;
+				searchPosition = 0;
+			}
+
+			public void afterTextChanged(Editable s) {
+
+			}
+		});
+	}
+
+	private void setNext() {
+		setSelection(searchPosition);
+	}
+
+	private void onClickFindNext() {
+		try {
+			int lastSearch = searchPosition;
+			for (int i = searchPosition + 1; i < ActivityGroupTracking.group
+					.getTrackingData().listTracking.size(); i++) {
+				if (ActivityGroupTracking.group.getTrackingData().listTracking
+						.get(i).getMealEvent() != null) {
+					for (DBMealFood obj : ActivityGroupTracking.group
+							.getTrackingData().listTracking.get(i)
+							.getMealEvent().getMealFood()) {
+						String foodName = obj.getFoodName().toString()
+								.toLowerCase();
+						if (foodName.indexOf(et.getText().toString()
+								.toLowerCase()) != -1) {
+							searchPosition = i;
+							return;
+						} else {
+							// we get here if we are on the last search item (
+							// go back to top )
+							searchPosition = 0;
+						}
+					}
+				}
+			}
+
+			// restart the searchposition when we didnt find a new item and
+			// search for the first one again
+			if (lastSearch == searchPosition) {
+				searchPosition = 0;
+				for (int i = searchPosition + 1; i < ActivityGroupTracking.group
+						.getTrackingData().listTracking.size(); i++) {
+					if (ActivityGroupTracking.group.getTrackingData().listTracking
+							.get(i).getMealEvent() != null) {
+						for (DBMealFood obj : ActivityGroupTracking.group
+								.getTrackingData().listTracking.get(i)
+								.getMealEvent().getMealFood()) {
+							String foodName = obj.getFoodName().toString()
+									.toLowerCase();
+							if (foodName.indexOf(et.getText().toString()
+									.toLowerCase()) != -1) {
+								searchPosition = i;
+								return;
+							} else {
+								// we get here if we are on the last search item
+								// (
+								// go back to top )
+								searchPosition = 0;
+							}
+						}
+					}
+				}
+			}
+
+		} catch (Exception e) {
+			// we get here if we selected our final item in the list
+			// then serachposition + 1 will crash :(
+		}
 	}
 
 	@Override
 	protected void onResume() {
 		super.onResume();
-		tvFetchingData.setVisibility(View.VISIBLE);
-		new DoInBackground().execute();
+		fillListView();
+
+		checkHideButtonLoadMore();
 	}
 
-	private void refresh() {
-		// hide button see more
-		btMore.setVisibility(View.GONE);
+	private void checkHideButtonLoadMore() {
+		// check if we need to show the button see more
+		if (ActivityGroupTracking.group.getTrackingData().thereAreMoreItems) {
+			llButtons.setVisibility(View.VISIBLE);
+		} else {
+			llButtons.setVisibility(View.GONE);
+			// show the search stuff
+			llSearch.setVisibility(View.VISIBLE);
+		}
+	}
 
+	private void fillListView() {
 		setListAdapter(null);
-		tvFetchingData.setVisibility(View.VISIBLE);
-		new DoInBackground().execute();
+
+		if (ActivityGroupTracking.group.getTrackingData().listTracking.size() <= 0) {
+			// add a no data part to the list
+			// create the list
+			ActivityGroupTracking.group.getTrackingData().listTracking = new ArrayList<DBTracking>();
+			// Fill the list with 1 item "no records found"
+			ActivityGroupTracking.group.getTrackingData().listTracking
+					.add(new DBTracking(null, null, null, null, null, false,
+							getResources().getString(R.string.noTrackingValues)));
+		}
+
+		adapter = new CustomArrayAdapterDBTracking(this, 0,
+				ActivityGroupTracking.group.getTrackingData().listTracking,
+				ActivityGroupMeal.group.getFoodData().dbFontSize,
+				ActivityGroupMeal.group.getFoodData().defaultValue);
+
+		setListAdapter(adapter);
 	}
 
-	private class DoInBackground extends AsyncTask<Void, Void, Void> {
+	private class AsyncGetNextMonthOfData extends AsyncTask<Void, Void, Void> {
+
 		@Override
 		protected Void doInBackground(Void... params) {
-			setListTracking();
+
+			ActivityGroupTracking.group.getTrackingData().calendarDate.add(
+					Calendar.MONTH, -1);
+
+			ActivityGroupTracking.group.getTrackingData().loopTrueGethingData();
 			return null;
 		}
 
 		@Override
 		protected void onPostExecute(Void result) {
+			// set listtracking as listview
 			fillListView();
-			tvFetchingData.setVisibility(View.GONE);
- 
-			// when there is more to show then show the button
-			if (thereAreMoreItems)
-				btMore.setVisibility(View.VISIBLE);
 
-			if(setSelectedItemToLastOne){
-				setSelection(listTracking.size());
-			}
+			// check if we have to hide the button " see more "
+			checkHideButtonLoadMore();
+			
+			//go to last listview item
+			setSelection(ActivityGroupTracking.group.getTrackingData().listTracking.size());
 			
 			super.onPostExecute(result);
 		}
-	}
 
-	private void fillListView() {
-		if (listTracking.size() <= 0) {
-			// create the list
-			listTracking = new ArrayList<DBTracking>();
-			// Fill the list with 1 item "no records found"
-			listTracking
-					.add(new DBTracking(null, null, null, null, null, false,
-							getResources().getString(R.string.noTrackingValues)));
-		}
-
-		adapter = new CustomArrayAdapterDBTracking(this, 0, listTracking,
-				ActivityGroupMeal.group.getFoodData().dbFontSize,
-				ActivityGroupMeal.group.getFoodData().defaultValue);
-
-		setListAdapter(adapter);
-
-	}
-
-	private void calendarMinusOneMonth() {
-		// do - 1 month standard
-		calendarTime.add(Calendar.MONTH, -1);
-	}
-
-	// This method will fill the listTracking with all the data from the db
-	private void setListTracking() {
-		DbAdapter dbHelper = new DbAdapter(this);
-		dbHelper.open();
-
-		// clear the list and create the object
-		listTracking = new ArrayList<DBTracking>();
-		// needed to temp store the dates in
-		List<Date> listDates = new ArrayList<Date>();
-		// get all needed objects
-		Cursor cDates = dbHelper.fetchAllTimestamps();
-
-		// fill listDates with all the dates
-		if (cDates.getCount() > 0) {
-			cDates.moveToFirst();
-			do {
-				Date tempDate = new Functions()
-						.getYearMonthDayAsDateFromString(cDates.getString(cDates
-								.getColumnIndexOrThrow(new DataParser().timestamp)));
-				 
-				if (tempDate.after(calendarTime.getTime()) || tempDate.equals(calendarTime.getTime())) { 
-					thereAreMoreItems = false;
-					listDates.add(tempDate);
-				} else {
-					// if we get here there are more items so we flag the
-					// boolean to show button " see more "
-					thereAreMoreItems = true;
-				}
-
-			} while (cDates.moveToNext());
-		}
-		cDates.close();
-
-		for (Date date : listDates) {
-			// For each date object add it to the listview
-			listTracking.add(new DBTracking(null, null, null, null, date, true,
-					""));
-
-			// create a temporary list with all the events from the date so we
-			// can sort it by time
-			List<DBTracking> listTempDBTracking = new ArrayList<DBTracking>();
-
-			// For each date get the exercise events
-			Cursor cExerciseEvents = dbHelper
-					.fetchExerciseEventByDate(new Functions()
-							.getYearMonthDayAsStringFromDate(date));
-			if (cExerciseEvents.getCount() > 0) {
-				cExerciseEvents.moveToFirst();
-				do {
-					Cursor cExerciseType = dbHelper
-							.fetchExerciseTypeByID(cExerciseEvents.getLong(cExerciseEvents
-									.getColumnIndexOrThrow(DbAdapter.DATABASE_EXERCISEEVENT_EXERCISETYPEID)));
-					cExerciseType.moveToFirst();
-					// new DBTracking(exerciseEvent, mealEvent,
-					// bloodGlucoseEvent, medicineEvent, timestamp, noRecors)
-					listTempDBTracking
-							.add(new DBTracking(
-									new DBExerciseEvent(
-											cExerciseEvents
-													.getLong(cExerciseEvents
-															.getColumnIndexOrThrow(DbAdapter.DATABASE_EXERCISEEVENT_ID)),
-											cExerciseEvents.getString(cExerciseEvents
-													.getColumnIndexOrThrow(DbAdapter.DATABASE_EXERCISEEVENT_DESCRIPTION)),
-											cExerciseEvents.getInt(cExerciseEvents
-													.getColumnIndexOrThrow(DbAdapter.DATABASE_EXERCISEEVENT_STARTTIME)),
-											cExerciseEvents.getInt(cExerciseEvents
-													.getColumnIndexOrThrow(DbAdapter.DATABASE_EXERCISEEVENT_STOPTIME)),
-											cExerciseEvents.getString(cExerciseEvents
-													.getColumnIndexOrThrow(DbAdapter.DATABASE_EXERCISEEVENT_EVENTDATETIME)),
-											cExerciseEvents.getLong(cExerciseEvents
-													.getColumnIndexOrThrow(DbAdapter.DATABASE_EXERCISEEVENT_EXERCISETYPEID)),
-											cExerciseEvents.getLong(cExerciseEvents
-													.getColumnIndexOrThrow(DbAdapter.DATABASE_EXERCISEEVENT_USERID)),
-											cExerciseType.getString(cExerciseType
-													.getColumnIndexOrThrow(DbAdapter.DATABASE_EXERCISETYPE_NAME))),
-									null,
-									null,
-									null,
-									new Functions()
-											.getYearMonthDayHourMinutesAsDateFromString(cExerciseEvents.getString(cExerciseEvents
-													.getColumnIndexOrThrow(DbAdapter.DATABASE_EXERCISEEVENT_EVENTDATETIME))),
-									false, ""));
-
-					cExerciseType.close();
-				} while (cExerciseEvents.moveToNext());
-			}
-			cExerciseEvents.close();
-
-			// For each date get the meal event
-			Cursor cMealEvents = dbHelper.fetchMealEventsByDate(new Functions()
-					.getYearMonthDayAsStringFromDate(date));
-
-			if (cMealEvents.getCount() > 0) {
-				cMealEvents.moveToFirst();
-				do {
-					List<DBMealFood> listDBMealFood = new ArrayList<DBMealFood>();
-					Cursor cMealFood = dbHelper
-							.fetchMealFoodByMealEventID(cMealEvents.getLong(cMealEvents
-									.getColumnIndexOrThrow(DbAdapter.DATABASE_MEALEVENT_ID)));
-					if (cMealFood.getCount() > 0) {
-						cMealFood.moveToFirst();
-						do {
-							// fill the list with meal foods
-
-							// to do so we first get the unit that belongs to
-							// this mealfood
-							Cursor cUnit = dbHelper
-									.fetchFoodUnit(cMealFood.getLong(cMealFood
-											.getColumnIndexOrThrow(DbAdapter.DATABASE_MEALFOOD_FOODUNITID)));
-							cUnit.moveToFirst();
-							Cursor cFood = dbHelper
-									.fetchFood(cUnit.getLong(cUnit
-											.getColumnIndexOrThrow(DbAdapter.DATABASE_FOODUNIT_FOODID)));
-							cFood.moveToFirst();
-
-							// fill cmealfood
-							listDBMealFood
-									.add(new DBMealFood(
-											cMealFood
-													.getLong(cMealFood
-															.getColumnIndexOrThrow(DbAdapter.DATABASE_MEALFOOD_ID)),
-											cFood.getString(cFood
-													.getColumnIndexOrThrow(DbAdapter.DATABASE_FOOD_NAME)),
-											cMealFood.getFloat(cMealFood
-													.getColumnIndexOrThrow(DbAdapter.DATABASE_MEALFOOD_AMOUNT)),
-											new DBFoodUnit(
-													cUnit.getLong(cUnit
-															.getColumnIndexOrThrow(DbAdapter.DATABASE_FOODUNIT_ID)),
-													cUnit.getString(cUnit
-															.getColumnIndexOrThrow(DbAdapter.DATABASE_FOODUNIT_NAME)),
-													cUnit.getString(cUnit
-															.getColumnIndexOrThrow(DbAdapter.DATABASE_FOODUNIT_DESCRIPTION)),
-													cUnit.getFloat(cUnit
-															.getColumnIndexOrThrow(DbAdapter.DATABASE_FOODUNIT_STANDARDAMOUNT)),
-													cUnit.getFloat(cUnit
-															.getColumnIndexOrThrow(DbAdapter.DATABASE_FOODUNIT_KCAL)),
-													cUnit.getFloat(cUnit
-															.getColumnIndexOrThrow(DbAdapter.DATABASE_FOODUNIT_PROTEIN)),
-													cUnit.getFloat(cUnit
-															.getColumnIndexOrThrow(DbAdapter.DATABASE_FOODUNIT_CARBS)),
-													cUnit.getFloat(cUnit
-															.getColumnIndexOrThrow(DbAdapter.DATABASE_FOODUNIT_FAT)),
-													cUnit.getFloat(cUnit
-															.getColumnIndexOrThrow(DbAdapter.DATABASE_FOODUNIT_VISIBLE)),
-													cUnit.getInt(cUnit
-															.getColumnIndexOrThrow(DbAdapter.DATABASE_FOODUNIT_FOODID)))));
-
-							cFood.close();
-							cUnit.close();
-
-						} while (cMealFood.moveToNext());
-					}
-					cMealFood.close();
-
-					// new DBTracking(exerciseEvent, mealEvent,
-					// bloodGlucoseEvent, medicineEvent, timestamp, noRecors)
-					listTempDBTracking
-							.add(new DBTracking(
-									null,
-									new DBMealEvent(
-											cMealEvents
-													.getLong(cMealEvents
-															.getColumnIndexOrThrow(DbAdapter.DATABASE_MEALEVENT_ID)),
-											cMealEvents.getFloat(cMealEvents
-													.getColumnIndexOrThrow(DbAdapter.DATABASE_MEALEVENT_INSULINERATIO)),
-											cMealEvents.getFloat(cMealEvents
-													.getColumnIndexOrThrow(DbAdapter.DATABASE_MEALEVENT_CORRECTIONFACTOR)),
-											cMealEvents.getFloat(cMealEvents
-													.getColumnIndexOrThrow(DbAdapter.DATABASE_MEALEVENT_CALCULATEDINSULINEAMOUNT)),
-											cMealEvents.getString(cMealEvents
-													.getColumnIndexOrThrow(DbAdapter.DATABASE_MEALEVENT_EVENTDATETIME)),
-											cMealEvents.getLong(cMealEvents
-													.getColumnIndexOrThrow(DbAdapter.DATABASE_MEALEVENT_USERID)),
-											listDBMealFood),
-									null,
-									null,
-									new Functions()
-											.getYearMonthDayHourMinutesAsDateFromString(cMealEvents.getString(cMealEvents
-													.getColumnIndexOrThrow(DbAdapter.DATABASE_MEALEVENT_EVENTDATETIME))),
-									false, ""));
-				} while (cMealEvents.moveToNext());
-			}
-			cMealEvents.close();
-
-			// For each date get the glucose event
-			Cursor cGlucoseEvent = dbHelper
-					.fetchBloodGlucoseEventByDate(new Functions()
-							.getYearMonthDayAsStringFromDate(date));
-			if (cGlucoseEvent.getCount() > 0) {
-				cGlucoseEvent.moveToFirst();
-				do {
-					// get the unit
-					Cursor cBGUnit = dbHelper
-							.fetchBloodGlucoseUnitsByID(cGlucoseEvent.getLong(cGlucoseEvent
-									.getColumnIndexOrThrow(DbAdapter.DATABASE_BLOODGLUCOSEEVENT_BGUNITID)));
-					cBGUnit.moveToFirst();
-					// new DBTracking(exerciseEvent, mealEvent,
-					// bloodGlucoseEvent, medicineEvent, timestamp, noRecors)
-					listTempDBTracking
-							.add(new DBTracking(
-									null,
-									null,
-									new DBBloodGlucoseEvent(
-											cGlucoseEvent
-													.getLong(cGlucoseEvent
-															.getColumnIndexOrThrow(DbAdapter.DATABASE_BLOODGLUCOSEEVENT_ID)),
-											cGlucoseEvent.getFloat(cGlucoseEvent
-													.getColumnIndexOrThrow(DbAdapter.DATABASE_BLOODGLUCOSEEVENT_AMOUNT)),
-											cGlucoseEvent.getString(cGlucoseEvent
-													.getColumnIndexOrThrow(DbAdapter.DATABASE_BLOODGLUCOSEEVENT_EVENTDATETIME)),
-											cGlucoseEvent.getLong(cGlucoseEvent
-													.getColumnIndexOrThrow(DbAdapter.DATABASE_BLOODGLUCOSEEVENT_BGUNITID)),
-											cGlucoseEvent.getLong(cGlucoseEvent
-													.getColumnIndexOrThrow(DbAdapter.DATABASE_BLOODGLUCOSEEVENT_USERID)),
-											cBGUnit.getString(cBGUnit
-													.getColumnIndexOrThrow(DbAdapter.DATABASE_BLOODGLUCOSEUNIT_UNIT))),
-									null,
-									new Functions()
-											.getYearMonthDayHourMinutesAsDateFromString(cGlucoseEvent.getString(cGlucoseEvent
-													.getColumnIndexOrThrow(DbAdapter.DATABASE_BLOODGLUCOSEEVENT_EVENTDATETIME))),
-									false, ""));
-
-					cBGUnit.close();
-				} while (cGlucoseEvent.moveToNext());
-			}
-			cGlucoseEvent.close();
-
-			// For each date get the medicine event
-			Cursor cMedicineEvent = dbHelper
-					.fetchMedicineEventByDate(new Functions()
-							.getYearMonthDayAsStringFromDate(date));
-			if (cMedicineEvent.getCount() > 0) {
-				cMedicineEvent.moveToFirst();
-
-				// loop true all medicine events
-				do {
-					// get the medicine type
-					Cursor cMedicineType = dbHelper
-							.fetchMedicineTypesByID(cMedicineEvent.getLong(cMedicineEvent
-									.getColumnIndexOrThrow(DbAdapter.DATABASE_MEDICINEEVENT_MEDICINETYPEID)));
-					cMedicineType.moveToFirst();
-					// new DBTracking(exerciseEvent, mealEvent,
-					// bloodGlucoseEvent,
-					// medicineEvent, timestamp, noRecors)
-					listTempDBTracking
-							.add(new DBTracking(
-									null,
-									null,
-									null,
-									new DBMedicineEvent(
-											cMedicineEvent
-													.getLong(cMedicineEvent
-															.getColumnIndexOrThrow(DbAdapter.DATABASE_MEDICINEEVENT_ID)),
-											cMedicineEvent.getFloat(cMedicineEvent
-													.getColumnIndexOrThrow(DbAdapter.DATABASE_MEDICINEEVENT_AMOUNT)),
-											cMedicineEvent.getString(cMedicineEvent
-													.getColumnIndexOrThrow(DbAdapter.DATABASE_MEDICINEEVENT_TIMESTAMP)),
-											cMedicineEvent.getLong(cMedicineEvent
-													.getColumnIndexOrThrow(DbAdapter.DATABASE_MEDICINEEVENT_MEDICINETYPEID)),
-											cMedicineType.getString(cMedicineType
-													.getColumnIndexOrThrow(DbAdapter.DATABASE_MEDICINETYPE_MEDICINENAME)),
-											cMedicineType.getString(cMedicineType
-													.getColumnIndexOrThrow(DbAdapter.DATABASE_MEDICINETYPE_MEDICINEUNIT))),
-									new Functions()
-											.getYearMonthDayHourMinutesAsDateFromString(cMedicineEvent.getString(cMedicineEvent
-													.getColumnIndexOrThrow(DbAdapter.DATABASE_MEDICINEEVENT_TIMESTAMP))),
-									false, ""));
-					cMedicineType.close();
-				} while (cMedicineEvent.moveToNext());
-			}
-			cMedicineEvent.close();
-
-			// order the temp list on timestamp
-			Collections.sort(listTempDBTracking, new TimeComparator());
-
-			// add the temp list to the real list
-			listTracking.addAll(listTracking.size(), listTempDBTracking);
-		}
-		dbHelper.close();
 	}
 
 	@Override
 	protected void onListItemClick(ListView l, View v, int position, long id) {
 		// click on medine event
-		if (listTracking.get(position).getMedicineEvent() != null) {
-			showPopUpDeleteMedicineEvent(listTracking.get(position)
-					.getMedicineEvent());
-		} else if (listTracking.get(position).getExerciseEvent() != null) {
-			showPopUpDeleteExerciseEvent(listTracking.get(position)
-					.getExerciseEvent());
-		} else if (listTracking.get(position).getBloodGlucoseEvent() != null) {
-			showPopUpDeleteGlucoseEvent(listTracking.get(position)
-					.getBloodGlucoseEvent());
-		} else if (listTracking.get(position).getMealEvent() != null) {
+		if (ActivityGroupTracking.group.getTrackingData().listTracking.get(
+				position).getMedicineEvent() != null) {
+			showPopUpDeleteMedicineEvent(
+					ActivityGroupTracking.group.getTrackingData().listTracking
+							.get(position).getMedicineEvent(), position);
+		} else if (ActivityGroupTracking.group.getTrackingData().listTracking
+				.get(position).getExerciseEvent() != null) {
+			showPopUpDeleteExerciseEvent(
+					ActivityGroupTracking.group.getTrackingData().listTracking
+							.get(position).getExerciseEvent(), position);
+		} else if (ActivityGroupTracking.group.getTrackingData().listTracking
+				.get(position).getBloodGlucoseEvent() != null) {
+			showPopUpDeleteGlucoseEvent(
+					ActivityGroupTracking.group.getTrackingData().listTracking
+							.get(position).getBloodGlucoseEvent(), position);
+		} else if (ActivityGroupTracking.group.getTrackingData().listTracking
+				.get(position).getMealEvent() != null) {
 
 			float totalValue = 0;
 			String text = " \n ";
 			String defaultValueText = "";
 
-			for (DBMealFood mealFood : listTracking.get(position)
+			for (DBMealFood mealFood : ActivityGroupTracking.group
+					.getTrackingData().listTracking.get(position)
 					.getMealEvent().getMealFood()) {
 				float calculatedValue = 0f;
 
@@ -485,13 +331,15 @@ public class ShowTracking extends ListActivity {
 			// Round total value
 			totalValue = new Functions().roundFloats(totalValue, 1);
 
-			showPopUpWhatToDoWithMealEvent(listTracking.get(position)
-					.getMealEvent().getId(), totalValue + " "
-					+ defaultValueText + " \n" + text);
+			showPopUpWhatToDoWithMealEvent(
+					ActivityGroupTracking.group.getTrackingData().listTracking
+							.get(position).getMealEvent().getId(), totalValue
+							+ " " + defaultValueText + " \n" + text, position);
 		}
 	}
 
-	private void showPopUpDeleteGlucoseEvent(final DBBloodGlucoseEvent event) {
+	private void showPopUpDeleteGlucoseEvent(final DBBloodGlucoseEvent event,
+			final int location) {
 		// Show a dialog
 		new AlertDialog.Builder(ActivityGroupTracking.group)
 				.setTitle(getResources().getString(R.string.delete))
@@ -503,7 +351,11 @@ public class ShowTracking extends ListActivity {
 								// Delete from database
 								deleteGlucoseEventFromDatabase(event.getId());
 								// refresh list
-								refresh();
+								// delete the item from the list
+								ActivityGroupTracking.group.getTrackingData().listTracking
+										.remove(location);
+								
+								adapter.notifyDataSetChanged();
 							}
 						})
 				.setNegativeButton(getResources().getString(R.string.cancel),
@@ -521,7 +373,8 @@ public class ShowTracking extends ListActivity {
 				.show();
 	}
 
-	private void showPopUpDeleteExerciseEvent(final DBExerciseEvent event) {
+	private void showPopUpDeleteExerciseEvent(final DBExerciseEvent event,
+			final int location) {
 		// Show a dialog
 		new AlertDialog.Builder(ActivityGroupTracking.group)
 				.setTitle(getResources().getString(R.string.delete))
@@ -533,7 +386,11 @@ public class ShowTracking extends ListActivity {
 								// Delete from database
 								deleteExerciseEventFromDatabase(event.getId());
 								// refresh list
-								refresh();
+								// delete the item from the list
+								ActivityGroupTracking.group.getTrackingData().listTracking
+										.remove(location);
+								 
+								adapter.notifyDataSetChanged();
 							}
 						})
 				.setNegativeButton(getResources().getString(R.string.cancel),
@@ -554,7 +411,7 @@ public class ShowTracking extends ListActivity {
 	}
 
 	private void showPopUpDeleteMedicineEvent(
-			final DBMedicineEvent medicineEvent) {
+			final DBMedicineEvent medicineEvent, final int location) {
 		// Show a dialog
 		new AlertDialog.Builder(ActivityGroupTracking.group)
 				.setTitle(getResources().getString(R.string.delete))
@@ -566,8 +423,12 @@ public class ShowTracking extends ListActivity {
 								// Delete from database
 								deleteMedicineEventFromDatabase(medicineEvent
 										.getId());
-								// refresh list
-								refresh();
+
+								// delete the item from the list
+								ActivityGroupTracking.group.getTrackingData().listTracking
+										.remove(location);
+								
+								adapter.notifyDataSetChanged();
 							}
 						})
 				.setNegativeButton(getResources().getString(R.string.cancel),
@@ -608,7 +469,8 @@ public class ShowTracking extends ListActivity {
 		db.close();
 	}
 
-	private void showPopUpWhatToDoWithMealEvent(final long mealID, String text) {
+	private void showPopUpWhatToDoWithMealEvent(final long mealID, String text,
+			final int location) {
 		AlertDialog.Builder builder = new AlertDialog.Builder(
 				ActivityGroupTracking.group);
 		builder.setMessage(text)
@@ -623,7 +485,7 @@ public class ShowTracking extends ListActivity {
 							}
 						})
 				.setNeutralButton(getResources().getString(R.string.cancel),
-						null)
+						null) 
 				.setNegativeButton(getResources().getString(R.string.delete),
 						new OnClickListener() {
 							public void onClick(DialogInterface dialog,
@@ -631,37 +493,13 @@ public class ShowTracking extends ListActivity {
 								// delete from database
 								deleteMealEventFromDatabase(mealID);
 
-								// refresh the list
-								refresh();
+								// delete the item from the list
+								ActivityGroupTracking.group.getTrackingData().listTracking
+										.remove(location);
+								
+								adapter.notifyDataSetChanged();
 							}
 						}).show();
-	}
-
-	private void goToFoodTab() {
-		try {
-			// flag to start show selected food
-			// ActivityGroupMeal.group.goToSeletedFood();
-
-			// Go to tracking tab when clicked on add
-			ShowHomeTab parentActivity;
-			parentActivity = (ShowHomeTab) this.getParent().getParent();
-			parentActivity.goToTab(DataParser.activityIDMeal);
-
-			// show sucess message
-			Toast.makeText(this,
-					getResources().getString(R.string.sucesfull_added),
-					Toast.LENGTH_LONG).show();
-		} catch (Exception e) {
-			showPopUp(e.toString());
-		}
-	}
-
-	private void showPopUp(String string) {
-		// Show a dialog with a inputbox to insert the template name
-		new AlertDialog.Builder(ActivityGroupTracking.group).setTitle("Error")
-				.setMessage(string)
-				.setNeutralButton(getResources().getString(R.string.oke), null)
-				.show();
 	}
 
 	private void deleteMealEventFromDatabase(long mealID) {
@@ -703,9 +541,30 @@ public class ShowTracking extends ListActivity {
 		db.close();
 	}
 
-	@Override
-	protected void onPause() {
-		super.onPause();
+	private void goToFoodTab() {
+		try {
+			// flag to start show selected food
+			// ActivityGroupMeal.group.goToSeletedFood();
+
+			// Go to tracking tab when clicked on add
+			ShowHomeTab parentActivity;
+			parentActivity = (ShowHomeTab) this.getParent().getParent();
+			parentActivity.goToTab(DataParser.activityIDMeal);
+
+			// show sucess message
+			Toast.makeText(this,
+					getResources().getString(R.string.sucesfull_added),
+					Toast.LENGTH_LONG).show();
+		} catch (Exception e) {
+			showPopUp(e.toString());
+		}
+	}
+
+	private void showPopUp(String string) {
+		new AlertDialog.Builder(ActivityGroupTracking.group).setTitle("Error")
+				.setMessage(string)
+				.setNeutralButton(getResources().getString(R.string.oke), null)
+				.show();
 	}
 
 	// if we press the back button on this activity we have to show a popup to
@@ -742,4 +601,5 @@ public class ShowTracking extends ListActivity {
 				.setNegativeButton(getResources().getString(R.string.no),
 						dialogClickListener).show();
 	}
+
 }

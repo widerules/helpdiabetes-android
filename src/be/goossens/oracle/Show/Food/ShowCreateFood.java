@@ -227,8 +227,8 @@ public class ShowCreateFood extends Activity {
 	private List<CharSequence> getArrayList() {
 		List<CharSequence> value = new ArrayList<CharSequence>();
 		
-		value.add("100 " + getResources().getString(R.string.gram));
-		value.add("100 " + getResources().getString(R.string.ml));
+		value.add("100 " + ActivityGroupMeal.group.getFoodData().dbTopOneCommonFoodUnit);
+		value.add("100 " + ActivityGroupMeal.group.getFoodData().dbTopTwoCommonFoodUnit);
 		value.add(getResources().getString(R.string.define_own));
 		
 		return value;
@@ -258,11 +258,11 @@ public class ShowCreateFood extends Activity {
 			if (spinnerUnit.getSelectedItemPosition() == 0) {
 				// if we selected '100 gram'
 				standardAmound = 100f;
-				unitName = getResources().getString(R.string.gram);
+				unitName = ActivityGroupMeal.group.getFoodData().dbTopOneCommonFoodUnit;
 			} else if (spinnerUnit.getSelectedItemPosition() == 1) {
 				// if we selected '100 ml'
 				standardAmound = 100f;
-				unitName = getResources().getString(R.string.ml);
+				unitName = ActivityGroupMeal.group.getFoodData().dbTopTwoCommonFoodUnit;
 			} else {
 				// else get from the editText boxes
 				standardAmound = Float.parseFloat(editTextUnitStandardAmound
