@@ -24,7 +24,7 @@
     <string name="next">Next</string>
     <string name="sureToExit">Are you sure you want to exit ?</string>
     <string name="checkingDatabase">Database Loading</string>
-    <string name="are_you_diabetes_patient">Helpdiabetes can automaticly calucate insuline. \n Do you want to use this function?</string>
+    <string name="are_you_diabetes_patient">Helpdiabetes can automatically calucate insulin.\nDo you want to use this functionality ?</string>
     <string name="titelTracking">Log</string>
     <string name="titelCreateFood">New food</string>
     <string name="titelUpdateFood">Food</string>
@@ -35,7 +35,7 @@
     <string name="titelSettings">Settings</string>
     <string name="titelAddMedicine">Medication</string>
     <string name="titelTemplate">Templates</string>
-    <string name="pref_insuline_ratio">Insulin-carb ratio</string>
+    <string name="pref_insuline_ratio">Insulin-to-carb ratio</string>
     <string name="pref_meal_times">Meal Time Slots</string>
     <string name="pref_value_order">Food composition</string>
     <string name="pref_text_size">Font Size</string>
@@ -51,11 +51,11 @@
     <string name="noTrackingValues">There are no logs</string>
     <string name="addToSelection">Add to selection</string>
     <string name="showSelectedFoodPopupAddAmountToTemplate">Save amounts?</string>
-    <string name="insuline">Insuline</string>
-    <string name="insulineRatio">carbs/1E</string>
-    <string name="insulineUnit">E</string>
-    <string name="showSelectedFoodUnitsInsuline">units insuline</string>
-    <string name="showSelectedFoodUInsulineRatio">Insuline ratio</string>
+    <string name="insuline">Insulin</string>
+    <string name="insulineRatio">grams of carbs/1 IU</string>
+    <string name="insulineUnit">IU</string>
+    <string name="showSelectedFoodUnitsInsuline">units insulin</string>
+    <string name="showSelectedFoodUInsulineRatio">Insulin-to-carb ratio</string>
     <string name="showSelectedFoodEatSelectedFood">Add to logs</string>
     <string name="total">Total selections</string>
     <string name="sureToDeleteSelectedFood">Are you sure to clear selections?</string>
@@ -104,7 +104,7 @@
     <string name="pref_snackratio_title">Snack</string>
     <string name="pref_dinnerratio_title">Dinner</string>
     <string name="starts_at">starts at</string>
-    <string name="if_value_zero_dont_calc_insuline">If the value is zero the insuline wont be calculated!</string>
+    <string name="if_value_zero_dont_calc_insuline">If the value is zero then insulin amount will not be calculated!</string>
     <string name="standard_cant_be_hidden">Default cant be hidden</string>
     <string name="fontSize">font size</string>
     <string name="selected_wanted_size">Selected the wanted size</string>

@@ -17,7 +17,7 @@
     <string name="short_kcal">Kcals</string>
     <string name="short_carbs">Kh</string>
     <string name="save">Opslaan</string>
-    <string name="oke">Oke</string>
+    <string name="oke">Ok</string>
     <string name="cancel">Annuleren</string>
     <string name="visibility">Zichtbaarheid</string>
     <string name="visible">Zichtbaar</string>
@@ -25,7 +25,7 @@
     <string name="next">Volgende</string>
     <string name="sureToExit">Bent u zeker dat u wilt afsluiten ?</string>
     <string name="checkingDatabase">Database initialiseren</string>
-    <string name="are_you_diabetes_patient">Helpdiabetes kan automatisch insuline dosissen berekenen. \nWilt u gebruik maken van deze functie?</string>
+    <string name="are_you_diabetes_patient">Helpdiabetes kan automatisch insuline dosissen berekenen. \nWilt u gebruik maken van deze functie ?</string>
     <string name="titelTracking">Historiek</string>
     <string name="titelCreateFood">Nieuw voedingsmiddel</string>
     <string name="titelUpdateFood">Voedingsmiddel</string>
@@ -36,7 +36,7 @@
     <string name="titelSettings">Instellingen</string>
     <string name="titelAddMedicine">Medicatie</string>
     <string name="titelTemplate">Templates</string>
-    <string name="pref_insuline_ratio">Insuline-KH Ratio</string>
+    <string name="pref_insuline_ratio">Insuline-Kh Ratio</string>
     <string name="pref_meal_times">Maaltijdtijden</string>
     <string name="pref_value_order">Voorkeur voedingswaarde</string>
     <string name="pref_text_size">Lettergrootte</string>
@@ -44,7 +44,7 @@
     <string name="pref_exercise_types">Activiteit types</string>
     <string name="pref_medicine_types">Medicijn types</string>
     <string name="pref_db_language">Taal voedingstabel</string>
-    <string name="pref_backup">Backup</string>
+    <string name="pref_backup">Back-up</string>
     <string name="pref_about">Over</string>
     <string name="pref_add_exercise_type">Activiteit type toevoegen</string>
     <string name="pref_add_medicine_type">Medicijn type toevoegen</string>
@@ -53,16 +53,16 @@
     <string name="addToSelection">Toevoegen aan selectie</string>
     <string name="showSelectedFoodPopupAddAmountToTemplate">Wilt u de aantallen mee bewaren?</string>
     <string name="insuline">Insuline</string>
-    <string name="insulineRatio">KH/1E</string>
-    <string name="insulineUnit">E</string>
+    <string name="insulineRatio">gram Kh/1 IE</string>
+    <string name="insulineUnit">IE</string>
     <string name="showSelectedFoodUnitsInsuline">eenheden insuline</string>
     <string name="showSelectedFoodUInsulineRatio">Insuline ratio</string>
     <string name="showSelectedFoodEatSelectedFood">toevoegen aan rapport</string>
     <string name="total">Totaal selecties</string>
-    <string name="sureToDeleteSelectedFood">Bent u zeker dat u alle selecties wilt verwijderen?</string>
-    <string name="addSelectionToTracking">De selectie aan de rapport pagina toevoegen ?</string>
+    <string name="sureToDeleteSelectedFood">Bent u zeker dat u alle selecties wilt verwijderen ?</string>
+    <string name="addSelectionToTracking">De selecties aan de historiek toevoegen ?</string>
     <string name="howMuch">Hoeveel</string>
-    <string name="didUUse">heeft u ingenomen?</string>
+    <string name="didUUse">heeft u ingenomen ?</string>
     <string name="changeTime">Verander tijd</string>
     <string name="search">Zoeken</string>
     <string name="options">Opties</string>
@@ -80,19 +80,19 @@
     <string name="amountCantBeZero">Waarde mag niet 0 zijn!</string>
     <string name="exercise_type_cant_be_empty">Type mag niet leeg zijn</string>
     <string name="date">Datum</string>
-    <string name="amound_of_kcal">Kilocalorien</string>
+    <string name="amound_of_kcal">Kilocalorieën</string>
     <string name="amound_of_carbs">Koolhydraten</string>
     <string name="amound_of_protein">Eiwit</string>
     <string name="amound_of_fat">Vet</string>
     <string name="multiplie">X</string>
-    <string name="cant_delete_food_caus_food_is_in_use">Dit eten kan niet verwijderd worden (Het word nog gebruikt)!</string>
+    <string name="cant_delete_food_caus_food_is_in_use">Dit eten kan niet verwijderd worden (het wordt nog gebruikt)!</string>
     <string name="create_new_food">eten</string>
     <string name="food_name">Productnaam</string>
     <string name="food_name_is_required">Naam eten mag niet leeg zijn</string>
     <string name="units">Hoeveelheden</string>
     <string name="selections_are_empty">Selecties is leeg</string>
     <string name="saved">Opgeslagen</string>
-    <string name="do_you_want_to_delete_the_selections">Wilt u de selecties leeg maken?</string>
+    <string name="do_you_want_to_delete_the_selections">Wilt u de selecties leegmaken ?</string>
     <string name="add_food_to_template_error">U moet minimum 2 etenswaren geselecteerd hebben</string>
     <string name="delete">verwijder</string>
     <string name="template_name">Template naam</string>
@@ -114,23 +114,23 @@
     <string name="make_standard">Markeer als default</string>
     <string name="standard_is_used_for">Default word gebruikt om geselecteerd eten aan de rapport pagina toe te voegen</string>
     <string name="about_text">Dit programa is vrije software: je mag het herdistribueren en/of wijzigen onder de voorwaarden van de GNU Algemene Publieke Licentie zoals gepubliceerd door de Free Software Foundation, onder versie 3 van de Licentie of (naar jouw keuze) elke latere versie. Dit programma is gedistribueerd in de hoop dat het nuttig zal zijn maar ZONDER ENIGE GARANTIE: zelfs zonder de impliciete garanties die GEBRUIKELIJK ZIJN IN DE HANDEL of voor BRUIKBAARHEID VOOR EEN SPECIFIEK DOEL. Zie de GNU Algemene Publieke Licentie voor meer details. Je hoort een kopie van de GNU Algemene Publieke Licentie te hebben ontvangen samen met dit programma. Als dat niet het geval is, zie http://www.gnu.org/licenses/gpl.txt.</string>
-    <string name="copyDatabaseToSD">Backup database 2 SD</string>
-    <string name="foodToExcel">exporteer producten 2 csv</string>
-    <string name="excelToDB">importeer producten uit csv</string>
-    <string name="select_standard_medicine_type">Selecteerd het default medicijn type</string>
-    <string name="define_own">Definier eigen</string>
+    <string name="copyDatabaseToSD">Back-up maken naar SD kaartje</string>
+    <string name="foodToExcel">Exporteer producten naar csv bestand</string>
+    <string name="excelToDB">Importeer producten uit csv bestand</string>
+    <string name="select_standard_medicine_type">Selecteer het default medicijn type</string>
+    <string name="define_own">Definieër eigen</string>
 
     <!-- Standard amound for adding units -->
     <string name="part">stuk</string>
 
     <!-- Update: 14-05-2012 --> 
-    <string name="file_name">Bestands naam</string>
+    <string name="file_name">Bestandsnaam</string>
     <string name="no_own_food">Er zijn geen zelf toegevoegde/aangepaste producten</string>
-    <string name="could_not_write">Kan niet schrijven naar sd kaartje</string>
-    <string name="succesfull_wrote_to_sd">Bestand succesvol gekopierd naar sd kaartje</string>
+    <string name="could_not_write">Kan niet schrijven naar SD kaartje</string>
+    <string name="succesfull_wrote_to_sd">Bestand succesvol gekopieerd naar SD kaartje</string>
     <string name="succesfull_wrote_csv_file">Bestand succesvol aangemaakt</string>
     <string name="sucessfull_copied_records_to_database">Producten sucessvol aan database toegevoegd</string>
-    <string name="could_not_read_from_sd">Kan niet van sd kaartje lezen</string>
+    <string name="could_not_read_from_sd">Kan niet van SD kaartje lezen</string>
     <string name="selections_aint_empty">Er zijn nog producten in selectie!</string>
     <string name="dont_add_medicine">Medicijn niet toevoegen</string>
     <string name="sucesfull_added">Producten toevoegd aan selectie</string>
@@ -138,13 +138,13 @@
      <!-- Update: 15-05-2012 -->
      <string name="warning">Waarschuwing</string>
      <string name="app_will_exit">De applicatie zal nu afsluiten \n Gelieve deze zelf terug op te starten</string>
-     <string name="something_went_wrong">Bent u zeker dat de file op het sd kaartje staat ? :)</string>
-     <string name="succesfull_copied">Succesvol database gekopierd</string>
-     <string name="databaseFromSDToPhone">Restore database from SD</string> 
-     <string name="deleteCurrentDatabase">Deze functie zal de huidige database overschrijven waardoor al de huidige data verwijderd word. \n\nBent u zeker dat u verder wilt gaan</string>
+     <string name="something_went_wrong">Bent u zeker dat het bestand op het SD kaartje staat ?</string>
+     <string name="succesfull_copied">Database gekopieerd</string>
+     <string name="databaseFromSDToPhone">Herstel database van SD kaartje</string> 
+     <string name="deleteCurrentDatabase">Deze functie zal de huidige database overschrijven waardoor al de huidige data verwijderd wordt. \n\nBent u zeker dat u verder wilt gaan ?</string>
      <string name="seeMore">Laad meer</string>
      <string name="noFilesFound">Geen csv bestanden gevonden op root van SD kaartje</string>
-     <string name="chooseFile">Kies de gewenste file</string>
+     <string name="chooseFile">Kies bestand</string>
      <string name="calculated">Berekend:</string>
      <string name="searchNext">Vind volgende</string>
 </resources>
