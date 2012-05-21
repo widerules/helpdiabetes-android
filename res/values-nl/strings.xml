@@ -14,7 +14,7 @@
     <string name="unit">Eenheid</string>
     <string name="name_cant_be_empty">Naam mag niet leeg zijn</string>
     <string name="unit_cant_be_empty">Eenheid mag niet leeg zijn</string>
-    <string name="short_kcal">Kcals</string>
+    <string name="short_kcal">kcal</string>
     <string name="short_carbs">Kh</string>
     <string name="save">Opslaan</string>
     <string name="oke">Ok</string>
@@ -44,7 +44,7 @@
     <string name="pref_exercise_types">Activiteit types</string>
     <string name="pref_medicine_types">Medicijn types</string>
     <string name="pref_db_language">Taal voedingstabel</string>
-    <string name="pref_backup">Back-up</string>
+    <string name="pref_backup">Back-up, herstel, importeer en exporteer</string>
     <string name="pref_about">Over</string>
     <string name="pref_add_exercise_type">Activiteit type toevoegen</string>
     <string name="pref_add_medicine_type">Medicijn type toevoegen</string>
@@ -91,7 +91,7 @@
     <string name="selections_are_empty">Selecties is leeg</string>
     <string name="saved">Opgeslagen</string>
     <string name="do_you_want_to_delete_the_selections">Wilt u de selecties leegmaken ?</string>
-    <string name="add_food_to_template_error">U moet minimum 2 etenswaren geselecteerd hebben</string>
+    <string name="add_food_to_template_error">U moet minimum 2 voedingsmiddelen selecteren vooraleer de selecties te kunnen bewaren als template</string>
     <string name="delete">verwijder</string>
     <string name="template_name">Template naam</string>
     <string name="save_as_template">bewaar template</string>
@@ -106,7 +106,7 @@
     <string name="starts_at">begint om</string>
     <string name="if_value_zero_dont_calc_insuline">Als de waarde 0 is word er geen insuline berekend!</string>
     <string name="standard_cant_be_hidden">Default kan niet onzichtbaar gezet worden</string>
-    <string name="fontSize">Tekst grootte</string>
+    <string name="fontSize">Tekstgrootte</string>
     <string name="selected_wanted_size">Selecteer de gewenste grootte</string>
     <string name="standard">default</string>
     <string name="make_standard">Markeer als default</string>
