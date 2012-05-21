@@ -52,10 +52,8 @@
     <string name="addToSelection">Add to selection</string>
     <string name="showSelectedFoodPopupAddAmountToTemplate">Save amounts?</string>
     <string name="insuline">Insulin</string>
-    <string name="insulineRatio">grams of carbs/1 IU</string>
+    <string name="insulineRatio">grams of carbs/1IU</string>
     <string name="insulineUnit">IU</string>
-    <string name="showSelectedFoodUnitsInsuline">units insulin</string>
-    <string name="showSelectedFoodUInsulineRatio">Insulin-to-carb ratio</string>
     <string name="showSelectedFoodEatSelectedFood">Add to logs</string>
     <string name="total">Total selections</string>
     <string name="sureToDeleteSelectedFood">Are you sure to clear selections?</string>

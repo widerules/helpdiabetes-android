@@ -23,7 +23,7 @@ public class CustomExpandableListAdapter extends BaseExpandableListAdapter {
 	private String defaultCalculatedText = "";
 	private int fontSize;
 	private int defaultValue;
-
+ 
 	public void clear() {
 		calculatedInsuline = "";
 		defaultCalculated = "";

@@ -5,18 +5,17 @@
 
     <LinearLayout style="@style/llTitel" >
 
-         <Button
+        <Button
             style="@style/buttonBack"
             android:visibility="invisible" />
-        
+
         <TextView
             style="@style/defaultFontTitle"
             android:text="@string/titelTracking" />
-        
-         <Button
+
+        <Button
             style="@style/buttonForward"
             android:visibility="invisible" />
-        
     </LinearLayout>
 
     <ListView
@@ -31,7 +30,9 @@
     <LinearLayout
         android:id="@+id/LinearLayoutButtons"
         android:layout_width="fill_parent"
-        android:layout_height="wrap_content" >
+        android:layout_height="wrap_content"
+        android:background="@color/ColorBackgroundTrackingDateLighter"
+        android:padding="5dip" >
 
         <Button
             android:id="@+id/buttonMore"
@@ -50,7 +51,9 @@
     <LinearLayout
         android:id="@+id/LinearLayoutSearch"
         android:layout_width="fill_parent"
-        android:layout_height="wrap_content" >
+        android:layout_height="wrap_content"
+        android:background="@color/ColorBackgroundTrackingDateLighter"
+        android:padding="5dip" >
 
         <EditText
             android:id="@+id/editText1"

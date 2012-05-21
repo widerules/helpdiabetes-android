@@ -18,8 +18,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1.0"
             android:hint="@string/search"
-            android:inputType="text"
-            android:paddingLeft="0dip" />
+            android:inputType="text" />
 
         <Button
             android:id="@+id/buttonShowFoodListSearch"
