@@ -6,7 +6,7 @@
     <string name="btup">+</string>
     <string name="btdown">-</string>
     <string name="endOfListView">></string>
-    <string name="Version">Versie 1.34.2</string>
+    <string name="Version">Versie 1.35</string>
     <string name="about_text_copyright">Copyright (C) 2012 Kenny Goossens</string>
 
 </resources>

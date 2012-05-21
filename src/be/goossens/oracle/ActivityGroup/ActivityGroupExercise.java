@@ -15,7 +15,7 @@ import be.goossens.oracle.Rest.DataParser;
 import be.goossens.oracle.Show.Exercise.ShowAddExerciseEvent;
 
 public class ActivityGroupExercise extends ActivityGroup {
-
+ 
 	// keep this in a static variable to make it accessible for all the nesten
 	// activities, let them manipulate the view
 	public static ActivityGroupExercise group;

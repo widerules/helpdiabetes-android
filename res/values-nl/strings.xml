@@ -53,10 +53,8 @@
     <string name="addToSelection">Toevoegen aan selectie</string>
     <string name="showSelectedFoodPopupAddAmountToTemplate">Wilt u de aantallen mee bewaren?</string>
     <string name="insuline">Insuline</string>
-    <string name="insulineRatio">gram Kh/1 IE</string>
+    <string name="insulineRatio">gram Kh/1IE</string>
     <string name="insulineUnit">IE</string>
-    <string name="showSelectedFoodUnitsInsuline">eenheden insuline</string>
-    <string name="showSelectedFoodUInsulineRatio">Insuline ratio</string>
     <string name="showSelectedFoodEatSelectedFood">toevoegen aan rapport</string>
     <string name="total">Totaal selecties</string>
     <string name="sureToDeleteSelectedFood">Bent u zeker dat u alle selecties wilt verwijderen ?</string>
@@ -123,7 +121,7 @@
     <!-- Standard amound for adding units -->
     <string name="part">stuk</string>
 
-    <!-- Update: 14-05-2012 --> 
+    <!-- Update: 14-05-2012 -->
     <string name="file_name">Bestandsnaam</string>
     <string name="no_own_food">Er zijn geen zelf toegevoegde/aangepaste producten</string>
     <string name="could_not_write">Kan niet schrijven naar SD kaartje</string>
@@ -134,17 +132,18 @@
     <string name="selections_aint_empty">Er zijn nog producten in selectie!</string>
     <string name="dont_add_medicine">Medicijn niet toevoegen</string>
     <string name="sucesfull_added">Producten toevoegd aan selectie</string>
-    
-     <!-- Update: 15-05-2012 -->
-     <string name="warning">Waarschuwing</string>
-     <string name="app_will_exit">De applicatie zal nu afsluiten \n Gelieve deze zelf terug op te starten</string>
-     <string name="something_went_wrong">Bent u zeker dat het bestand op het SD kaartje staat ?</string>
-     <string name="succesfull_copied">Database gekopieerd</string>
-     <string name="databaseFromSDToPhone">Herstel database van SD kaartje</string> 
-     <string name="deleteCurrentDatabase">Deze functie zal de huidige database overschrijven waardoor al de huidige data verwijderd wordt. \n\nBent u zeker dat u verder wilt gaan ?</string>
-     <string name="seeMore">Laad meer</string>
-     <string name="noFilesFound">Geen csv bestanden gevonden op root van SD kaartje</string>
-     <string name="chooseFile">Kies bestand</string>
-     <string name="calculated">Berekend:</string>
-     <string name="searchNext">Vind volgende</string>
+
+    <!-- Update: 15-05-2012 -->
+    <string name="warning">Waarschuwing</string>
+    <string name="app_will_exit">De applicatie zal nu afsluiten \n Gelieve deze zelf terug op te starten</string>
+    <string name="something_went_wrong">Bent u zeker dat het bestand op het SD kaartje staat ?</string>
+    <string name="succesfull_copied">Database gekopieerd</string>
+    <string name="databaseFromSDToPhone">Herstel database van SD kaartje</string>
+    <string name="deleteCurrentDatabase">Deze functie zal de huidige database overschrijven waardoor al de huidige data verwijderd wordt. \n\nBent u zeker dat u verder wilt gaan ?</string>
+    <string name="seeMore">Laad meer</string>
+    <string name="noFilesFound">Geen csv bestanden gevonden op root van SD kaartje</string>
+    <string name="chooseFile">Kies bestand</string>
+    <string name="calculated">Berekend:</string>
+    <string name="searchNext">Vind volgende</string>
+
 </resources>

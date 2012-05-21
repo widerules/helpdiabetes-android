@@ -47,23 +47,22 @@
         <LinearLayout
             android:id="@+id/linearLayout3"
             android:layout_width="fill_parent"
-            android:layout_height="wrap_content" >
+            android:layout_height="wrap_content"
+            android:background="@color/ColorBackgroundTrackingDateLighter" >
 
             <Button
                 android:id="@+id/buttonSaveAsTemplate"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:drawableLeft="@drawable/ic_menu_save"
-                android:text="@string/save_as_template" />
+                android:background="@drawable/ic_menu_save" />
 
             <Button
                 android:id="@+id/buttonLoadTemplate"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:drawableLeft="@drawable/ic_menu_load"
-                android:text="@string/Load_template" />
+                android:background="@drawable/ic_menu_load" />
 
             <TextView
                 android:layout_width="fill_parent"

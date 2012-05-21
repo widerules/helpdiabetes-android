@@ -162,7 +162,7 @@ public class ShowSelectedFood extends ListActivity {
 								.getColumnIndexOrThrow(DbAdapter.DATABASE_SELECTEDFOOD_UNITID)));
 				// move the foodUnit to the first object in the cursor
 				cUnit.moveToFirst();
- 
+
 				// create the mealFood
 				dbHelper.createMealFood(
 						lMealEventID,
@@ -195,9 +195,9 @@ public class ShowSelectedFood extends ListActivity {
 		// set selectedFoodCount = 0
 		ActivityGroupMeal.group.getFoodData().countSelectedFood = 0;
 
-		//reset the tracking activity
+		// reset the tracking activity
 		ActivityGroupTracking.group.restartThisActivity();
-		
+
 		// Go to tracking activity
 		ShowHomeTab parentActivity;
 		parentActivity = (ShowHomeTab) this.getParent().getParent();
@@ -240,7 +240,8 @@ public class ShowSelectedFood extends ListActivity {
 									addSelectedFoodToTracking();
 
 									// mark tracking page for refresh
-									//ActivityGroupTracking.group.getShowTracking().refresh = true;
+									// ActivityGroupTracking.group.getShowTracking().refresh
+									// = true;
 
 									// show medicine event
 									showPopUpToCreateMedicineEvent(tempCalculatedInsulineAmount);
@@ -425,20 +426,9 @@ public class ShowSelectedFood extends ListActivity {
 
 	// This will set the total calculated values on top of the page
 	private void calculateValues() {
-		TextView tvTotalNames;
-		TextView tvTotalValues;
-
-		try {
-			tvTotalNames = (TextView) findViewById(R.id.textViewShowTotalNames);
-			tvTotalValues = (TextView) findViewById(R.id.textViewShowTotalValues);
-		} catch (Exception e) {
-			tvTotalNames = null;
-			tvTotalValues = null;
-		}
 
 		// clear the adapter
-		if (expandableListview != null)
-			adapter.clear();
+		adapter.clear();
 
 		// calculate amound of kilocalories
 		float totalKcal = 0;
@@ -593,9 +583,6 @@ public class ShowSelectedFood extends ListActivity {
 		fCalculatedInsulineAmount = functions.roundFloats(
 				fCalculatedInsulineAmount, 1);
 
-		String tvNameText = "\n ";
-		String tvValueText = "\n ";
-
 		// if we didnt togle the carbs off
 		// update: AND the carbs are not the default
 		// we add them to the list
@@ -605,11 +592,7 @@ public class ShowSelectedFood extends ListActivity {
 					&& ActivityGroupMeal.group.getFoodData().defaultValue != 1)
 				adapter.addItem(totalCarbs + " "
 						+ getResources().getString(R.string.amound_of_carbs));
-			else if (tvTotalNames != null && tvTotalValues != null) {
-				tvNameText += getResources()
-						.getString(R.string.amound_of_carbs) + " \n ";
-				tvValueText += totalCarbs + " \n ";
-			}
+
 		}
 
 		if (ActivityGroupMeal.group.getFoodData().showProt) {
@@ -618,12 +601,7 @@ public class ShowSelectedFood extends ListActivity {
 					&& ActivityGroupMeal.group.getFoodData().defaultValue != 2)
 				adapter.addItem(totalProtein + " "
 						+ getResources().getString(R.string.amound_of_protein));
-			else if (tvTotalNames != null && tvTotalValues != null) {
-				tvNameText += getResources().getString(
-						R.string.amound_of_protein)
-						+ " \n ";
-				tvValueText += totalProtein + " \n ";
-			}
+
 		}
 
 		if (ActivityGroupMeal.group.getFoodData().showFat) {
@@ -632,11 +610,7 @@ public class ShowSelectedFood extends ListActivity {
 					&& ActivityGroupMeal.group.getFoodData().defaultValue != 3)
 				adapter.addItem(totalFat + " "
 						+ getResources().getString(R.string.amound_of_fat));
-			else if (tvTotalNames != null && tvTotalValues != null) {
-				tvNameText += getResources().getString(R.string.amound_of_fat)
-						+ " \n ";
-				tvValueText += totalFat + " \n ";
-			}
+
 		}
 
 		if (ActivityGroupMeal.group.getFoodData().showKcal) {
@@ -645,69 +619,53 @@ public class ShowSelectedFood extends ListActivity {
 					&& ActivityGroupMeal.group.getFoodData().defaultValue != 4)
 				adapter.addItem(totalKcal + " "
 						+ getResources().getString(R.string.amound_of_kcal));
-			else if (tvTotalNames != null && tvTotalValues != null) {
-				tvNameText += getResources().getString(R.string.amound_of_kcal)
-						+ " \n ";
-				tvValueText += totalKcal + " \n ";
-			}
-		}
+
+		} 
 
 		// add insuline ratio to the string when the radio != 0
 		if (fInsulineRatio != 0) {
 			if (expandableListview != null) {
 				adapter.setCalculatedInsuline("" + fCalculatedInsulineAmount
-						+ " " + getResources().getString(R.string.insulineUnit));
-				adapter.setInsulineRatio("à "
-						+ functions.roundFloats(fInsulineRatio, 1) + " "
+						+ "" + getResources().getString(R.string.insulineUnit)); 
+				
+				adapter.setInsulineRatio(functions.roundFloats(fInsulineRatio, 1) + " "
 						+ getResources().getString(R.string.insulineRatio));
-			} else if (tvTotalNames != null && tvTotalValues != null) {
-				tvValueText += fCalculatedInsulineAmount + " \n ";
-				tvNameText += ""
-						+ getResources().getString(R.string.insulineUnit) + " "
-						+ getResources().getString(R.string.insuline) + " "
-						+ "(à " + functions.roundFloats(fInsulineRatio, 1)
-						+ " "
-						+ getResources().getString(R.string.insulineRatio)
-						+ ") \n ";
+
 			}
 		}
 
-		if (expandableListview != null) {
-			// set calculated default
-			switch (ActivityGroupMeal.group.getFoodData().defaultValue) {
-			case 1:
-				if (expandableListview != null)
-					adapter.setDefaultCalculated("" + totalCarbs);
-				adapter.setDefaultCalculatedText(getResources().getString(
-						R.string.amound_of_carbs));
-				break;
-			case 2:
-				if (expandableListview != null)
-					adapter.setDefaultCalculated("" + totalProtein);
-				adapter.setDefaultCalculatedText(getResources().getString(
-						R.string.amound_of_protein));
-				break;
-			case 3:
-				if (expandableListview != null)
-					adapter.setDefaultCalculated("" + totalFat);
-				adapter.setDefaultCalculatedText(getResources().getString(
-						R.string.amound_of_fat));
-				break;
-			case 4:
-				if (expandableListview != null)
-					adapter.setDefaultCalculated("" + totalKcal);
-				adapter.setDefaultCalculatedText(getResources().getString(
-						R.string.amound_of_kcal));
-				break;
-			}
-
-			adapter.setDefaultValue(ActivityGroupMeal.group.getFoodData().defaultValue);
-
-			expandableListview.setAdapter(adapter);
-		} else if (tvTotalNames != null && tvTotalValues != null) {
-			tvTotalNames.setText(tvNameText);
-			tvTotalValues.setText(tvValueText);
+		// set calculated default
+		switch (ActivityGroupMeal.group.getFoodData().defaultValue) {
+		case 1:
+			if (expandableListview != null)
+				adapter.setDefaultCalculated("" + totalCarbs);
+			adapter.setDefaultCalculatedText(getResources().getString(
+					R.string.amound_of_carbs));
+			break;
+		case 2:
+			if (expandableListview != null)
+				adapter.setDefaultCalculated("" + totalProtein);
+			adapter.setDefaultCalculatedText(getResources().getString(
+					R.string.amound_of_protein));
+			break;
+		case 3:
+			if (expandableListview != null)
+				adapter.setDefaultCalculated("" + totalFat);
+			adapter.setDefaultCalculatedText(getResources().getString(
+					R.string.amound_of_fat));
+			break;
+		case 4:
+			if (expandableListview != null)
+				adapter.setDefaultCalculated("" + totalKcal);
+			adapter.setDefaultCalculatedText(getResources().getString(
+					R.string.amound_of_kcal));
+			break;
 		}
+
+		adapter.setDefaultValue(ActivityGroupMeal.group.getFoodData().defaultValue);
+
+		expandableListview.setAdapter(adapter);
+
 	}
 
 	// This function will transform a string to a date object
@@ -817,7 +775,8 @@ public class ShowSelectedFood extends ListActivity {
 
 	// this method will refresh all the data on the screen
 	public void refreshData() {
-		setListAdapter(null);
+		setListAdapter(null); 
+		expandableListview.setAdapter(adapter);
 		calculateValues();
 		fillData();
 		calculateTemplates();
@@ -826,8 +785,12 @@ public class ShowSelectedFood extends ListActivity {
 	private void calculateTemplates() {
 		dbHelper.open();
 		Cursor cFoodTemplates = dbHelper.fetchAllFoodTemplates();
-		btLoadTemplate.setText(getResources().getString(R.string.Load_template)
-				.toString() + " (" + cFoodTemplates.getCount() + ")");
+		if (cFoodTemplates.getCount() == 0) {
+			btLoadTemplate.setVisibility(View.INVISIBLE);
+		} else {
+			btLoadTemplate.setVisibility(View.VISIBLE);
+		} 
+		// btLoadTemplate.setText(" (" + cFoodTemplates.getCount() + ")");
 		cFoodTemplates.close();
 	}
 
@@ -961,10 +924,9 @@ public class ShowSelectedFood extends ListActivity {
 		super.onResume();
 		dbHelper.open();
 
-		if (expandableListview != null)
-			adapter = new CustomExpandableListAdapter(ActivityGroupMeal.group,
-					ActivityGroupMeal.group.getFoodData().dbFontSize);
-
+		adapter = new CustomExpandableListAdapter(ActivityGroupMeal.group,
+				ActivityGroupMeal.group.getFoodData().dbFontSize);
+		
 		refreshData();
 	}
 

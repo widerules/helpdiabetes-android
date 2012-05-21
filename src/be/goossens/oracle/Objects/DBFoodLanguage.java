@@ -5,11 +5,13 @@ package be.goossens.oracle.Objects;
 public class DBFoodLanguage {
 	private long id;
 	private String language;
+	private String resource;
 
-	public DBFoodLanguage(long id, String language) {
+	public DBFoodLanguage(long id, String language, String resource) {
 		super();
 		this.id = id;
 		this.language = language;
+		this.resource = resource;
 	}
 
 	public long getId() {
@@ -28,4 +30,14 @@ public class DBFoodLanguage {
 		this.language = language;
 	}
 
+	public String getResource() {
+		return resource;
+	}
+
+	public void setResource(String resource) {
+		this.resource = resource;
+	}
+
+	
+	
 }

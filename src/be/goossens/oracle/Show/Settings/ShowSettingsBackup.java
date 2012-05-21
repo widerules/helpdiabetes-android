@@ -50,7 +50,7 @@ public class ShowSettingsBackup extends ListActivity {
 	private int counter, max;
 	private long foodLanguageID;
 	private String filename = "";
-
+ 
 	// for letting the user choose a file
 	private String[] mFileList;
 	private File mPath;
@@ -152,7 +152,7 @@ public class ShowSettingsBackup extends ListActivity {
 			break;
 		case 3:
 			// show popup to ask filename
-			showPopUpWriteFileName();
+			writeFile();
 			break;
 		case 4:
 			//reloade file list on root of sd
@@ -183,33 +183,20 @@ public class ShowSettingsBackup extends ListActivity {
 						null).show();
 	}
 
-	private void showPopUpWriteFileName() {
-		final EditText input = new EditText(this);
+	private void writeFile() {
+		filename = "helpDiabetesExported";
 
-		new AlertDialog.Builder(ActivityGroupSettings.group)
-				.setTitle(getResources().getString(R.string.file_name))
-				.setView(input)
-				.setPositiveButton(getResources().getString(R.string.oke),
-						new DialogInterface.OnClickListener() {
-							public void onClick(DialogInterface dialog,
-									int which) {
-								filename = input.getText().toString();
+		db.open();
+		max = db.fetchFoodByLanguageIDAndPlatformNotStandard(
+				foodLanguageID).getCount();
+		db.close();
 
-								db.open();
-								max = db.fetchFoodByLanguageIDAndPlatformNotStandard(
-										foodLanguageID).getCount();
-								db.close();
+		if (max > 0) {
+			showProgressDialogWithProcents(getResources()
+					.getString(R.string.foodToExcel));
+		}
 
-								if (max > 0) {
-									showProgressDialogWithProcents(getResources()
-											.getString(R.string.foodToExcel));
-								}
-
-								new AsyncCopyDBToCSV().execute();
-							}
-						})
-				.setNegativeButton(getResources().getString(R.string.cancel),
-						null).show();
+		new AsyncCopyDBToCSV().execute();
 	}
 
 	private void selectedFileToImport() {
@@ -607,7 +594,7 @@ public class ShowSettingsBackup extends ListActivity {
 		protected void onProgressUpdate(Void... values) {
 			pdProcents.setProgress(counter);
 			super.onProgressUpdate(values);
-		}
+		} 
 
 		@Override
 		protected String doInBackground(Void... params) {

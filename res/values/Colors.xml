@@ -15,6 +15,7 @@
     <color name="ColorHelpDiabetesBlueDarker">#1E2B3F</color>
     <color name="ColorText">#000</color>
     <color name="ColorBackgroundTrackingDate">#213A5C</color>
+    <color name="ColorBackgroundTrackingDateLittleLittleLighter">#374E6C</color>
     <color name="ColorBackgroundTrackingDateLighter">#64758D</color>
     <color name="ColorTextTrackingDate">#FFF</color>
     <color name="ColorTransparant">#00000000</color>

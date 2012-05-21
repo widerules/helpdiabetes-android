@@ -13,12 +13,12 @@ import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import be.goossens.oracle.Rest.DataParser;
 import be.goossens.oracle.Show.Glucose.ShowAddGlucoseEvent;
-
+ 
 public class ActivityGroupGlucose extends ActivityGroup {
 	// keep this in a static variable to make it accessible for all the nesten
 	// activities, let them manipulate the view
 	public static ActivityGroupGlucose group;
-
+ 
 	// Need to keep track of the history so the back button works properly
 	private ArrayList<View> history;
 

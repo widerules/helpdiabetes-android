@@ -5,7 +5,9 @@ package be.goossens.oracle.Show.Settings;
 import java.util.ArrayList;
 import java.util.List;
 
+import android.app.AlertDialog;
 import android.app.ListActivity;
+import android.content.DialogInterface;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.view.KeyEvent;
@@ -13,7 +15,6 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.ListView;
-import android.widget.Toast;
 import be.goossens.oracle.R;
 import be.goossens.oracle.ActivityGroup.ActivityGroupMeal;
 import be.goossens.oracle.ActivityGroup.ActivityGroupSettings;
@@ -75,7 +76,9 @@ public class ShowSettingsDBLanguage extends ListActivity {
 								.getLong(cFoodLanguage
 										.getColumnIndexOrThrow(DbAdapter.DATABASE_FOODLANGUAGE_ID)),
 						cFoodLanguage.getString(cFoodLanguage
-								.getColumnIndexOrThrow(DbAdapter.DATABASE_FOODLANGUAGE_LANGUAGE))));
+								.getColumnIndexOrThrow(DbAdapter.DATABASE_FOODLANGUAGE_LANGUAGE)),
+						cFoodLanguage.getString(cFoodLanguage
+								.getColumnIndexOrThrow(DbAdapter.DATABASE_FOODLANGUAGE_NAME))));
 
 			} while (cFoodLanguage.moveToNext());
 		}
@@ -92,34 +95,66 @@ public class ShowSettingsDBLanguage extends ListActivity {
 	protected void onListItemClick(ListView l, View v, int position, long id) {
 		// save the new languageID to the settings
 		DbAdapter databaseHelper = new DbAdapter(this);
-		databaseHelper.open(); 
-		databaseHelper.updateSettingsByName(DbSettings.setting_language,
-				"" + objects.get(position).getId()); 
+		databaseHelper.open();
+		databaseHelper.updateSettingsByName(DbSettings.setting_language, ""
+				+ objects.get(position).getId());
 		databaseHelper.close();
-		
+
 		// try to go back to
 		// when its the first time we run this application
 		// we cant go back but we have to finish()
-		try {  
+		try {
 			if (getIntent().getExtras().getString(DataParser.whatToDo)
 					.equals(DataParser.doFirstTime)) {
-				finish();
-			} else {
-				// restart the activity tracking
-				ActivityGroupTracking.group.restartThisActivity();
- 
-				// go back to settings page
-				ActivityGroupSettings.group.back();
-			}
-		} catch (Exception e) { 
-			// restart the activity tracking
-			ActivityGroupTracking.group.restartThisActivity();
+				// show popup to with resource and call finish
 
-			//restart the activity meal
-			ActivityGroupMeal.group.restartThisActivity();
-			
-			// go back to settings page
-			ActivityGroupSettings.group.back();
+				new AlertDialog.Builder(this)
+						.setMessage(objects.get(position).getResource())
+						.setPositiveButton(
+								getResources().getString(R.string.oke),
+								new DialogInterface.OnClickListener() {
+									public void onClick(DialogInterface dialog,
+											int which) {
+										finish();
+									}
+								}).show();
+
+			} else {
+				new AlertDialog.Builder(ActivityGroupSettings.group)
+						.setMessage(objects.get(position).getResource())
+						.setPositiveButton(
+								getResources().getString(R.string.oke),
+								new DialogInterface.OnClickListener() {
+									public void onClick(DialogInterface dialog,
+											int which) {
+										// restart the activity tracking
+										ActivityGroupTracking.group
+												.restartThisActivity();
+
+										// go back to settings page
+										ActivityGroupSettings.group.back();
+									}
+								}).show();
+			}
+		} catch (Exception e) {
+			new AlertDialog.Builder(ActivityGroupSettings.group)
+					.setMessage(objects.get(position).getResource())
+					.setPositiveButton(getResources().getString(R.string.oke),
+							new DialogInterface.OnClickListener() {
+								public void onClick(DialogInterface dialog,
+										int which) {
+									// restart the activity tracking
+									ActivityGroupTracking.group
+											.restartThisActivity();
+
+									// restart the activity meal
+									ActivityGroupMeal.group
+											.restartThisActivity();
+
+									// go back to settings page
+									ActivityGroupSettings.group.back();
+								}
+							}).show();
 		}
 	}
 

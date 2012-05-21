@@ -16,16 +16,11 @@ public class FoodComparator implements Comparator<DBFoodComparable> {
 
 	public int compare(DBFoodComparable foodOne, DBFoodComparable foodTwo) {
 
-		/*
-		 * if (foodOne.getIsfavorite() > 0 && foodTwo.getIsfavorite() <= 0)
-		 * return -1; else if (foodOne.getIsfavorite() <= 0 &&
-		 * foodTwo.getIsfavorite() > 0) return 1; else {
-		 */
 		String foodNameOne = removeAccents(foodOne.getName());
 		String foodNameTwo = removeAccents(foodTwo.getName());
  
-		return foodNameOne.toLowerCase().compareTo(foodNameTwo.toLowerCase());
-		// }
+		//return foodNameOne.toLowerCase().compareTo(foodNameTwo.toLowerCase());
+		return foodNameOne.compareTo(foodNameTwo); 
 	}
 
 	/*

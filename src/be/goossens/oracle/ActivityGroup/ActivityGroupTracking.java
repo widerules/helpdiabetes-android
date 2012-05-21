@@ -41,10 +41,17 @@ public class ActivityGroupTracking extends ActivityGroup {
 	}
 
 	private void hideKeyboard() {
-		InputMethodManager inputManager = (InputMethodManager) this
-				.getSystemService(Context.INPUT_METHOD_SERVICE);
-		inputManager.hideSoftInputFromWindow(getParent().getCurrentFocus()
-				.getWindowToken(), 0);
+		//when we add food to selection and press the enter key on the hard keyboard
+		//we go to the histor page
+		//when we come back this returns a nullpointer
+		try {
+			InputMethodManager inputManager = (InputMethodManager) this
+					.getSystemService(Context.INPUT_METHOD_SERVICE);
+			inputManager.hideSoftInputFromWindow(getParent().getCurrentFocus()
+					.getWindowToken(), 0);
+		} catch (NullPointerException e) {
+ 
+		}
 	}
 
 	public void restartThisActivity() {
