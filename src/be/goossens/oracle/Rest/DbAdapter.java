@@ -267,13 +267,20 @@ public class DbAdapter extends SQLiteOpenHelper {
 				+ DATABASE_MEDICINEEVENT_TIMESTAMP + " from "
 				+ DATABASE_MEDICINEEVENT_TABLE + ") order by 1 desc", null);
 	}
- 
-	//get all unit with the counts from current languageid
-	//select count(*), foodunit.name from foodunit inner join food on foodunit.foodid = food._id where food.foodlanguageid = 1 group by foodunit.name order by 1 desc
-	public Cursor fetchAllUnitsFromCurrentDBLangauge(long foodlangaugeID){  
-		return mDb.rawQuery("select count(*), foodunit.name from foodunit inner join food on foodunit.foodid = food._id where food.foodlanguageid = " + foodlangaugeID + " group by foodunit.name order by 1 desc", null);
+
+	// get all unit with the counts from current languageid
+	// select count(*), foodunit.name from foodunit inner join food on
+	// foodunit.foodid = food._id where food.foodlanguageid = 1 group by
+	// foodunit.name order by 1 desc
+	public Cursor fetchAllUnitsFromCurrentDBLangauge(long foodlangaugeID) {
+		return mDb
+				.rawQuery(
+						"select count(*), foodunit.name from foodunit inner join food on foodunit.foodid = food._id where food.foodlanguageid = "
+								+ foodlangaugeID
+								+ " group by foodunit.name order by 1 desc",
+						null);
 	}
-	
+
 	// Medicine Events Functions
 	// create
 	public long createMedicineEvent(float amount, String timestamp,
@@ -285,7 +292,28 @@ public class DbAdapter extends SQLiteOpenHelper {
 				.put(DATABASE_MEDICINEEVENT_MEDICINETYPEID, medicineTypeID);
 		return mDb.insert(DATABASE_MEDICINEEVENT_TABLE, null, initialValues);
 	}
- 
+
+	public void updateExerciseEventDate(String timestamp, long id) {
+		ContentValues initialValues = new ContentValues();
+		initialValues.put(DATABASE_EXERCISEEVENT_EVENTDATETIME, timestamp);
+		mDb.update(DATABASE_EXERCISEEVENT_TABLE, initialValues,
+				DATABASE_EXERCISEEVENT_ID + "=" + id, null);
+	}
+
+	public void updateGlucoseEventDate(String timestamp, long id) {
+		ContentValues initialValues = new ContentValues();
+		initialValues.put(DATABASE_BLOODGLUCOSEEVENT_EVENTDATETIME, timestamp);
+		mDb.update(DATABASE_BLOODGLUCOSEEVENT_TABLE, initialValues,
+				DATABASE_BLOODGLUCOSEEVENT_ID + "=" + id, null);
+	}
+
+	public void updateMedicineEventDate(String timestamp, long id) {
+		ContentValues initialValues = new ContentValues();
+		initialValues.put(DATABASE_MEDICINEEVENT_TIMESTAMP, timestamp);
+		mDb.update(DATABASE_MEDICINEEVENT_TABLE, initialValues,
+				DATABASE_MEDICINEEVENT_ID + "=" + id, null);
+	}
+
 	// get medicine events by timestamp
 	public Cursor fetchMedicineEventByDate(String date) {
 		return mDb.query(DATABASE_MEDICINEEVENT_TABLE,
@@ -436,7 +464,8 @@ public class DbAdapter extends SQLiteOpenHelper {
 		return mDb.query(DATABASE_FOODLANGUAGE_TABLE, new String[] {
 				DATABASE_FOODLANGUAGE_ID, DATABASE_FOODLANGUAGE_LANGUAGE,
 				DATABASE_FOODLANGUAGE_NAME, DATABASE_FOODLANGUAGE_VALUE },
-				DATABASE_FOODLANGUAGE_VALUE + "=1", null, DATABASE_FOODLANGUAGE_LANGUAGE, null, null);
+				DATABASE_FOODLANGUAGE_VALUE + "=1", null,
+				DATABASE_FOODLANGUAGE_LANGUAGE, null, null);
 	}
 
 	// Meal Food Functions

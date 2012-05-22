@@ -25,9 +25,4 @@
         android:layout_height="fill_parent"
         android:layout_weight="1.0" >
     </ListView>
-
-    <TextView
-        style="@style/defaultFontNormal"
-        android:text="@string/standard_is_used_for" />
-
-</LinearLayout>
+</LinearLayout>

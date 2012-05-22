@@ -194,9 +194,6 @@ public class ShowAddFoodToSelection extends Activity {
 
 		btAdd.setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
-				// set search string back to ""
-				ActivityGroupMeal.group.lastSearchString = "";
-
 				// if we come from show selected food we have to update
 				if (getIntent().getExtras()
 						.getString(DataParser.fromWhereWeCome)
@@ -614,6 +611,9 @@ public class ShowAddFoodToSelection extends Activity {
 	}
 
 	private void addFood() {
+		// set search string back to ""
+		ActivityGroupMeal.group.lastSearchString = "";
+
 		float amount = getInsertedAmund();
 		// round the input to 1 decimal behind ,
 		amount = functions.roundFloats(amount, 1);

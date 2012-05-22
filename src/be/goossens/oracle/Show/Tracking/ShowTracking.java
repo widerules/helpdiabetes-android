@@ -6,7 +6,9 @@ import java.util.ArrayList;
 import java.util.Calendar;
 
 import android.app.AlertDialog;
+import android.app.Dialog;
 import android.app.ListActivity;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
 import android.database.Cursor;
@@ -34,6 +36,8 @@ import be.goossens.oracle.Rest.DataParser;
 import be.goossens.oracle.Rest.DbAdapter;
 import be.goossens.oracle.Rest.Functions;
 import be.goossens.oracle.Show.ShowHomeTab;
+import be.goossens.oracle.slider.DateSlider;
+import be.goossens.oracle.slider.DateTimeSlider;
 
 public class ShowTracking extends ListActivity {
 	private CustomArrayAdapterDBTracking adapter;
@@ -46,10 +50,18 @@ public class ShowTracking extends ListActivity {
 
 	private int searchPosition;
 
+	private Calendar mCalendar;
+	// to save selected position so we can update the time
+	private int selectedPosition;
+	private Context ctx;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.show_tracking);
+		ctx = this;
+		mCalendar = Calendar.getInstance();
+		selectedPosition = 0;
 
 		// search function
 		btSearch = (Button) findViewById(R.id.buttonSearch);
@@ -123,6 +135,60 @@ public class ShowTracking extends ListActivity {
 			}
 		});
 	}
+
+	@Override
+	protected Dialog onCreateDialog(int id) {
+		if (id == 0) {
+			return new DateTimeSlider(ActivityGroupTracking.group,
+					mDateTimeSetListener, mCalendar);
+		}
+		return super.onCreateDialog(id);
+	}
+
+	private DateSlider.OnDateSetListener mDateTimeSetListener = new DateSlider.OnDateSetListener() {
+		public void onDateSet(DateSlider view, Calendar selectedDate) {
+			// every time we clicked on the date slider
+			mCalendar = selectedDate;
+			updateDate();
+		}
+
+		private void updateDate() {
+			// update time for selected position
+			DbAdapter db = new DbAdapter(ctx);
+			db.open();
+
+			if (ActivityGroupTracking.group.getTrackingData().listTracking.get(
+					selectedPosition).getMedicineEvent() != null) {
+				// update medicine event
+				db.updateMedicineEventDate(
+						new Functions().getDateAsStringFromCalendar(mCalendar),
+						ActivityGroupTracking.group.getTrackingData().listTracking
+								.get(selectedPosition).getMedicineEvent()
+								.getId());
+			} else if (ActivityGroupTracking.group.getTrackingData().listTracking
+					.get(selectedPosition).getExerciseEvent() != null) {
+				// update exercise event
+				db.updateExerciseEventDate(
+						new Functions().getDateAsStringFromCalendar(mCalendar),
+						ActivityGroupTracking.group.getTrackingData().listTracking
+								.get(selectedPosition).getExerciseEvent()
+								.getId());
+			} else if (ActivityGroupTracking.group.getTrackingData().listTracking
+					.get(selectedPosition).getBloodGlucoseEvent() != null) {
+				// update glucose event
+				db.updateGlucoseEventDate(
+						new Functions().getDateAsStringFromCalendar(mCalendar),
+						ActivityGroupTracking.group.getTrackingData().listTracking
+								.get(selectedPosition).getBloodGlucoseEvent()
+								.getId());
+			}
+
+			db.close();
+
+			// refresh the list
+			ActivityGroupTracking.group.restartThisActivity();
+		}
+	};
 
 	private void setNext() {
 		setSelection(searchPosition);
@@ -246,10 +312,11 @@ public class ShowTracking extends ListActivity {
 
 			// check if we have to hide the button " see more "
 			checkHideButtonLoadMore();
-			
-			//go to last listview item
-			setSelection(ActivityGroupTracking.group.getTrackingData().listTracking.size());
-			
+
+			// go to last listview item
+			setSelection(ActivityGroupTracking.group.getTrackingData().listTracking
+					.size());
+
 			super.onPostExecute(result);
 		}
 
@@ -257,20 +324,23 @@ public class ShowTracking extends ListActivity {
 
 	@Override
 	protected void onListItemClick(ListView l, View v, int position, long id) {
+		// save clicked position so we can update the time
+		selectedPosition = position;
+
 		// click on medine event
 		if (ActivityGroupTracking.group.getTrackingData().listTracking.get(
 				position).getMedicineEvent() != null) {
-			showPopUpDeleteMedicineEvent(
+			showPopUpMedicineEvent(
 					ActivityGroupTracking.group.getTrackingData().listTracking
 							.get(position).getMedicineEvent(), position);
 		} else if (ActivityGroupTracking.group.getTrackingData().listTracking
 				.get(position).getExerciseEvent() != null) {
-			showPopUpDeleteExerciseEvent(
+			showPopUpExerciseEvent(
 					ActivityGroupTracking.group.getTrackingData().listTracking
 							.get(position).getExerciseEvent(), position);
 		} else if (ActivityGroupTracking.group.getTrackingData().listTracking
 				.get(position).getBloodGlucoseEvent() != null) {
-			showPopUpDeleteGlucoseEvent(
+			showPopUpGlucoseEvent(
 					ActivityGroupTracking.group.getTrackingData().listTracking
 							.get(position).getBloodGlucoseEvent(), position);
 		} else if (ActivityGroupTracking.group.getTrackingData().listTracking
@@ -279,6 +349,7 @@ public class ShowTracking extends ListActivity {
 			float totalValue = 0;
 			String text = " \n ";
 			String defaultValueText = "";
+			String calculatedInsuline = "";
 
 			for (DBMealFood mealFood : ActivityGroupTracking.group
 					.getTrackingData().listTracking.get(position)
@@ -328,41 +399,68 @@ public class ShowTracking extends ListActivity {
 						+ defaultValueText + ") \n ";
 			}
 
+			if (ActivityGroupTracking.group.getTrackingData().listTracking
+					.get(position).getMealEvent().getInsulineRatio() != 0) {
+				calculatedInsuline = "\n"
+						+ getResources().getString(R.string.calculated)
+						+ " "
+						+ ActivityGroupTracking.group.getTrackingData().listTracking
+								.get(position).getMealEvent()
+								.getCalculatedInsulineAmount()
+						+ " "
+						+ getResources().getString(R.string.insulineUnit)
+						+ " \n"
+						+ ActivityGroupTracking.group.getTrackingData().listTracking
+								.get(position).getMealEvent()
+								.getInsulineRatio() + " "
+						+ getResources().getString(R.string.insulineRatio);
+			} else {
+				calculatedInsuline = "";
+			}
+
 			// Round total value
 			totalValue = new Functions().roundFloats(totalValue, 1);
 
 			showPopUpWhatToDoWithMealEvent(
 					ActivityGroupTracking.group.getTrackingData().listTracking
-							.get(position).getMealEvent().getId(), totalValue
-							+ " " + defaultValueText + " \n" + text, position);
+							.get(position).getMealEvent().getId(), " "
+							+ totalValue + " " + defaultValueText + " \n"
+							+ text + " \n" + calculatedInsuline, position);
 		}
 	}
 
-	private void showPopUpDeleteGlucoseEvent(final DBBloodGlucoseEvent event,
+	private void showPopUpGlucoseEvent(final DBBloodGlucoseEvent event,
 			final int location) {
 		// Show a dialog
 		new AlertDialog.Builder(ActivityGroupTracking.group)
-				.setTitle(getResources().getString(R.string.delete))
-				.setPositiveButton(getResources().getString(R.string.yes),
+				.setPositiveButton(
+						getResources().getString(R.string.changeTime),
 						new DialogInterface.OnClickListener() {
 							public void onClick(DialogInterface dialog,
 									int which) {
-								// on click positive button
+								// update time
+								mCalendar.setTime(new Functions()
+										.getYearMonthDayHourMinutesAsDateFromString(event
+												.getTimeStamp()));
+
+								// show dialog to update time
+								showDialog(0);
+							}
+						})
+				.setNeutralButton(getResources().getString(R.string.cancel),
+						null)
+				.setNegativeButton(getResources().getString(R.string.delete),
+						new DialogInterface.OnClickListener() {
+							public void onClick(DialogInterface dialog,
+									int which) {
 								// Delete from database
 								deleteGlucoseEventFromDatabase(event.getId());
 								// refresh list
 								// delete the item from the list
 								ActivityGroupTracking.group.getTrackingData().listTracking
 										.remove(location);
-								
+
 								adapter.notifyDataSetChanged();
-							}
-						})
-				.setNegativeButton(getResources().getString(R.string.cancel),
-						new DialogInterface.OnClickListener() {
-							public void onClick(DialogInterface dialog,
-									int which) {
-								// on click negative button do nothing
 							}
 						})
 				.setMessage(
@@ -373,31 +471,38 @@ public class ShowTracking extends ListActivity {
 				.show();
 	}
 
-	private void showPopUpDeleteExerciseEvent(final DBExerciseEvent event,
+	private void showPopUpExerciseEvent(final DBExerciseEvent event,
 			final int location) {
 		// Show a dialog
 		new AlertDialog.Builder(ActivityGroupTracking.group)
-				.setTitle(getResources().getString(R.string.delete))
-				.setPositiveButton(getResources().getString(R.string.yes),
+				.setPositiveButton(
+						getResources().getString(R.string.changeTime),
 						new DialogInterface.OnClickListener() {
 							public void onClick(DialogInterface dialog,
 									int which) {
-								// on click positive button
+								// update time
+								mCalendar.setTime(new Functions()
+										.getYearMonthDayHourMinutesAsDateFromString(event
+												.getTimeStamp()));
+
+								// show dialog to update time
+								showDialog(0);
+							}
+						})
+				.setNeutralButton(getResources().getString(R.string.cancel),
+						null)
+				.setNegativeButton(getResources().getString(R.string.delete),
+						new DialogInterface.OnClickListener() {
+							public void onClick(DialogInterface dialog,
+									int which) {
 								// Delete from database
 								deleteExerciseEventFromDatabase(event.getId());
 								// refresh list
 								// delete the item from the list
 								ActivityGroupTracking.group.getTrackingData().listTracking
 										.remove(location);
-								 
+
 								adapter.notifyDataSetChanged();
-							}
-						})
-				.setNegativeButton(getResources().getString(R.string.cancel),
-						new DialogInterface.OnClickListener() {
-							public void onClick(DialogInterface dialog,
-									int which) {
-								// on click negative button do nothing
 							}
 						})
 				.setMessage(
@@ -410,12 +515,25 @@ public class ShowTracking extends ListActivity {
 								+ event.getDescription()).show();
 	}
 
-	private void showPopUpDeleteMedicineEvent(
-			final DBMedicineEvent medicineEvent, final int location) {
+	private void showPopUpMedicineEvent(final DBMedicineEvent medicineEvent,
+			final int location) {
 		// Show a dialog
 		new AlertDialog.Builder(ActivityGroupTracking.group)
-				.setTitle(getResources().getString(R.string.delete))
-				.setPositiveButton(getResources().getString(R.string.yes),
+				.setPositiveButton(
+						getResources().getString(R.string.changeTime),
+						new OnClickListener() {
+							public void onClick(DialogInterface dialog,
+									int which) {
+								// update time
+								mCalendar.setTime(new Functions()
+										.getYearMonthDayHourMinutesAsDateFromString(medicineEvent
+												.getTimeStamp()));
+
+								// show dialog to update time
+								showDialog(0);
+							}
+						})
+				.setNegativeButton(getResources().getString(R.string.delete),
 						new DialogInterface.OnClickListener() {
 							public void onClick(DialogInterface dialog,
 									int which) {
@@ -427,17 +545,12 @@ public class ShowTracking extends ListActivity {
 								// delete the item from the list
 								ActivityGroupTracking.group.getTrackingData().listTracking
 										.remove(location);
-								
+
 								adapter.notifyDataSetChanged();
 							}
 						})
-				.setNegativeButton(getResources().getString(R.string.cancel),
-						new DialogInterface.OnClickListener() {
-							public void onClick(DialogInterface dialog,
-									int which) {
-								// on click negative button do nothing
-							}
-						})
+				.setNeutralButton(getResources().getString(R.string.cancel),
+						null)
 				.setMessage(
 						""
 								+ new Functions()
@@ -485,7 +598,7 @@ public class ShowTracking extends ListActivity {
 							}
 						})
 				.setNeutralButton(getResources().getString(R.string.cancel),
-						null) 
+						null)
 				.setNegativeButton(getResources().getString(R.string.delete),
 						new OnClickListener() {
 							public void onClick(DialogInterface dialog,
@@ -496,7 +609,7 @@ public class ShowTracking extends ListActivity {
 								// delete the item from the list
 								ActivityGroupTracking.group.getTrackingData().listTracking
 										.remove(location);
-								
+
 								adapter.notifyDataSetChanged();
 							}
 						}).show();

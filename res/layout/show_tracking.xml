@@ -59,15 +59,17 @@
             android:id="@+id/editText1"
             style="@style/styleEditText"
             android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="fill_parent"
             android:layout_weight="1.0"
             android:hint="@string/food_name" />
 
         <Button
             android:id="@+id/buttonSearchNext"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/searchNext" />
+            android:layout_height="fill_parent"
+            android:text="@string/searchNext"
+            android:layout_gravity="center"
+            android:gravity="center" />
     </LinearLayout>
 
 </LinearLayout>

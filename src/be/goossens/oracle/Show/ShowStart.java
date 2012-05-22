@@ -7,6 +7,7 @@ import java.io.IOException;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.content.DialogInterface.OnClickListener;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.AsyncTask;
@@ -58,7 +59,7 @@ public class ShowStart extends Activity {
 			goToRightPage();
 		}
 	}
- 
+
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		switch (requestCode) {
@@ -70,10 +71,10 @@ public class ShowStart extends Activity {
 			break;
 		case requestCodeKHRatio:
 			showActivityDefaultMedicineType();
-			break; 
+			break;
 		case requestCodeDefaultMedicineType:
 			startHomeActivityAndStopThisActivity();
-			break; 
+			break;
 		}
 		super.onActivityResult(requestCode, resultCode, data);
 	}
@@ -89,7 +90,8 @@ public class ShowStart extends Activity {
 		// check to see if it is the first time application starts
 		dbHelper.open();
 
-		Cursor cSetting = dbHelper.fetchSettingByName(DbSettings.setting_language);
+		Cursor cSetting = dbHelper
+				.fetchSettingByName(DbSettings.setting_language);
 		if (cSetting.getCount() > 0) {
 			cSetting.moveToFirst();
 
@@ -123,35 +125,35 @@ public class ShowStart extends Activity {
 	}
 
 	private void showPopUpDiabetesPatient() {
-		DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
-			public void onClick(DialogInterface dialog, int which) {
-				switch (which) {
-				case DialogInterface.BUTTON_POSITIVE:
-					startIntentMealTimes();
-					break; 
-				default:
-					startHomeActivityAndStopThisActivity();
-					break;
-				}
-			}
-		};
-
-		AlertDialog.Builder builder = new AlertDialog.Builder(this);
-		builder.setMessage(
-				getResources().getString(R.string.are_you_diabetes_patient))
+		new AlertDialog.Builder(this)
+				.setMessage(
+						getResources().getString(
+								R.string.are_you_diabetes_patient))
 				.setPositiveButton(getResources().getString(R.string.yes),
-						dialogClickListener)
+						new OnClickListener() {
+
+							public void onClick(DialogInterface dialog,
+									int which) {
+			 					startIntentMealTimes(); 
+							}
+						})
 				.setNegativeButton(getResources().getString(R.string.no),
-						dialogClickListener).show();
+						new OnClickListener() {
+
+							public void onClick(DialogInterface dialog,
+									int which) {
+								startHomeActivityAndStopThisActivity();
+							}
+						}).show();
 	}
- 
-	private void startIntentMealTimes(){
+
+	private void startIntentMealTimes() {
 		Intent k = new Intent(this, ShowSettingsMealTimes.class);
 		// mark the intent as first time
 		k.putExtra(DataParser.whatToDo, DataParser.doFirstTime);
 		startActivityForResult(k, requestCodeMealTimes);
 	}
-	
+
 	private void startIntentInsulineRatios() {
 		Intent k = new Intent(this, ShowSettingsInsulineRatio.class);
 		// mark the intent as first time

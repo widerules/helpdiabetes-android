@@ -43,14 +43,6 @@
                 <TextView
                     android:id="@+id/textViewTracking4"
                     style="@style/defaultFontNormal" />
-
-                <TextView
-                    android:id="@+id/textViewTracking5"
-                    style="@style/defaultFontNormal" />
-
-                <TextView
-                    android:id="@+id/textViewTracking6"
-                    style="@style/defaultFontNormal" />
             </LinearLayout>
         </LinearLayout>
     </LinearLayout>
