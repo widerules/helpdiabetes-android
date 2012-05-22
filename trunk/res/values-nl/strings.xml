@@ -53,7 +53,7 @@
     <string name="addToSelection">Toevoegen aan selectie</string>
     <string name="showSelectedFoodPopupAddAmountToTemplate">Wilt u de aantallen mee bewaren?</string>
     <string name="insuline">Insuline</string>
-    <string name="insulineRatio">gram Kh/1IE</string>
+    <string name="insulineRatio">gram Kh/1 IE</string>
     <string name="insulineUnit">IE</string>
     <string name="showSelectedFoodEatSelectedFood">toevoegen aan rapport</string>
     <string name="total">Totaal selecties</string>
@@ -145,5 +145,9 @@
     <string name="chooseFile">Kies bestand</string>
     <string name="calculated">Berekend:</string>
     <string name="searchNext">Vind volgende</string>
+    
+    <!--  Update: 22-05-2012 -->
+    <string name="selectedTime">Geselecteerde tijd</string>
+    <string name="resource">Bron</string>
 
 </resources>

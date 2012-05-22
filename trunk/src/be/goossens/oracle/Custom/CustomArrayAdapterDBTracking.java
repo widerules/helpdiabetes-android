@@ -138,12 +138,6 @@ public class CustomArrayAdapterDBTracking extends ArrayAdapter<DBTracking> {
 					TextView tv4 = (TextView) v
 							.findViewById(R.id.textViewTracking4);
 
-					TextView tv5 = (TextView) v
-							.findViewById(R.id.textViewTracking5);
-
-					TextView tv6 = (TextView) v
-							.findViewById(R.id.textViewTracking6);
-
 					iv.setImageDrawable(context.getResources().getDrawable(
 							R.drawable.ic_tab_meal_unselected));
 
@@ -184,7 +178,7 @@ public class CustomArrayAdapterDBTracking extends ArrayAdapter<DBTracking> {
 									.getAmount());
 							break;
 						}
-
+ 
 						// add the list of food
 						// max 10 chars
 						// text += "" + new
@@ -228,40 +222,12 @@ public class CustomArrayAdapterDBTracking extends ArrayAdapter<DBTracking> {
 					// tv2 is for the food list
 					tv2.setText(text);
 
-					// only if taken insuline ratio != 0!
-					if (objects.get(position).getMealEvent().getInsulineRatio() != 0) {
-						tv5.setVisibility(View.VISIBLE);
-						tv6.setVisibility(View.VISIBLE);
-						// tv5 is for the calculated amound of insuline
-						tv5.setText("\n"
-								+ context.getResources().getString(
-										R.string.calculated)
-								+ " "
-								+ objects.get(position).getMealEvent()
-										.getCalculatedInsulineAmount()
-								+ " "
-								+ context.getResources().getString(
-										R.string.insulineUnit));
-						// tv6 is for the taken insuline ratio
-						tv6.setText("à "
-								+ objects.get(position).getMealEvent()
-										.getInsulineRatio()
-								+ " "
-								+ context.getResources().getString(
-										R.string.insulineRatio));
-					} else {
-						tv5.setVisibility(View.GONE);
-						tv6.setVisibility(View.GONE);
-					}
-
 					// tv4 is for the default total value
 					tv4.setText(totalCalc + " " + value);
  
 					tv1.setTextSize(fontSize);
 					tv2.setTextSize(fontSize - 3);
 					tv4.setTextSize(fontSize);
-					tv5.setTextSize(fontSize - 3);
-					tv6.setTextSize(fontSize - 3);
 
 					tv4.setTextColor(context.getResources().getColor(
 							R.color.colorFood));

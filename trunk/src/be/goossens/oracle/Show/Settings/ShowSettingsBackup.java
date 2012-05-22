@@ -606,13 +606,22 @@ public class ShowSettingsBackup extends ListActivity {
 				File sd = Environment.getExternalStorageDirectory();
 				if (sd.canWrite()) {
 					File outputFile = new File(sd, filename + ".csv");
+					
+					int fileNumber = 1;
+					
+					//update outputFile until we have a not existing number
+					while(outputFile.exists()){
+						outputFile = new File(sd, filename + "-" + fileNumber + ".csv");
+						fileNumber++;
+					}
+					
 					try {
 						FileWriter writer = new FileWriter(outputFile);
 						String seperator = ";";
 
 						// write first line with example
-						writer.append("Example: FOODNAME ; UNITNAME1 ; standardamount1 ; carbs1 ; prot1 ; fat1 ; kcal1 ; UNITNAME2 ; standardamount2 ; carb2 ; prot2 ; fat2 ; kcal2 ; UNITNAME3 ; standardamount3 ; carbs3 ; prot3 ; fat3 ; kcal3");
-						writer.append("\n");
+						//writer.append("Example: FOODNAME ; UNITNAME1 ; standardamount1 ; carbs1 ; prot1 ; fat1 ; kcal1 ; UNITNAME2 ; standardamount2 ; carb2 ; prot2 ; fat2 ; kcal2 ; UNITNAME3 ; standardamount3 ; carbs3 ; prot3 ; fat3 ; kcal3");
+						//writer.append("\n");
 
 						// writer order:
 						// FOODNAME ; UNITNAME ; standardamount ; carbs ; prot ;
@@ -674,8 +683,8 @@ public class ShowSettingsBackup extends ListActivity {
 
 						writer.flush();
 						writer.close();
-						return getResources().getString(
-								R.string.succesfull_wrote_csv_file);
+						return getResources().getString( 
+								R.string.succesfull_wrote_csv_file) + " (" + outputFile.getName()  + ")";
 					} catch (IOException e) {
 						return e.toString();
 					}

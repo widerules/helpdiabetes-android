@@ -120,16 +120,7 @@ public class ActivityGroupTracking extends ActivityGroup {
 	public void finish() {
 
 	}
-
-	// public ShowTracking getShowTracking() {
-	// try {
-	// View v = history.get(1);
-	// return (ShowTracking) v.getContext();
-	// } catch (Exception e) {
-	// return null;
-	// }
-	// }
-
+	
 	public ShowLoadingTrackingData getTrackingData() {
 		try {
 			return (ShowLoadingTrackingData) history.get(0).getContext();

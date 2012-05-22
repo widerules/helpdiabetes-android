@@ -29,9 +29,4 @@
         android:layout_height="fill_parent"
         android:layout_weight="1.0"
         android:cacheColorHint="#00000000" />
-
-    <TextView
-        style="@style/defaultFontNormal"
-        android:text="@string/standard_is_used_for" />
-
-</LinearLayout>
+</LinearLayout>

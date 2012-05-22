@@ -109,7 +109,7 @@ public class ShowSettingsDBLanguage extends ListActivity {
 				// show popup to with resource and call finish
 
 				new AlertDialog.Builder(this)
-						.setMessage(objects.get(position).getResource())
+						.setMessage(getResources().getString(R.string.resource) + ": " + objects.get(position).getResource())
 						.setPositiveButton(
 								getResources().getString(R.string.oke),
 								new DialogInterface.OnClickListener() {
@@ -121,7 +121,7 @@ public class ShowSettingsDBLanguage extends ListActivity {
 
 			} else {
 				new AlertDialog.Builder(ActivityGroupSettings.group)
-						.setMessage(objects.get(position).getResource())
+						.setMessage(getResources().getString(R.string.resource) + ": " + objects.get(position).getResource())
 						.setPositiveButton(
 								getResources().getString(R.string.oke),
 								new DialogInterface.OnClickListener() {
@@ -136,9 +136,9 @@ public class ShowSettingsDBLanguage extends ListActivity {
 									}
 								}).show();
 			}
-		} catch (Exception e) {
+		} catch (Exception e) { 
 			new AlertDialog.Builder(ActivityGroupSettings.group)
-					.setMessage(objects.get(position).getResource())
+					.setMessage(getResources().getString(R.string.resource) + ": " + objects.get(position).getResource())
 					.setPositiveButton(getResources().getString(R.string.oke),
 							new DialogInterface.OnClickListener() {
 								public void onClick(DialogInterface dialog,

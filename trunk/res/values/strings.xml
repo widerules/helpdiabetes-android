@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- Please read info.txt for license and legal information -->
+<!--   Please read info.txt for license and legal information  -->
 <resources>
+
     <string name="add">Add</string>
     <string name="update">Update</string>
     <string name="menu_delete">Delete</string>
@@ -52,7 +53,7 @@
     <string name="addToSelection">Add to selection</string>
     <string name="showSelectedFoodPopupAddAmountToTemplate">Save amounts?</string>
     <string name="insuline">Insulin</string>
-    <string name="insulineRatio">grams of carbs/1IU</string>
+    <string name="insulineRatio">grams of carbs/1 IU</string>
     <string name="insulineUnit">IU</string>
     <string name="showSelectedFoodEatSelectedFood">Add to logs</string>
     <string name="total">Total selections</string>
@@ -137,4 +138,6 @@
     <string name="chooseFile">Choose file</string>
     <string name="calculated">Calculated:</string>
     <string name="searchNext">Find next</string>
+    <string name="selectedTime">Selected time</string>
+	<string name="resource">Resource</string>
 </resources>
