@@ -31,6 +31,7 @@ import be.goossens.oracle.Custom.CustomArrayAdapterCharSequenceShowCreateFood;
 import be.goossens.oracle.Rest.DataParser;
 import be.goossens.oracle.Rest.DbAdapter;
 import be.goossens.oracle.Rest.Functions;
+import be.goossens.oracle.Rest.TrackingValues;
 
 public class ShowCreateUnit extends Activity {
 	private long foodId, unitId;
@@ -56,6 +57,9 @@ public class ShowCreateUnit extends Activity {
 				R.layout.show_create_unit, null);
 		setContentView(contentView);
 
+		//track we come here
+		ActivityGroupMeal.group.parent.trackPageView(TrackingValues.pageShowCreateUnit);
+		
 		editTextStandardAmound = (EditText) findViewById(R.id.editTextShowCreateUnitFoodUnitStandardAmound);
 		editTextName = (EditText) findViewById(R.id.editTextShowCreateUnitFoodUnitName);
 		btAdd = (Button) findViewById(R.id.buttonShowCreateUnitAddOrUpdate);

@@ -17,6 +17,7 @@ import android.widget.ListView;
 import be.goossens.oracle.R;
 import be.goossens.oracle.ActivityGroup.ActivityGroupSettings;
 import be.goossens.oracle.Custom.CustomArrayAdapterCharSequenceSettings;
+import be.goossens.oracle.Rest.TrackingValues;
 import be.goossens.oracle.Show.Exercise.ShowExerciseTypes;
 import be.goossens.oracle.Show.Medicine.ShowMedicineTypes;
 
@@ -25,6 +26,10 @@ public class ShowSettings extends ListActivity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+
+		// track we come here
+		ActivityGroupSettings.group.parent
+				.trackPageView(TrackingValues.pageShowSettingTab);
 
 		View contentView = LayoutInflater.from(getParent()).inflate(
 				R.layout.show_settings, null);
@@ -37,9 +42,9 @@ public class ShowSettings extends ListActivity {
 		fillListView();
 	}
 
-	public void fillListView() { 
+	public void fillListView() {
 		setListAdapter(null);
-		
+
 		CustomArrayAdapterCharSequenceSettings adapter = new CustomArrayAdapterCharSequenceSettings(
 				this, R.layout.row_custom_array_adapter_charsequence_settings,
 				getCharSequenceList());
@@ -64,7 +69,7 @@ public class ShowSettings extends ListActivity {
 
 		return value;
 	}
- 
+
 	@Override
 	protected void onListItemClick(ListView l, View v, int position, long id) {
 		Intent i = null;

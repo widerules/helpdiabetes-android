@@ -24,6 +24,7 @@ import be.goossens.oracle.ActivityGroup.ActivityGroupSettings;
 import be.goossens.oracle.Rest.DataParser;
 import be.goossens.oracle.Rest.DbAdapter;
 import be.goossens.oracle.Rest.DbSettings;
+import be.goossens.oracle.Rest.TrackingValues;
 
 public class ShowAddExerciseType extends Activity {
 	private EditText etName;
@@ -38,6 +39,10 @@ public class ShowAddExerciseType extends Activity {
 				R.layout.show_add_exercise_type, null);
 		setContentView(contentView);
 
+		// track we come here
+				ActivityGroupSettings.group.parent
+						.trackPageView(TrackingValues.pageShowSettingActivityTypesCreateType);
+		
 		etName = (EditText) findViewById(R.id.editTextShowAddExerciseTypeName);
 		btAdd = (Button) findViewById(R.id.buttonAdd);
 		btDelete = (Button) findViewById(R.id.buttonDelete);

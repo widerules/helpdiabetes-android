@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- Please read info.txt for license and legal information -->
 <resources>
-
-    <string name="add">Toevoegen</string>
+	<string name="add">Toevoegen</string>
     <string name="update">Aanpassen</string>
     <string name="menu_delete">Verwijderen</string>
     <string name="delete_all">Wis alles</string>
@@ -150,4 +149,7 @@
     <string name="selectedTime">Geselecteerde tijd</string>
     <string name="resource">Bron</string>
 
+    <!--  Update: 23-05-2012 -->
+    <string name="customResource">U hebt een custom database gekozen. \nGelieve uw eigen voedingsmiddelen te importeren via de settings tab.</string>
+    <string name="realTotal">Totaal</string>
 </resources>

@@ -14,6 +14,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.widget.TextView;
 import be.goossens.oracle.R;
+import be.goossens.oracle.ActivityGroup.ActivityGroupSettings;
 import be.goossens.oracle.Rest.DataParser;
 import be.goossens.oracle.Rest.DbAdapter;
 import be.goossens.oracle.Rest.DbSettings;
@@ -99,7 +100,7 @@ public class ShowStart extends Activity {
 					.getColumnIndexOrThrow(DbAdapter.DATABASE_SETTINGS_VALUE)) == 0) {
 
 				// first time application starts!
-				startActivityDBLanguage();
+				showPopUpAbout();
 
 			} else {
 				// mark app as startup ( to show dialog when we have already
@@ -134,7 +135,7 @@ public class ShowStart extends Activity {
 
 							public void onClick(DialogInterface dialog,
 									int which) {
-			 					startIntentMealTimes(); 
+								startIntentMealTimes();
 							}
 						})
 				.setNegativeButton(getResources().getString(R.string.no),
@@ -143,6 +144,34 @@ public class ShowStart extends Activity {
 							public void onClick(DialogInterface dialog,
 									int which) {
 								startHomeActivityAndStopThisActivity();
+							}
+						}).show();
+	}
+ 
+	// first start up
+	private void showPopUpAbout() {
+		// Show a dialog with info
+		new AlertDialog.Builder(this)
+				.setTitle(getResources().getString(R.string.pref_about))
+				.setPositiveButton(getResources().getString(R.string.oke),
+						new OnClickListener() { 
+							public void onClick(DialogInterface dialog,
+									int which) {
+								startActivityDBLanguage();
+							}
+						})
+				.setMessage(
+						getResources().getString(R.string.Version)
+								+ " \n\n"
+								+ getResources().getString(
+										R.string.about_text_copyright)
+								+ " \n\n"
+								+ getResources().getString(R.string.about_text))
+				.setNegativeButton(getResources().getString(R.string.cancel),
+						new OnClickListener() {
+							public void onClick(DialogInterface dialog,
+									int which) {
+								finish();
 							}
 						}).show();
 	}

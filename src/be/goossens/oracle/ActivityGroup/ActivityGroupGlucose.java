@@ -4,6 +4,8 @@ package be.goossens.oracle.ActivityGroup;
 
 import java.util.ArrayList;
 
+import com.google.android.apps.analytics.GoogleAnalyticsTracker;
+
 import android.app.ActivityGroup;
 import android.content.Context;
 import android.content.Intent;
@@ -12,13 +14,16 @@ import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import be.goossens.oracle.Rest.DataParser;
+import be.goossens.oracle.Show.ShowHomeTab;
 import be.goossens.oracle.Show.Glucose.ShowAddGlucoseEvent;
  
 public class ActivityGroupGlucose extends ActivityGroup {
+	public ShowHomeTab parent;
 	// keep this in a static variable to make it accessible for all the nesten
 	// activities, let them manipulate the view
 	public static ActivityGroupGlucose group;
- 
+	
+	
 	// Need to keep track of the history so the back button works properly
 	private ArrayList<View> history;
 
@@ -27,7 +32,7 @@ public class ActivityGroupGlucose extends ActivityGroup {
 		super.onCreate(savedInstanceState);
 		this.history = new ArrayList<View>();
 		group = this;
-
+		initializeTracker();
 		// make a root activity when the history size = 0
 		if (history.size() == 0) {
 			// Start the root activity within the group and get its view
@@ -39,7 +44,9 @@ public class ActivityGroupGlucose extends ActivityGroup {
 			replaceView(view);
 		}
 	}
-
+	private void initializeTracker() {
+		parent = (ShowHomeTab) this.getParent();
+	}
 	private void hideKeyboard() {
 		InputMethodManager inputManager = (InputMethodManager) this
 				.getSystemService(Context.INPUT_METHOD_SERVICE); 

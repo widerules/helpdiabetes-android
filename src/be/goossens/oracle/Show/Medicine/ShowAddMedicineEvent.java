@@ -23,6 +23,7 @@ import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
 import be.goossens.oracle.R;
+import be.goossens.oracle.ActivityGroup.ActivityGroupExercise;
 import be.goossens.oracle.ActivityGroup.ActivityGroupMeal;
 import be.goossens.oracle.ActivityGroup.ActivityGroupMedicine;
 import be.goossens.oracle.ActivityGroup.ActivityGroupTracking;
@@ -31,6 +32,7 @@ import be.goossens.oracle.Objects.DBNameAndID;
 import be.goossens.oracle.Rest.DataParser;
 import be.goossens.oracle.Rest.DbAdapter;
 import be.goossens.oracle.Rest.Functions;
+import be.goossens.oracle.Rest.TrackingValues;
 import be.goossens.oracle.Show.ShowHomeTab;
 import be.goossens.oracle.slider.DateSlider;
 import be.goossens.oracle.slider.DateTimeSlider;
@@ -54,6 +56,10 @@ public class ShowAddMedicineEvent extends Activity {
 				R.layout.show_add_medicine_event, null);
 		setContentView(contentView);
 
+		// track we come here
+		ActivityGroupMedicine.group.parent
+				.trackPageView(TrackingValues.pageShowMedicineTab);
+
 		functions = new Functions();
 
 		btUpdateDateAndHour = (Button) findViewById(R.id.buttonUpdateDateAndHour);
@@ -70,13 +76,13 @@ public class ShowAddMedicineEvent extends Activity {
 				showDialog(0);
 			}
 		});
- 
+
 		btAdd.setOnClickListener(new OnClickListener() {
 
 			public void onClick(View v) {
 				onClickBtAdd();
-			} 
-		}); 
+			}
+		});
 
 		// update the tvUnit when we select a other medicine type
 		spMedicine.setOnItemSelectedListener(new OnItemSelectedListener() {
@@ -89,10 +95,10 @@ public class ShowAddMedicineEvent extends Activity {
 			}
 
 			public void onNothingSelected(AdapterView<?> arg0) {
-  
-			} 
+
+			}
 		});
- 
+
 		etAmount.setOnKeyListener(new View.OnKeyListener() {
 			public boolean onKey(View v, int keyCode, KeyEvent event) {
 				// filter so we only get the onkey up actions
@@ -107,7 +113,7 @@ public class ShowAddMedicineEvent extends Activity {
 				return false;
 			}
 		});
-		
+
 	}
 
 	// when we click on the button add

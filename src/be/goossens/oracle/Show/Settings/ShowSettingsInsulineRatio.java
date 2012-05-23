@@ -19,6 +19,7 @@ import be.goossens.oracle.ActivityGroup.ActivityGroupSettings;
 import be.goossens.oracle.Rest.DataParser;
 import be.goossens.oracle.Rest.DbAdapter;
 import be.goossens.oracle.Rest.DbSettings;
+import be.goossens.oracle.Rest.TrackingValues;
 
 public class ShowSettingsInsulineRatio extends Activity {
 	private DbAdapter dbHelper;
@@ -36,6 +37,14 @@ public class ShowSettingsInsulineRatio extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.show_settings_insuline_ratio);
+
+		try {
+			// track we come here
+			ActivityGroupSettings.group.parent
+					.trackPageView(TrackingValues.pageShowSettingInsulineRatio);
+		} catch (RuntimeException e) {
+		}
+
 		dbHelper = new DbAdapter(this);
 		dbHelper.open();
 
@@ -88,7 +97,7 @@ public class ShowSettingsInsulineRatio extends Activity {
 		btNext.setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
 				try {
-					//see if we are here from startup page
+					// see if we are here from startup page
 					if (getIntent().getExtras().getString(DataParser.whatToDo)
 							.equals(DataParser.doFirstTime)) {
 						updateValues();
@@ -98,7 +107,7 @@ public class ShowSettingsInsulineRatio extends Activity {
 					}
 				} catch (Exception e) {
 					onClickUpdate();
-				} 
+				}
 			}
 		});
 	}

@@ -43,6 +43,7 @@ import be.goossens.oracle.Rest.DataParser;
 import be.goossens.oracle.Rest.DbAdapter;
 import be.goossens.oracle.Rest.DbSettings;
 import be.goossens.oracle.Rest.Functions;
+import be.goossens.oracle.Rest.TrackingValues;
 import be.goossens.oracle.Show.ShowHomeTab;
 import be.goossens.oracle.slider.DateSlider;
 import be.goossens.oracle.slider.DateTimeSlider;
@@ -76,6 +77,10 @@ public class ShowSelectedFood extends ListActivity {
 		View contentView = LayoutInflater.from(getParent()).inflate(
 				R.layout.show_selected_food, null);
 		setContentView(contentView);
+
+		// track we come here
+		ActivityGroupMeal.group.parent
+				.trackPageView(TrackingValues.pageShowSelectedFood);
 
 		functions = new Functions();
 
@@ -145,9 +150,12 @@ public class ShowSelectedFood extends ListActivity {
 	// add selected food to tracking list
 	private void createMedicineEvent() {
 		dbHelper.open();
+		// do calendar time -1 second so it comes below the meal food!
+		mCalendar.add(Calendar.SECOND, -1);
+
 		// medicine id = the medicine id that is default from settings!
-		dbHelper.createMedicineEvent(fCalculatedInsulineAmount, new Functions()
-				.getDateAsStringFromCalendar(Calendar.getInstance()),
+		dbHelper.createMedicineEvent(fCalculatedInsulineAmount,
+				new Functions().getDateAsStringFromCalendar(mCalendar),
 				ActivityGroupMeal.group.getFoodData().defaultMedicineTypeID);
 	}
 
@@ -229,10 +237,10 @@ public class ShowSelectedFood extends ListActivity {
 				+ android.text.format.DateFormat.getDateFormat(this).format(
 						mCalendar.getTime()) + " "
 				+ functions.getTimeFromDate(mCalendar.getTime()));
-		
+
 		tv.setGravity(Gravity.CENTER_HORIZONTAL);
 		tv.setTextColor(getResources().getColor(R.color.ColorWhite));
-		
+
 		// Show a dialog
 		new AlertDialog.Builder(ActivityGroupMeal.group)
 				.setTitle(

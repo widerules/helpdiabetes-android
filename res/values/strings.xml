@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!--   Please read info.txt for license and legal information  -->
+<!-- Please read info.txt for license and legal information -->
 <resources>
 
     <string name="add">Add</string>
@@ -12,12 +12,12 @@
     <string name="hide">Hide</string>
     <string name="Name">Name</string>
     <string name="unit">Unit</string>
-    <string name="name_cant_be_empty">Name cant be empty</string>
-    <string name="unit_cant_be_empty">Unit cant be empty</string>
-    <string name="short_kcal">Kcals</string>
+    <string name="name_cant_be_empty">Name cannot be empty</string>
+    <string name="unit_cant_be_empty">Unit cannot be empty</string>
+    <string name="short_kcal">kcals</string>
     <string name="short_carbs">carbs</string>
     <string name="save">Save</string>
-    <string name="oke">Oke</string>
+    <string name="oke">Ok</string>
     <string name="cancel">Cancel</string>
     <string name="visibility">Visibility</string>
     <string name="visible">Visible</string>
@@ -37,30 +37,30 @@
     <string name="titelAddMedicine">Medication</string>
     <string name="titelTemplate">Templates</string>
     <string name="pref_insuline_ratio">Insulin-to-carb ratio</string>
-    <string name="pref_meal_times">Meal Time Slots</string>
+    <string name="pref_meal_times">Mealtimes</string>
     <string name="pref_value_order">Food composition</string>
     <string name="pref_text_size">Font Size</string>
-    <string name="pref_glucose_unit">Glucose-unit</string>
+    <string name="pref_glucose_unit">Blood glucose unit</string>
     <string name="pref_exercise_types">Activity types</string>
     <string name="pref_medicine_types">Medicine types</string>
-    <string name="pref_db_language">Language database</string>
+    <string name="pref_db_language">Food Database language</string>
     <string name="pref_backup">Backup, Restore, Import and Export</string>
     <string name="pref_about">About</string>
     <string name="pref_add_exercise_type">Add activity type</string>
     <string name="pref_add_medicine_type">Add medicine type</string>
-    <string name="showTracking">Logs</string>
-    <string name="noTrackingValues">There are no logs</string>
+    <string name="showTracking">History log</string>
+    <string name="noTrackingValues">There is no history log</string>
     <string name="addToSelection">Add to selection</string>
-    <string name="showSelectedFoodPopupAddAmountToTemplate">Save amounts?</string>
+    <string name="showSelectedFoodPopupAddAmountToTemplate">Save amounts ?</string>
     <string name="insuline">Insulin</string>
     <string name="insulineRatio">grams of carbs/1 IU</string>
     <string name="insulineUnit">IU</string>
-    <string name="showSelectedFoodEatSelectedFood">Add to logs</string>
+    <string name="showSelectedFoodEatSelectedFood">Add to history log</string>
     <string name="total">Total selections</string>
     <string name="sureToDeleteSelectedFood">Are you sure to clear selections?</string>
-    <string name="addSelectionToTracking">Add selection to logs?</string>
+    <string name="addSelectionToTracking">Add selection to history log ?</string>
     <string name="howMuch">How much</string>
-    <string name="didUUse">did u use?</string>
+    <string name="didUUse">did you use?</string>
     <string name="changeTime">Change time</string>
     <string name="search">Search</string>
     <string name="options">Options</string>
@@ -119,25 +119,27 @@
     <string name="part">piece</string>
     <string name="file_name">File name</string>
     <string name="no_own_food">No own created/updated food</string>
-    <string name="could_not_write">Could not write to sd</string>
-    <string name="succesfull_wrote_to_sd">Succesfull wrote to sd</string>
+    <string name="could_not_write">Could not write to sd card</string>
+    <string name="succesfull_wrote_to_sd">Succesfull wrote to sd card</string>
     <string name="succesfull_wrote_csv_file">Succesfull created csv file</string>
     <string name="sucessfull_copied_records_to_database">Succesfull imported products</string>
-    <string name="could_not_read_from_sd">Could not read from sd</string>
+    <string name="could_not_read_from_sd">Could not read from sd card</string>
     <string name="selections_aint_empty">there is still selected food!</string>
     <string name="dont_add_medicine">Dont add medicine</string>
     <string name="sucesfull_added">Products added to selection</string>
     <string name="warning">Warning</string>
     <string name="app_will_exit">The application will now exit. \n Please manually start it again.</string>
     <string name="something_went_wrong">Something went wrong</string>
-    <string name="succesfull_copied">Succesfull copied database from sd to phone</string>
-    <string name="databaseFromSDToPhone">Restore database from SD</string>
-    <string name="deleteCurrentDatabase">This function will delete the current database and override it with the database from the SD card \n\nAll existing data from the current database will be erased</string>
+    <string name="succesfull_copied">Succesfully copied database from sd card to phone</string>
+    <string name="databaseFromSDToPhone">Restore database from sd card</string>
+    <string name="deleteCurrentDatabase">This function will delete the current database and override it with the database from the sd card\n\nAll existing data from the current database will be erased</string>
     <string name="seeMore">See more</string>
-    <string name="noFilesFound">No csv files found on root of SD card</string>
+    <string name="noFilesFound">No csv files found on root of sd card</string>
     <string name="chooseFile">Choose file</string>
     <string name="calculated">Calculated:</string>
     <string name="searchNext">Find next</string>
     <string name="selectedTime">Selected time</string>
-	<string name="resource">Resource</string>
+    <string name="resource">Resource</string>
+    <string name="customResource">You have selected a custom database. \n please import your own food items. from the settings tab</string>
+	<string name="realTotal">Total</string>
 </resources>

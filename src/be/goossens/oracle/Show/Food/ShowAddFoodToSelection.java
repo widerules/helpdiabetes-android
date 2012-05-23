@@ -37,6 +37,7 @@ import be.goossens.oracle.Objects.DBNameAndID;
 import be.goossens.oracle.Rest.DataParser;
 import be.goossens.oracle.Rest.DbAdapter;
 import be.goossens.oracle.Rest.Functions;
+import be.goossens.oracle.Rest.TrackingValues;
 
 public class ShowAddFoodToSelection extends Activity {
 	private DbAdapter dbHelper;
@@ -73,6 +74,10 @@ public class ShowAddFoodToSelection extends Activity {
 		View contentView = LayoutInflater.from(getParent()).inflate(
 				R.layout.show_add_food_to_selection, null);
 		setContentView(contentView);
+
+		// track we come here
+		ActivityGroupMeal.group.parent
+				.trackPageView(TrackingValues.pageShowAddFoodToSelection);
 
 		dbHelper = new DbAdapter(this);
 		functions = new Functions();
@@ -507,7 +512,7 @@ public class ShowAddFoodToSelection extends Activity {
 
 			// make the unitName shorter if its to long
 			unitName = functions.getShorterString(unitName, 6);
-
+ 
 			tvRowOneFieldTwo
 					.setText(cUnit.getString(cUnit
 							.getColumnIndexOrThrow(DbAdapter.DATABASE_FOODUNIT_STANDARDAMOUNT))
@@ -516,17 +521,17 @@ public class ShowAddFoodToSelection extends Activity {
 			tvRowOneFieldThree.setText("" + amount + " " + unitName);
 
 			// fill the rest of the table
-
-			// carbs
+   
+			// carbs 
 			tvRowTwoFieldTwo
-					.setText(""
+	 				.setText(""
 							+ functions.roundFloats(
 									cUnit.getFloat(cUnit
 											.getColumnIndexOrThrow(DbAdapter.DATABASE_FOODUNIT_CARBS)),
 									1));
 			tvRowTwoFieldThree.setText("" + calcCarbs);
-
-			// prot
+					
+			// prot 
 			tvRowThreeFieldTwo
 					.setText(""
 							+ functions.roundFloats(
@@ -534,7 +539,7 @@ public class ShowAddFoodToSelection extends Activity {
 											.getColumnIndexOrThrow(DbAdapter.DATABASE_FOODUNIT_PROTEIN)),
 									1));
 			tvRowThreeFieldThree.setText("" + calcProtein);
-
+					 
 			// fat
 			tvRowFourFieldTwo
 					.setText(""
@@ -543,16 +548,17 @@ public class ShowAddFoodToSelection extends Activity {
 											.getColumnIndexOrThrow(DbAdapter.DATABASE_FOODUNIT_FAT)),
 									1));
 			tvRowFourFieldThree.setText("" + calcFat);
-
+			 
+		 	
 			// kcal
 			tvRowFiveFieldTwo
-					.setText(""
+					.setText("" 
 							+ functions.roundFloats(
 									cUnit.getFloat(cUnit
 											.getColumnIndexOrThrow(DbAdapter.DATABASE_FOODUNIT_KCAL)),
 									1));
-			tvRowFiveFieldThree.setText("" + calcKcal);
-
+			tvRowFiveFieldThree.setText("" + calcKcal); 
+					
 			cUnit.close();
 		} catch (Exception e) {
 		}

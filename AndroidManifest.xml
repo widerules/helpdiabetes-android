@@ -8,88 +8,88 @@
     <uses-sdk android:minSdkVersion="4" android:targetSdkVersion="8" />
 
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
 
     <application
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name" >
-        <activity android:name=".Show.Food.ShowAddFoodToSelection" >
+        <activity android:name="be.goossens.oracle.Show.Food.ShowAddFoodToSelection" >
         </activity>
-        <activity android:name=".Show.Food.ShowCreateFood" >
+        <activity android:name="be.goossens.oracle.Show.Food.ShowCreateFood" >
         </activity>
-        <activity android:name=".Show.Food.ShowCreateUnit" >
+        <activity android:name="be.goossens.oracle.Show.Food.ShowCreateUnit" >
         </activity>
-        <activity android:name=".Show.Food.ShowFoodList" >
+        <activity android:name="be.goossens.oracle.Show.Food.ShowFoodList" >
         </activity>
-        <activity android:name=".Show.Food.ShowFoodTemplates" >
+        <activity android:name="be.goossens.oracle.Show.Food.ShowFoodTemplates" >
         </activity>
-        <activity android:name=".Show.Food.ShowManageOwnFood" >
+        <activity android:name="be.goossens.oracle.Show.Food.ShowManageOwnFood" >
         </activity>
-        <activity android:name=".Show.Food.ShowSelectedFood" >
+        <activity android:name="be.goossens.oracle.Show.Food.ShowSelectedFood" >
         </activity>
-        <activity android:name=".Show.Settings.ShowSettings" >
+        <activity android:name="be.goossens.oracle.Show.Settings.ShowSettings" >
         </activity>
-        <activity android:name=".Show.Settings.ShowSettingsInsulineRatio" >
+        <activity android:name="be.goossens.oracle.Show.Settings.ShowSettingsInsulineRatio" >
         </activity>
-        <activity android:name=".Show.Settings.ShowSettingsMealTimes" >
+        <activity android:name="be.goossens.oracle.Show.Settings.ShowSettingsMealTimes" >
         </activity>
-        <activity android:name=".Show.Food.ShowUpdateFood" >
+        <activity android:name="be.goossens.oracle.Show.Food.ShowUpdateFood" >
         </activity>
-        <activity android:name=".Show.Settings.ShowSettingsValue" >
+        <activity android:name="be.goossens.oracle.Show.Settings.ShowSettingsValue" >
         </activity>
-        <activity android:name=".Show.Settings.ShowSettingsFontSizeLists" >
+        <activity android:name="be.goossens.oracle.Show.Settings.ShowSettingsFontSizeLists" >
         </activity>
-        <activity android:name=".Show.Exercise.ShowAddExerciseEvent" >
+        <activity android:name="be.goossens.oracle.Show.Exercise.ShowAddExerciseEvent" >
         </activity>
-        <activity android:name=".Show.Exercise.ShowAddExerciseType" >
+        <activity android:name="be.goossens.oracle.Show.Exercise.ShowAddExerciseType" >
         </activity>
-        <activity android:name=".Show.Exercise.ShowExerciseTypes" >
+        <activity android:name="be.goossens.oracle.Show.Exercise.ShowExerciseTypes" >
         </activity>
-        <activity android:name=".Show.Tracking.ShowTracking" >
+        <activity android:name="be.goossens.oracle.Show.Tracking.ShowTracking" >
         </activity>
         <activity
-            android:name=".Show.ShowHomeTab"
+            android:name="be.goossens.oracle.Show.ShowHomeTab"
             android:theme="@android:style/Theme.NoTitleBar" >
         </activity>
-        <activity android:name=".ActivityGroup.ActivityGroupTracking" >
+        <activity android:name="be.goossens.oracle.ActivityGroup.ActivityGroupTracking" >
         </activity>
-        <activity android:name=".ActivityGroup.ActivityGroupMeal" >
+        <activity android:name="be.goossens.oracle.ActivityGroup.ActivityGroupMeal" >
         </activity>
-        <activity android:name=".ActivityGroup.ActivityGroupExercise" >
+        <activity android:name="be.goossens.oracle.ActivityGroup.ActivityGroupExercise" >
         </activity>
-        <activity android:name=".ActivityGroup.ActivityGroupGlucose" >
+        <activity android:name="be.goossens.oracle.ActivityGroup.ActivityGroupGlucose" >
         </activity>
-        <activity android:name=".ActivityGroup.ActivityGroupMedicine" >
+        <activity android:name="be.goossens.oracle.ActivityGroup.ActivityGroupMedicine" >
         </activity>
-        <activity android:name=".ActivityGroup.ActivityGroupSettings" >
+        <activity android:name="be.goossens.oracle.ActivityGroup.ActivityGroupSettings" >
         </activity>
-        <activity android:name=".Show.Glucose.ShowAddGlucoseEvent" >
+        <activity android:name="be.goossens.oracle.Show.Glucose.ShowAddGlucoseEvent" >
         </activity>
-        <activity android:name=".Show.ShowSelectLanguage" >
-        </activity>
-        <activity android:name=".Show.ShowStart" >
+        <activity android:name="be.goossens.oracle.Show.ShowStart" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".Show.Settings.ShowSettingsGlucoseUnit" >
+        <activity android:name="be.goossens.oracle.Show.Settings.ShowSettingsGlucoseUnit" >
         </activity>
-        <activity android:name=".Show.Medicine.ShowAddMedicineEvent" >
+        <activity android:name="be.goossens.oracle.Show.Medicine.ShowAddMedicineEvent" >
         </activity>
-        <activity android:name=".Show.Food.ShowLoadingFoodData" >
+        <activity android:name="be.goossens.oracle.Show.Food.ShowLoadingFoodData" >
         </activity>
-        <activity android:name=".Show.Settings.ShowSettingsDBLanguage" >
+        <activity android:name="be.goossens.oracle.Show.Settings.ShowSettingsDBLanguage" >
         </activity>
-        <activity android:name=".Show.Medicine.ShowMedicineTypes" >
+        <activity android:name="be.goossens.oracle.Show.Medicine.ShowMedicineTypes" >
         </activity>
-        <activity android:name=".Show.Medicine.ShowAddMedicineType" >
+        <activity android:name="be.goossens.oracle.Show.Medicine.ShowAddMedicineType" >
         </activity>
-        <activity android:name=".Show.Settings.ShowSettingsBackup" >
+        <activity android:name="be.goossens.oracle.Show.Settings.ShowSettingsBackup" >
         </activity>
-        <activity android:name=".Show.Settings.ShowSettingsDefaultMedicineType" >
+        <activity android:name="be.goossens.oracle.Show.Settings.ShowSettingsDefaultMedicineType" >
         </activity>
-        <activity android:name=".Show.Tracking.ShowLoadingTrackingData"></activity>
+        <activity android:name="be.goossens.oracle.Show.Tracking.ShowLoadingTrackingData"></activity>
     </application>
 
 </manifest>

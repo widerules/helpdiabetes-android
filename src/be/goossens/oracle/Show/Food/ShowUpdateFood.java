@@ -26,6 +26,7 @@ import be.goossens.oracle.Objects.DBFood;
 import be.goossens.oracle.Objects.DBFoodUnit;
 import be.goossens.oracle.Rest.DataParser;
 import be.goossens.oracle.Rest.DbAdapter;
+import be.goossens.oracle.Rest.TrackingValues;
 
 public class ShowUpdateFood extends ListActivity {
 
@@ -41,6 +42,10 @@ public class ShowUpdateFood extends ListActivity {
 				R.layout.show_update_food, null);
 		setContentView(contentView);
 
+		// track we come here
+		ActivityGroupMeal.group.parent
+				.trackPageView(TrackingValues.pageShowUpdateFood);
+
 		btName = (Button) findViewById(R.id.buttonName);
 		btAdd = (Button) findViewById(R.id.buttonAdd);
 		btDelete = (Button) findViewById(R.id.buttonDelete);
@@ -51,7 +56,7 @@ public class ShowUpdateFood extends ListActivity {
 				ActivityGroupMeal.group.back();
 			}
 		});
-		
+
 		btName.setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
 				onClickButtonName();
@@ -88,7 +93,7 @@ public class ShowUpdateFood extends ListActivity {
 							.getColumnIndexOrThrow(DbAdapter.DATABASE_FOOD_ID)),
 					cFood.getString(cFood
 							.getColumnIndexOrThrow(DbAdapter.DATABASE_FOOD_NAME)),
-					null,null);
+					null, null);
 			// close the cursor
 			cFood.close();
 			// close the database
@@ -219,7 +224,7 @@ public class ShowUpdateFood extends ListActivity {
 
 		// update the object
 		food.setName(foodName);
- 
+
 		// update the database
 		DbAdapter db = new DbAdapter(this);
 		db.open();
@@ -272,8 +277,7 @@ public class ShowUpdateFood extends ListActivity {
 				.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP).putExtra(
 						DataParser.idFood, food.getId());
 		View view = ActivityGroupMeal.group.getLocalActivityManager()
-				.startActivity(DataParser.activityIDMeal, i)
-				.getDecorView();
+				.startActivity(DataParser.activityIDMeal, i).getDecorView();
 		ActivityGroupMeal.group.setContentView(view);
 	}
 
@@ -281,11 +285,11 @@ public class ShowUpdateFood extends ListActivity {
 	@Override
 	protected void onListItemClick(ListView l, View v, int position, long id) {
 		Intent i = new Intent(ActivityGroupMeal.group, ShowCreateUnit.class)
-				.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP).putExtra(
-						DataParser.idFood, food.getId()).putExtra(DataParser.idUnit, listFoodUnit.get(position).getId());
+				.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+				.putExtra(DataParser.idFood, food.getId())
+				.putExtra(DataParser.idUnit, listFoodUnit.get(position).getId());
 		View view = ActivityGroupMeal.group.getLocalActivityManager()
-				.startActivity(DataParser.activityIDMeal, i)
-				.getDecorView();
+				.startActivity(DataParser.activityIDMeal, i).getDecorView();
 		ActivityGroupMeal.group.setContentView(view);
 	}
 

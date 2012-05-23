@@ -22,10 +22,11 @@ import be.goossens.oracle.Custom.CustomArrayAdapterDBMedicineType;
 import be.goossens.oracle.Objects.DBMedicineType;
 import be.goossens.oracle.Rest.DataParser;
 import be.goossens.oracle.Rest.DbAdapter;
+import be.goossens.oracle.Rest.TrackingValues;
 
 public class ShowMedicineTypes extends ListActivity {
 	private List<DBMedicineType> listMedicineTypes;
-	private Button btAdd,btBack;
+	private Button btAdd, btBack;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -35,6 +36,10 @@ public class ShowMedicineTypes extends ListActivity {
 				R.layout.show_medicine_types, null);
 		setContentView(contentView);
 
+		// track we come here
+		ActivityGroupSettings.group.parent
+				.trackPageView(TrackingValues.pageShowSettingMedicineTypes);
+
 		btAdd = (Button) findViewById(R.id.buttonAdd);
 
 		btAdd.setOnClickListener(new OnClickListener() {
@@ -42,14 +47,14 @@ public class ShowMedicineTypes extends ListActivity {
 				onClickAddMedicineType();
 			}
 		});
-		
+
 		btBack = (Button) findViewById(R.id.buttonBack);
 		btBack.setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
 				ActivityGroupSettings.group.back();
 			}
 		});
-		
+
 	}
 
 	// refresh the name of a object
@@ -59,7 +64,8 @@ public class ShowMedicineTypes extends ListActivity {
 		for (DBMedicineType obj : listMedicineTypes) {
 			if (obj.getId() == medicineTypeID) {
 				// set name
-				listMedicineTypes.get(listMedicineTypes.indexOf(obj)).setMedicineName(name);
+				listMedicineTypes.get(listMedicineTypes.indexOf(obj))
+						.setMedicineName(name);
 				// update listadapter
 				fillListView();
 				// stop looping
@@ -103,13 +109,13 @@ public class ShowMedicineTypes extends ListActivity {
 
 	private void fillListView() {
 		setListAdapter(null);
-		 
+
 		CustomArrayAdapterDBMedicineType adapter = new CustomArrayAdapterDBMedicineType(
 				this, R.layout.row_custom_array_adapter_with_arrow,
 				listMedicineTypes,
 				ActivityGroupMeal.group.getFoodData().dbFontSize,
 				ActivityGroupMeal.group.getFoodData().defaultMedicineTypeID);
- 
+
 		setListAdapter(adapter);
 	}
 
@@ -130,11 +136,11 @@ public class ShowMedicineTypes extends ListActivity {
 		refresh();
 	}
 
-	public void refresh(){
+	public void refresh() {
 		fillListMedicineTypes();
 		fillListView();
 	}
-	
+
 	private void fillListMedicineTypes() {
 		listMedicineTypes = new ArrayList<DBMedicineType>();
 		DbAdapter db = new DbAdapter(this);

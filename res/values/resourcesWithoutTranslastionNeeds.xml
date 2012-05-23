@@ -1,12 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- Please read info.txt for license and legal information -->
 <resources>
-
-    <string name="app_name">HelpDiabetes</string>
-    <string name="btup">+</string>
+	<string name="app_name">HelpDiabetes</string>
+   	<string name="btup">+</string>
     <string name="btdown">-</string>
     <string name="endOfListView">></string>
-    <string name="Version">Versie 1.35</string>
-    <string name="about_text_copyright">Copyright (C) 2012 Kenny Goossens</string>
-
+    <string name="Version">Versie 1.37</string>
+    <string name="about_text_copyright">Copyright &#169; 2012 Kenny Goossens</string>
 </resources>

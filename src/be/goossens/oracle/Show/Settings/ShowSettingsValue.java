@@ -18,6 +18,7 @@ import be.goossens.oracle.ActivityGroup.ActivityGroupSettings;
 import be.goossens.oracle.Rest.DataParser;
 import be.goossens.oracle.Rest.DbAdapter;
 import be.goossens.oracle.Rest.DbSettings;
+import be.goossens.oracle.Rest.TrackingValues;
 
 public class ShowSettingsValue extends Activity {
 
@@ -28,12 +29,16 @@ public class ShowSettingsValue extends Activity {
 	// 1 = carb, 2 = prot, 3 = fat, 4 = kcal
 	private int defaultValue;
 
-	private Button btNext,btBack;
+	private Button btNext, btBack;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.show_settings_value);
+
+		// track we come here
+		ActivityGroupSettings.group.parent
+				.trackPageView(TrackingValues.pageShowSettingFoodComposition);
 
 		rbCarb = (RadioButton) findViewById(R.id.radioCarbs);
 		rbProt = (RadioButton) findViewById(R.id.radioProt);
@@ -53,7 +58,7 @@ public class ShowSettingsValue extends Activity {
 				ActivityGroupSettings.group.back();
 			}
 		});
-		
+
 		// set text off
 		tgCarb.setTextOff(getResources().getString(R.string.invisible));
 		tgProt.setTextOff(getResources().getString(R.string.invisible));
@@ -141,7 +146,7 @@ public class ShowSettingsValue extends Activity {
 			if (getIntent().getExtras().getString(DataParser.whatToDo)
 					.equals(DataParser.doFirstTime)) {
 				btNext.setVisibility(View.VISIBLE);
-				//hide the button back
+				// hide the button back
 				btBack.setVisibility(View.GONE);
 			}
 		} catch (NullPointerException e) {
@@ -169,9 +174,8 @@ public class ShowSettingsValue extends Activity {
 				}
 			}
 
-			db.updateSettingsByName(
-					DbSettings.setting_value_carb_onoff,
-					"" + carbValue);
+			db.updateSettingsByName(DbSettings.setting_value_carb_onoff, ""
+					+ carbValue);
 			break;
 		case 2:
 			int protValue = 0;
@@ -189,9 +193,8 @@ public class ShowSettingsValue extends Activity {
 				}
 			}
 
-			db.updateSettingsByName(
-					DbSettings.setting_value_prot_onoff,
-					"" + protValue);
+			db.updateSettingsByName(DbSettings.setting_value_prot_onoff, ""
+					+ protValue);
 
 			break;
 		case 3:
@@ -210,9 +213,8 @@ public class ShowSettingsValue extends Activity {
 				}
 			}
 
-			db.updateSettingsByName(
-					DbSettings.setting_value_fat_onoff,
-					"" + fatValue);
+			db.updateSettingsByName(DbSettings.setting_value_fat_onoff, ""
+					+ fatValue);
 			break;
 		case 4:
 			int kcalValue = 0;
@@ -230,9 +232,8 @@ public class ShowSettingsValue extends Activity {
 				}
 			}
 
-			db.updateSettingsByName(
-					DbSettings.setting_value_kcal_onoff,
-					"" + kcalValue);
+			db.updateSettingsByName(DbSettings.setting_value_kcal_onoff, ""
+					+ kcalValue);
 			break;
 		}
 
@@ -314,9 +315,8 @@ public class ShowSettingsValue extends Activity {
 			break;
 		}
 
-		db.updateSettingsByName(
-				DbSettings.setting_value_default, ""
-						+ newDefault);
+		db.updateSettingsByName(DbSettings.setting_value_default, ""
+				+ newDefault);
 		db.close();
 
 		// mark the new default as visible in database and on screen
@@ -333,7 +333,8 @@ public class ShowSettingsValue extends Activity {
 
 		DbAdapter db = new DbAdapter(this);
 		db.open();
-		Cursor cSetting = db.fetchSettingByName(DbSettings.setting_value_default);
+		Cursor cSetting = db
+				.fetchSettingByName(DbSettings.setting_value_default);
 		if (cSetting.getCount() > 0) {
 			cSetting.moveToFirst();
 			defaultValue = cSetting.getInt(cSetting
@@ -367,7 +368,8 @@ public class ShowSettingsValue extends Activity {
 		db.open();
 
 		// carb togle button
-		Cursor cSettingCarb = db.fetchSettingByName(DbSettings.setting_value_carb_onoff);
+		Cursor cSettingCarb = db
+				.fetchSettingByName(DbSettings.setting_value_carb_onoff);
 		if (cSettingCarb.getCount() > 0) {
 			cSettingCarb.moveToFirst();
 			if (cSettingCarb.getInt(cSettingCarb
@@ -380,7 +382,8 @@ public class ShowSettingsValue extends Activity {
 		cSettingCarb.close();
 
 		// prot togle button
-		Cursor cSettingProt = db.fetchSettingByName(DbSettings.setting_value_prot_onoff);
+		Cursor cSettingProt = db
+				.fetchSettingByName(DbSettings.setting_value_prot_onoff);
 		if (cSettingProt.getCount() > 0) {
 			cSettingProt.moveToFirst();
 			if (cSettingProt.getInt(cSettingProt
@@ -393,7 +396,8 @@ public class ShowSettingsValue extends Activity {
 		cSettingProt.close();
 
 		// fat togle button
-		Cursor cSettingFat = db.fetchSettingByName(DbSettings.setting_value_fat_onoff);
+		Cursor cSettingFat = db
+				.fetchSettingByName(DbSettings.setting_value_fat_onoff);
 		if (cSettingFat.getCount() > 0) {
 			cSettingFat.moveToFirst();
 			if (cSettingFat.getInt(cSettingFat
@@ -406,7 +410,8 @@ public class ShowSettingsValue extends Activity {
 		cSettingFat.close();
 
 		// kcal togle button
-		Cursor cSettingKcal = db.fetchSettingByName(DbSettings.setting_value_kcal_onoff);
+		Cursor cSettingKcal = db
+				.fetchSettingByName(DbSettings.setting_value_kcal_onoff);
 		if (cSettingKcal.getCount() > 0) {
 			cSettingKcal.moveToFirst();
 			if (cSettingKcal.getInt(cSettingKcal

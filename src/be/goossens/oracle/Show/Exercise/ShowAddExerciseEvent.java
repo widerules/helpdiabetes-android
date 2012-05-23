@@ -24,6 +24,7 @@ import android.widget.Toast;
 import be.goossens.oracle.R;
 import be.goossens.oracle.ActivityGroup.ActivityGroupExercise;
 import be.goossens.oracle.ActivityGroup.ActivityGroupMeal;
+import be.goossens.oracle.ActivityGroup.ActivityGroupSettings;
 import be.goossens.oracle.ActivityGroup.ActivityGroupTracking;
 import be.goossens.oracle.Custom.CustomArrayAdapterCharSequenceForASpinner;
 import be.goossens.oracle.Custom.CustomSimpleArrayAdapterForASpinner;
@@ -31,6 +32,7 @@ import be.goossens.oracle.Objects.DBNameAndID;
 import be.goossens.oracle.Rest.DataParser;
 import be.goossens.oracle.Rest.DbAdapter;
 import be.goossens.oracle.Rest.Functions;
+import be.goossens.oracle.Rest.TrackingValues;
 import be.goossens.oracle.Show.ShowHomeTab;
 import be.goossens.oracle.slider.DateSlider;
 import be.goossens.oracle.slider.DateTimeSlider;
@@ -52,12 +54,17 @@ public class ShowAddExerciseEvent extends Activity {
 				R.layout.show_add_exercise_event, null);
 		setContentView(contentView);
 
+		// track we come here
+		ActivityGroupExercise.group.parent
+				.trackPageView(TrackingValues.pageShowExerciseTab);
+		
+		
 		dbHelper = new DbAdapter(this);
 		functions = new Functions();
 		spinnerExerciseTypes = (Spinner) findViewById(R.id.spinnerSportType);
 		spinnerDuration = (Spinner) findViewById(R.id.spinnerDuration);
 		etDescription = (EditText) findViewById(R.id.editText1);
- 
+
 		btAdd = (Button) findViewById(R.id.buttonAdd);
 		btDelete = (Button) findViewById(R.id.buttonDelete);
 		btUpdateDateAndHour = (Button) findViewById(R.id.buttonUpdateDateAndHour);
@@ -79,8 +86,8 @@ public class ShowAddExerciseEvent extends Activity {
 			public void onClick(View v) {
 				showDialog(0);
 			}
-		}); 
-		
+		});
+
 		etDescription.setOnKeyListener(new View.OnKeyListener() {
 			public boolean onKey(View v, int keyCode, KeyEvent event) {
 				// filter so we only get the onkey up actions
@@ -229,52 +236,37 @@ public class ShowAddExerciseEvent extends Activity {
 
 	public void onClickAdd(View view) {
 		dbHelper.open();
-		if (etDescription.length() <= 0) {
-			Toast.makeText(
-					this,
-					""
-							+ getResources().getString(
-									R.string.description_cant_be_empty),
-					Toast.LENGTH_LONG).show();
-		} else {
-			if (getIntent().getExtras().getString(DataParser.whatToDo)
-					.equals(DataParser.doUpdateExerciseEvent)) {
-				// update exercise event
+  
+		// create new exercise event
+		int startTime = 0;
+		int endTime = 0;
 
-			} else {
-				// create new exercise event
-				int startTime = 0;
-				int endTime = 0;
+		// Fill startTime with seconds of time
+		startTime = (functions.getHour(mCalendar) * 3600)
+				+ (functions.getMinutes(mCalendar) * 60);
 
-				// Fill startTime with seconds of time
-				startTime = (functions.getHour(mCalendar) * 3600)
-						+ (functions.getMinutes(mCalendar) * 60);
+		// Fill endTime
+		// The * 1800 comes from 30 minutes * position + 1
+		endTime = ((spinnerDuration.getSelectedItemPosition() + 1) * 1800);
 
-				// Fill endTime
-				// The * 1800 comes from 30 minutes * position + 1
-				endTime = ((spinnerDuration.getSelectedItemPosition() + 1) * 1800);
+		// do endtime += starttime becaus the endTime is the startTime +
+		// the just calculated seconds
+		endTime += startTime;
 
-				// do endtime += starttime becaus the endTime is the startTime +
-				// the just calculated seconds
-				endTime += startTime;
+		// create exerciseEvent
+		dbHelper.createExerciseEvent(etDescription.getText().toString(),
+				startTime, endTime, spinnerExerciseTypes.getSelectedItemId(),
+				functions.getDateAsStringFromCalendar(mCalendar));
 
-				// create exerciseEvent
-				dbHelper.createExerciseEvent(
-						etDescription.getText().toString(), startTime, endTime,
-						spinnerExerciseTypes.getSelectedItemId(),
-						functions.getDateAsStringFromCalendar(mCalendar));
+		ActivityGroupTracking.group.restartThisActivity();
 
-				ActivityGroupTracking.group.restartThisActivity();
+		etDescription.setText("");
 
-			}
+		// Go to tracking tab when clicked on add
+		ShowHomeTab parentActivity;
+		parentActivity = (ShowHomeTab) this.getParent().getParent();
+		parentActivity.goToTab(DataParser.activityIDTracking);
 
-			etDescription.setText("");
-
-			// Go to tracking tab when clicked on add
-			ShowHomeTab parentActivity;
-			parentActivity = (ShowHomeTab) this.getParent().getParent();
-			parentActivity.goToTab(DataParser.activityIDTracking);
-		}
 	}
 
 	public void onClickDelete(View view) {
