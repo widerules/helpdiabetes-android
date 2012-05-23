@@ -38,6 +38,7 @@ import be.goossens.oracle.Rest.DbAdapter;
 import be.goossens.oracle.Rest.DbSettings;
 import be.goossens.oracle.Rest.ExcelCharacter;
 import be.goossens.oracle.Rest.FoodComparator;
+import be.goossens.oracle.Rest.TrackingValues;
 
 public class ShowFoodList extends ListActivity {
 	// dbHelper to get the food list out the database
@@ -70,7 +71,10 @@ public class ShowFoodList extends ListActivity {
 		View contentView = LayoutInflater.from(getParent()).inflate(
 				R.layout.show_food_list, null);
 		setContentView(contentView);
-
+		
+		//track we come here
+		ActivityGroupMeal.group.parent.trackPageView(TrackingValues.pageShowFoodList);
+		
 		customArrayAdapterFoodList = null;
 
 		editTextSearch = (EditText) findViewById(R.id.editTextSearch);
@@ -117,9 +121,11 @@ public class ShowFoodList extends ListActivity {
 				checkSearchButton();
 			}
 		});
-
+ 
 		btCreateFood.setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
+				//track on click create food
+				ActivityGroupMeal.group.parent.trackEvent(TrackingValues.pageShowFoodList, TrackingValues.pageShowFoodListOnClickCreateFood);
 				onClickCreateNewFood(v);
 			}
 		});
@@ -729,7 +735,11 @@ public class ShowFoodList extends ListActivity {
 
 		builder.create().show();
 	}
-
+ 
+	private void registerOnClickListItem(int position){
+		ActivityGroupMeal.group.parent.trackEvent(TrackingValues.pageShowFoodList, TrackingValues.pageShowFoodListOnClickAddFoodToSelection);
+	}
+	
 	public class CustomArrayAdapterFoodList extends
 			ArrayAdapter<DBFoodComparable> {
 		private Context ctx;
@@ -808,12 +818,14 @@ public class ShowFoodList extends ListActivity {
 				// when we click on a textview!
 				tt.setOnClickListener(new OnClickListener() {
 					public void onClick(View v) {
+						registerOnClickListItem(position);
 						goToPageAddFoodToSelection(position);
 					}
 				});
 
 				ttTwo.setOnClickListener(new OnClickListener() {
 					public void onClick(View v) {
+						registerOnClickListItem(position);
 						goToPageAddFoodToSelection(position);
 					}
 				});

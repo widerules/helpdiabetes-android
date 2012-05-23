@@ -21,6 +21,7 @@ import be.goossens.oracle.Rest.DataParser;
 import be.goossens.oracle.Rest.DbAdapter;
 import be.goossens.oracle.Rest.DbSettings;
 import be.goossens.oracle.Rest.Functions;
+import be.goossens.oracle.Rest.TrackingValues;
 import be.goossens.oracle.slider.DateSlider;
 import be.goossens.oracle.slider.TimeSlider;
 
@@ -34,6 +35,14 @@ public class ShowSettingsMealTimes extends ListActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.show_settings_meal_times);
+		
+		try {
+			// track we come here
+			ActivityGroupSettings.group.parent
+					.trackPageView(TrackingValues.pageShowSettingMealTimes);
+		} catch (RuntimeException e) {
+		}
+		
 		dbHelper = new DbAdapter(this);
 		functions = new Functions();
 		selectedMeal = 0;

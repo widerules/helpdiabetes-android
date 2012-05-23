@@ -22,25 +22,29 @@ import java.util.Calendar;
 
 import android.content.Context;
 import be.goossens.oracle.R;
+import be.goossens.oracle.Rest.Functions;
 
 public class DateTimeSlider extends DateSlider {
 
-	public DateTimeSlider(Context context, OnDateSetListener l,	Calendar calendar) {
+	public DateTimeSlider(Context context, OnDateSetListener l,
+			Calendar calendar) {
 		this(context, l, calendar, null, null);
 	}
-	
-    public DateTimeSlider(Context context, OnDateSetListener l,	Calendar calendar, 
-    		Calendar minDate, Calendar maxDate) {
-        super(context, R.layout.slider_datetimeslider, l, calendar, minDate, maxDate);
-    }
 
-    @Override
-    protected void setTitle() {
-        if (mTitleText != null) {
-            final Calendar c = getTime();
-            int minute = c.get(Calendar.MINUTE)/TimeLabeler.MINUTEINTERVAL*TimeLabeler.MINUTEINTERVAL;
-            mTitleText.setText(String.format("Selected DateTime: %te/%tm/%ty %tH:%02d",
-                    c,c,c,c,minute));
-        }
-    }
+	public DateTimeSlider(Context context, OnDateSetListener l,
+			Calendar calendar, Calendar minDate, Calendar maxDate) {
+		super(context, R.layout.slider_datetimeslider, l, calendar, minDate,
+				maxDate);
+	}
+
+	@Override
+	protected void setTitle() {
+		if (mTitleText != null) {
+			mTitleText.setText(getContext().getString(R.string.dateSliderTitle)
+					+ ": "
+					+ android.text.format.DateFormat
+							.getDateFormat(getContext()).format(getTime().getTime())
+					+ " " + new Functions().getTimeFromDate(getTime().getTime()));
+		}
+	}
 }

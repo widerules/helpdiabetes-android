@@ -24,6 +24,7 @@ import be.goossens.oracle.Objects.DBFoodLanguage;
 import be.goossens.oracle.Rest.DataParser;
 import be.goossens.oracle.Rest.DbAdapter;
 import be.goossens.oracle.Rest.DbSettings;
+import be.goossens.oracle.Rest.TrackingValues;
 
 public class ShowSettingsDBLanguage extends ListActivity {
 
@@ -34,6 +35,13 @@ public class ShowSettingsDBLanguage extends ListActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.show_settings_db_language);
+
+		try {
+			// track we come here
+			ActivityGroupSettings.group.parent
+					.trackPageView(TrackingValues.pageShowSettingFoodDatabaseLanguage);
+		} catch (RuntimeException e) {
+		}
 
 		btBack = (Button) findViewById(R.id.buttonBack);
 		btBack.setOnClickListener(new OnClickListener() {
@@ -66,24 +74,44 @@ public class ShowSettingsDBLanguage extends ListActivity {
 		db.open();
 
 		objects = new ArrayList<DBFoodLanguage>();
+		DBFoodLanguage objectCustomFoodLanguage = null;
 
 		Cursor cFoodLanguage = db.fetchAllFoodLanguages();
 		if (cFoodLanguage.getCount() > 0) {
 			cFoodLanguage.moveToFirst();
 			do {
-				objects.add(new DBFoodLanguage(
-						cFoodLanguage
-								.getLong(cFoodLanguage
-										.getColumnIndexOrThrow(DbAdapter.DATABASE_FOODLANGUAGE_ID)),
-						cFoodLanguage.getString(cFoodLanguage
-								.getColumnIndexOrThrow(DbAdapter.DATABASE_FOODLANGUAGE_LANGUAGE)),
-						cFoodLanguage.getString(cFoodLanguage
-								.getColumnIndexOrThrow(DbAdapter.DATABASE_FOODLANGUAGE_NAME))));
-
+				if (!cFoodLanguage
+						.getString(
+								cFoodLanguage
+										.getColumnIndexOrThrow(DbAdapter.DATABASE_FOODLANGUAGE_LANGUAGE))
+						.equals("Custom")) {
+					objects.add(new DBFoodLanguage(
+							cFoodLanguage
+									.getLong(cFoodLanguage
+											.getColumnIndexOrThrow(DbAdapter.DATABASE_FOODLANGUAGE_ID)),
+							cFoodLanguage.getString(cFoodLanguage
+									.getColumnIndexOrThrow(DbAdapter.DATABASE_FOODLANGUAGE_LANGUAGE)),
+							cFoodLanguage.getString(cFoodLanguage
+									.getColumnIndexOrThrow(DbAdapter.DATABASE_FOODLANGUAGE_NAME))));
+				} else {
+					objectCustomFoodLanguage = new DBFoodLanguage(
+							cFoodLanguage
+									.getLong(cFoodLanguage
+											.getColumnIndexOrThrow(DbAdapter.DATABASE_FOODLANGUAGE_ID)),
+							cFoodLanguage.getString(cFoodLanguage
+									.getColumnIndexOrThrow(DbAdapter.DATABASE_FOODLANGUAGE_LANGUAGE)),
+							cFoodLanguage.getString(cFoodLanguage
+									.getColumnIndexOrThrow(DbAdapter.DATABASE_FOODLANGUAGE_NAME)));
+				}
 			} while (cFoodLanguage.moveToNext());
 		}
 		cFoodLanguage.close();
 		db.close();
+
+		if (objectCustomFoodLanguage != null) {
+			// add the custom food item as first item in list
+			objects.add(0, objectCustomFoodLanguage);
+		}
 
 		CustomArrayAdapterDBFoodLanguage adapter = new CustomArrayAdapterDBFoodLanguage(
 				this, R.layout.row_custom_array_adapter_with_arrow, objects);
@@ -100,6 +128,16 @@ public class ShowSettingsDBLanguage extends ListActivity {
 				+ objects.get(position).getId());
 		databaseHelper.close();
 
+		// create string to show message
+		String message = "";
+
+		if (position == 0) {
+			message = getResources().getString(R.string.customResource);
+		} else {
+			message = getResources().getString(R.string.resource) + ": "
+					+ objects.get(position).getResource();
+		}
+
 		// try to go back to
 		// when its the first time we run this application
 		// we cant go back but we have to finish()
@@ -107,9 +145,8 @@ public class ShowSettingsDBLanguage extends ListActivity {
 			if (getIntent().getExtras().getString(DataParser.whatToDo)
 					.equals(DataParser.doFirstTime)) {
 				// show popup to with resource and call finish
-
 				new AlertDialog.Builder(this)
-						.setMessage(getResources().getString(R.string.resource) + ": " + objects.get(position).getResource())
+						.setMessage(message)
 						.setPositiveButton(
 								getResources().getString(R.string.oke),
 								new DialogInterface.OnClickListener() {
@@ -121,7 +158,7 @@ public class ShowSettingsDBLanguage extends ListActivity {
 
 			} else {
 				new AlertDialog.Builder(ActivityGroupSettings.group)
-						.setMessage(getResources().getString(R.string.resource) + ": " + objects.get(position).getResource())
+						.setMessage(message)
 						.setPositiveButton(
 								getResources().getString(R.string.oke),
 								new DialogInterface.OnClickListener() {
@@ -136,9 +173,9 @@ public class ShowSettingsDBLanguage extends ListActivity {
 									}
 								}).show();
 			}
-		} catch (Exception e) { 
+		} catch (Exception e) {
 			new AlertDialog.Builder(ActivityGroupSettings.group)
-					.setMessage(getResources().getString(R.string.resource) + ": " + objects.get(position).getResource())
+					.setMessage(message)
 					.setPositiveButton(getResources().getString(R.string.oke),
 							new DialogInterface.OnClickListener() {
 								public void onClick(DialogInterface dialog,

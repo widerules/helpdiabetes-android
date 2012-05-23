@@ -21,12 +21,14 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 import be.goossens.oracle.R;
+import be.goossens.oracle.ActivityGroup.ActivityGroupExercise;
 import be.goossens.oracle.ActivityGroup.ActivityGroupGlucose;
 import be.goossens.oracle.ActivityGroup.ActivityGroupTracking;
 import be.goossens.oracle.Rest.DataParser;
 import be.goossens.oracle.Rest.DbAdapter;
 import be.goossens.oracle.Rest.DbSettings;
 import be.goossens.oracle.Rest.Functions;
+import be.goossens.oracle.Rest.TrackingValues;
 import be.goossens.oracle.Show.ShowHomeTab;
 import be.goossens.oracle.slider.DateSlider;
 import be.goossens.oracle.slider.DateTimeSlider;
@@ -60,6 +62,10 @@ public class ShowAddGlucoseEvent extends Activity {
 		View contentView = LayoutInflater.from(getParent()).inflate(
 				R.layout.show_add_glucose_event, null);
 		setContentView(contentView);
+
+		// track we come here
+		ActivityGroupGlucose.group.parent
+				.trackPageView(TrackingValues.pageShowGlucoseTab);
 
 		dbHelper = new DbAdapter(this);
 		functions = new Functions();
@@ -156,7 +162,7 @@ public class ShowAddGlucoseEvent extends Activity {
 				return false;
 			}
 		});
-		
+
 		updateTimeAndTimeTextView(mCalendar);
 	}
 
@@ -227,7 +233,7 @@ public class ShowAddGlucoseEvent extends Activity {
 		} catch (Exception e) {
 			amount = 0;
 		}
- 
+
 		if (amount > 0) {
 			dbHelper.open();
 

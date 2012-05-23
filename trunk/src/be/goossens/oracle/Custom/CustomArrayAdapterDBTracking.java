@@ -184,7 +184,7 @@ public class CustomArrayAdapterDBTracking extends ArrayAdapter<DBTracking> {
 						// text += "" + new
 						// Functions().getShorterString(mealfood.getFoodName(),
 						// 10) + " \n ";
-						text += "" + mealfood.getFoodName() + " \n ";
+						text += "" + mealfood.getFoodName() + " \n";
 					}
 
 					// Round the totalCalc
@@ -301,29 +301,33 @@ public class CustomArrayAdapterDBTracking extends ArrayAdapter<DBTracking> {
 							.findViewById(R.id.textViewTracking1);
 					TextView tv2 = (TextView) v
 							.findViewById(R.id.textViewTracking2);
-
+					
+					TextView tv3 = (TextView) v
+							.findViewById(R.id.textViewTracking3);
+					
 					iv.setImageDrawable(context.getResources().getDrawable(
 							R.drawable.ic_tab_medicine_unselected));
 
 					tv1.setText(new Functions().getTimeFromString(objects 
 							.get(position).getMedicineEvent().getTimeStamp()));
-
-					tv2.setText(""
+ 
+					tv2.setText("" + objects.get(position).getMedicineEvent().getMedicineTypeName());
+					
+					tv3.setText(""
 							+ objects.get(position).getMedicineEvent()
 									.getAmount()
 							+ " "
 							+ objects.get(position).getMedicineEvent()
-									.getMedicineTypeUnit()
-							+ " "
-							+ objects.get(position).getMedicineEvent()
-									.getMedicineTypeName());
+									.getMedicineTypeUnit()); 
 
-					tv2.setTextColor(context.getResources().getColor(
+					tv1.setTextSize(fontSize);
+					tv2.setTextSize(fontSize - 3);
+					tv3.setTextSize(fontSize);
+
+					tv3.setTextColor(context.getResources().getColor(
 							R.color.colorMedicine));
 
-					tv2.setGravity(Gravity.RIGHT);
-					tv1.setTextSize(fontSize);
-					tv2.setTextSize(fontSize);
+					tv3.setGravity(Gravity.RIGHT);
 					
 					//add background
 					LinearLayout ll = (LinearLayout) v

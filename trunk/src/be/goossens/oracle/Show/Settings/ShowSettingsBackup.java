@@ -40,6 +40,7 @@ import be.goossens.oracle.ActivityGroup.ActivityGroupSettings;
 import be.goossens.oracle.Custom.CustomArrayAdapterCharSequenceSettings;
 import be.goossens.oracle.Rest.DbAdapter;
 import be.goossens.oracle.Rest.DbSettings;
+import be.goossens.oracle.Rest.TrackingValues;
 
 public class ShowSettingsBackup extends ListActivity {
 	private ProgressDialog pd;
@@ -64,6 +65,10 @@ public class ShowSettingsBackup extends ListActivity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.show_settings_backup);
 
+		// track we come here
+				ActivityGroupSettings.group.parent
+						.trackPageView(TrackingValues.pageShowSettingBackup);
+		
 		db = new DbAdapter(ActivityGroupSettings.group);
 		foodLanguageID = ActivityGroupMeal.group.getFoodData().foodLanguageID;
 		checkFoodLanguageID();

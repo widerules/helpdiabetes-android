@@ -23,30 +23,38 @@ import java.util.Calendar;
 
 import android.content.Context;
 import be.goossens.oracle.R;
+import be.goossens.oracle.Rest.Functions;
 
 public class TimeSlider extends DateSlider {
 
 	public TimeSlider(Context context, OnDateSetListener l, Calendar calendar) {
 		this(context, l, calendar, null, null, 1);
 	}
-	
-	public TimeSlider(Context context, OnDateSetListener l, Calendar calendar, int minuteInterval) {
+
+	public TimeSlider(Context context, OnDateSetListener l, Calendar calendar,
+			int minuteInterval) {
 		this(context, l, calendar, null, null, minuteInterval);
 	}
-	
-    public TimeSlider(Context context, OnDateSetListener l, Calendar calendar, 
-    		Calendar minTime, Calendar maxTime, int minuteInterval) {
-        super(context, R.layout.slider_timeslider, l, calendar, minTime, maxTime, minuteInterval);
-    }
 
-    /**
-     * define our own title of the dialog
-     */
-    @Override
-    protected void setTitle() {
-        if (mTitleText != null) {
-            mTitleText.setText(String.format("Selected Time: %tR",getTime()));
-        }
-    }
+	public TimeSlider(Context context, OnDateSetListener l, Calendar calendar,
+			Calendar minTime, Calendar maxTime, int minuteInterval) {
+		super(context, R.layout.slider_timeslider, l, calendar, minTime,
+				maxTime, minuteInterval);
+	} 
+ 
+	/** 
+	 * define our own title of the dialog
+	 */
+	@Override
+	protected void setTitle() {
+		if (mTitleText != null) {
+			// mTitleText.setText(String.format(
+			// "Selected Time: %tR",getTime()));
+			mTitleText.setText(getContext().getResources().getString(
+					R.string.selectedTime)
+					+ ": "
+					+ new Functions().getTimeFromDate(getTime().getTime()));
+		}
+	}
 
 }

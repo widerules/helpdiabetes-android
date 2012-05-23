@@ -12,10 +12,12 @@ import android.view.KeyEvent;
 import android.view.View;
 import android.widget.ListView;
 import be.goossens.oracle.R;
+import be.goossens.oracle.ActivityGroup.ActivityGroupSettings;
 import be.goossens.oracle.Custom.CustomArrayAdapterDBMedicineType;
 import be.goossens.oracle.Objects.DBMedicineType;
 import be.goossens.oracle.Rest.DbAdapter;
 import be.goossens.oracle.Rest.DbSettings;
+import be.goossens.oracle.Rest.TrackingValues;
 
 public class ShowSettingsDefaultMedicineType extends ListActivity {
 
@@ -31,7 +33,7 @@ public class ShowSettingsDefaultMedicineType extends ListActivity {
 	protected void onResume() {
 		super.onResume();
 		fillListView();
-	}  
+	}
 
 	private void fillListView() {
 		setListAdapter(null);
@@ -75,9 +77,9 @@ public class ShowSettingsDefaultMedicineType extends ListActivity {
 		DbAdapter db = new DbAdapter(this);
 		db.open();
 		db.updateSettingsByName(DbSettings.setting_default_medicine_type_ID, ""
-						+ listMedicineTypes.get(position).getId());
+				+ listMedicineTypes.get(position).getId());
 		db.close();
-		
+
 		// kill this activity
 		finish();
 	}

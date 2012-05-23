@@ -28,6 +28,7 @@ import be.goossens.oracle.Objects.DBFoodTemplate;
 import be.goossens.oracle.Rest.DbAdapter;
 import be.goossens.oracle.Rest.DbSettings;
 import be.goossens.oracle.Rest.Functions;
+import be.goossens.oracle.Rest.TrackingValues;
 
 public class ShowFoodTemplates extends ListActivity {
 	private DbAdapter dbHelper;
@@ -43,6 +44,10 @@ public class ShowFoodTemplates extends ListActivity {
 		View contentView = LayoutInflater.from(getParent()).inflate(
 				R.layout.show_food_templates, null);
 		setContentView(contentView);
+
+		// track we come here
+		ActivityGroupMeal.group
+				.parent.trackPageView(TrackingValues.pageShowTemplates);
 
 		dbHelper = new DbAdapter(this);
 		registerForContextMenu(getListView());
@@ -110,7 +115,8 @@ public class ShowFoodTemplates extends ListActivity {
 	private void fillData() {
 		dbHelper.open();
 		if (dbHelper.fetchAllFoodTemplates().getCount() > 0) {
-			Cursor cSettings = dbHelper.fetchSettingByName(DbSettings.setting_font_size);
+			Cursor cSettings = dbHelper
+					.fetchSettingByName(DbSettings.setting_font_size);
 			cSettings.moveToFirst();
 			CustomBaseAdapterFoodTemplates adapter = new CustomBaseAdapterFoodTemplates(
 					this,

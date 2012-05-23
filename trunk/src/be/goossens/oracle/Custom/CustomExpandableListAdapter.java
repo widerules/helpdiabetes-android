@@ -141,10 +141,10 @@ public class CustomExpandableListAdapter extends BaseExpandableListAdapter {
 
 		switch (displayMetrics) {
 		case DisplayMetrics.DENSITY_HIGH:
-			params.height = (4 * fontSize);
-			break;
+			params.height = (5 * fontSize);
+			break; 
 		default:
-			params.height = (3 * fontSize);
+			params.height = (4 * fontSize);
 			break;
 		}
 
@@ -258,7 +258,7 @@ public class CustomExpandableListAdapter extends BaseExpandableListAdapter {
 			convertView = infl
 					.inflate(
 							R.layout.row_custom_expandable_listview_adapter_group_layout,
-							null);
+	 						null);
 		}
 
 		TextView tv1 = (TextView) convertView.findViewById(R.id.tv1);
@@ -276,17 +276,17 @@ public class CustomExpandableListAdapter extends BaseExpandableListAdapter {
 
 		tv1.setTextSize(fontSize);
 		tv2.setTextSize(fontSize - 7);
-
+  
 		tv3.setTextSize(fontSize);
 		tv4.setTextSize(fontSize - 7);
-
+  
 		LayoutParams params = tvHeigth.getLayoutParams();
 		switch (displayMetrics) {
 		case DisplayMetrics.DENSITY_HIGH:
-			params.height = (4 * fontSize);
+			params.height = (5 * fontSize);
 			break;
 		default:
-			params.height = (3 * fontSize);
+			params.height = (4 * fontSize);
 			break;
 		}
 		tvHeigth.setLayoutParams(params);

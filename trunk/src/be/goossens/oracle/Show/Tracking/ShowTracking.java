@@ -35,6 +35,7 @@ import be.goossens.oracle.Objects.DBTracking;
 import be.goossens.oracle.Rest.DataParser;
 import be.goossens.oracle.Rest.DbAdapter;
 import be.goossens.oracle.Rest.Functions;
+import be.goossens.oracle.Rest.TrackingValues;
 import be.goossens.oracle.Show.ShowHomeTab;
 import be.goossens.oracle.slider.DateSlider;
 import be.goossens.oracle.slider.DateTimeSlider;
@@ -63,6 +64,9 @@ public class ShowTracking extends ListActivity {
 		mCalendar = Calendar.getInstance();
 		selectedPosition = 0;
 
+		//track we come here
+		ActivityGroupTracking.group.parent.trackPageView(TrackingValues.pageShowTrackingTab);
+		
 		// search function
 		btSearch = (Button) findViewById(R.id.buttonSearch);
 		btSearchNext = (Button) findViewById(R.id.buttonSearchNext);
@@ -423,7 +427,7 @@ public class ShowTracking extends ListActivity {
 
 			showPopUpWhatToDoWithMealEvent(
 					ActivityGroupTracking.group.getTrackingData().listTracking
-							.get(position).getMealEvent().getId(), " "
+							.get(position).getMealEvent().getId(), getResources().getString(R.string.realTotal) + ": "
 							+ totalValue + " " + defaultValueText + " \n"
 							+ text + " \n" + calculatedInsuline, position);
 		}

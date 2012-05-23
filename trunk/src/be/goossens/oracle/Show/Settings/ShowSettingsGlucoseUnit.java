@@ -16,6 +16,7 @@ import be.goossens.oracle.ActivityGroup.ActivityGroupSettings;
 import be.goossens.oracle.Rest.DataParser;
 import be.goossens.oracle.Rest.DbAdapter;
 import be.goossens.oracle.Rest.DbSettings;
+import be.goossens.oracle.Rest.TrackingValues;
 
 public class ShowSettingsGlucoseUnit extends Activity {
 	private DbAdapter dbHelper;
@@ -28,6 +29,10 @@ public class ShowSettingsGlucoseUnit extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.show_settings_glucose_unit);
 
+		// track we come here
+		ActivityGroupSettings.group.parent
+				.trackPageView(TrackingValues.pageShowSettingGlucoseUnit);
+
 		dbHelper = new DbAdapter(this);
 		rgGlucoseUnit = (RadioGroup) findViewById(R.id.radioGroupGlucoseUnit);
 
@@ -37,7 +42,7 @@ public class ShowSettingsGlucoseUnit extends Activity {
 				ActivityGroupSettings.group.back();
 			}
 		});
-		
+
 		btNext = (Button) findViewById(R.id.buttonNext);
 		btNext.setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
@@ -66,7 +71,7 @@ public class ShowSettingsGlucoseUnit extends Activity {
 			if (getIntent().getExtras().getString(DataParser.whatToDo)
 					.equals(DataParser.doFirstTime)) {
 				btNext.setVisibility(View.VISIBLE);
-				//hide the button back
+				// hide the button back
 				btBack.setVisibility(View.GONE);
 			}
 		} catch (Exception e) {
@@ -75,7 +80,8 @@ public class ShowSettingsGlucoseUnit extends Activity {
 
 	private void fillRadioGroup() {
 		Cursor cGlucoseUnits = dbHelper.fetchAllBloodGlucoseUnits();
-		Cursor cSettingGlucoseUnit = dbHelper.fetchSettingByName(DbSettings.setting_glucose_unit);
+		Cursor cSettingGlucoseUnit = dbHelper
+				.fetchSettingByName(DbSettings.setting_glucose_unit);
 		cSettingGlucoseUnit.moveToFirst();
 
 		if (cGlucoseUnits.getCount() > 0) {
@@ -108,7 +114,7 @@ public class ShowSettingsGlucoseUnit extends Activity {
 	private void onRadioGroupSelectedChange() {
 		// update the setting glucose unit
 		dbHelper.updateSettingsByName(DbSettings.setting_glucose_unit, ""
-						+ rgGlucoseUnit.getCheckedRadioButtonId());
+				+ rgGlucoseUnit.getCheckedRadioButtonId());
 
 		try {
 			// go back

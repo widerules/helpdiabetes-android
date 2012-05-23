@@ -22,6 +22,7 @@ import be.goossens.oracle.Custom.CustomArrayAdapterDBExerciseType;
 import be.goossens.oracle.Objects.DBExerciseType;
 import be.goossens.oracle.Rest.DataParser;
 import be.goossens.oracle.Rest.DbAdapter;
+import be.goossens.oracle.Rest.TrackingValues;
 
 public class ShowExerciseTypes extends ListActivity {
 	private List<DBExerciseType> listExerciseTypes;
@@ -35,6 +36,10 @@ public class ShowExerciseTypes extends ListActivity {
 				R.layout.show_exercise_types, null);
 		setContentView(contentView);
 
+		// track we come here
+				ActivityGroupSettings.group.parent
+						.trackPageView(TrackingValues.pageShowSettingActivityTypes);
+		
 		btAdd = (Button) findViewById(R.id.buttonAdd);
 
 		btAdd.setOnClickListener(new OnClickListener() {

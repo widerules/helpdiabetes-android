@@ -18,11 +18,12 @@ import be.goossens.oracle.ActivityGroup.ActivityGroupSettings;
 import be.goossens.oracle.Rest.DataParser;
 import be.goossens.oracle.Rest.DbAdapter;
 import be.goossens.oracle.Rest.DbSettings;
+import be.goossens.oracle.Rest.TrackingValues;
 
 public class ShowAddMedicineType extends Activity {
 
 	private EditText etName, etUnit;
-	private Button btAdd, btDelete,btBack, btStandard;
+	private Button btAdd, btDelete, btBack, btStandard;
 	private long existingMedicineTypeID;
 
 	@Override
@@ -33,26 +34,30 @@ public class ShowAddMedicineType extends Activity {
 				R.layout.show_add_medicine_type, null);
 		setContentView(contentView);
 
+		// track we come here
+		ActivityGroupSettings.group.parent
+				.trackPageView(TrackingValues.pageShowSettingMedicineTypesCreateType);
+
 		etName = (EditText) findViewById(R.id.editText1);
 		etUnit = (EditText) findViewById(R.id.editText2);
 
 		btAdd = (Button) findViewById(R.id.buttonAdd);
 		btDelete = (Button) findViewById(R.id.buttonDelete);
 		btStandard = (Button) findViewById(R.id.buttonStandard);
-		
+
 		btBack = (Button) findViewById(R.id.buttonBack);
 		btBack.setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
 				ActivityGroupSettings.group.back();
 			}
 		});
-		
+
 		btStandard.setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
 				onClickStandard();
 			}
 		});
-		
+
 		// standard hide the button delete
 		btDelete.setVisibility(View.GONE);
 
@@ -72,25 +77,26 @@ public class ShowAddMedicineType extends Activity {
 	}
 
 	private void onClickStandard() {
-		//hide button delete
+		// hide button delete
 		btDelete.setVisibility(View.GONE);
-		
-		//hide button standard 
+
+		// hide button standard
 		btStandard.setVisibility(View.GONE);
-		
-		//update default in db
+
+		// update default in db
 		DbAdapter db = new DbAdapter(this);
 		db.open();
-		db.updateSettingsByName(DbSettings.setting_default_medicine_type_ID, "" + existingMedicineTypeID);
+		db.updateSettingsByName(DbSettings.setting_default_medicine_type_ID, ""
+				+ existingMedicineTypeID);
 		db.close();
-		
-		//update default medicine type ID in food data 
+
+		// update default medicine type ID in food data
 		ActivityGroupMeal.group.getFoodData().defaultMedicineTypeID = existingMedicineTypeID;
-		
-		//update show medicine types 
-		ActivityGroupSettings.group.getMedicineTypes().refresh(); 
+
+		// update show medicine types
+		ActivityGroupSettings.group.getMedicineTypes().refresh();
 	}
-	
+
 	@Override
 	protected void onResume() {
 		super.onResume();
@@ -106,22 +112,22 @@ public class ShowAddMedicineType extends Activity {
 
 			// check if we can show the delete button
 			showDeleteButton();
-			
+
 			// check if we can show the button mark as default
 			showDefaultButton();
 
 		} catch (NullPointerException e) {
 			existingMedicineTypeID = -1;
-			
-			//hide the button mark default when we create a new one
-			btStandard.setVisibility(View.GONE); 
+
+			// hide the button mark default when we create a new one
+			btStandard.setVisibility(View.GONE);
 		}
 	}
 
 	private void showDefaultButton() {
-		if(existingMedicineTypeID == ActivityGroupMeal.group.getFoodData().defaultMedicineTypeID){
-			//hide when the item is already default
-			btStandard.setVisibility(View.GONE); 
+		if (existingMedicineTypeID == ActivityGroupMeal.group.getFoodData().defaultMedicineTypeID) {
+			// hide when the item is already default
+			btStandard.setVisibility(View.GONE);
 		}
 	}
 
@@ -139,7 +145,7 @@ public class ShowAddMedicineType extends Activity {
 
 		// if the medicine type is not in use in medicine events
 		// and the medicine type is not the last one
-		// and the medicine type is not the default one! 
+		// and the medicine type is not the default one!
 		if (db.fetchMedicineEventByMedicineTypeID(existingMedicineTypeID)
 				.getCount() == 0
 				&& db.fetchAllMedicineTypes().getCount() > 1
@@ -183,17 +189,18 @@ public class ShowAddMedicineType extends Activity {
 
 				// create new one
 				if (existingMedicineTypeID == -1) {
-					db.createMedicineType(etName.getText().toString(), etUnit.getText().toString());
+					db.createMedicineType(etName.getText().toString(), etUnit
+							.getText().toString());
 				} else {
 					// update one
 					db.updateMedicineTypeByID(existingMedicineTypeID, etName
 							.getText().toString(), etUnit.getText().toString());
 				}
 				db.close();
-				
-				//refresh the list
+
+				// refresh the list
 				ActivityGroupSettings.group.getMedicineTypes().refresh();
-				
+
 				// go back
 				ActivityGroupSettings.group.back();
 			} else {

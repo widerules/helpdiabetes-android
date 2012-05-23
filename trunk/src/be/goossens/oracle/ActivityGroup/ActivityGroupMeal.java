@@ -4,17 +4,15 @@ package be.goossens.oracle.ActivityGroup;
 
 import java.util.ArrayList;
 
-import android.R;
 import android.app.ActivityGroup;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.KeyEvent;
 import android.view.View;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
 import android.view.inputmethod.InputMethodManager;
 import be.goossens.oracle.Rest.DataParser;
+import be.goossens.oracle.Show.ShowHomeTab;
 import be.goossens.oracle.Show.Food.ShowFoodList;
 import be.goossens.oracle.Show.Food.ShowLoadingFoodData;
 import be.goossens.oracle.Show.Food.ShowSelectedFood;
@@ -22,6 +20,8 @@ import be.goossens.oracle.Show.Food.ShowUpdateFood;
 
 public class ActivityGroupMeal extends ActivityGroup {
 
+	public ShowHomeTab parent;
+	
 	// keep this in a static variable to make it accessible
 	// activities, let them manipulate the view
 	public static ActivityGroupMeal group;
@@ -68,11 +68,16 @@ public class ActivityGroupMeal extends ActivityGroup {
 
 		// Initialize stuff
 		lastSearchString = "";
-
+		initializeTracker();
+		
 		// make a root activity when the history size = 0
 		if (history.size() == 0) {
 			restartThisActivity();
 		}
+	}
+	
+	private void initializeTracker() {
+		parent = (ShowHomeTab) this.getParent();
 	}
 
 	public void hideKeyboard() {

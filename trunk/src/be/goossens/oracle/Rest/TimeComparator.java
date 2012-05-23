@@ -24,7 +24,6 @@ public class TimeComparator implements Comparator<DBTracking> {
 		else
 			compareTo = 0;
  
-		// return arg0.getTimestamp().compareTo(arg1.getTimestamp());
 		return compareTo; 
 	}
 }

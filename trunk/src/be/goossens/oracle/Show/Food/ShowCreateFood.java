@@ -24,6 +24,7 @@ import be.goossens.oracle.ActivityGroup.ActivityGroupMeal;
 import be.goossens.oracle.Custom.CustomArrayAdapterCharSequenceShowCreateFood;
 import be.goossens.oracle.Rest.DataParser;
 import be.goossens.oracle.Rest.DbAdapter;
+import be.goossens.oracle.Rest.TrackingValues;
 
 public class ShowCreateFood extends Activity {
 	private EditText editTextfoodName;
@@ -48,6 +49,10 @@ public class ShowCreateFood extends Activity {
 		View contentView = LayoutInflater.from(getParent()).inflate(
 				R.layout.show_create_food, null);
 		setContentView(contentView);
+
+		// track we come here
+		ActivityGroupMeal.group.parent
+				.trackPageView(TrackingValues.pageShowCreateFood);
 
 		dbHelper = new DbAdapter(this);
 
@@ -74,7 +79,7 @@ public class ShowCreateFood extends Activity {
 				ActivityGroupMeal.group.back();
 			}
 		});
-		
+
 		spinnerUnit.setOnItemSelectedListener(new OnItemSelectedListener() {
 
 			public void onItemSelected(AdapterView<?> arg0, View arg1,
@@ -226,11 +231,13 @@ public class ShowCreateFood extends Activity {
 
 	private List<CharSequence> getArrayList() {
 		List<CharSequence> value = new ArrayList<CharSequence>();
-		
-		value.add("100 " + ActivityGroupMeal.group.getFoodData().dbTopOneCommonFoodUnit);
-		value.add("100 " + ActivityGroupMeal.group.getFoodData().dbTopTwoCommonFoodUnit);
+
+		value.add("100 "
+				+ ActivityGroupMeal.group.getFoodData().dbTopOneCommonFoodUnit);
+		value.add("100 "
+				+ ActivityGroupMeal.group.getFoodData().dbTopTwoCommonFoodUnit);
 		value.add(getResources().getString(R.string.define_own));
-		
+
 		return value;
 	}
 

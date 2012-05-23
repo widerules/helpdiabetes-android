@@ -21,11 +21,15 @@ import be.goossens.oracle.ActivityGroup.ActivityGroupMedicine;
 import be.goossens.oracle.ActivityGroup.ActivityGroupSettings;
 import be.goossens.oracle.ActivityGroup.ActivityGroupTracking;
 import be.goossens.oracle.Rest.DataParser;
+import be.goossens.oracle.Rest.TrackingValues;
+
+import com.google.android.apps.analytics.GoogleAnalyticsTracker;
 
 public class ShowHomeTab extends TabActivity {
 	private TabHost tabHost;
 	public static TabActivity context;
-
+	public GoogleAnalyticsTracker tracker;
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -33,11 +37,33 @@ public class ShowHomeTab extends TabActivity {
 
 		context = this;
 
+		tracker = GoogleAnalyticsTracker.getInstance();
+		tracker.startNewSession(TrackingValues.trackingCode, this);
+		
+		//to upload all data to the cloud
+		tracker.setSampleRate(100);
+		
 		tabHost = getTabHost();
 
 		setupTabHost();
 	}
 
+	public void trackPageView(String value){
+		tracker.trackPageView(value);
+		tracker.dispatch();
+	}
+	
+	public void trackEvent(String categorie, String action){
+		tracker.setCustomVar(0, categorie, action);
+		tracker.dispatch();
+	}
+	
+	@Override
+	public void finish() {
+		tracker.stopSession();
+		super.finish();
+	}
+	
 	// when we press the home button we set startup back to true!
 	@Override
 	protected void onUserLeaveHint() {
@@ -78,11 +104,7 @@ public class ShowHomeTab extends TabActivity {
 		setupTab(new TextView(this), DataParser.activityIDSettings,
 				R.drawable.ic_tab_settings, in);
 		counter++;
-
-		//for (int i = counter; i >= 0; i--) {
-		//	tabHost.setCurrentTab(i);
-		//} 
-
+		
 		// set default tab on show food list
 		goToTab(DataParser.activityIDMeal);
 	}
