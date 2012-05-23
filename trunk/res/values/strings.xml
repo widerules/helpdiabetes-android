@@ -110,7 +110,11 @@
     <string name="standard">default</string>
     <string name="make_standard">Mark as default</string>
     <string name="standard_is_used_for">Default is used to add selected food to log</string>
-    <string name="about_text">Dit programa is vrije software: je mag het herdistribueren en/of wijzigen onder de voorwaarden van de GNU Algemene Publieke Licentie zoals gepubliceerd door de Free Software Foundation, onder versie 3 van de Licentie of (naar jouw keuze) elke latere versie. Dit programma is gedistribueerd in de hoop dat het nuttig zal zijn maar ZONDER ENIGE GARANTIE: zelfs zonder de impliciete garanties die GEBRUIKELIJK ZIJN IN DE HANDEL of voor BRUIKBAARHEID VOOR EEN SPECIFIEK DOEL. Zie de GNU Algemene Publieke Licentie voor meer details. Je hoort een kopie van de GNU Algemene Publieke Licentie te hebben ontvangen samen met dit programma. Als dat niet het geval is, zie http://www.gnu.org/licenses/gpl.txt.</string>
+    <string name="about_text">Dit programa is vrije software: je mag het herdistribueren en/of wijzigen onder de voorwaarden van de GNU Algemene Publieke Licentie zoals gepubliceerd door de Free Software Foundation, onder versie 3 van de Licentie of (naar jouw keuze) elke latere versie. Dit programma is gedistribueerd in de hoop dat het nuttig zal zijn maar ZONDER ENIGE GARANTIE: zelfs zonder de impliciete garanties die GEBRUIKELIJK ZIJN IN DE HANDEL of voor BRUIKBAARHEID VOOR EEN SPECIFIEK DOEL. Zie de GNU Algemene Publieke Licentie voor meer details. Je hoort een kopie van de GNU Algemene Publieke Licentie te hebben ontvangen samen met dit programma. Als dat niet het geval is, zie http://www.gnu.org/licenses/gpl.txt.
+    \n
+    \n
+    We use Google Analytics to track the usage of this application. We track every screen without tracking de contents of the screens. Your identity or other personal information is not tracked.</string>
+</string>
     <string name="copyDatabaseToSD">Backup database 2 SD</string>
     <string name="foodToExcel">export products 2 csv</string>
     <string name="excelToDB">import products from csv</string>
@@ -140,6 +144,6 @@
     <string name="searchNext">Find next</string>
     <string name="selectedTime">Selected time</string>
     <string name="resource">Resource</string>
-    <string name="customResource">You have selected a custom database. \n please import your own food items. from the settings tab</string>
+    <string name="customResource">You have selected a custom database.\nYou can now import your own food items by selecting 'Backup, Restore, Import and Export. Then you select 'import food items from csv file'.</string>
 	<string name="realTotal">Total</string>
 </resources>

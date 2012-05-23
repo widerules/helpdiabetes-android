@@ -110,7 +110,10 @@
     <string name="standard">default</string>
     <string name="make_standard">Markeer als default</string>
     <string name="standard_is_used_for">Default word gebruikt om geselecteerd eten aan de rapport pagina toe te voegen</string>
-    <string name="about_text">Dit programa is vrije software: je mag het herdistribueren en/of wijzigen onder de voorwaarden van de GNU Algemene Publieke Licentie zoals gepubliceerd door de Free Software Foundation, onder versie 3 van de Licentie of (naar jouw keuze) elke latere versie. Dit programma is gedistribueerd in de hoop dat het nuttig zal zijn maar ZONDER ENIGE GARANTIE: zelfs zonder de impliciete garanties die GEBRUIKELIJK ZIJN IN DE HANDEL of voor BRUIKBAARHEID VOOR EEN SPECIFIEK DOEL. Zie de GNU Algemene Publieke Licentie voor meer details. Je hoort een kopie van de GNU Algemene Publieke Licentie te hebben ontvangen samen met dit programma. Als dat niet het geval is, zie http://www.gnu.org/licenses/gpl.txt.</string>
+    <string name="about_text">Dit programa is vrije software: je mag het herdistribueren en/of wijzigen onder de voorwaarden van de GNU Algemene Publieke Licentie zoals gepubliceerd door de Free Software Foundation, onder versie 3 van de Licentie of (naar jouw keuze) elke latere versie. Dit programma is gedistribueerd in de hoop dat het nuttig zal zijn maar ZONDER ENIGE GARANTIE: zelfs zonder de impliciete garanties die GEBRUIKELIJK ZIJN IN DE HANDEL of voor BRUIKBAARHEID VOOR EEN SPECIFIEK DOEL. Zie de GNU Algemene Publieke Licentie voor meer details. Je hoort een kopie van de GNU Algemene Publieke Licentie te hebben ontvangen samen met dit programma. Als dat niet het geval is, zie http://www.gnu.org/licenses/gpl.txt.
+    \n
+    \n
+    Wij gebruiken Google Analytics om het gebruik van deze applicatie op te volgen. Wij traceren het gebruik van elk scherm zonder echter de inhoud van het scherm te traceren. Uw identiteit of andere persoonlijke gegevens worden niet getraceerd.</string>
     <string name="copyDatabaseToSD">Back-up maken naar SD kaartje</string>
     <string name="foodToExcel">Exporteer producten naar csv bestand</string>
     <string name="excelToDB">Importeer producten uit csv bestand</string>
@@ -150,6 +153,6 @@
     <string name="resource">Bron</string>
 
     <!--  Update: 23-05-2012 -->
-    <string name="customResource">U hebt een custom database gekozen. \nGelieve uw eigen voedingsmiddelen te importeren via de settings tab.</string>
+    <string name="customResource">U hebt een custom database gekozen.\nU kunt nu uw eigen voedingsmiddelen importeren via 'Back-up, herstel, importeer en exporteer'. Kies daarna de optie 'Importeer voedingsmiddelen uit csv bestand'.</string>
     <string name="realTotal">Totaal</string>
 </resources>
