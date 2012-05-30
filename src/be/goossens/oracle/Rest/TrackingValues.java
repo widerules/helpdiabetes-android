@@ -2,7 +2,7 @@ package be.goossens.oracle.Rest;
 
 public class TrackingValues {
 	//The code used for uploading the trackings
-	public static final String trackingCode = "UA-32004285-1";
+	public static final String trackingCode = "";
 	
 	//meal tab
 	public static final String pageShowFoodList = "pageShowFoodList";
