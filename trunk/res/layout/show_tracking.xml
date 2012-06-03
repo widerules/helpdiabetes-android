@@ -14,8 +14,8 @@
             android:text="@string/titelTracking" />
 
         <Button
-            style="@style/buttonForward"
-            android:visibility="invisible" />
+            android:id="@+id/ButtonForward"
+            style="@style/buttonForward" />
     </LinearLayout>
 
     <ListView

@@ -103,8 +103,8 @@
     <string name="pref_snackratio_title">Vieruurtje</string>
     <string name="pref_dinnerratio_title">Avondmaal</string>
     <string name="starts_at">begint om</string>
-    <string name="if_value_zero_dont_calc_insuline">Als de waarde 0 is word er geen insuline berekend!</string>
-    <string name="standard_cant_be_hidden">Default kan niet onzichtbaar gezet worden</string>
+    <string name="if_value_zero_dont_calc_insuline">Als de waarde 0 is wordt er geen insuline berekend!</string>
+    <string name="standard_cant_be_hidden">Default kan niet onzichtbaar gezet worden</string> 
     <string name="fontSize">Tekstgrootte</string>
     <string name="selected_wanted_size">Selecteer de gewenste grootte</string>
     <string name="standard">default</string>
@@ -112,8 +112,26 @@
     <string name="standard_is_used_for">Default word gebruikt om geselecteerd eten aan de rapport pagina toe te voegen</string>
     <string name="about_text">Dit programa is vrije software: je mag het herdistribueren en/of wijzigen onder de voorwaarden van de GNU Algemene Publieke Licentie zoals gepubliceerd door de Free Software Foundation, onder versie 3 van de Licentie of (naar jouw keuze) elke latere versie. Dit programma is gedistribueerd in de hoop dat het nuttig zal zijn maar ZONDER ENIGE GARANTIE: zelfs zonder de impliciete garanties die GEBRUIKELIJK ZIJN IN DE HANDEL of voor BRUIKBAARHEID VOOR EEN SPECIFIEK DOEL. Zie de GNU Algemene Publieke Licentie voor meer details. Je hoort een kopie van de GNU Algemene Publieke Licentie te hebben ontvangen samen met dit programma. Als dat niet het geval is, zie http://www.gnu.org/licenses/gpl.txt.
     \n
+    \nWij gebruiken Google Analytics om het gebruik van deze applicatie op te volgen. Wij traceren het gebruik van elk scherm zonder echter de inhoud van het scherm te traceren. Uw identiteit of andere persoonlijke gegevens worden niet getraceerd.
+    \n 
+    \nDe food data komt van de volgende bronnen:
     \n
-    Wij gebruiken Google Analytics om het gebruik van deze applicatie op te volgen. Wij traceren het gebruik van elk scherm zonder echter de inhoud van het scherm te traceren. Uw identiteit of andere persoonlijke gegevens worden niet getraceerd.</string>
+    \n
+    - Dutch: www.johandegraeve.net \n\n
+    - English - Norway: The Norwegian Food Safety Authority \n\n
+    - English - Denmark: Danish Food Composition Databank, version 6.0, 2008 \n\n
+    - French - Switserland: Swiss Food Composition Database V2.0 - ETH Zurich en Federal Office of Public Health \n\n
+    - Spanish - Argentina: http://www.unlu.edu.ar/~argenfood/wwwunlu.htm \n\n
+    - Spanish - Uruguay: Tabla de Composición de Alimentos de Uruguay \n\n
+    - German - Switserland: Swiss Food Composition Database V2.0 - ETH Zurich en Federal Office of Public Health \n\n
+    - Italian - Switserland: Swiss Food Composition Database V2.0 - ETH Zurich en Federal Office of Public Health \n\n
+    - Danish: Danish Food Composition Databank, version 6.0, 2008 \n\n
+    - Romanian: http://www.getfit.ro/continut.php \n\n
+    - Norwegian: The Norwegian Food Safety Authority \n\n
+    - Czech: http://www.rozumnehubnuti.cz \n\n
+    - USDA National Nutrition Database: U.S. Department of Agriculture, Agricultural Research Service. 2011. USDA National Nutrient Database for Standard Reference, Release 24. Nutrient Data Laboratory Home Page,http://www.ars.usda.gov/ba/bhnrc/ndl \n\n
+    - French: Axelle, membre du Forum Diabète de Doctissimo
+    </string>
     <string name="copyDatabaseToSD">Back-up maken naar SD kaartje</string>
     <string name="foodToExcel">Exporteer producten naar csv bestand</string>
     <string name="excelToDB">Importeer producten uit csv bestand</string>
@@ -153,6 +171,9 @@
     <string name="resource">Bron</string>
 
     <!--  Update: 23-05-2012 -->
-    <string name="customResource">U hebt een custom database gekozen.\nU kunt nu uw eigen voedingsmiddelen importeren via 'Back-up, herstel, importeer en exporteer'. Kies daarna de optie 'Importeer voedingsmiddelen uit csv bestand'.</string>
+    <string name="customResource">U hebt een custom database gekozen.\nU kunt nu uw eigen voedingsmiddelen importeren via \'Back-up, herstel, importeer en exporteer\'. Kies daarna de optie \'Importeer voedingsmiddelen uit csv bestand\'.</string>
     <string name="realTotal">Totaal</string>
+    
+    <!--  Update: 24-05-2012 -->
+    <string name="standardAmountCantBeEmpty">Het aantal mag niet leeg zijn</string>
 </resources>

@@ -6,16 +6,16 @@
 <resources>
 
     <string-array name="standard_duration">
-        <item>30 minuten</item>
-        <item>1 uur</item>
-        <item>1 uur 30 minuten</item>
-        <item>2 uur</item>
-        <item>2 uur 30 minuten</item>
-        <item>3 uur</item>
-        <item>3 uur 30 minuten</item>
-        <item>4 uur</item>
-        <item>4 uur 30 minuten</item>
-        <item>5 uur</item>
+        <item>30 minutes</item>
+        <item>1 hour</item>
+        <item>1 hour 30 minutes</item>
+        <item>2 hour</item>
+        <item>2 hour 30 minutes</item>
+        <item>3 hour</item>
+        <item>3 hour 30 minutes</item>
+        <item>4 hour</item>
+        <item>4 hour 30 minutes</item>
+        <item>5 hour</item>
     </string-array>
 
 </resources>

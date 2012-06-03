@@ -1,23 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- Please read info.txt for license and legal information -->
-<be.goossens.oracle.slider.SliderContainer xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res/be.goossens.oracle"
+<com.hippoandfriends.helpdiabetes.slider.SliderContainer xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res/com.hippoandfriends.helpdiabetes"
     android:id="@+id/dateSliderContainer"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent" >
 
-    <be.goossens.oracle.slider.ScrollLayout
+    <com.hippoandfriends.helpdiabetes.slider.ScrollLayout
         style="@style/Scroller"
         app:childWidth="150dp"
-        app:labelerClass="be.goossens.oracle.slider.YearLabeler"
+        app:labelerClass="com.hippoandfriends.helpdiabetes.slider.YearLabeler"
         app:labelerFormat="%tY" />
 
-    <be.goossens.oracle.slider.ScrollLayout
+    <com.hippoandfriends.helpdiabetes.slider.ScrollLayout
         style="@style/Scroller"
         app:childWidth="200dp"
-        app:labelerClass="be.goossens.oracle.slider.MonthLabeler"
+        app:labelerClass="com.hippoandfriends.helpdiabetes.slider.MonthLabeler"
         app:labelerFormat="%tB" />
 
     <include layout="@layout/slider_dialogbuttons" />
 
-</be.goossens.oracle.slider.SliderContainer>
+</com.hippoandfriends.helpdiabetes.slider.SliderContainer>

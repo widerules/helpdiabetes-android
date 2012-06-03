@@ -9,8 +9,8 @@
         android:id="@+id/text1"
         style="@style/listViewItemOne" />
 
-    <TextView 
+    <TextView
         android:id="@+id/text2"
-        style="@style/listViewItemArrow" 
-        />
-</LinearLayout>
+        style="@style/listViewItemArrow" />
+
+</LinearLayout>
