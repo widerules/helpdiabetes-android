@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- Please read info.txt for license and legal information -->
+
 <resources>
 
     <string name="add">Add</string>
@@ -110,8 +111,7 @@
     <string name="standard">default</string>
     <string name="make_standard">Mark as default</string>
     <string name="standard_is_used_for">Default is used to add selected food to log</string>
-    <string name="about_text">
-    This program is free software: you can redistribute it and/or modify
+    <string name="about_text">This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
     the Free Software Foundation, either version 3 of the License, or
     (at your option) any later version.
@@ -124,9 +124,26 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/gpl.txt.
     \n
+    \nWe use Google Analytics to track the usage of this application. We track every screen without tracking de contents of the screens. Your identity or other personal information is not tracked.
+    \n 
+    \nThe food data comes from the following sources:
     \n
-    We use Google Analytics to track the usage of this application. We track every screen without tracking de contents of the screens. Your identity or other personal information is not tracked.</string>
-</string>
+    \n
+    - Dutch: www.johandegraeve.net \n\n
+    - English - Norway: The Norwegian Food Safety Authority \n\n
+    - English - Denmark: Danish Food Composition Databank, version 6.0, 2008 \n\n
+    - French - Switserland: Swiss Food Composition Database V2.0 - ETH Zurich and Federal Office of Public Health \n\n
+    - Spanish - Argentina: http://www.unlu.edu.ar/~argenfood/wwwunlu.htm \n\n
+    - Spanish - Uruguay: Tabla de Composición de Alimentos de Uruguay \n\n
+    - German - Switserland: Swiss Food Composition Database V2.0 - ETH Zurich and Federal Office of Public Health \n\n
+    - Italian - Switserland: Swiss Food Composition Database V2.0 - ETH Zurich and Federal Office of Public Health \n\n
+    - Danish: Danish Food Composition Databank, version 6.0, 2008 \n\n
+    - Romanian: http://www.getfit.ro/continut.php \n\n
+    - Norwegian: The Norwegian Food Safety Authority \n\n
+    - Czech: http://www.rozumnehubnuti.cz \n\n
+    - USDA National Nutrition Database: U.S. Department of Agriculture, Agricultural Research Service. 2011. USDA National Nutrient Database for Standard Reference, Release 24. Nutrient Data Laboratory Home Page,http://www.ars.usda.gov/ba/bhnrc/ndl \n\n
+    - French: Axelle, membre du Forum Diabète de Doctissimo
+    </string>
     <string name="copyDatabaseToSD">Backup database 2 SD</string>
     <string name="foodToExcel">export products 2 csv</string>
     <string name="excelToDB">import products from csv</string>
@@ -156,6 +173,7 @@
     <string name="searchNext">Find next</string>
     <string name="selectedTime">Selected time</string>
     <string name="resource">Resource</string>
-    <string name="customResource">You have selected a custom database.\nYou can now import your own food items by selecting 'Backup, Restore, Import and Export. Then you select 'import food items from csv file'.</string>
-	<string name="realTotal">Total</string>
+    <string name="customResource">You have selected a custom database.\nYou can now import your own food items by selecting \'Backup, Restore, Import and Export. Then you select \'import food items from csv file\'.</string>
+    <string name="realTotal">Total</string>
+	<string name="standardAmountCantBeEmpty">The amount cant be empty</string>
 </resources>
