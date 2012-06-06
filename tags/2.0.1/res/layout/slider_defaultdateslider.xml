@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Please read info.txt for license and legal information -->
+<com.hippoandfriends.helpdiabetes.slider.SliderContainer xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res/com.hippoandfriends.helpdiabetes"
+    android:id="@+id/dateSliderContainer"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent" >
+
+    <com.hippoandfriends.helpdiabetes.slider.ScrollLayout
+        style="@style/Scroller"
+        app:childWidth="90dp"
+        app:labelerClass="com.hippoandfriends.helpdiabetes.slider.MonthYearLabeler"
+        app:labelerFormat="%tb %tY" />
+
+    <com.hippoandfriends.helpdiabetes.slider.ScrollLayout
+        style="@style/Scroller"
+        app:childWidth="45dp"
+        app:labelerClass="com.hippoandfriends.helpdiabetes.slider.DayDateLabeler"
+        app:labelerFormat="%td %ta" />
+
+    <include layout="@layout/slider_dialogbuttons" />
+
+</com.hippoandfriends.helpdiabetes.slider.SliderContainer>
