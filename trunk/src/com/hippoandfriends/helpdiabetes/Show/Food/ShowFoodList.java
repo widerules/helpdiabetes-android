@@ -122,7 +122,7 @@ public class ShowFoodList extends ListActivity {
 				// update: we only do this method when !listWithFilter becaus
 				// else we show the red cross
 				checkSearchButton();
- 
+
 				// store the search string in a variable to set it back when we
 				// press cancel on addFoodToSelection
 				ActivityGroupMeal.group.lastSearchString = editTextSearch
@@ -441,55 +441,24 @@ public class ShowFoodList extends ListActivity {
 
 	private void fillObjectsWithFilter() {
 		// get all the right items with the search.
-
 		listDBFoodComparableWithFilter = new ArrayList<DBFoodComparable>();
+		new SpecialCharactersToNormal();
+
+		// split with spaces
+		String[] searchWorths = editTextSearch.getText().toString().split(" ");
 
 		// do for every object in the normal list
 		for (DBFoodComparable obj : ActivityGroupMeal.group.getFoodData().listFood) {
-			String tempName = new SpecialCharactersToNormal().removeAccents(obj
+			String tempName = SpecialCharactersToNormal.removeAccents(obj
 					.getName());
 			// if tempname.indexof != -1 then we found the search string in the
 			// obj
-			if (tempName.toLowerCase().indexOf(
-					editTextSearch.getText().toString().toLowerCase()) != -1) {
-				listDBFoodComparableWithFilter.add(obj);
+			for (String worth : searchWorths) {
+				if (tempName.toLowerCase().indexOf(worth.toLowerCase()) != -1) {
+					listDBFoodComparableWithFilter.add(obj);
+				}
 			}
 		}
-
-		// dbHelper.open();
-		// Cursor cSettings = dbHelper
-		// .fetchSettingByName(DbSettings.setting_language);
-		// cSettings.moveToFirst();
-		//
-		// // get all the food items
-		// Cursor cFood = dbHelper.fetchFoodWithFilterByName(editTextSearch
-		// .getText().toString(), cSettings.getLong(cSettings
-		// .getColumnIndexOrThrow(DbAdapter.DATABASE_SETTINGS_VALUE)));
-		//
-		// if (cFood.getCount() > 0) {
-		// cFood.moveToFirst();
-		// do {
-		// // new DBFoodComparable(id, platform, languageid, visible,
-		// // categoryid, userid, isfavorite, name)
-		// DBFoodComparable newFood = new DBFoodComparable(
-		// cFood.getInt(cFood
-		// .getColumnIndexOrThrow(DbAdapter.DATABASE_FOOD_ID)),
-		// cFood.getString(cFood
-		// .getColumnIndexOrThrow(DbAdapter.DATABASE_FOOD_PLATFORM)),
-		// 0,
-		// 0,
-		// 0,
-		// 0,
-		// cFood.getInt(cFood
-		// .getColumnIndexOrThrow(DbAdapter.DATABASE_FOOD_ISFAVORITE)),
-		// cFood.getString(cFood
-		// .getColumnIndexOrThrow(DbAdapter.DATABASE_FOOD_NAME)));
-		// listDBFoodComparableWithFilter.add(newFood);
-		// } while (cFood.moveToNext());
-		// }
-		//
-		// cSettings.close();
-		// cFood.close();
 
 		// sort the list
 		sortObjectsWithFilter();
