@@ -7,6 +7,9 @@ package com.hippoandfriends.helpdiabetes.Rest;
  */
 
 public class DbSettings {
+	//<!-- Database version -->
+	public static final String setting_database_version = "databaseVersion";
+	
     //<!-- Insuline ratio setting names -->
     public static final String setting_insuline_ratio_breakfast = "insulineRatioBreakfast";
     public static final String setting_insuline_ratio_lunch = "insulineRatioLunch";

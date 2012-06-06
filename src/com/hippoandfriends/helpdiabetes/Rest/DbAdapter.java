@@ -255,6 +255,17 @@ public class DbAdapter extends SQLiteOpenHelper {
 		super.close();
 	}
 
+	public void rawQuery(String query){
+		mDb.rawQuery(query, null);
+	}
+	
+	//update foodlanguage language
+	public void updateFoodLanguageLanguage(int id, String language){
+		ContentValues values = new ContentValues();
+		values.put(DATABASE_FOODLANGUAGE_LANGUAGE, language);
+		mDb.update(DATABASE_FOODLANGUAGE_TABLE, values, DATABASE_FOODLANGUAGE_ID + "=" + id, null);
+	}
+	
 	// get all timestamps
 	public Cursor fetchAllTimestamps() {
 		return mDb.rawQuery("SELECT DISTINCT date(eventdatetime) as '"

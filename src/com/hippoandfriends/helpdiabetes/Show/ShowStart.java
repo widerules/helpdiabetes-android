@@ -14,6 +14,7 @@ import android.database.Cursor;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.hippoandfriends.helpdiabetes.R;
 import com.hippoandfriends.helpdiabetes.Rest.DataParser;
@@ -92,6 +93,8 @@ public class ShowStart extends Activity {
 		// check to see if it is the first time application starts
 		dbHelper.open();
 
+		doUpdates(dbHelper);
+		
 		Cursor cSetting = dbHelper
 				.fetchSettingByName(DbSettings.setting_language);
 		if (cSetting.getCount() > 0) {
@@ -117,6 +120,27 @@ public class ShowStart extends Activity {
 		}
 		cSetting.close();
 		dbHelper.close();
+	}
+ 
+	private void doUpdates(DbAdapter dbHelper) {
+		Cursor cDatabaseVersion = dbHelper.fetchSettingByName(DbSettings.setting_database_version);
+		if(cDatabaseVersion.getCount() > 0){
+			cDatabaseVersion.moveToFirst();
+	 		
+			if(cDatabaseVersion.getString(cDatabaseVersion.getColumnIndexOrThrow(DbAdapter.DATABASE_SETTINGS_VALUE)).equals("1")){
+				//from version 1 to version 2
+				dbHelper.updateSettingsByName(DbSettings.setting_database_version, "2");
+				
+				//rename "Canada Francaise" to "Canada Francais" = ID 6
+				dbHelper.updateFoodLanguageLanguage(6, "Français - Switserland");
+
+				//rename "USDA National Nitrution Datbase to "English - USDA National Nitrution Database" = ID 16
+				dbHelper.updateFoodLanguageLanguage(16, "English - USDA National Nutrition Database");
+				
+				
+			}
+		}
+		cDatabaseVersion.close();
 	}
 
 	private void startActivityDBLanguage() {

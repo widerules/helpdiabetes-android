@@ -258,13 +258,13 @@ public class ShowAddGlucoseEvent extends Activity {
 			parentActivity.goToTab(DataParser.activityIDTracking);
 
 			amount = 0;
-			etAmount.setText("" + amount);
+			etAmount.setText("");
 		} else {
 			Toast.makeText(this,
 					getResources().getString(R.string.amountCantBeZero),
 					Toast.LENGTH_LONG).show();
 			amount = 0;
-			etAmount.setText("" + amount);
+			etAmount.setText("");
 		}
 	}
 

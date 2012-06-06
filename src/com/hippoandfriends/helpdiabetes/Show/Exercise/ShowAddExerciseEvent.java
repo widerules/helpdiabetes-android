@@ -161,10 +161,8 @@ public class ShowAddExerciseEvent extends Activity {
 		// this method is called after invoking 'showDialog' for the first time
 		// here we initiate the corresponding DateSlideSelector and return the
 		// dialog to its caller
-
-		final Calendar c = Calendar.getInstance();
 		return new DateTimeSlider(ActivityGroupExercise.group,
-				mDateTimeSetListener, c);
+				mDateTimeSetListener, mCalendar);
 	}
 
 	@Override
@@ -173,7 +171,7 @@ public class ShowAddExerciseEvent extends Activity {
 		// create a new date with current date and hour
 		mCalendar = Calendar.getInstance();
 		updateTimeAndTimeTextView(Calendar.getInstance());
-
+		
 		dbHelper.open();
 		fillSpinnerSportType();
 		fillSpinnerDuration();
