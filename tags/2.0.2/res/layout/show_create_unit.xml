@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Please read info.txt for license and legal information -->
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent" >
+
+    <LinearLayout style="@style/linearLayoutVerticalWithPadding" >
+
+        <LinearLayout style="@style/llTitel" >
+
+            <Button
+                android:id="@+id/buttonBack"
+                style="@style/buttonBack" />
+
+            <TextView
+                style="@style/defaultFontTitle"
+                android:text="@string/titelCreateUnit" />
+
+            <Button
+                android:id="@+id/buttonShowCreateUnitAddOrUpdate"
+                style="@style/buttonForward" />
+        </LinearLayout>
+
+        <TableLayout
+            android:id="@+id/tableLayout1"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:layout_weight="1.0" >
+
+            <TableRow
+                android:id="@+id/tableRow8"
+                style="@style/styleTableRowGravityCenter" >
+
+                <TextView
+                    android:id="@+id/textView7"
+                    style="@style/textViewInTableAlignRight"
+                    android:text="@string/unit" />
+
+                <Spinner
+                    android:id="@+id/spinnerShowCreateUnit"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+            </TableRow>
+
+            <TableRow
+                android:id="@+id/tableRowShowCreateUnitSpecialFoodUnit"
+                style="@style/styleTableRowGravityCenter"
+                android:visibility="gone" >
+
+                <TextView
+                    android:id="@+id/textView2"
+                    style="@style/textViewInTableAlignRight" />
+
+                <EditText
+                    android:id="@+id/editTextShowCreateUnitFoodUnitStandardAmound"
+                    style="@style/editTextInTableText"
+                    android:digits="1234567890."
+                    android:inputType="phone"
+                    android:text="1" />
+
+                <EditText
+                    android:id="@+id/editTextShowCreateUnitFoodUnitName"
+                    style="@style/editTextInTableText"
+                    android:inputType="text"
+                    android:text="@string/part" >
+                </EditText>
+            </TableRow>
+
+            <TableRow
+                android:id="@+id/tableRowCarb"
+                style="@style/styleTableRowGravityCenter" >
+
+                <TextView
+                    android:id="@+id/textViewShowCreateUnit1"
+                    style="@style/textViewInTableAlignRight"
+                    android:text="@string/short_carbs" />
+
+                <EditText
+                    android:id="@+id/editTextShowCreateUnit1"
+                    style="@style/editTextInTableText"
+                    android:digits="1234567890."
+                    android:inputType="phone" />
+            </TableRow>
+
+            <TableRow
+                android:id="@+id/tableRowProt"
+                style="@style/styleTableRowGravityCenter" >
+
+                <TextView
+                    android:id="@+id/textViewShowCreateUnit2"
+                    style="@style/textViewInTableAlignRight"
+                    android:text="@string/amound_of_protein" />
+
+                <EditText
+                    android:id="@+id/editTextShowCreateUnit2"
+                    style="@style/editTextInTableText"
+                    android:digits="1234567890."
+                    android:inputType="phone" />
+            </TableRow>
+
+            <TableRow
+                android:id="@+id/tableRowFat"
+                style="@style/styleTableRowGravityCenter" >
+
+                <TextView
+                    android:id="@+id/textViewShowCreateUnit3"
+                    style="@style/textViewInTableAlignRight"
+                    android:text="@string/amound_of_fat" />
+
+                <EditText
+                    android:id="@+id/editTextShowCreateUnit3"
+                    style="@style/editTextInTableText"
+                    android:digits="1234567890."
+                    android:inputType="phone" />
+            </TableRow>
+
+            <TableRow
+                android:id="@+id/tableRowKcal"
+                style="@style/styleTableRowGravityCenter" >
+
+                <TextView
+                    android:id="@+id/textViewShowCreateUnit4"
+                    style="@style/textViewInTableAlignRight"
+                    android:text="@string/short_kcal" />
+
+                <EditText
+                    android:id="@+id/editTextShowCreateUnit4"
+                    style="@style/editTextInTableText"
+                    android:digits="1234567890."
+                    android:inputType="phone" />
+            </TableRow>
+        </TableLayout>
+
+        <Button
+            android:id="@+id/buttonShowCreateUnitDelete"
+            style="@style/buttonTrashCan"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom|right" />
+    </LinearLayout>
+</ScrollView>
