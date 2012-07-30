@@ -94,7 +94,8 @@
                         android:id="@+id/textViewShowAddFoodRowOneFieldThree"
                         style="@style/textViewInTableAlignRight"
                         android:paddingLeft="10dip"
-                        android:textColor="@color/ColorWhite" />
+                        android:textColor="@color/ColorWhite"
+                        android:textStyle="bold" />
                 </TableRow>
 
                 <TableRow
@@ -119,7 +120,8 @@
                         android:id="@+id/textViewShowAddFoodRowTwoFieldThree"
                         style="@style/textViewInTableAlignRight"
                         android:paddingLeft="10dip"
-                        android:textColor="@color/ColorWhite" />
+                        android:textColor="@color/ColorWhite"
+                        android:textStyle="bold" />
                 </TableRow>
 
                 <TableRow
@@ -144,7 +146,8 @@
                         android:id="@+id/textViewShowAddFoodRowThreeFieldThree"
                         style="@style/textViewInTableAlignRight"
                         android:paddingLeft="10dip"
-                        android:textColor="@color/ColorWhite" />
+                        android:textColor="@color/ColorWhite"
+                        android:textStyle="bold" />
                 </TableRow>
 
                 <TableRow
@@ -169,7 +172,8 @@
                         android:id="@+id/textViewShowAddFoodRowFourFieldThree"
                         style="@style/textViewInTableAlignRight"
                         android:paddingLeft="10dip"
-                        android:textColor="@color/ColorWhite" />
+                        android:textColor="@color/ColorWhite"
+                        android:textStyle="bold" />
                 </TableRow>
 
                 <TableRow
@@ -194,7 +198,8 @@
                         android:id="@+id/textViewShowAddFoodRowFiveFieldThree"
                         style="@style/textViewInTableAlignRight"
                         android:paddingLeft="10dip"
-                        android:textColor="@color/ColorWhite" />
+                        android:textColor="@color/ColorWhite"
+                        android:textStyle="bold" />
                 </TableRow>
             </TableLayout>
 
