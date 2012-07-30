@@ -176,4 +176,10 @@
     <string name="customResource">You have selected a custom database.\nYou can now import your own food items by selecting \'Backup, Restore, Import and Export. Then you select \'import food items from csv file\'.</string>
     <string name="realTotal">Total</string>
 	<string name="standardAmountCantBeEmpty">The amount cant be empty</string>
+	
+	<string name="pref_log_to_excel">Log to Excel</string>
+	<string name="minutes">minutes</string>
+	
+	<string name="created">created</string>
+	
 </resources>

@@ -176,4 +176,11 @@
     
     <!--  Update: 24-05-2012 -->
     <string name="standardAmountCantBeEmpty">Het aantal mag niet leeg zijn</string>
+    
+    <!-- Update: 26-05-2012 -->
+    <string name="pref_log_to_excel">Historiek naar Excel</string>
+    <string name="minutes">minuten</string>
+    
+    <!-- Update: 30-05-2012 -->
+    <string name="created">aangemaakt</string>
 </resources>
