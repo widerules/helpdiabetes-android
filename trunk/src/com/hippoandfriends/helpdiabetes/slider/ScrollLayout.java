@@ -36,7 +36,7 @@ import android.view.WindowManager;
 import android.widget.LinearLayout;
 import android.widget.Scroller;
 
-import com.hippoandfriends.helpdiabetes.R;
+
 
 /**
  * This is where most of the magic happens. This is a subclass of LinearLayout

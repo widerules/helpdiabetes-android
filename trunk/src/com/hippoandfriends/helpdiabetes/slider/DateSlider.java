@@ -29,7 +29,7 @@ import android.view.Window;
 import android.widget.Button;
 import android.widget.TextView;
 
-import com.hippoandfriends.helpdiabetes.R;
+
 import com.hippoandfriends.helpdiabetes.slider.SliderContainer.OnTimeChangeListener;
 
 /**

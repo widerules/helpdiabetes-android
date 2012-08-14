@@ -14,7 +14,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.hippoandfriends.helpdiabetes.R;
+
 import com.hippoandfriends.helpdiabetes.Objects.DBMealFood;
 import com.hippoandfriends.helpdiabetes.Objects.DBTracking;
 import com.hippoandfriends.helpdiabetes.Rest.Functions;

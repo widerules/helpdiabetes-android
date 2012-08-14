@@ -29,7 +29,7 @@ import android.widget.Spinner;
 import android.widget.TableRow;
 import android.widget.TextView;
 
-import com.hippoandfriends.helpdiabetes.R;
+
 import com.hippoandfriends.helpdiabetes.ActivityGroup.ActivityGroupMeal;
 import com.hippoandfriends.helpdiabetes.Custom.CustomSimpleArrayAdapterForASpinner;
 import com.hippoandfriends.helpdiabetes.Objects.DBNameAndID;

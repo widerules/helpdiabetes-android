@@ -20,7 +20,7 @@ import android.widget.Spinner;
 import android.widget.TableRow;
 import android.widget.Toast;
 
-import com.hippoandfriends.helpdiabetes.R;
+
 import com.hippoandfriends.helpdiabetes.ActivityGroup.ActivityGroupMeal;
 import com.hippoandfriends.helpdiabetes.Custom.CustomArrayAdapterCharSequenceShowCreateFood;
 import com.hippoandfriends.helpdiabetes.Rest.DataParser;

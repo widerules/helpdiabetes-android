@@ -23,7 +23,7 @@ import java.util.Calendar;
 
 import android.content.Context;
 
-import com.hippoandfriends.helpdiabetes.R;
+
 import com.hippoandfriends.helpdiabetes.Rest.Functions;
 
 public class TimeSlider extends DateSlider {

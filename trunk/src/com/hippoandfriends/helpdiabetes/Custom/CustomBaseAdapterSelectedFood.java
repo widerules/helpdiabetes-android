@@ -15,7 +15,7 @@ import android.widget.BaseAdapter;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.hippoandfriends.helpdiabetes.R;
+
 import com.hippoandfriends.helpdiabetes.Objects.DBSelectedFood;
 import com.hippoandfriends.helpdiabetes.Rest.Functions;
 

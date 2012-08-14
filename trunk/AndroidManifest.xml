@@ -93,12 +93,6 @@
         </activity>
         <activity android:name="com.hippoandfriends.helpdiabetes.Show.Tracking.ShowLoadingTrackingData" >
         </activity>
-        <activity android:name="com.hippoandfriends.helpdiabetes.Show.Tracking.ShowTrackingBloodGlucoseChart" >
-        </activity>
-        <activity android:name="com.hippoandfriends.helpdiabetes.Show.Tracking.ShowTrackingDefaultInsulineChart" >
-        </activity>
-        <activity android:name=".Show.Tracking.ShowTrackingAScatterChartBloodGlucose" >
-        </activity>
     </application>
 
 </manifest>

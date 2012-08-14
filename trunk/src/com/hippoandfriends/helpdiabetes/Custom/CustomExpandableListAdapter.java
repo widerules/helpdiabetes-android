@@ -14,7 +14,7 @@ import android.widget.BaseExpandableListAdapter;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.hippoandfriends.helpdiabetes.R;
+
 import com.hippoandfriends.helpdiabetes.Objects.DBTotalCalculated;
 
 public class CustomExpandableListAdapter extends BaseExpandableListAdapter {

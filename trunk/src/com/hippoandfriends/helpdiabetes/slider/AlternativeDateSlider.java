@@ -23,7 +23,6 @@ import java.util.Calendar;
 
 import android.content.Context;
 
-import com.hippoandfriends.helpdiabetes.R;
 
 public class AlternativeDateSlider extends DateSlider {
 	
