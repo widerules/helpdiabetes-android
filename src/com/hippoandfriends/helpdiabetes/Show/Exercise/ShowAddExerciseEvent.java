@@ -23,7 +23,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
 
-import com.hippoandfriends.helpdiabetes.R;
+
 import com.hippoandfriends.helpdiabetes.ActivityGroup.ActivityGroupExercise;
 import com.hippoandfriends.helpdiabetes.ActivityGroup.ActivityGroupMeal;
 import com.hippoandfriends.helpdiabetes.ActivityGroup.ActivityGroupTracking;

@@ -22,7 +22,7 @@ import android.database.sqlite.SQLiteException;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.os.Environment;
 
-import com.hippoandfriends.helpdiabetes.R;
+
 
 /*
  * This class provides the add, delete, create of all the database components

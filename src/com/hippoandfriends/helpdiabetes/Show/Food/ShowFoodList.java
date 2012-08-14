@@ -31,7 +31,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.hippoandfriends.helpdiabetes.R;
+
 import com.hippoandfriends.helpdiabetes.ActivityGroup.ActivityGroupMeal;
 import com.hippoandfriends.helpdiabetes.Objects.DBFoodComparable;
 import com.hippoandfriends.helpdiabetes.Rest.DataParser;

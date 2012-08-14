@@ -15,7 +15,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 
-import com.hippoandfriends.helpdiabetes.R;
+
 import com.hippoandfriends.helpdiabetes.ActivityGroup.ActivityGroupTracking;
 import com.hippoandfriends.helpdiabetes.Objects.DBBloodGlucoseEvent;
 import com.hippoandfriends.helpdiabetes.Objects.DBExerciseEvent;

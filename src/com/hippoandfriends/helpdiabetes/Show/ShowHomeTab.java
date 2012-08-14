@@ -16,7 +16,7 @@ import android.widget.TabHost.TabSpec;
 import android.widget.TextView;
 
 import com.google.android.apps.analytics.GoogleAnalyticsTracker;
-import com.hippoandfriends.helpdiabetes.R;
+
 import com.hippoandfriends.helpdiabetes.ActivityGroup.ActivityGroupExercise;
 import com.hippoandfriends.helpdiabetes.ActivityGroup.ActivityGroupGlucose;
 import com.hippoandfriends.helpdiabetes.ActivityGroup.ActivityGroupMeal;

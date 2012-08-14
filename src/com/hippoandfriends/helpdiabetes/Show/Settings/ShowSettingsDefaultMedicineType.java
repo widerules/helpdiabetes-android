@@ -12,7 +12,7 @@ import android.view.KeyEvent;
 import android.view.View;
 import android.widget.ListView;
 
-import com.hippoandfriends.helpdiabetes.R;
+
 import com.hippoandfriends.helpdiabetes.Custom.CustomArrayAdapterDBMedicineType;
 import com.hippoandfriends.helpdiabetes.Objects.DBMedicineType;
 import com.hippoandfriends.helpdiabetes.Rest.DbAdapter;

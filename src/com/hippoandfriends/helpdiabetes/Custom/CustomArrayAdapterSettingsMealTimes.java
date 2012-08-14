@@ -11,7 +11,7 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
-import com.hippoandfriends.helpdiabetes.R;
+
 
 public class CustomArrayAdapterSettingsMealTimes extends ArrayAdapter<String> {
 	private Context ctx;

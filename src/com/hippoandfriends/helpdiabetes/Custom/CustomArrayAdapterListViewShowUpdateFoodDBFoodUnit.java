@@ -11,7 +11,7 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
-import com.hippoandfriends.helpdiabetes.R;
+
 import com.hippoandfriends.helpdiabetes.Objects.DBFoodUnit;
 
 public class CustomArrayAdapterListViewShowUpdateFoodDBFoodUnit extends ArrayAdapter<DBFoodUnit> {
