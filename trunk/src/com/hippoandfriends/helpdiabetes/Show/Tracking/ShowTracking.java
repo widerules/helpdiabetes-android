@@ -44,7 +44,7 @@ import com.hippoandfriends.helpdiabetes.slider.DateTimeSlider;
 
 public class ShowTracking extends ListActivity {
 	private CustomArrayAdapterDBTracking adapter;
-	private Button btMore, btForward;
+	private Button btMore /*,btForward*/;
 
 	// search function
 	private Button btSearch, btSearchNext;
@@ -74,7 +74,7 @@ public class ShowTracking extends ListActivity {
 		btSearch = (Button) findViewById(R.id.buttonSearch);
 		btSearchNext = (Button) findViewById(R.id.buttonSearchNext);
 		btMore = (Button) findViewById(R.id.buttonMore);
-		btForward = (Button) findViewById(R.id.ButtonForward);
+		//btForward = (Button) findViewById(R.id.ButtonForward);
 		llSearch = (LinearLayout) findViewById(R.id.LinearLayoutSearch);
 		llButtons = (LinearLayout) findViewById(R.id.LinearLayoutButtons);
 		et = (EditText) findViewById(R.id.editText1);
@@ -90,16 +90,16 @@ public class ShowTracking extends ListActivity {
 		searchPosition = 0;
 		
 		//hide the charts part
-		btForward.setVisibility(View.GONE);
+		//btForward.setVisibility(View.GONE);
 		
-		btForward.setOnClickListener(new View.OnClickListener() {
+		/*btForward.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
 				Intent i = new Intent(ActivityGroupTracking.group,
 						ShowTrackingAScatterChartBloodGlucose.class).addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 				View view = ActivityGroupTracking.group.getLocalActivityManager().startActivity(DataParser.activityIDTracking, i).getDecorView();
 				ActivityGroupTracking.group.setContentView(view);
 			}
-		});
+		});*/
 
 		btMore.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
