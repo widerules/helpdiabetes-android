@@ -15,8 +15,8 @@
     <string name="unit">Unit</string>
     <string name="unit_name">Unit, Name</string>
     <string name="unit_amount">Amount</string>
-    <string name="name_cant_be_empty">Enter a valid name</string>
-    <string name="unit_cant_be_empty">Enter a valid unit</string>
+    <string name="name_cant_be_empty">Invalid \'Name\'</string>
+    <string name="unit_cant_be_empty">Invalid \'Unit\'</string>
     <string name="short_kcal">kcals</string>
     <string name="short_carbs">carbs</string>
     <string name="save">Save</string>
@@ -63,12 +63,11 @@
     <string name="sureToDeleteSelectedFood">Are you sure to clear selections?</string>
     <string name="addSelectionToTracking">Add selection to history log ?</string>
     <string name="howMuch">How much</string>
-    <string name="didUUse">did you use?</string>
+    <string name="didUUse">did you use ?</string>
     <string name="changeTime">Change time</string>
     <string name="search">Search</string>
     <string name="options">Options</string>
     <string name="update_food_name">Update product name</string>
-    <string name="unit_amount_cant_be_zero">Amount needs to be higher than 0</string>
     <string name="add_exercise_events">Add exercise activity</string>
     <string name="menu_update_exercise_type">Update intensity</string>
     <string name="add_and_add_another">Add and back to list</string>
@@ -99,7 +98,7 @@
     <string name="save_as_template">Save template</string>
     <string name="Load_template">Load template</string>
     <string name="template_load_empty">There are no templates</string>
-    <string name="template_name_cant_be_empty">Template name can not be empty</string>
+    <string name="template_name_cant_be_empty">\'Template name\' can not be empty</string>
     <string name="dateSliderTitle">Selected date</string>
     <string name="pref_breakfastratio_title">Breakfast</string>
     <string name="pref_lunchratio_title">Lunch</string>

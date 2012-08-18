@@ -8,44 +8,18 @@ import java.util.List;
 import com.hippoandfriends.helpdiabetes.R;
 
 import android.app.Activity;
-import com.hippoandfriends.helpdiabetes.R;
-
 import android.os.Bundle;
-import com.hippoandfriends.helpdiabetes.R;
-
 import android.view.KeyEvent;
-import com.hippoandfriends.helpdiabetes.R;
-
 import android.view.LayoutInflater;
-import com.hippoandfriends.helpdiabetes.R;
-
 import android.view.View;
-import com.hippoandfriends.helpdiabetes.R;
-
 import android.view.View.OnClickListener;
-import com.hippoandfriends.helpdiabetes.R;
-
 import android.view.View.OnKeyListener;
-import com.hippoandfriends.helpdiabetes.R;
-
 import android.widget.AdapterView;
-import com.hippoandfriends.helpdiabetes.R;
-
 import android.widget.AdapterView.OnItemSelectedListener;
-import com.hippoandfriends.helpdiabetes.R;
-
 import android.widget.Button;
-import com.hippoandfriends.helpdiabetes.R;
-
 import android.widget.EditText;
-import com.hippoandfriends.helpdiabetes.R;
-
 import android.widget.Spinner;
-import com.hippoandfriends.helpdiabetes.R;
-
 import android.widget.TableRow;
-import com.hippoandfriends.helpdiabetes.R;
-
 import android.widget.Toast;
 
 
@@ -352,6 +326,8 @@ public class ShowCreateFood extends Activity {
 		}
 	}
 
+	//has been changed by Johan Degraeve on 18/08/2012
+	//before the change it returned false when there were invalid values, now invalid values are replaced by default valid values
 	private boolean checkAllFieldsGotSomeValue() {
 		if (editTextfoodName.getText().length() <= 0) {
 			Toast.makeText(this,
@@ -369,25 +345,6 @@ public class ShowCreateFood extends Activity {
 			if (editTextUnitName.getText().length() <= 0) {
 				//standard unit name not filled in, take part as value
 				editTextUnitName.setText(R.string.part);
-			}
-			
-
-			// and check if standardamount != 0
-			float checkStandardAmount = 0;
-			try {
-				checkStandardAmount = Float
-						.parseFloat(editTextUnitStandardAmound.getText()
-								.toString());
-			} catch (Exception e) {
-				checkStandardAmount = 0;
-			}
-			if (checkStandardAmount == 0) {
-				Toast.makeText(
-						this,
-						getResources().getString(
-								R.string.unit_amount_cant_be_zero),
-						Toast.LENGTH_LONG).show();
-				return false;
 			}
 		}
 		// if everything went OK we return true

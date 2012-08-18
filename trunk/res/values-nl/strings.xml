@@ -14,7 +14,7 @@
     <string name="unit_name">Eenheid, naam</string>
     <string name="unit_amount">Aantal</string>
     <string name="name_cant_be_empty">\'Naam\' mag niet leeg zijn</string>
-    <string name="unit_cant_be_empty">\'Eenheid, naam\' mag niet leeg zijn</string>
+    <string name="unit_cant_be_empty">\'Eenheid\' mag niet leeg zijn</string>
     <string name="short_kcal">kcal</string>
     <string name="short_carbs">Kh</string>
     <string name="save">Opslaan</string>
@@ -66,7 +66,6 @@
     <string name="search">Zoeken</string>
     <string name="options">Opties</string>
     <string name="update_food_name">Productnaam aanpassen</string>
-    <string name="unit_amount_cant_be_zero">Aantal moet groter dan 0 zijn</string>
     <string name="add_exercise_events">Sport activiteit toevoegen</string>
     <string name="menu_update_exercise_type">Intensiteiten updaten</string>
     <string name="add_and_add_another">Toevoegen en terug naar lijst</string>

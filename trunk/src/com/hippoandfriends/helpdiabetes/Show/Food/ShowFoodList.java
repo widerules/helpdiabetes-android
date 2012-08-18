@@ -9,74 +9,28 @@ import java.util.List;
 import com.hippoandfriends.helpdiabetes.R;
 
 import android.app.AlertDialog;
-import com.hippoandfriends.helpdiabetes.R;
-
 import android.app.ListActivity;
-import com.hippoandfriends.helpdiabetes.R;
-
 import android.content.Context;
-import com.hippoandfriends.helpdiabetes.R;
-
 import android.content.DialogInterface;
-import com.hippoandfriends.helpdiabetes.R;
-
 import android.content.Intent;
-import com.hippoandfriends.helpdiabetes.R;
-
 import android.database.Cursor;
-import com.hippoandfriends.helpdiabetes.R;
-
 import android.os.AsyncTask;
-import com.hippoandfriends.helpdiabetes.R;
-
 import android.os.Bundle;
-import com.hippoandfriends.helpdiabetes.R;
-
 import android.text.Editable;
-import com.hippoandfriends.helpdiabetes.R;
-
 import android.text.TextWatcher;
-import com.hippoandfriends.helpdiabetes.R;
-
 import android.view.KeyEvent;
-import com.hippoandfriends.helpdiabetes.R;
-
 import android.view.LayoutInflater;
-import com.hippoandfriends.helpdiabetes.R;
-
 import android.view.View;
-import com.hippoandfriends.helpdiabetes.R;
-
 import android.view.View.OnClickListener;
-import com.hippoandfriends.helpdiabetes.R;
-
 import android.view.View.OnLongClickListener;
-import com.hippoandfriends.helpdiabetes.R;
-
 import android.view.ViewGroup;
-import com.hippoandfriends.helpdiabetes.R;
-
 import android.view.animation.AlphaAnimation;
-import com.hippoandfriends.helpdiabetes.R;
-
 import android.view.animation.Animation;
-import com.hippoandfriends.helpdiabetes.R;
-
 import android.view.animation.LinearInterpolator;
-import com.hippoandfriends.helpdiabetes.R;
-
 import android.widget.ArrayAdapter;
-import com.hippoandfriends.helpdiabetes.R;
-
 import android.widget.Button;
-import com.hippoandfriends.helpdiabetes.R;
-
 import android.widget.EditText;
-import com.hippoandfriends.helpdiabetes.R;
-
 import android.widget.ImageView;
-import com.hippoandfriends.helpdiabetes.R;
-
 import android.widget.TextView;
 
 
