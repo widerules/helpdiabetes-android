@@ -24,7 +24,17 @@
                 android:id="@+id/buttonNext"
                 style="@style/buttonForward" />
         </LinearLayout>
+         <View
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:layout_weight="1.0" />
 
+        <TextView
+            style="@style/defaultFontNormal"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/if_value_zero_dont_calc_insuline" />
+        
         <TableLayout
             android:id="@+id/tableLayout1"
             android:layout_width="fill_parent"
@@ -97,15 +107,5 @@
             </TableRow>
         </TableLayout>
         
-         <View
-            android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
-            android:layout_weight="1.0" />
-
-        <TextView
-            style="@style/defaultFontNormal"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/if_value_zero_dont_calc_insuline" />
     </LinearLayout>
 </ScrollView>

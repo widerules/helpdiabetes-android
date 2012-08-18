@@ -11,22 +11,56 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
+import com.hippoandfriends.helpdiabetes.R;
+
 import android.app.Activity;
+import com.hippoandfriends.helpdiabetes.R;
+
 import android.database.Cursor;
+import com.hippoandfriends.helpdiabetes.R;
+
 import android.os.Bundle;
+import com.hippoandfriends.helpdiabetes.R;
+
 import android.text.Editable;
+import com.hippoandfriends.helpdiabetes.R;
+
 import android.text.TextWatcher;
+import com.hippoandfriends.helpdiabetes.R;
+
 import android.view.KeyEvent;
+import com.hippoandfriends.helpdiabetes.R;
+
 import android.view.LayoutInflater;
+import com.hippoandfriends.helpdiabetes.R;
+
 import android.view.View;
+import com.hippoandfriends.helpdiabetes.R;
+
 import android.view.View.OnClickListener;
+import com.hippoandfriends.helpdiabetes.R;
+
 import android.view.View.OnKeyListener;
+import com.hippoandfriends.helpdiabetes.R;
+
 import android.widget.AdapterView;
+import com.hippoandfriends.helpdiabetes.R;
+
 import android.widget.AdapterView.OnItemSelectedListener;
+import com.hippoandfriends.helpdiabetes.R;
+
 import android.widget.Button;
+import com.hippoandfriends.helpdiabetes.R;
+
 import android.widget.EditText;
+import com.hippoandfriends.helpdiabetes.R;
+
 import android.widget.Spinner;
+import com.hippoandfriends.helpdiabetes.R;
+
 import android.widget.TableRow;
+import com.hippoandfriends.helpdiabetes.R;
+
 import android.widget.TextView;
 
 

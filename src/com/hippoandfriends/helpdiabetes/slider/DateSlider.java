@@ -21,12 +21,26 @@ package com.hippoandfriends.helpdiabetes.slider;
 
 import java.util.Calendar;
 
+import com.hippoandfriends.helpdiabetes.R;
+
 import android.app.Dialog;
+import com.hippoandfriends.helpdiabetes.R;
+
 import android.content.Context;
+import com.hippoandfriends.helpdiabetes.R;
+
 import android.os.Bundle;
+import com.hippoandfriends.helpdiabetes.R;
+
 import android.view.View;
+import com.hippoandfriends.helpdiabetes.R;
+
 import android.view.Window;
+import com.hippoandfriends.helpdiabetes.R;
+
 import android.widget.Button;
+import com.hippoandfriends.helpdiabetes.R;
+
 import android.widget.TextView;
 
 

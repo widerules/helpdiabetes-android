@@ -13,13 +13,29 @@ import java.io.OutputStream;
 import java.nio.channels.FileChannel;
 import java.util.zip.ZipInputStream;
 
+import com.hippoandfriends.helpdiabetes.R;
+
 import android.content.ContentValues;
+import com.hippoandfriends.helpdiabetes.R;
+
 import android.content.Context;
+import com.hippoandfriends.helpdiabetes.R;
+
 import android.database.Cursor;
+import com.hippoandfriends.helpdiabetes.R;
+
 import android.database.SQLException;
+import com.hippoandfriends.helpdiabetes.R;
+
 import android.database.sqlite.SQLiteDatabase;
+import com.hippoandfriends.helpdiabetes.R;
+
 import android.database.sqlite.SQLiteException;
+import com.hippoandfriends.helpdiabetes.R;
+
 import android.database.sqlite.SQLiteOpenHelper;
+import com.hippoandfriends.helpdiabetes.R;
+
 import android.os.Environment;
 
 

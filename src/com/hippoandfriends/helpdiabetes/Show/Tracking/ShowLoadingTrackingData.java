@@ -6,13 +6,29 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
+import com.hippoandfriends.helpdiabetes.R;
+
 import android.app.Activity;
+import com.hippoandfriends.helpdiabetes.R;
+
 import android.content.Context;
+import com.hippoandfriends.helpdiabetes.R;
+
 import android.content.Intent;
+import com.hippoandfriends.helpdiabetes.R;
+
 import android.database.Cursor;
+import com.hippoandfriends.helpdiabetes.R;
+
 import android.os.AsyncTask;
+import com.hippoandfriends.helpdiabetes.R;
+
 import android.os.Bundle;
+import com.hippoandfriends.helpdiabetes.R;
+
 import android.view.LayoutInflater;
+import com.hippoandfriends.helpdiabetes.R;
+
 import android.view.View;
 
 

@@ -20,20 +20,50 @@ package com.hippoandfriends.helpdiabetes.slider;
 
 import java.lang.reflect.Constructor;
 
+import com.hippoandfriends.helpdiabetes.R;
+
 import android.content.Context;
+import com.hippoandfriends.helpdiabetes.R;
+
 import android.content.res.TypedArray;
+import com.hippoandfriends.helpdiabetes.R;
+
 import android.graphics.Canvas;
+import com.hippoandfriends.helpdiabetes.R;
+
 import android.graphics.drawable.Drawable;
+import com.hippoandfriends.helpdiabetes.R;
+
 import android.util.AttributeSet;
+import com.hippoandfriends.helpdiabetes.R;
+
 import android.util.Log;
+import com.hippoandfriends.helpdiabetes.R;
+
 import android.view.Display;
+import com.hippoandfriends.helpdiabetes.R;
+
 import android.view.Gravity;
+import com.hippoandfriends.helpdiabetes.R;
+
 import android.view.MotionEvent;
+import com.hippoandfriends.helpdiabetes.R;
+
 import android.view.VelocityTracker;
+import com.hippoandfriends.helpdiabetes.R;
+
 import android.view.View;
+import com.hippoandfriends.helpdiabetes.R;
+
 import android.view.ViewConfiguration;
+import com.hippoandfriends.helpdiabetes.R;
+
 import android.view.WindowManager;
+import com.hippoandfriends.helpdiabetes.R;
+
 import android.widget.LinearLayout;
+import com.hippoandfriends.helpdiabetes.R;
+
 import android.widget.Scroller;
 
 

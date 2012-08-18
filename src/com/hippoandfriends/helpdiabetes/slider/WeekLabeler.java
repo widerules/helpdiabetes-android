@@ -4,9 +4,17 @@ package com.hippoandfriends.helpdiabetes.slider;
 
 import java.util.Calendar;
 
+import com.hippoandfriends.helpdiabetes.R;
+
 import android.content.Context;
+import com.hippoandfriends.helpdiabetes.R;
+
 import android.graphics.Typeface;
+import com.hippoandfriends.helpdiabetes.R;
+
 import android.util.TypedValue;
+import com.hippoandfriends.helpdiabetes.R;
+
 import android.view.Gravity;
 
 /**

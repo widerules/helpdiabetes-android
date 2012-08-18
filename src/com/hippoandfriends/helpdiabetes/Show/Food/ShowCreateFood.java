@@ -5,19 +5,47 @@ package com.hippoandfriends.helpdiabetes.Show.Food;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.hippoandfriends.helpdiabetes.R;
+
 import android.app.Activity;
+import com.hippoandfriends.helpdiabetes.R;
+
 import android.os.Bundle;
+import com.hippoandfriends.helpdiabetes.R;
+
 import android.view.KeyEvent;
+import com.hippoandfriends.helpdiabetes.R;
+
 import android.view.LayoutInflater;
+import com.hippoandfriends.helpdiabetes.R;
+
 import android.view.View;
+import com.hippoandfriends.helpdiabetes.R;
+
 import android.view.View.OnClickListener;
+import com.hippoandfriends.helpdiabetes.R;
+
 import android.view.View.OnKeyListener;
+import com.hippoandfriends.helpdiabetes.R;
+
 import android.widget.AdapterView;
+import com.hippoandfriends.helpdiabetes.R;
+
 import android.widget.AdapterView.OnItemSelectedListener;
+import com.hippoandfriends.helpdiabetes.R;
+
 import android.widget.Button;
+import com.hippoandfriends.helpdiabetes.R;
+
 import android.widget.EditText;
+import com.hippoandfriends.helpdiabetes.R;
+
 import android.widget.Spinner;
+import com.hippoandfriends.helpdiabetes.R;
+
 import android.widget.TableRow;
+import com.hippoandfriends.helpdiabetes.R;
+
 import android.widget.Toast;
 
 
@@ -34,7 +62,8 @@ public class ShowCreateFood extends Activity {
 	private Button btAdd, btBack;
 
 	private Spinner spinnerUnit;
-	private TableRow tableRowSpecialFoodUnit;
+	private TableRow tableRowSpecialFoodUnit_Unit;
+	private TableRow tableRowSpecialFoodUnit_Amount;
 
 	private DbAdapter dbHelper;
 
@@ -58,7 +87,8 @@ public class ShowCreateFood extends Activity {
 		dbHelper = new DbAdapter(this);
 
 		spinnerUnit = (Spinner) findViewById(R.id.spinnerShowCreateFoodUnit);
-		tableRowSpecialFoodUnit = (TableRow) findViewById(R.id.tableRowSpecialFoodUnit);
+		tableRowSpecialFoodUnit_Unit = (TableRow) findViewById(R.id.tableRowSpecialFoodUnit_Unit);
+		tableRowSpecialFoodUnit_Amount = (TableRow) findViewById(R.id.tableRowSpecialFoodUnit_Amount);
 		editTextfoodName = (EditText) findViewById(R.id.editTextFoodName);
 		editTextUnitStandardAmound = (EditText) findViewById(R.id.editTextFoodUnitStandardAmound);
 		editTextUnitName = (EditText) findViewById(R.id.editTextFoodUnitName);
@@ -85,7 +115,7 @@ public class ShowCreateFood extends Activity {
 
 			public void onItemSelected(AdapterView<?> arg0, View arg1,
 					int arg2, long arg3) {
-				// hide or show the tableRowSpecialFoodUnit
+				// hide or show the tableRowSpecialFoodUnit_Unit and tableRowSpecialFoodUnit_Amount
 				hideOrShowSpecialFoodUnitTableRow();
 			}
 
@@ -170,11 +200,13 @@ public class ShowCreateFood extends Activity {
 	// spinner item is selected.
 	private void hideOrShowSpecialFoodUnitTableRow() {
 		if (spinnerUnit.getCount() == spinnerUnit.getSelectedItemPosition() + 1) {
-			// Show the row
-			tableRowSpecialFoodUnit.setVisibility(View.VISIBLE);
+			// Show the rows
+			tableRowSpecialFoodUnit_Unit.setVisibility(View.VISIBLE);
+			tableRowSpecialFoodUnit_Amount.setVisibility(View.VISIBLE);
 		} else {
-			// Hide the row
-			tableRowSpecialFoodUnit.setVisibility(View.GONE);
+			// Hide the rows
+			tableRowSpecialFoodUnit_Unit.setVisibility(View.GONE);
+			tableRowSpecialFoodUnit_Amount.setVisibility(View.GONE);
 		}
 	}
 
@@ -331,18 +363,12 @@ public class ShowCreateFood extends Activity {
 			// if we selected the last spinner option we have to check if
 			// standardamount and unitName are filled in
 			if (editTextUnitStandardAmound.getText().length() <= 0) {
-				Toast.makeText(
-						this,
-						getResources().getString(
-								R.string.standardAmountCantBeEmpty),
-						Toast.LENGTH_LONG).show();
-				return false;
+				//standardamount not filled in, take "1" as value
+				editTextUnitStandardAmound.setText("1");
 			}
 			if (editTextUnitName.getText().length() <= 0) {
-				Toast.makeText(this,
-						getResources().getString(R.string.unit_cant_be_empty),
-						Toast.LENGTH_LONG).show();
-				return false;
+				//standard unit name not filled in, take part as value
+				editTextUnitName.setText(R.string.part);
 			}
 			
 
