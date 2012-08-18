@@ -4,12 +4,26 @@ package com.hippoandfriends.helpdiabetes.Show.Settings;
 
 import java.util.ArrayList;
 
+import com.hippoandfriends.helpdiabetes.R;
+
 import android.app.ListActivity;
+import com.hippoandfriends.helpdiabetes.R;
+
 import android.os.Bundle;
+import com.hippoandfriends.helpdiabetes.R;
+
 import android.view.KeyEvent;
+import com.hippoandfriends.helpdiabetes.R;
+
 import android.view.View;
+import com.hippoandfriends.helpdiabetes.R;
+
 import android.view.View.OnClickListener;
+import com.hippoandfriends.helpdiabetes.R;
+
 import android.widget.Button;
+import com.hippoandfriends.helpdiabetes.R;
+
 import android.widget.ListView;
 
 

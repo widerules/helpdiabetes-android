@@ -10,20 +10,50 @@ package com.hippoandfriends.helpdiabetes.Show.Food;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.hippoandfriends.helpdiabetes.R;
+
 import android.app.Activity;
+import com.hippoandfriends.helpdiabetes.R;
+
 import android.database.Cursor;
+import com.hippoandfriends.helpdiabetes.R;
+
 import android.os.Bundle;
+import com.hippoandfriends.helpdiabetes.R;
+
 import android.view.KeyEvent;
+import com.hippoandfriends.helpdiabetes.R;
+
 import android.view.LayoutInflater;
+import com.hippoandfriends.helpdiabetes.R;
+
 import android.view.View;
+import com.hippoandfriends.helpdiabetes.R;
+
 import android.view.View.OnClickListener;
+import com.hippoandfriends.helpdiabetes.R;
+
 import android.view.View.OnKeyListener;
+import com.hippoandfriends.helpdiabetes.R;
+
 import android.widget.AdapterView;
+import com.hippoandfriends.helpdiabetes.R;
+
 import android.widget.AdapterView.OnItemSelectedListener;
+import com.hippoandfriends.helpdiabetes.R;
+
 import android.widget.Button;
+import com.hippoandfriends.helpdiabetes.R;
+
 import android.widget.EditText;
+import com.hippoandfriends.helpdiabetes.R;
+
 import android.widget.Spinner;
+import com.hippoandfriends.helpdiabetes.R;
+
 import android.widget.TableRow;
+import com.hippoandfriends.helpdiabetes.R;
+
 import android.widget.Toast;
 
 
@@ -308,15 +338,11 @@ public class ShowCreateUnit extends Activity {
 			// if we selected the last spinner option we have to check if
 			// standardamount and unitname are filled in
 			if (editTextStandardAmound.getText().length() <= 0) {
-				Toast.makeText(
-						this,
-						getResources().getString(
-								R.string.standardAmountCantBeEmpty),
-						Toast.LENGTH_LONG).show();
-				return false;
+				//standardamount not filled in, take "1" as value
+				editTextStandardAmound.setText("1");
 			} else if (editTextName.getText().length() <= 0) {
 				Toast.makeText(this,
-						getResources().getString(R.string.name_cant_be_empty),
+						getResources().getString(R.string.unit_cant_be_empty),
 						Toast.LENGTH_LONG).show();
 				return false;
 			}

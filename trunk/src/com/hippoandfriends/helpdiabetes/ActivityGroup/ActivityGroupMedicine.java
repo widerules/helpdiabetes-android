@@ -8,12 +8,26 @@ import com.hippoandfriends.helpdiabetes.Rest.DataParser;
 import com.hippoandfriends.helpdiabetes.Show.ShowHomeTab;
 import com.hippoandfriends.helpdiabetes.Show.Medicine.ShowAddMedicineEvent;
 
+import com.hippoandfriends.helpdiabetes.R;
+
 import android.app.ActivityGroup;
+import com.hippoandfriends.helpdiabetes.R;
+
 import android.content.Context;
+import com.hippoandfriends.helpdiabetes.R;
+
 import android.content.Intent;
+import com.hippoandfriends.helpdiabetes.R;
+
 import android.os.Bundle;
+import com.hippoandfriends.helpdiabetes.R;
+
 import android.view.KeyEvent;
+import com.hippoandfriends.helpdiabetes.R;
+
 import android.view.View;
+import com.hippoandfriends.helpdiabetes.R;
+
 import android.view.inputmethod.InputMethodManager;
 
 public class ActivityGroupMedicine extends ActivityGroup {

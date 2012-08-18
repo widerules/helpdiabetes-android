@@ -62,6 +62,7 @@
                     android:id="@+id/editTextShowCreateUnitFoodUnitName"
                     style="@style/editTextInTableText"
                     android:inputType="text"
+                    android:hint="@string/part"
                     android:text="@string/part" >
                 </EditText>
             </TableRow>

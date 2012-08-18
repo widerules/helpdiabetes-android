@@ -8,15 +8,35 @@ package com.hippoandfriends.helpdiabetes.Show.Exercise;
  * This class is also used to delete a existing exercise type when it is not in use and it is not the last existing exercise type
  */
 
+import com.hippoandfriends.helpdiabetes.R;
+
 import android.app.Activity;
+import com.hippoandfriends.helpdiabetes.R;
+
 import android.database.Cursor;
+import com.hippoandfriends.helpdiabetes.R;
+
 import android.os.Bundle;
+import com.hippoandfriends.helpdiabetes.R;
+
 import android.view.KeyEvent;
+import com.hippoandfriends.helpdiabetes.R;
+
 import android.view.LayoutInflater;
+import com.hippoandfriends.helpdiabetes.R;
+
 import android.view.View;
+import com.hippoandfriends.helpdiabetes.R;
+
 import android.view.View.OnClickListener;
+import com.hippoandfriends.helpdiabetes.R;
+
 import android.widget.Button;
+import com.hippoandfriends.helpdiabetes.R;
+
 import android.widget.EditText;
+import com.hippoandfriends.helpdiabetes.R;
+
 import android.widget.Toast;
 
 

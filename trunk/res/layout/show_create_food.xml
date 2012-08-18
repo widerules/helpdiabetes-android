@@ -58,25 +58,39 @@
             </TableRow>
 
             <TableRow
-                android:id="@+id/tableRowSpecialFoodUnit"
+                android:id="@+id/tableRowSpecialFoodUnit_Unit"
                 style="@style/styleTableRowGravityCenter"
                 android:visibility="gone" >
 
                 <TextView
                     android:id="@+id/textView2"
-                    style="@style/textViewInTableAlignRight" />
-
-                <EditText
-                    android:id="@+id/editTextFoodUnitStandardAmound"
-                    style="@style/editTextInTableFloat"
-                    android:text="1" >
-                </EditText>
+                    style="@style/textViewInTableAlignRight" 
+                    android:text="@string/unit_name"/>
 
                 <EditText
                     android:id="@+id/editTextFoodUnitName"
                     style="@style/editTextInTableText"
+                    android:hint="@string/part"
                     android:text="@string/part" >
                 </EditText>
+            </TableRow>
+
+            <TableRow
+                android:id="@+id/tableRowSpecialFoodUnit_Amount"
+                style="@style/styleTableRowGravityCenter"
+                android:visibility="gone" >
+
+                <TextView
+                    android:id="@+id/textView2_Amount"
+                    style="@style/textViewInTableAlignRight"
+                    android:text="@string/unit_amount"/> />
+
+                <EditText
+                    android:id="@+id/editTextFoodUnitStandardAmound"
+                    style="@style/editTextInTableFloat"
+                    android:text="1" android:hint="1">
+                </EditText>
+
             </TableRow>
 
             <TableRow

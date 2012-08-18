@@ -11,8 +11,10 @@
     <string name="hide">Verberg</string>
     <string name="Name">Naam</string>
     <string name="unit">Eenheid</string>
-    <string name="name_cant_be_empty">Naam mag niet leeg zijn</string>
-    <string name="unit_cant_be_empty">Eenheid mag niet leeg zijn</string>
+    <string name="unit_name">Eenheid, naam</string>
+    <string name="unit_amount">Aantal</string>
+    <string name="name_cant_be_empty">\'Naam\' mag niet leeg zijn</string>
+    <string name="unit_cant_be_empty">\'Eenheid, naam\' mag niet leeg zijn</string>
     <string name="short_kcal">kcal</string>
     <string name="short_carbs">Kh</string>
     <string name="save">Opslaan</string>
@@ -35,7 +37,7 @@
     <string name="titelSettings">Instellingen</string>
     <string name="titelAddMedicine">Medicatie</string>
     <string name="titelTemplate">Templates</string>
-    <string name="pref_insuline_ratio">Insuline-Kh Ratio</string>
+    <string name="pref_insuline_ratio">Koolhydraatratio</string>
     <string name="pref_meal_times">Maaltijdtijden</string>
     <string name="pref_value_order">Voorkeur voedingswaarde</string>
     <string name="pref_text_size">Lettergrootte</string>
@@ -64,7 +66,7 @@
     <string name="search">Zoeken</string>
     <string name="options">Opties</string>
     <string name="update_food_name">Productnaam aanpassen</string>
-    <string name="unit_amount_cant_be_zero">Eenheid moet groter dan 0 zijn</string>
+    <string name="unit_amount_cant_be_zero">Aantal moet groter dan 0 zijn</string>
     <string name="add_exercise_events">Sport activiteit toevoegen</string>
     <string name="menu_update_exercise_type">Intensiteiten updaten</string>
     <string name="add_and_add_another">Toevoegen en terug naar lijst</string>
@@ -85,7 +87,7 @@
     <string name="cant_delete_food_caus_food_is_in_use">Dit eten kan niet verwijderd worden (het wordt nog gebruikt)!</string>
     <string name="create_new_food">eten</string>
     <string name="food_name">Productnaam</string>
-    <string name="food_name_is_required">Naam eten mag niet leeg zijn</string>
+    <string name="food_name_is_required">\'Productnaam\' mag niet leeg zijn</string>
     <string name="units">Hoeveelheden</string>
     <string name="selections_are_empty">Selecties is leeg</string>
     <string name="saved">Opgeslagen</string>
@@ -96,17 +98,17 @@
     <string name="save_as_template">bewaar template</string>
     <string name="Load_template">laad template</string>
     <string name="template_load_empty">Er zijn geen templates</string>
-    <string name="template_name_cant_be_empty">Template naam mag niet leeg zijn</string>
+    <string name="template_name_cant_be_empty">\'Template naam\' mag niet leeg zijn</string>
     <string name="dateSliderTitle">Geselecteerde datum</string>
     <string name="pref_breakfastratio_title">Ontbijt</string>
-    <string name="pref_lunchratio_title">Middag</string>
+    <string name="pref_lunchratio_title">Middagmaal</string>
     <string name="pref_snackratio_title">Vieruurtje</string>
     <string name="pref_dinnerratio_title">Avondmaal</string>
     <string name="starts_at">begint om</string>
-    <string name="if_value_zero_dont_calc_insuline">Als de waarde 0 is wordt er geen insuline berekend!</string>
+    <string name="if_value_zero_dont_calc_insuline">Geef het aantal gram koolhydraten per eenheid insuline.\nAls de waarde 0 is wordt er geen hoeveelheid insuline berekend!\n</string>
     <string name="standard_cant_be_hidden">Default kan niet onzichtbaar gezet worden</string> 
     <string name="fontSize">Tekstgrootte</string>
-    <string name="selected_wanted_size">Selecteer de gewenste grootte</string>
+    <string name="selected_wanted_size">Hier kies je de lettergrootte die gebruikt wordt in lijsten.\nSelecteer de grootte:\n</string>
     <string name="standard">default</string>
     <string name="make_standard">Markeer als default</string>
     <string name="standard_is_used_for">Default word gebruikt om geselecteerd eten aan de rapport pagina toe te voegen</string>
@@ -136,7 +138,7 @@
     <string name="foodToExcel">Exporteer producten naar csv bestand</string>
     <string name="excelToDB">Importeer producten uit csv bestand</string>
     <string name="select_standard_medicine_type">Selecteer het default medicijn type</string>
-    <string name="define_own">Definieër eigen</string>
+    <string name="define_own">Definieer eigen</string>
 
     <!-- Standard amound for adding units -->
     <string name="part">stuk</string>
@@ -173,9 +175,6 @@
     <!--  Update: 23-05-2012 -->
     <string name="customResource">U hebt een custom database gekozen.\nU kunt nu uw eigen voedingsmiddelen importeren via \'Back-up, herstel, importeer en exporteer\'. Kies daarna de optie \'Importeer voedingsmiddelen uit csv bestand\'.</string>
     <string name="realTotal">Totaal</string>
-    
-    <!--  Update: 24-05-2012 -->
-    <string name="standardAmountCantBeEmpty">Het aantal mag niet leeg zijn</string>
     
     <!-- Update: 26-05-2012 -->
     <string name="pref_log_to_excel">Historiek naar Excel</string>

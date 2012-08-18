@@ -5,20 +5,50 @@ package com.hippoandfriends.helpdiabetes.Show.Food;
 import java.util.ArrayList;
 import java.util.Calendar;
 
+import com.hippoandfriends.helpdiabetes.R;
+
 import android.app.ListActivity;
+import com.hippoandfriends.helpdiabetes.R;
+
 import android.database.Cursor;
+import com.hippoandfriends.helpdiabetes.R;
+
 import android.os.Bundle;
+import com.hippoandfriends.helpdiabetes.R;
+
 import android.view.ContextMenu;
+import com.hippoandfriends.helpdiabetes.R;
+
 import android.view.ContextMenu.ContextMenuInfo;
+import com.hippoandfriends.helpdiabetes.R;
+
 import android.view.KeyEvent;
+import com.hippoandfriends.helpdiabetes.R;
+
 import android.view.LayoutInflater;
+import com.hippoandfriends.helpdiabetes.R;
+
 import android.view.Menu;
+import com.hippoandfriends.helpdiabetes.R;
+
 import android.view.MenuItem;
+import com.hippoandfriends.helpdiabetes.R;
+
 import android.view.View;
+import com.hippoandfriends.helpdiabetes.R;
+
 import android.view.View.OnClickListener;
+import com.hippoandfriends.helpdiabetes.R;
+
 import android.widget.AdapterView.AdapterContextMenuInfo;
+import com.hippoandfriends.helpdiabetes.R;
+
 import android.widget.Button;
+import com.hippoandfriends.helpdiabetes.R;
+
 import android.widget.ListView;
+import com.hippoandfriends.helpdiabetes.R;
+
 import android.widget.Toast;
 
 

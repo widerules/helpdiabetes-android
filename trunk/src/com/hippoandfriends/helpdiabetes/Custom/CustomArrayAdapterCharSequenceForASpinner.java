@@ -2,13 +2,29 @@
 
 package com.hippoandfriends.helpdiabetes.Custom;
 
+import com.hippoandfriends.helpdiabetes.R;
+
 import android.content.Context;
+import com.hippoandfriends.helpdiabetes.R;
+
 import android.view.Gravity;
+import com.hippoandfriends.helpdiabetes.R;
+
 import android.view.LayoutInflater;
+import com.hippoandfriends.helpdiabetes.R;
+
 import android.view.View;
+import com.hippoandfriends.helpdiabetes.R;
+
 import android.view.ViewGroup;
+import com.hippoandfriends.helpdiabetes.R;
+
 import android.view.ViewGroup.LayoutParams;
+import com.hippoandfriends.helpdiabetes.R;
+
 import android.widget.ArrayAdapter;
+import com.hippoandfriends.helpdiabetes.R;
+
 import android.widget.TextView;
 
 public class CustomArrayAdapterCharSequenceForASpinner extends

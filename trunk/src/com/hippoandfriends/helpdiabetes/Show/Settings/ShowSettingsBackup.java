@@ -17,21 +17,53 @@ import java.nio.channels.FileChannel;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.hippoandfriends.helpdiabetes.R;
+
 import android.app.AlertDialog;
+import com.hippoandfriends.helpdiabetes.R;
+
 import android.app.AlertDialog.Builder;
+import com.hippoandfriends.helpdiabetes.R;
+
 import android.app.Dialog;
+import com.hippoandfriends.helpdiabetes.R;
+
 import android.app.ListActivity;
+import com.hippoandfriends.helpdiabetes.R;
+
 import android.app.ProgressDialog;
+import com.hippoandfriends.helpdiabetes.R;
+
 import android.content.DialogInterface;
+import com.hippoandfriends.helpdiabetes.R;
+
 import android.database.Cursor;
+import com.hippoandfriends.helpdiabetes.R;
+
 import android.os.AsyncTask;
+import com.hippoandfriends.helpdiabetes.R;
+
 import android.os.Bundle;
+import com.hippoandfriends.helpdiabetes.R;
+
 import android.os.Environment;
+import com.hippoandfriends.helpdiabetes.R;
+
 import android.view.KeyEvent;
+import com.hippoandfriends.helpdiabetes.R;
+
 import android.view.View;
+import com.hippoandfriends.helpdiabetes.R;
+
 import android.view.View.OnClickListener;
+import com.hippoandfriends.helpdiabetes.R;
+
 import android.widget.Button;
+import com.hippoandfriends.helpdiabetes.R;
+
 import android.widget.ListView;
+import com.hippoandfriends.helpdiabetes.R;
+
 import android.widget.Toast;
 
 
