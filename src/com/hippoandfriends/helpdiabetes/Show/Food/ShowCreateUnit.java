@@ -13,47 +13,19 @@ import java.util.List;
 import com.hippoandfriends.helpdiabetes.R;
 
 import android.app.Activity;
-import com.hippoandfriends.helpdiabetes.R;
-
 import android.database.Cursor;
-import com.hippoandfriends.helpdiabetes.R;
-
 import android.os.Bundle;
-import com.hippoandfriends.helpdiabetes.R;
-
 import android.view.KeyEvent;
-import com.hippoandfriends.helpdiabetes.R;
-
 import android.view.LayoutInflater;
-import com.hippoandfriends.helpdiabetes.R;
-
 import android.view.View;
-import com.hippoandfriends.helpdiabetes.R;
-
 import android.view.View.OnClickListener;
-import com.hippoandfriends.helpdiabetes.R;
-
 import android.view.View.OnKeyListener;
-import com.hippoandfriends.helpdiabetes.R;
-
 import android.widget.AdapterView;
-import com.hippoandfriends.helpdiabetes.R;
-
 import android.widget.AdapterView.OnItemSelectedListener;
-import com.hippoandfriends.helpdiabetes.R;
-
 import android.widget.Button;
-import com.hippoandfriends.helpdiabetes.R;
-
 import android.widget.EditText;
-import com.hippoandfriends.helpdiabetes.R;
-
 import android.widget.Spinner;
-import com.hippoandfriends.helpdiabetes.R;
-
 import android.widget.TableRow;
-import com.hippoandfriends.helpdiabetes.R;
-
 import android.widget.Toast;
 
 
@@ -73,8 +45,9 @@ public class ShowCreateUnit extends Activity {
 	private Button btDelete, btBack;
 
 	private Spinner spinnerUnit;
-	private TableRow tableRowSpecialUnit;
-
+	private TableRow tableRowSpecialUnit_Unit;
+	private TableRow tableRowSpecialUnit_Amount;
+	
 	private EditText etCarb, etProt, etFat, etKcal;
 
 	// used to hide the ones we dont need to show
@@ -97,7 +70,8 @@ public class ShowCreateUnit extends Activity {
 		btAdd = (Button) findViewById(R.id.buttonShowCreateUnitAddOrUpdate);
 		btDelete = (Button) findViewById(R.id.buttonShowCreateUnitDelete);
 		spinnerUnit = (Spinner) findViewById(R.id.spinnerShowCreateUnit);
-		tableRowSpecialUnit = (TableRow) findViewById(R.id.tableRowShowCreateUnitSpecialFoodUnit);
+		tableRowSpecialUnit_Unit = (TableRow) findViewById(R.id.tableRowShowCreateUnitSpecialFoodUnit_Unit);
+		tableRowSpecialUnit_Amount = (TableRow) findViewById(R.id.tableRowShowCreateUnitSpecialFoodUnit_Amount);
 
 		etCarb = (EditText) findViewById(R.id.editTextShowCreateUnit1);
 		etProt = (EditText) findViewById(R.id.editTextShowCreateUnit2);
@@ -333,6 +307,8 @@ public class ShowCreateUnit extends Activity {
 		}
 	}
 
+	//has been changed by Johan Degraeve on 18/08/2012
+	//before the change it returned false when there were invalid values, now invalid values are replaced by default valid values
 	private boolean checkValues() {
 		if (spinnerUnit.getCount() == spinnerUnit.getSelectedItemPosition() + 1) {
 			// if we selected the last spinner option we have to check if
@@ -341,32 +317,9 @@ public class ShowCreateUnit extends Activity {
 				//standardamount not filled in, take "1" as value
 				editTextStandardAmound.setText("1");
 			} else if (editTextName.getText().length() <= 0) {
-				Toast.makeText(this,
-						getResources().getString(R.string.unit_cant_be_empty),
-						Toast.LENGTH_LONG).show();
-				return false;
+				editTextName.setText(R.string.part);
 			}
-		} else {
-			// if there is a value in everything ( check if the value aint '0'
-			// or '0.'
-			try {
-				float unitStandardAmound = Float
-						.parseFloat(editTextStandardAmound.getText().toString());
-				if (unitStandardAmound <= 0) {
-					Toast.makeText(
-							this,
-							getResources().getString(
-									R.string.name_cant_be_empty),
-							Toast.LENGTH_LONG).show();
-					return false;
-				}
-			} catch (Exception e) {
-				Toast.makeText(this,
-						getResources().getString(R.string.name_cant_be_empty),
-						Toast.LENGTH_LONG).show();
-				return false;
-			}
-		}
+		} 
 		// if everything went OK we return true
 		return true;
 	}
@@ -510,9 +463,11 @@ public class ShowCreateUnit extends Activity {
 	// spinner item is selected
 	private void hideOrShowSpecialFoodUnitTableRow() {
 		if (spinnerUnit.getCount() == spinnerUnit.getSelectedItemPosition() + 1) {
-			tableRowSpecialUnit.setVisibility(View.VISIBLE);
+			tableRowSpecialUnit_Unit.setVisibility(View.VISIBLE);
+			tableRowSpecialUnit_Amount.setVisibility(View.VISIBLE);
 		} else {
-			tableRowSpecialUnit.setVisibility(View.GONE);
+			tableRowSpecialUnit_Unit.setVisibility(View.GONE);
+			tableRowSpecialUnit_Amount.setVisibility(View.GONE);
 		}
 	}
 

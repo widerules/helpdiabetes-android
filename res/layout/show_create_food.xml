@@ -83,11 +83,13 @@
                 <TextView
                     android:id="@+id/textView2_Amount"
                     style="@style/textViewInTableAlignRight"
-                    android:text="@string/unit_amount"/> />
+                    android:text="@string/unit_amount"/>
 
                 <EditText
                     android:id="@+id/editTextFoodUnitStandardAmound"
                     style="@style/editTextInTableFloat"
+                    android:digits="1234567890."
+                    android:inputType="phone"
                     android:text="1" android:hint="1">
                 </EditText>
 

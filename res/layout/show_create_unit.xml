@@ -43,20 +43,14 @@
             </TableRow>
 
             <TableRow
-                android:id="@+id/tableRowShowCreateUnitSpecialFoodUnit"
+                android:id="@+id/tableRowShowCreateUnitSpecialFoodUnit_Unit"
                 style="@style/styleTableRowGravityCenter"
                 android:visibility="gone" >
 
                 <TextView
                     android:id="@+id/textView2"
-                    style="@style/textViewInTableAlignRight" />
-
-                <EditText
-                    android:id="@+id/editTextShowCreateUnitFoodUnitStandardAmound"
-                    style="@style/editTextInTableText"
-                    android:digits="1234567890."
-                    android:inputType="phone"
-                    android:text="1" />
+                    style="@style/textViewInTableAlignRight"
+                    android:text="@string/unit_name"/> />
 
                 <EditText
                     android:id="@+id/editTextShowCreateUnitFoodUnitName"
@@ -66,7 +60,26 @@
                     android:text="@string/part" >
                 </EditText>
             </TableRow>
+            <TableRow
+                android:id="@+id/tableRowShowCreateUnitSpecialFoodUnit_Amount"
+                style="@style/styleTableRowGravityCenter"
+                android:visibility="gone" >
 
+                <TextView
+                    android:id="@+id/textView2_Amount"
+                    style="@style/textViewInTableAlignRight" 
+                    android:text="@string/unit_amount"/>
+
+                <EditText
+                    android:id="@+id/editTextShowCreateUnitFoodUnitStandardAmound"
+                    style="@style/editTextInTableText"
+                    android:digits="1234567890."
+                    android:inputType="phone"
+                    android:hint="1"
+                    android:text="1" />
+
+            </TableRow>
+            
             <TableRow
                 android:id="@+id/tableRowCarb"
                 style="@style/styleTableRowGravityCenter" >

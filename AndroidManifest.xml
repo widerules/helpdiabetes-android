@@ -3,7 +3,7 @@
     package="com.hippoandfriends.helpdiabetes"
     android:installLocation="auto"
     android:versionCode="16"
-    android:versionName="2.0.2" >
+    android:versionName="2.0.3" >
 
     <uses-sdk
         android:minSdkVersion="4"
