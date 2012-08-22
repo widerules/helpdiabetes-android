@@ -6,7 +6,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import com.hippoandfriends.helpdiabetes.R;
 
 import android.app.AlertDialog;
 import android.app.ListActivity;
@@ -43,6 +42,7 @@ import com.hippoandfriends.helpdiabetes.Rest.ExcelCharacter;
 import com.hippoandfriends.helpdiabetes.Rest.FoodComparator;
 import com.hippoandfriends.helpdiabetes.Rest.SpecialCharactersToNormal;
 import com.hippoandfriends.helpdiabetes.Rest.TrackingValues;
+import com.hippoandfriends.helpdiabetes.R;
 
 public class ShowFoodList extends ListActivity {
 	// dbHelper to get the food list out the database

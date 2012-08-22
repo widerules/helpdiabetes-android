@@ -5,7 +5,6 @@ package com.hippoandfriends.helpdiabetes.Show.Food;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.hippoandfriends.helpdiabetes.R;
 
 import android.app.Activity;
 import android.os.Bundle;
@@ -28,6 +27,7 @@ import com.hippoandfriends.helpdiabetes.Custom.CustomArrayAdapterCharSequenceSho
 import com.hippoandfriends.helpdiabetes.Rest.DataParser;
 import com.hippoandfriends.helpdiabetes.Rest.DbAdapter;
 import com.hippoandfriends.helpdiabetes.Rest.TrackingValues;
+import com.hippoandfriends.helpdiabetes.R;
 
 public class ShowCreateFood extends Activity {
 	private EditText editTextfoodName;
@@ -347,6 +347,24 @@ public class ShowCreateFood extends Activity {
 				editTextUnitName.setText(R.string.part);
 			}
 		}
+		if (etCarb.getText().length() == 0) {
+			Toast.makeText(
+					this,
+					getResources().getString(R.string.carb_value_cant_be_empty),
+					Toast.LENGTH_LONG).show();
+			return false;
+		}
+		//if fat or protein or kcal values empty, then set to -1
+		if (etFat.getText().length() == 0) {
+			etFat.setText("-1");
+		}
+		if (etProt.getText().length() == 0) {
+			etProt.setText("-1");
+		}
+		if (etKcal.getText().length() == 0) {
+			etKcal.setText("-1");
+		}
+
 		// if everything went OK we return true
 		return true;
 	}

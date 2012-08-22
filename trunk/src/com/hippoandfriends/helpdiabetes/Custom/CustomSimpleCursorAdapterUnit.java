@@ -9,25 +9,18 @@ package com.hippoandfriends.helpdiabetes.Custom;
 
 import com.hippoandfriends.helpdiabetes.Rest.DbAdapter;
 
-import com.hippoandfriends.helpdiabetes.R;
 
 import android.content.Context;
-import com.hippoandfriends.helpdiabetes.R;
 
 import android.database.Cursor;
-import com.hippoandfriends.helpdiabetes.R;
 
 import android.view.LayoutInflater;
-import com.hippoandfriends.helpdiabetes.R;
 
 import android.view.View;
-import com.hippoandfriends.helpdiabetes.R;
 
 import android.view.ViewGroup;
-import com.hippoandfriends.helpdiabetes.R;
 
 import android.widget.SimpleCursorAdapter;
-import com.hippoandfriends.helpdiabetes.R;
 
 import android.widget.TextView;
 

@@ -5,61 +5,42 @@ package com.hippoandfriends.helpdiabetes.Show.Tracking;
 import java.util.ArrayList;
 import java.util.Calendar;
 
-import com.hippoandfriends.helpdiabetes.R;
 
 import android.app.AlertDialog;
-import com.hippoandfriends.helpdiabetes.R;
 
 import android.app.Dialog;
-import com.hippoandfriends.helpdiabetes.R;
 
 import android.app.ListActivity;
-import com.hippoandfriends.helpdiabetes.R;
 
 import android.content.Context;
-import com.hippoandfriends.helpdiabetes.R;
 
 import android.content.DialogInterface;
-import com.hippoandfriends.helpdiabetes.R;
 
 import android.content.DialogInterface.OnClickListener;
-import com.hippoandfriends.helpdiabetes.R;
 
 import android.content.Intent;
-import com.hippoandfriends.helpdiabetes.R;
 
 import android.database.Cursor;
-import com.hippoandfriends.helpdiabetes.R;
 
 import android.os.AsyncTask;
-import com.hippoandfriends.helpdiabetes.R;
 
 import android.os.Bundle;
-import com.hippoandfriends.helpdiabetes.R;
 
 import android.text.Editable;
-import com.hippoandfriends.helpdiabetes.R;
 
 import android.text.TextWatcher;
-import com.hippoandfriends.helpdiabetes.R;
 
 import android.view.KeyEvent;
-import com.hippoandfriends.helpdiabetes.R;
 
 import android.view.View;
-import com.hippoandfriends.helpdiabetes.R;
 
 import android.widget.Button;
-import com.hippoandfriends.helpdiabetes.R;
 
 import android.widget.EditText;
-import com.hippoandfriends.helpdiabetes.R;
 
 import android.widget.LinearLayout;
-import com.hippoandfriends.helpdiabetes.R;
 
 import android.widget.ListView;
-import com.hippoandfriends.helpdiabetes.R;
 
 import android.widget.Toast;
 
@@ -79,6 +60,7 @@ import com.hippoandfriends.helpdiabetes.Rest.TrackingValues;
 import com.hippoandfriends.helpdiabetes.Show.ShowHomeTab;
 import com.hippoandfriends.helpdiabetes.slider.DateSlider;
 import com.hippoandfriends.helpdiabetes.slider.DateTimeSlider;
+import com.hippoandfriends.helpdiabetes.R;
 
 public class ShowTracking extends ListActivity {
 	private CustomArrayAdapterDBTracking adapter;

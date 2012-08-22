@@ -20,12 +20,12 @@ package com.hippoandfriends.helpdiabetes.slider;
 
 import java.util.Calendar;
 
-import com.hippoandfriends.helpdiabetes.R;
 
 import android.content.Context;
 
 
 import com.hippoandfriends.helpdiabetes.Rest.Functions;
+import com.hippoandfriends.helpdiabetes.R;
 
 public class DateTimeSlider extends DateSlider {
 

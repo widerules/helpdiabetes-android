@@ -5,22 +5,16 @@ package com.hippoandfriends.helpdiabetes.Show.Settings;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.hippoandfriends.helpdiabetes.R;
 
 import android.app.ListActivity;
-import com.hippoandfriends.helpdiabetes.R;
 
 import android.database.Cursor;
-import com.hippoandfriends.helpdiabetes.R;
 
 import android.os.Bundle;
-import com.hippoandfriends.helpdiabetes.R;
 
 import android.view.KeyEvent;
-import com.hippoandfriends.helpdiabetes.R;
 
 import android.view.View;
-import com.hippoandfriends.helpdiabetes.R;
 
 import android.widget.ListView;
 
@@ -29,6 +23,7 @@ import com.hippoandfriends.helpdiabetes.Custom.CustomArrayAdapterDBMedicineType;
 import com.hippoandfriends.helpdiabetes.Objects.DBMedicineType;
 import com.hippoandfriends.helpdiabetes.Rest.DbAdapter;
 import com.hippoandfriends.helpdiabetes.Rest.DbSettings;
+import com.hippoandfriends.helpdiabetes.R;
 
 public class ShowSettingsDefaultMedicineType extends ListActivity {
 

@@ -2,22 +2,16 @@
 
 package com.hippoandfriends.helpdiabetes.slider;
 
-import com.hippoandfriends.helpdiabetes.R;
 
 import android.content.Context;
-import com.hippoandfriends.helpdiabetes.R;
 
 import android.graphics.Typeface;
-import com.hippoandfriends.helpdiabetes.R;
 
 import android.util.TypedValue;
-import com.hippoandfriends.helpdiabetes.R;
 
 import android.view.Gravity;
-import com.hippoandfriends.helpdiabetes.R;
 
 import android.widget.LinearLayout;
-import com.hippoandfriends.helpdiabetes.R;
 
 import android.widget.TextView;
 

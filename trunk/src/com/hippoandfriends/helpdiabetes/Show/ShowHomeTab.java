@@ -2,40 +2,28 @@
 
 package com.hippoandfriends.helpdiabetes.Show;
 
-import com.hippoandfriends.helpdiabetes.R;
 
 import android.app.TabActivity;
-import com.hippoandfriends.helpdiabetes.R;
 
 import android.content.Context;
-import com.hippoandfriends.helpdiabetes.R;
 
 import android.content.Intent;
-import com.hippoandfriends.helpdiabetes.R;
 
 import android.content.pm.ActivityInfo;
-import com.hippoandfriends.helpdiabetes.R;
 
 import android.os.Bundle;
-import com.hippoandfriends.helpdiabetes.R;
 
 import android.view.LayoutInflater;
-import com.hippoandfriends.helpdiabetes.R;
 
 import android.view.View;
-import com.hippoandfriends.helpdiabetes.R;
 
 import android.widget.ImageView;
-import com.hippoandfriends.helpdiabetes.R;
 
 import android.widget.TabHost;
-import com.hippoandfriends.helpdiabetes.R;
 
 import android.widget.TabHost.TabContentFactory;
-import com.hippoandfriends.helpdiabetes.R;
 
 import android.widget.TabHost.TabSpec;
-import com.hippoandfriends.helpdiabetes.R;
 
 import android.widget.TextView;
 
@@ -49,6 +37,7 @@ import com.hippoandfriends.helpdiabetes.ActivityGroup.ActivityGroupSettings;
 import com.hippoandfriends.helpdiabetes.ActivityGroup.ActivityGroupTracking;
 import com.hippoandfriends.helpdiabetes.Rest.DataParser;
 import com.hippoandfriends.helpdiabetes.Rest.TrackingValues;
+import com.hippoandfriends.helpdiabetes.R;
 
 public class ShowHomeTab extends TabActivity {
 	private TabHost tabHost;
