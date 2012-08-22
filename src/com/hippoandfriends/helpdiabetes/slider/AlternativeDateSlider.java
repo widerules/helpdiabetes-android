@@ -21,11 +21,10 @@ package com.hippoandfriends.helpdiabetes.slider;
 
 import java.util.Calendar;
 
-import com.hippoandfriends.helpdiabetes.R;
 
-import com.hippoandfriends.helpdiabetes.R;
 
 import android.content.Context;
+import com.hippoandfriends.helpdiabetes.R;
 
 
 public class AlternativeDateSlider extends DateSlider {

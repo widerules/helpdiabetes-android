@@ -11,70 +11,48 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
-import com.hippoandfriends.helpdiabetes.R;
 
 import android.app.AlertDialog;
-import com.hippoandfriends.helpdiabetes.R;
 
 import android.app.Dialog;
-import com.hippoandfriends.helpdiabetes.R;
 
 import android.app.ListActivity;
-import com.hippoandfriends.helpdiabetes.R;
 
 import android.content.DialogInterface;
-import com.hippoandfriends.helpdiabetes.R;
 
 import android.content.Intent;
-import com.hippoandfriends.helpdiabetes.R;
 
 import android.database.Cursor;
-import com.hippoandfriends.helpdiabetes.R;
 
 import android.os.Bundle;
-import com.hippoandfriends.helpdiabetes.R;
 
 import android.text.InputType;
-import com.hippoandfriends.helpdiabetes.R;
 
 import android.util.DisplayMetrics;
-import com.hippoandfriends.helpdiabetes.R;
 
 import android.view.Gravity;
-import com.hippoandfriends.helpdiabetes.R;
 
 import android.view.KeyEvent;
-import com.hippoandfriends.helpdiabetes.R;
 
 import android.view.LayoutInflater;
-import com.hippoandfriends.helpdiabetes.R;
 
 import android.view.View;
-import com.hippoandfriends.helpdiabetes.R;
 
 import android.view.View.OnClickListener;
-import com.hippoandfriends.helpdiabetes.R;
 
 import android.widget.Button;
-import com.hippoandfriends.helpdiabetes.R;
 
 import android.widget.EditText;
-import com.hippoandfriends.helpdiabetes.R;
 
 import android.widget.ExpandableListView;
-import com.hippoandfriends.helpdiabetes.R;
 
 import android.widget.ExpandableListView.OnGroupCollapseListener;
-import com.hippoandfriends.helpdiabetes.R;
 
 import android.widget.ExpandableListView.OnGroupExpandListener;
-import com.hippoandfriends.helpdiabetes.R;
 
 import android.widget.ListView;
-import com.hippoandfriends.helpdiabetes.R;
 
 import android.widget.TextView;
-import com.hippoandfriends.helpdiabetes.R;
 
 import android.widget.Toast;
 
@@ -94,6 +72,7 @@ import com.hippoandfriends.helpdiabetes.Rest.TrackingValues;
 import com.hippoandfriends.helpdiabetes.Show.ShowHomeTab;
 import com.hippoandfriends.helpdiabetes.slider.DateSlider;
 import com.hippoandfriends.helpdiabetes.slider.DateTimeSlider;
+import com.hippoandfriends.helpdiabetes.R;
 
 public class ShowSelectedFood extends ListActivity {
 	private DbAdapter dbHelper;
@@ -545,14 +524,20 @@ public class ShowSelectedFood extends ListActivity {
 										.getColumnIndexOrThrow(DbAdapter.DATABASE_FOODUNIT_DESCRIPTION)),
 								cUnit.getFloat(cUnit
 										.getColumnIndexOrThrow(DbAdapter.DATABASE_FOODUNIT_STANDARDAMOUNT)),
-								cUnit.getFloat(cUnit
-										.getColumnIndexOrThrow(DbAdapter.DATABASE_FOODUNIT_KCAL)),
-								cUnit.getFloat(cUnit
-										.getColumnIndexOrThrow(DbAdapter.DATABASE_FOODUNIT_PROTEIN)),
+								cUnit.getString(cUnit.getColumnIndexOrThrow(DbAdapter.DATABASE_FOODUNIT_KCAL)).length() == 0 ?		
+										-1F:
+										cUnit.getFloat(cUnit
+												.getColumnIndexOrThrow(DbAdapter.DATABASE_FOODUNIT_KCAL)),
+								cUnit.getString(cUnit.getColumnIndexOrThrow(DbAdapter.DATABASE_FOODUNIT_PROTEIN)).length() == 0 ?		
+										-1F:
+										cUnit.getFloat(cUnit
+												.getColumnIndexOrThrow(DbAdapter.DATABASE_FOODUNIT_PROTEIN)),
 								cUnit.getFloat(cUnit
 										.getColumnIndexOrThrow(DbAdapter.DATABASE_FOODUNIT_CARBS)),
-								cUnit.getFloat(cUnit
-										.getColumnIndexOrThrow(DbAdapter.DATABASE_FOODUNIT_FAT)),
+								cUnit.getString(cUnit.getColumnIndexOrThrow(DbAdapter.DATABASE_FOODUNIT_FAT)).length() == 0 ?		
+										-1F:
+										cUnit.getFloat(cUnit
+												.getColumnIndexOrThrow(DbAdapter.DATABASE_FOODUNIT_FAT)),
 								cUnit.getFloat(cUnit
 										.getColumnIndexOrThrow(DbAdapter.DATABASE_FOODUNIT_VISIBLE)),
 								cUnit.getInt(cUnit

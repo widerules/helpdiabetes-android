@@ -4,26 +4,21 @@ package com.hippoandfriends.helpdiabetes.Custom;
 
 import java.util.List;
 
-import com.hippoandfriends.helpdiabetes.R;
 
 import android.content.Context;
-import com.hippoandfriends.helpdiabetes.R;
 
 import android.view.LayoutInflater;
-import com.hippoandfriends.helpdiabetes.R;
 
 import android.view.View;
-import com.hippoandfriends.helpdiabetes.R;
 
 import android.view.ViewGroup;
-import com.hippoandfriends.helpdiabetes.R;
 
 import android.widget.ArrayAdapter;
-import com.hippoandfriends.helpdiabetes.R;
 
 import android.widget.TextView;
 
 
+import com.hippoandfriends.helpdiabetes.R;
 import com.hippoandfriends.helpdiabetes.Objects.DBExerciseEvent;
 
 public class CustomArrayAdapterDBExerciseEvent extends ArrayAdapter<DBExerciseEvent> {

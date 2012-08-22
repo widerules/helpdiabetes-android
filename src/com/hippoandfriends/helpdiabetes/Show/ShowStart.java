@@ -4,37 +4,26 @@ package com.hippoandfriends.helpdiabetes.Show;
 
 import java.io.IOException;
 
-import com.hippoandfriends.helpdiabetes.R;
 
 import android.app.Activity;
-import com.hippoandfriends.helpdiabetes.R;
 
 import android.app.AlertDialog;
-import com.hippoandfriends.helpdiabetes.R;
 
 import android.content.DialogInterface;
-import com.hippoandfriends.helpdiabetes.R;
 
 import android.content.DialogInterface.OnClickListener;
-import com.hippoandfriends.helpdiabetes.R;
 
 import android.content.Intent;
-import com.hippoandfriends.helpdiabetes.R;
 
 import android.content.pm.PackageManager.NameNotFoundException;
-import com.hippoandfriends.helpdiabetes.R;
 
 import android.database.Cursor;
-import com.hippoandfriends.helpdiabetes.R;
 
 import android.os.AsyncTask;
-import com.hippoandfriends.helpdiabetes.R;
 
 import android.os.Bundle;
-import com.hippoandfriends.helpdiabetes.R;
 
 import android.widget.TextView;
-import com.hippoandfriends.helpdiabetes.R;
 
 import android.widget.Toast;
 
@@ -46,6 +35,7 @@ import com.hippoandfriends.helpdiabetes.Show.Settings.ShowSettingsDBLanguage;
 import com.hippoandfriends.helpdiabetes.Show.Settings.ShowSettingsDefaultMedicineType;
 import com.hippoandfriends.helpdiabetes.Show.Settings.ShowSettingsInsulineRatio;
 import com.hippoandfriends.helpdiabetes.Show.Settings.ShowSettingsMealTimes;
+import com.hippoandfriends.helpdiabetes.R;
 
 public class ShowStart extends Activity {
 

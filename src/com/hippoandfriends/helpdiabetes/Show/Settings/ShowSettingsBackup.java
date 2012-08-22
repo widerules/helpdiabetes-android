@@ -1,6 +1,7 @@
 // Please read info.txt for license and legal information
 
 package com.hippoandfriends.helpdiabetes.Show.Settings;
+import com.hippoandfriends.helpdiabetes.R;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedReader;
@@ -17,53 +18,22 @@ import java.nio.channels.FileChannel;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.hippoandfriends.helpdiabetes.R;
 
 import android.app.AlertDialog;
-import com.hippoandfriends.helpdiabetes.R;
-
 import android.app.AlertDialog.Builder;
-import com.hippoandfriends.helpdiabetes.R;
-
 import android.app.Dialog;
-import com.hippoandfriends.helpdiabetes.R;
-
 import android.app.ListActivity;
-import com.hippoandfriends.helpdiabetes.R;
-
 import android.app.ProgressDialog;
-import com.hippoandfriends.helpdiabetes.R;
-
 import android.content.DialogInterface;
-import com.hippoandfriends.helpdiabetes.R;
-
 import android.database.Cursor;
-import com.hippoandfriends.helpdiabetes.R;
-
 import android.os.AsyncTask;
-import com.hippoandfriends.helpdiabetes.R;
-
 import android.os.Bundle;
-import com.hippoandfriends.helpdiabetes.R;
-
 import android.os.Environment;
-import com.hippoandfriends.helpdiabetes.R;
-
 import android.view.KeyEvent;
-import com.hippoandfriends.helpdiabetes.R;
-
 import android.view.View;
-import com.hippoandfriends.helpdiabetes.R;
-
 import android.view.View.OnClickListener;
-import com.hippoandfriends.helpdiabetes.R;
-
 import android.widget.Button;
-import com.hippoandfriends.helpdiabetes.R;
-
 import android.widget.ListView;
-import com.hippoandfriends.helpdiabetes.R;
-
 import android.widget.Toast;
 
 
@@ -449,21 +419,31 @@ public class ShowSettingsBackup extends ListActivity {
 						}
 
 						try {
-							carb1 = Float.parseFloat(str.substring(
+								carb1 = Float.parseFloat(str.substring(
 									positionOfFirstStandardAmount + 1,
 									positionOfFirstCarb).replace(",", "."));
 						} catch (Exception e) {
 						}
 
 						try {
-							prot1 = Float.parseFloat(str.substring(
+							if (str.substring(
+									positionOfFirstCarb + 1,
+									positionOfFirstprot).length() == 0) {
+								prot1 = -1F;
+							} else
+								prot1 = Float.parseFloat(str.substring(
 									positionOfFirstCarb + 1,
 									positionOfFirstprot).replace(",", "."));
 						} catch (Exception e) {
 						}
 
 						try {
-							fat1 = Float.parseFloat(str
+							if (str.substring(
+									positionOfFirstprot + 1,
+									positionOfFirstFat).length() == 0) {
+								fat1 = -1F;
+							} else
+								fat1 = Float.parseFloat(str
 									.substring(positionOfFirstprot + 1,
 											positionOfFirstFat).replace(",",
 											"."));
@@ -471,17 +451,25 @@ public class ShowSettingsBackup extends ListActivity {
 						}
 
 						try {
-							// this will be -1 when we didnt at a seperator on
-							// the
-							// end of the line!
+							// this will be -1 when we didnt add a seperator on
+							// the end of the line!
 							if (positionOfFirstKcal != -1) {
-								kcal1 = Float.parseFloat(str.substring(
+								if (str.substring(
+										positionOfFirstFat + 1,
+										positionOfFirstKcal).length() == 0) {
+									kcal1 = -1F;
+								} else
+									kcal1 = Float.parseFloat(str.substring(
 										positionOfFirstFat + 1,
 										positionOfFirstKcal).replace(",", "."));
 							} else {
 								// if we dont have a seperator we just put
 								// everything till the end in kcal
 
+								if (str.substring(
+										positionOfFirstFat + 1).length() == 0) {
+									kcal1 = -1F;
+								}
 								kcal1 = Float.parseFloat(str.substring(
 										positionOfFirstFat + 1).replace(",",
 										"."));
@@ -561,7 +549,10 @@ public class ShowSettingsBackup extends ListActivity {
 										}
 
 										try {
-											prot = Float
+											if (str.substring(lastPosition + 1,positionOfSeperator).length() == 0) {
+												prot = -1F;
+											} else
+												prot = Float
 													.parseFloat(str
 															.substring(
 																	lastPosition + 1,
@@ -575,7 +566,10 @@ public class ShowSettingsBackup extends ListActivity {
 										}
 
 										try {
-											fat = Float
+											if (str.substring(lastPosition + 1,positionOfSeperator).length() == 0) {
+												fat = -1F;
+											} else
+												fat = Float
 													.parseFloat(str
 															.substring(
 																	lastPosition + 1,
@@ -590,7 +584,10 @@ public class ShowSettingsBackup extends ListActivity {
 
 										try {
 											if (positionOfSeperator != -1) {
-												kcal = Float
+												if (str.substring(lastPosition + 1,positionOfSeperator).length() == 0) {
+													kcal = -1F;
+												} else
+													kcal = Float
 														.parseFloat(str
 																.substring(
 																		lastPosition + 1,
@@ -608,7 +605,10 @@ public class ShowSettingsBackup extends ListActivity {
 												// didnt at a seperator on the
 												// end
 												// of the line!
-												kcal = Float
+												if (str.substring(lastPosition + 1).length() == 0) {
+													prot = -1F;
+												} else
+													kcal = Float
 														.parseFloat(str
 																.substring(
 																		lastPosition + 1)
@@ -700,13 +700,13 @@ public class ShowSettingsBackup extends ListActivity {
 						String seperator = ";";
 
 						// write first line with example
-						// writer.append("Example: FOODNAME ; UNITNAME1 ; standardamount1 ; carbs1 ; prot1 ; fat1 ; kcal1 ; UNITNAME2 ; standardamount2 ; carb2 ; prot2 ; fat2 ; kcal2 ; UNITNAME3 ; standardamount3 ; carbs3 ; prot3 ; fat3 ; kcal3");
+						// writer.append("Example: FOODNAME ; UNITNAME1 ; standardamount1 ; kcal1 ; prot1 ; carbs1;fat1  ; UNITNAME2 ; standardamount2 ; kcal2 ; prot2 ; carbs2 ; fat2 ; UNITNAME3 ; standardamount3 ; kcal3 ; prot3 ; carbs3 ; fat3");
 						// writer.append("\n");
 
 						// writer order:
-						// FOODNAME ; UNITNAME ; standardamount ; carbs ; prot ;
-						// fat ; kcal ; UNITNAME ; standrdamount ; carbs ; prot
-						// ; kcal
+						// FOODNAME ; UNITNAME ; standardamount ; kcal ; prot ;
+						// cqrbs ; fat ; UNITNAME ; standardamount ; kcal ; prot
+						// ;carbs;fat
 
 						do {
 							Cursor cUnit = db
@@ -730,9 +730,9 @@ public class ShowSettingsBackup extends ListActivity {
 											.getColumnIndexOrThrow(DbAdapter.DATABASE_FOODUNIT_STANDARDAMOUNT)));
 									writer.append(seperator);
 
-									// write the carbs
+									// write the kcal
 									writer.append(cUnit.getString(cUnit
-											.getColumnIndexOrThrow(DbAdapter.DATABASE_FOODUNIT_CARBS)));
+											.getColumnIndexOrThrow(DbAdapter.DATABASE_FOODUNIT_KCAL)));
 									writer.append(seperator);
 
 									// write the prot
@@ -740,15 +740,16 @@ public class ShowSettingsBackup extends ListActivity {
 											.getColumnIndexOrThrow(DbAdapter.DATABASE_FOODUNIT_PROTEIN)));
 									writer.append(seperator);
 
+									// write the carbs
+									writer.append(cUnit.getString(cUnit
+											.getColumnIndexOrThrow(DbAdapter.DATABASE_FOODUNIT_CARBS)));
+									writer.append(seperator);
+
 									// write the fat
 									writer.append(cUnit.getString(cUnit
 											.getColumnIndexOrThrow(DbAdapter.DATABASE_FOODUNIT_FAT)));
 									writer.append(seperator);
 
-									// write the kcal
-									writer.append(cUnit.getString(cUnit
-											.getColumnIndexOrThrow(DbAdapter.DATABASE_FOODUNIT_KCAL)));
-									writer.append(seperator);
 
 								} while (cUnit.moveToNext());
 								writer.append("\n");

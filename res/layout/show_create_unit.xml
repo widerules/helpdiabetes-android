@@ -109,7 +109,8 @@
                     android:id="@+id/editTextShowCreateUnit2"
                     style="@style/editTextInTableText"
                     android:digits="1234567890."
-                    android:inputType="phone" />
+                    android:inputType="phone"
+                    android:hint="@string/unknown" />
             </TableRow>
 
             <TableRow
@@ -125,7 +126,8 @@
                     android:id="@+id/editTextShowCreateUnit3"
                     style="@style/editTextInTableText"
                     android:digits="1234567890."
-                    android:inputType="phone" />
+                    android:inputType="phone"
+                    android:hint="@string/unknown" />
             </TableRow>
 
             <TableRow
@@ -141,7 +143,8 @@
                     android:id="@+id/editTextShowCreateUnit4"
                     style="@style/editTextInTableText"
                     android:digits="1234567890."
-                    android:inputType="phone" />
+                    android:inputType="phone"
+                    android:hint="@string/unknown" />
             </TableRow>
         </TableLayout>
 

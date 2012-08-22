@@ -5,46 +5,32 @@ package com.hippoandfriends.helpdiabetes.Show.Food;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.hippoandfriends.helpdiabetes.R;
 
 import android.app.AlertDialog;
-import com.hippoandfriends.helpdiabetes.R;
 
 import android.app.ListActivity;
-import com.hippoandfriends.helpdiabetes.R;
 
 import android.content.DialogInterface;
-import com.hippoandfriends.helpdiabetes.R;
 
 import android.content.Intent;
-import com.hippoandfriends.helpdiabetes.R;
 
 import android.database.Cursor;
-import com.hippoandfriends.helpdiabetes.R;
 
 import android.os.Bundle;
-import com.hippoandfriends.helpdiabetes.R;
 
 import android.view.KeyEvent;
-import com.hippoandfriends.helpdiabetes.R;
 
 import android.view.LayoutInflater;
-import com.hippoandfriends.helpdiabetes.R;
 
 import android.view.View;
-import com.hippoandfriends.helpdiabetes.R;
 
 import android.view.View.OnClickListener;
-import com.hippoandfriends.helpdiabetes.R;
 
 import android.widget.Button;
-import com.hippoandfriends.helpdiabetes.R;
 
 import android.widget.EditText;
-import com.hippoandfriends.helpdiabetes.R;
 
 import android.widget.ListView;
-import com.hippoandfriends.helpdiabetes.R;
 
 import android.widget.Toast;
 
@@ -56,6 +42,7 @@ import com.hippoandfriends.helpdiabetes.Objects.DBFoodUnit;
 import com.hippoandfriends.helpdiabetes.Rest.DataParser;
 import com.hippoandfriends.helpdiabetes.Rest.DbAdapter;
 import com.hippoandfriends.helpdiabetes.Rest.TrackingValues;
+import com.hippoandfriends.helpdiabetes.R;
 
 public class ShowUpdateFood extends ListActivity {
 
@@ -193,12 +180,16 @@ public class ShowUpdateFood extends ListActivity {
 			do {
 				listFoodUnit
 						.add(new DBFoodUnit(
-								cFoodUnit
-										.getLong(cFoodUnit
-												.getColumnIndexOrThrow(DbAdapter.DATABASE_FOODUNIT_ID)),
-								cFoodUnit.getString(cFoodUnit
-										.getColumnIndexOrThrow(DbAdapter.DATABASE_FOODUNIT_NAME)),
-								"", 0F, 0F, 0F, 0F, 0F, 1F, 0));
+								cFoodUnit.getLong(cFoodUnit.getColumnIndexOrThrow(DbAdapter.DATABASE_FOODUNIT_ID)),//id
+								cFoodUnit.getString(cFoodUnit.getColumnIndexOrThrow(DbAdapter.DATABASE_FOODUNIT_NAME)),//name
+								"", //description
+								0F, //standardamount
+								0F, //kcal
+								0F, //protein
+								0F, //carbs
+								0F, //fat
+								1F, //visible
+								0));//foodid
 			} while (cFoodUnit.moveToNext());
 		}
 		cFoodUnit.close();

@@ -2,31 +2,22 @@
 
 package com.hippoandfriends.helpdiabetes.Show.Settings;
 
-import com.hippoandfriends.helpdiabetes.R;
 
 import android.app.Activity;
-import com.hippoandfriends.helpdiabetes.R;
 
 import android.database.Cursor;
-import com.hippoandfriends.helpdiabetes.R;
 
 import android.os.Bundle;
-import com.hippoandfriends.helpdiabetes.R;
 
 import android.view.View;
-import com.hippoandfriends.helpdiabetes.R;
 
 import android.view.View.OnClickListener;
-import com.hippoandfriends.helpdiabetes.R;
 
 import android.widget.Button;
-import com.hippoandfriends.helpdiabetes.R;
 
 import android.widget.RadioButton;
-import com.hippoandfriends.helpdiabetes.R;
 
 import android.widget.RadioGroup;
-import com.hippoandfriends.helpdiabetes.R;
 
 import android.widget.RadioGroup.OnCheckedChangeListener;
 
@@ -36,6 +27,7 @@ import com.hippoandfriends.helpdiabetes.Rest.DataParser;
 import com.hippoandfriends.helpdiabetes.Rest.DbAdapter;
 import com.hippoandfriends.helpdiabetes.Rest.DbSettings;
 import com.hippoandfriends.helpdiabetes.Rest.TrackingValues;
+import com.hippoandfriends.helpdiabetes.R;
 
 public class ShowSettingsGlucoseUnit extends Activity {
 	private DbAdapter dbHelper;

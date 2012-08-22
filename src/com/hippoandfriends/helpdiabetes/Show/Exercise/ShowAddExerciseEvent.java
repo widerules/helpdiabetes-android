@@ -6,57 +6,40 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
-import com.hippoandfriends.helpdiabetes.R;
 
 import android.app.Activity;
-import com.hippoandfriends.helpdiabetes.R;
 
 import android.app.AlertDialog;
-import com.hippoandfriends.helpdiabetes.R;
 
 import android.app.Dialog;
-import com.hippoandfriends.helpdiabetes.R;
 
 import android.content.DialogInterface;
-import com.hippoandfriends.helpdiabetes.R;
 
 import android.content.Intent;
-import com.hippoandfriends.helpdiabetes.R;
 
 import android.database.Cursor;
-import com.hippoandfriends.helpdiabetes.R;
 
 import android.os.Bundle;
-import com.hippoandfriends.helpdiabetes.R;
 
 import android.view.KeyEvent;
-import com.hippoandfriends.helpdiabetes.R;
 
 import android.view.LayoutInflater;
-import com.hippoandfriends.helpdiabetes.R;
 
 import android.view.View;
-import com.hippoandfriends.helpdiabetes.R;
 
 import android.view.View.OnClickListener;
-import com.hippoandfriends.helpdiabetes.R;
 
 import android.widget.AdapterView;
-import com.hippoandfriends.helpdiabetes.R;
 
 import android.widget.AdapterView.OnItemSelectedListener;
-import com.hippoandfriends.helpdiabetes.R;
 
 import android.widget.Button;
-import com.hippoandfriends.helpdiabetes.R;
 
 import android.widget.EditText;
-import com.hippoandfriends.helpdiabetes.R;
 
 import android.widget.Spinner;
 
 
-import com.hippoandfriends.helpdiabetes.R;
 import com.hippoandfriends.helpdiabetes.ActivityGroup.ActivityGroupExercise;
 import com.hippoandfriends.helpdiabetes.ActivityGroup.ActivityGroupMeal;
 import com.hippoandfriends.helpdiabetes.ActivityGroup.ActivityGroupTracking;
@@ -70,6 +53,7 @@ import com.hippoandfriends.helpdiabetes.Rest.TrackingValues;
 import com.hippoandfriends.helpdiabetes.Show.ShowHomeTab;
 import com.hippoandfriends.helpdiabetes.slider.DateSlider;
 import com.hippoandfriends.helpdiabetes.slider.DateTimeSlider;
+import com.hippoandfriends.helpdiabetes.R;
 
 public class ShowAddExerciseEvent extends Activity {
 	private Spinner spinnerExerciseTypes, spinnerDuration;

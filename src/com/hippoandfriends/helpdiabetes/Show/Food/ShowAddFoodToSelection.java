@@ -11,7 +11,6 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
-import com.hippoandfriends.helpdiabetes.R;
 
 import android.app.Activity;
 import android.database.Cursor;
@@ -39,6 +38,7 @@ import com.hippoandfriends.helpdiabetes.Rest.DataParser;
 import com.hippoandfriends.helpdiabetes.Rest.DbAdapter;
 import com.hippoandfriends.helpdiabetes.Rest.Functions;
 import com.hippoandfriends.helpdiabetes.Rest.TrackingValues;
+import com.hippoandfriends.helpdiabetes.R;
 
 public class ShowAddFoodToSelection extends Activity {
 	private DbAdapter dbHelper;

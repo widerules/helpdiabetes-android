@@ -17,6 +17,8 @@
     <string name="unit_amount">Amount</string>
     <string name="name_cant_be_empty">Invalid \'Name\'</string>
     <string name="unit_cant_be_empty">Invalid \'Unit\'</string>
+    <string name="carb_value_cant_be_empty">Invalid value for \'carbs\'</string>
+    <string name="unknown">Unknown</string>
     <string name="short_kcal">kcals</string>
     <string name="short_carbs">carbs</string>
     <string name="save">Save</string>

@@ -15,6 +15,8 @@
     <string name="unit_amount">Aantal</string>
     <string name="name_cant_be_empty">\'Naam\' mag niet leeg zijn</string>
     <string name="unit_cant_be_empty">\'Eenheid\' mag niet leeg zijn</string>
+    <string name="carb_value_cant_be_empty">\'Kh\' mag niet leeg zijn</string>
+    <string name="unknown">Niet gekend</string>
     <string name="short_kcal">kcal</string>
     <string name="short_carbs">Kh</string>
     <string name="save">Opslaan</string>

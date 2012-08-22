@@ -4,34 +4,27 @@ package com.hippoandfriends.helpdiabetes.Custom;
 
 import java.util.List;
 
-import com.hippoandfriends.helpdiabetes.R;
 
 import android.content.Context;
-import com.hippoandfriends.helpdiabetes.R;
 
 import android.view.Gravity;
-import com.hippoandfriends.helpdiabetes.R;
 
 import android.view.LayoutInflater;
-import com.hippoandfriends.helpdiabetes.R;
 
 import android.view.View;
-import com.hippoandfriends.helpdiabetes.R;
 
 import android.view.ViewGroup;
-import com.hippoandfriends.helpdiabetes.R;
 
 import android.widget.BaseAdapter;
-import com.hippoandfriends.helpdiabetes.R;
 
 import android.widget.LinearLayout;
-import com.hippoandfriends.helpdiabetes.R;
 
 import android.widget.TextView;
 
 
 import com.hippoandfriends.helpdiabetes.Objects.DBFood;
 import com.hippoandfriends.helpdiabetes.Objects.DBFoodTemplate;
+import com.hippoandfriends.helpdiabetes.R;
 
 public class CustomBaseAdapterFoodTemplates extends BaseAdapter {
 	private Context context;

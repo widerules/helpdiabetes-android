@@ -4,7 +4,6 @@ package com.hippoandfriends.helpdiabetes.slider;
 
 import java.util.Calendar;
 
-import com.hippoandfriends.helpdiabetes.R;
 
 import android.util.Log;
 

@@ -7,44 +7,33 @@ package com.hippoandfriends.helpdiabetes.Show.Food;
  * This class will hold our foodList and other values we cant lose when we restart the ShowFoodList activity
  */
 
+import com.hippoandfriends.helpdiabetes.R;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import com.hippoandfriends.helpdiabetes.R;
 
 import android.app.Activity;
-import com.hippoandfriends.helpdiabetes.R;
 
 import android.app.AlertDialog;
-import com.hippoandfriends.helpdiabetes.R;
 
 import android.content.Context;
-import com.hippoandfriends.helpdiabetes.R;
 
 import android.content.DialogInterface;
-import com.hippoandfriends.helpdiabetes.R;
 
 import android.content.DialogInterface.OnKeyListener;
-import com.hippoandfriends.helpdiabetes.R;
 
 import android.content.Intent;
-import com.hippoandfriends.helpdiabetes.R;
 
 import android.database.Cursor;
-import com.hippoandfriends.helpdiabetes.R;
 
 import android.os.AsyncTask;
-import com.hippoandfriends.helpdiabetes.R;
 
 import android.os.Bundle;
-import com.hippoandfriends.helpdiabetes.R;
 
 import android.view.KeyEvent;
-import com.hippoandfriends.helpdiabetes.R;
 
 import android.view.LayoutInflater;
-import com.hippoandfriends.helpdiabetes.R;
 
 import android.view.View;
 

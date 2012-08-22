@@ -2,7 +2,6 @@
 
 package com.hippoandfriends.helpdiabetes.slider;
 
-import com.hippoandfriends.helpdiabetes.R;
 
 import android.content.Context;
 
