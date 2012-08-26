@@ -94,7 +94,6 @@ public class ShowTracking extends ListActivity {
 		btSearch = (Button) findViewById(R.id.buttonSearch);
 		btSearchNext = (Button) findViewById(R.id.buttonSearchNext);
 		btMore = (Button) findViewById(R.id.buttonMore);
-		//btForward = (Button) findViewById(R.id.ButtonForward);
 		llSearch = (LinearLayout) findViewById(R.id.LinearLayoutSearch);
 		llButtons = (LinearLayout) findViewById(R.id.LinearLayoutButtons);
 		et = (EditText) findViewById(R.id.editText1);
@@ -415,21 +414,30 @@ public class ShowTracking extends ListActivity {
 							R.string.short_carbs);
 					break;
 				case 2:
-					calculatedValue = ((mealFood.getUnit().getProtein() / mealFood
-							.getUnit().getStandardamound()) * mealFood
-							.getAmount());
+					calculatedValue = 
+							(mealFood.getUnit().getProtein() < 0F || totalValue < 0F)?
+									-1:
+									((mealFood.getUnit().getProtein() / mealFood
+											.getUnit().getStandardamound()) * mealFood
+											.getAmount());
 					defaultValueText = getResources().getString(
 							R.string.amound_of_protein);
 					break;
 				case 3:
-					calculatedValue = ((mealFood.getUnit().getFat() / mealFood
+					calculatedValue = 
+							(mealFood.getUnit().getFat() < 0F || totalValue < 0F)?
+									-1:
+									((mealFood.getUnit().getFat() / mealFood
 							.getUnit().getStandardamound()) * mealFood
 							.getAmount());
 					defaultValueText = getResources().getString(
 							R.string.amound_of_fat);
 					break;
 				case 4:
-					calculatedValue = ((mealFood.getUnit().getKcal() / mealFood
+					calculatedValue = 
+							(mealFood.getUnit().getKcal() < 0F || totalValue < 0F)?
+									-1:
+									((mealFood.getUnit().getKcal() / mealFood
 							.getUnit().getStandardamound()) * mealFood
 							.getAmount());
 					defaultValueText = getResources().getString(
@@ -437,7 +445,7 @@ public class ShowTracking extends ListActivity {
 					break;
 				}
 
-				totalValue += calculatedValue;
+				totalValue = calculatedValue < 0F ? -1: totalValue + calculatedValue;
 
 				// round calculatedValue
 				calculatedValue = new Functions().roundFloats(calculatedValue,
@@ -445,7 +453,7 @@ public class ShowTracking extends ListActivity {
 
 				text += "" + mealFood.getAmount() + " "
 						+ mealFood.getUnit().getName() + " "
-						+ mealFood.getFoodName() + " (" + calculatedValue + " "
+						+ mealFood.getFoodName() + " (" + (calculatedValue < 0 ? getResources().getString(R.string.unknown) : calculatedValue) + " "
 						+ defaultValueText + ") \n";
 			}
 
@@ -475,7 +483,7 @@ public class ShowTracking extends ListActivity {
 					ActivityGroupTracking.group.getTrackingData().listTracking
 							.get(position).getMealEvent().getId(),
 					getResources().getString(R.string.realTotal) + ": "
-							+ totalValue + " " + defaultValueText + " \n"
+							+ (totalValue < 0F ? getResources().getString(R.string.unknown):totalValue)  + " " + defaultValueText + " \n"
 							+ text + " \n" + calculatedInsuline, position);
 		}
 	}

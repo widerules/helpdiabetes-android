@@ -5,17 +5,10 @@
 
     <LinearLayout style="@style/llTitel" >
 
-        <Button
-            style="@style/buttonBack"
-            android:visibility="invisible" />
-
         <TextView
             style="@style/defaultFontTitle"
             android:text="@string/titelTracking" />
 
-        <Button
-            android:id="@+id/ButtonForward"
-            style="@style/buttonForward" />
     </LinearLayout>
 
     <ListView

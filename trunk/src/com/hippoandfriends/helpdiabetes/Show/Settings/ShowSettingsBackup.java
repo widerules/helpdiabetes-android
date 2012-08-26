@@ -359,7 +359,9 @@ public class ShowSettingsBackup extends ListActivity {
 			db.open();
 
 			File sd = Environment.getExternalStorageDirectory();
-			String seperator = ";";
+			String seperator1 = ";";
+			String seperator2 = ",";
+			String pipedelimiter = "|";
 			if (sd.canRead()) {
 				File inputFile = new File(sd, params[0]);
 
@@ -367,223 +369,180 @@ public class ShowSettingsBackup extends ListActivity {
 					BufferedReader in = new BufferedReader(new FileReader(
 							inputFile));
 					String str;
+					boolean firstline = true;
 
 					while ((str = in.readLine()) != null) {
-						// for every line
-						String foodName = "";
-						String unitName1 = "";
-						Float standardAmount1 = 0F, prot1 = 0F, kcal1 = 0F, fat1 = 0F, carb1 = 0F;
+						if (firstline) {
+							//skip the first line, this is a line with column names
+							firstline = false;
+						} else {
+							// for every line
+							str.replace(seperator2, seperator1);
+							String foodName = "";
+							String unitName1 = "";
+							Float standardAmount1 = 0F, prot1 = 0F, kcal1 = 0F, fat1 = 0F, carb1 = 0F;
 
-						// Food name end position
-						int positionOfEndFoodName = str.indexOf(seperator);
-						// unit name end position
-						int positionOfFirstUnitName = str.indexOf(seperator,
-								positionOfEndFoodName + 1);
-						// standard amount end position
-						int positionOfFirstStandardAmount = str.indexOf(
-								seperator, positionOfFirstUnitName + 1);
-						// carb end position
-						int positionOfFirstCarb = str.indexOf(seperator,
-								positionOfFirstStandardAmount + 1);
-						// prot end position
-						int positionOfFirstprot = str.indexOf(seperator,
-								positionOfFirstCarb + 1);
-						// fat end position
-						int positionOfFirstFat = str.indexOf(seperator,
-								positionOfFirstprot + 1);
-						// kcal end position
-						int positionOfFirstKcal = str.indexOf(seperator,
-								positionOfFirstFat + 1);
-						if (positionOfEndFoodName != -1) {
+							// Food name end position
+							int positionOfEndFoodName = str.indexOf(seperator1);
+							// unit name end position
+							int positionOfFirstUnitName = str.indexOf(seperator1,
+									positionOfEndFoodName + 1);
+							// standard amount end position
+							int positionOfFirstStandardAmount = str.indexOf(
+									seperator1, positionOfFirstUnitName + 1);
+							// kcal end position
+							int positionOfFirstKcal = str.indexOf(seperator1,
+									positionOfFirstStandardAmount + 1);
+							// prot end position
+							int positionOfFirstprot = str.indexOf(seperator1,
+									positionOfFirstKcal + 1);
+							// carb end position
+							int positionOfFirstCarb = str.indexOf(seperator1,
+									positionOfFirstprot + 1);
+							// fat end position
+							int positionOfFirstFat = str.indexOf(seperator1,
+									positionOfFirstCarb + 1);
+							if (positionOfEndFoodName != -1) {
+								try {
+									foodName = str.substring(0,
+											positionOfEndFoodName).replace(pipedelimiter, ",");
+								} catch (Exception e) {
+								}
+							}
+							if (positionOfFirstUnitName != -1) {
+								try {
+									unitName1 = str.substring(
+											positionOfEndFoodName + 1,
+											positionOfFirstUnitName).replace(pipedelimiter, ",");
+								} catch (Exception e) {
+								}
+							}
+
 							try {
-								foodName = str.substring(0,
-										positionOfEndFoodName);
+								standardAmount1 = Float.parseFloat(str.substring(
+										positionOfFirstUnitName + 1,
+										positionOfFirstStandardAmount).replace(",",
+										"."));
 							} catch (Exception e) {
 							}
-						}
-						if (positionOfFirstUnitName != -1) {
+
 							try {
-								unitName1 = str.substring(
-										positionOfEndFoodName + 1,
-										positionOfFirstUnitName);
-							} catch (Exception e) {
-							}
-						}
-
-						try {
-							standardAmount1 = Float.parseFloat(str.substring(
-									positionOfFirstUnitName + 1,
-									positionOfFirstStandardAmount).replace(",",
-									"."));
-						} catch (Exception e) {
-						}
-
-						try {
-								carb1 = Float.parseFloat(str.substring(
-									positionOfFirstStandardAmount + 1,
-									positionOfFirstCarb).replace(",", "."));
-						} catch (Exception e) {
-						}
-
-						try {
-							if (str.substring(
-									positionOfFirstCarb + 1,
-									positionOfFirstprot).length() == 0) {
-								prot1 = -1F;
-							} else
-								prot1 = Float.parseFloat(str.substring(
-									positionOfFirstCarb + 1,
-									positionOfFirstprot).replace(",", "."));
-						} catch (Exception e) {
-						}
-
-						try {
-							if (str.substring(
-									positionOfFirstprot + 1,
-									positionOfFirstFat).length() == 0) {
-								fat1 = -1F;
-							} else
-								fat1 = Float.parseFloat(str
-									.substring(positionOfFirstprot + 1,
-											positionOfFirstFat).replace(",",
-											"."));
-						} catch (Exception e) {
-						}
-
-						try {
-							// this will be -1 when we didnt add a seperator on
-							// the end of the line!
-							if (positionOfFirstKcal != -1) {
 								if (str.substring(
-										positionOfFirstFat + 1,
+										positionOfFirstStandardAmount + 1,
 										positionOfFirstKcal).length() == 0) {
 									kcal1 = -1F;
 								} else
-									kcal1 = Float.parseFloat(str.substring(
-										positionOfFirstFat + 1,
-										positionOfFirstKcal).replace(",", "."));
-							} else {
-								// if we dont have a seperator we just put
-								// everything till the end in kcal
-
-								if (str.substring(
-										positionOfFirstFat + 1).length() == 0) {
-									kcal1 = -1F;
-								}
-								kcal1 = Float.parseFloat(str.substring(
-										positionOfFirstFat + 1).replace(",",
-										"."));
-
+									kcal1 = Float.parseFloat(str
+										.substring(positionOfFirstStandardAmount + 1,
+												positionOfFirstKcal).replace(",",
+												"."));
+							} catch (Exception e) {
 							}
-						} catch (Exception e) {
-						}
 
-						// trim the stuff
-						foodName = foodName.trim();
-						unitName1 = unitName1.trim();
+							try {
+								if (str.substring(
+										positionOfFirstKcal + 1,
+										positionOfFirstprot).length() == 0) {
+									prot1 = -1F;
+								} else
+									prot1 = Float.parseFloat(str.substring(
+										positionOfFirstKcal + 1,
+										positionOfFirstprot).replace(",", "."));
+							} catch (Exception e) {
+							}
 
-						// do stuff for adding food and first unit to the
-						// database
-  
-						// if foodname aint empty and unitname aint empty and
-						// standardamount not 0
-						if (!foodName.equals("") && !unitName1.equals("")
-								&& standardAmount1 != 0) {
-							Long foodID = db.createFood(foodName,
-									foodLanguageID);
+							try {
+									carb1 = Float.parseFloat(str.substring(
+										positionOfFirstprot + 1,
+										positionOfFirstCarb).replace(",", "."));
+							} catch (Exception e) {
+							}
 
-							db.createFoodUnit(foodID, unitName1,
-									standardAmount1, carb1, prot1, fat1, kcal1);
+							try {
+								// this will be -1 when we didnt add a seperator on
+								// the end of the line!
+								if (positionOfFirstFat != -1) {
+									if (str.substring(
+											positionOfFirstCarb + 1,
+											positionOfFirstFat).length() == 0) {
+										fat1 = -1F;
+									} else
+										fat1 = Float.parseFloat(str.substring(
+											positionOfFirstCarb + 1,
+											positionOfFirstFat).replace(",", "."));
+								} else {
+									// if we dont have a seperator we just put
+									// everything till the end in kcal
 
-							// if we had a seperator behind the first kcal we go
-							// further
-							if (positionOfFirstKcal != -1 && foodID != 0) {
-								int positionOfUnitName = str.indexOf(seperator,
-										positionOfFirstKcal + 1);
-								// if the seperator behind the first kcal wasnt
-								// the
-								// last one we go further
-								if (positionOfUnitName != -1) {
-									int lastPosition = positionOfFirstKcal;
-									int positionOfSeperator = str.indexOf(
-											seperator, lastPosition + 1);
+									if (str.substring(
+											positionOfFirstCarb + 1).length() == 0) {
+										fat1 = -1F;
+									}
+									fat1 = Float.parseFloat(str.substring(
+											positionOfFirstCarb + 1).replace(",",
+											"."));
 
-									while (positionOfSeperator != -1) {
+								}
+							} catch (Exception e) {
+							}
 
-										String unitName;
-										Float standardAmount = 0F, prot = 0F, kcal = 0F, fat = 0F, carb = 0F;
+							// trim the stuff
+							foodName = foodName.trim();
+							unitName1 = unitName1.trim();
 
-										unitName = str.substring(
-												lastPosition + 1,
-												positionOfSeperator);
-										lastPosition = positionOfSeperator;
-										positionOfSeperator = str.indexOf(
-												seperator, lastPosition + 1);
+							// do stuff for adding food and first unit to the
+							// database
+	  
+							// if foodname aint empty and unitname aint empty and
+							// standardamount not 0
+							if (!foodName.equals("") && !unitName1.equals("")
+									&& standardAmount1 != 0) {
+								Long foodID = db.createFood(foodName,
+										foodLanguageID);
 
-										try {
-											standardAmount = Float
-													.parseFloat(str
-															.substring(
-																	lastPosition + 1,
-																	positionOfSeperator)
-															.replace(",", "."));
+								db.createFoodUnit(foodID, unitName1,
+										standardAmount1, carb1, prot1, fat1, kcal1);
+
+								// if we had a seperator behind the first kcal we go
+								// further
+								if (positionOfFirstFat != -1 && foodID != 0) {
+									int positionOfUnitName = str.indexOf(seperator1,
+											positionOfFirstFat + 1);
+									// if the seperator behind the first kcal wasnt
+									// the
+									// last one we go further
+									if (positionOfUnitName != -1) {
+										int lastPosition = positionOfFirstFat;
+										int positionOfSeperator = str.indexOf(
+												seperator1, lastPosition + 1);
+
+										while (positionOfSeperator != -1) {
+
+											String unitName;
+											Float standardAmount = 0F, prot = 0F, kcal = 0F, fat = 0F, carb = 0F;
+
+											unitName = str.substring(
+													lastPosition + 1,
+													positionOfSeperator).replace(pipedelimiter,",");
 											lastPosition = positionOfSeperator;
-											positionOfSeperator = str
-													.indexOf(seperator,
-															lastPosition + 1);
-										} catch (Exception e) {
-										}
+											positionOfSeperator = str.indexOf(
+													seperator1, lastPosition + 1);
 
-										try {
-											carb = Float
-													.parseFloat(str
-															.substring(
-																	lastPosition + 1,
-																	positionOfSeperator)
-															.replace(",", "."));
-											lastPosition = positionOfSeperator;
-											positionOfSeperator = str
-													.indexOf(seperator,
-															lastPosition + 1);
-										} catch (Exception e) {
-										}
+											try {
+												standardAmount = Float
+														.parseFloat(str
+																.substring(
+																		lastPosition + 1,
+																		positionOfSeperator)
+																.replace(",", "."));
+												lastPosition = positionOfSeperator;
+												positionOfSeperator = str
+														.indexOf(seperator1,
+																lastPosition + 1);
+											} catch (Exception e) {
+											}
 
-										try {
-											if (str.substring(lastPosition + 1,positionOfSeperator).length() == 0) {
-												prot = -1F;
-											} else
-												prot = Float
-													.parseFloat(str
-															.substring(
-																	lastPosition + 1,
-																	positionOfSeperator)
-															.replace(",", "."));
-											lastPosition = positionOfSeperator;
-											positionOfSeperator = str
-													.indexOf(seperator,
-															lastPosition + 1);
-										} catch (Exception e) {
-										}
-
-										try {
-											if (str.substring(lastPosition + 1,positionOfSeperator).length() == 0) {
-												fat = -1F;
-											} else
-												fat = Float
-													.parseFloat(str
-															.substring(
-																	lastPosition + 1,
-																	positionOfSeperator)
-															.replace(",", "."));
-											lastPosition = positionOfSeperator;
-											positionOfSeperator = str
-													.indexOf(seperator,
-															lastPosition + 1);
-										} catch (Exception e) {
-										}
-
-										try {
-											if (positionOfSeperator != -1) {
+											try {
 												if (str.substring(lastPosition + 1,positionOfSeperator).length() == 0) {
 													kcal = -1F;
 												} else
@@ -592,50 +551,100 @@ public class ShowSettingsBackup extends ListActivity {
 																.substring(
 																		lastPosition + 1,
 																		positionOfSeperator)
-																.replace(",",
-																		"."));
+																.replace(",", "."));
 												lastPosition = positionOfSeperator;
 												positionOfSeperator = str
-														.indexOf(
-																seperator,
+														.indexOf(seperator1,
 																lastPosition + 1);
-											} else {
-												// if we are at the last kcal
-												// and we
-												// didnt at a seperator on the
-												// end
-												// of the line!
-												if (str.substring(lastPosition + 1).length() == 0) {
+											} catch (Exception e) {
+											}
+
+											try {
+												if (str.substring(lastPosition + 1,positionOfSeperator).length() == 0) {
 													prot = -1F;
 												} else
-													kcal = Float
+													prot = Float
 														.parseFloat(str
 																.substring(
-																		lastPosition + 1)
-																.replace(",",
-																		"."));
+																		lastPosition + 1,
+																		positionOfSeperator)
+																.replace(",", "."));
+												lastPosition = positionOfSeperator;
+												positionOfSeperator = str
+														.indexOf(seperator1,
+																lastPosition + 1);
+											} catch (Exception e) {
 											}
-										} catch (Exception e) {
-										}
 
-										if (!unitName.equals("")
-												&& standardAmount != 0) {
-											// trim unitName
-											unitName = unitName.trim();
+											try {
+												carb = Float
+														.parseFloat(str
+																.substring(
+																		lastPosition + 1,
+																		positionOfSeperator)
+																.replace(",", "."));
+												lastPosition = positionOfSeperator;
+												positionOfSeperator = str
+														.indexOf(seperator1,
+																lastPosition + 1);
+											} catch (Exception e) {
+											}
 
-											// do stuff for adding unit to the
-											// database
-											db.createFoodUnit(foodID, unitName,
-													standardAmount, carb, prot,
-													fat, kcal);
+											try {
+												if (positionOfSeperator != -1) {
+													if (str.substring(lastPosition + 1,positionOfSeperator).length() == 0) {
+														fat = -1F;
+													} else
+														fat = Float
+															.parseFloat(str
+																	.substring(
+																			lastPosition + 1,
+																			positionOfSeperator)
+																	.replace(",",
+																			"."));
+													lastPosition = positionOfSeperator;
+													positionOfSeperator = str
+															.indexOf(
+																	seperator1,
+																	lastPosition + 1);
+												} else {
+													// if we are at the last fat
+													// and we
+													// didnt at a seperator on the
+													// end
+													// of the line!
+													if (str.substring(lastPosition + 1).length() == 0) {
+														prot = -1F;
+													} else
+														fat = Float
+															.parseFloat(str
+																	.substring(
+																			lastPosition + 1)
+																	.replace(",",
+																			"."));
+												}
+											} catch (Exception e) {
+											}
+
+											if (!unitName.equals("")
+													&& standardAmount != 0) {
+												// trim unitName
+												unitName = unitName.trim();
+
+												// do stuff for adding unit to the
+												// database
+												db.createFoodUnit(foodID, unitName,
+														standardAmount, carb, prot,
+														fat, kcal);
+											}
 										}
 									}
 								}
 							}
+							counter++;
+							publishProgress(null);
+							// end of the while loop! ( dont go past here with code
 						}
-						counter++;
-						publishProgress(null);
-						// end of the while loop! ( dont go past here with code
 					}
 					return getResources().getString(
 							R.string.sucessfull_copied_records_to_database);
@@ -698,16 +707,86 @@ public class ShowSettingsBackup extends ListActivity {
 					try {
 						FileWriter writer = new FileWriter(outputFile);
 						String seperator = ";";
+						String pipedelimiter = "|";
 
-						// write first line with example
-						// writer.append("Example: FOODNAME ; UNITNAME1 ; standardamount1 ; kcal1 ; prot1 ; carbs1;fat1  ; UNITNAME2 ; standardamount2 ; kcal2 ; prot2 ; carbs2 ; fat2 ; UNITNAME3 ; standardamount3 ; kcal3 ; prot3 ; carbs3 ; fat3");
-						// writer.append("\n");
-
-						// writer order:
-						// FOODNAME ; UNITNAME ; standardamount ; kcal ; prot ;
-						// cqrbs ; fat ; UNITNAME ; standardamount ; kcal ; prot
-						// ;carbs;fat
-
+						//add column names
+						writer.append(
+								getResources().getString(R.string.food_name) 
+								+
+								seperator
+								+
+								getResources().getString(R.string.unit) 
+								+ 
+								seperator
+								+
+								getResources().getString(R.string.unit_amount) 
+								+ 
+								seperator
+								+
+								getResources().getString(R.string.short_kcal)
+								+
+								seperator
+								+
+								getResources().getString(R.string.amound_of_protein)
+								+
+								seperator
+								+
+								getResources().getString(R.string.short_carbs)
+								+
+								seperator
+								+
+								getResources().getString(R.string.amound_of_fat)
+								+
+								seperator
+								+
+								getResources().getString(R.string.unit) 
+								+ 
+								seperator
+								+
+								getResources().getString(R.string.unit_amount) 
+								+ 
+								seperator
+								+
+								getResources().getString(R.string.short_kcal)
+								+
+								seperator
+								+
+								getResources().getString(R.string.amound_of_protein)
+								+
+								seperator
+								+
+								getResources().getString(R.string.short_carbs)
+								+
+								seperator
+								+
+								getResources().getString(R.string.amound_of_fat)
+								+
+								seperator
+								+
+								getResources().getString(R.string.unit) 
+								+ 
+								seperator
+								+
+								getResources().getString(R.string.unit_amount) 
+								+ 
+								seperator
+								+
+								getResources().getString(R.string.short_kcal)
+								+
+								seperator
+								+
+								getResources().getString(R.string.amound_of_protein)
+								+
+								seperator
+								+
+								getResources().getString(R.string.short_carbs)
+								+
+								seperator
+								+
+								getResources().getString(R.string.amound_of_fat)
+								
+								+ "\n"
+								);
 						do {
 							Cursor cUnit = db
 									.fetchFoodUnitByFoodId(cFood.getLong(cFood
@@ -716,13 +795,13 @@ public class ShowSettingsBackup extends ListActivity {
 								cUnit.moveToFirst();
 								// write the food name
 								writer.append(cFood.getString(cFood
-										.getColumnIndexOrThrow(DbAdapter.DATABASE_FOOD_NAME)));
+										.getColumnIndexOrThrow(DbAdapter.DATABASE_FOOD_NAME)).replace(",", pipedelimiter));
 								writer.append(seperator);
 
 								do {
 									// write the unit name
 									writer.append(cUnit.getString(cUnit
-											.getColumnIndexOrThrow(DbAdapter.DATABASE_FOODUNIT_NAME)));
+											.getColumnIndexOrThrow(DbAdapter.DATABASE_FOODUNIT_NAME)).replace(",", pipedelimiter));
 									writer.append(seperator);
 
 									// write the standardamount

@@ -82,7 +82,9 @@ public class CustomBaseAdapterSelectedFood extends BaseAdapter implements
 					+ context.getResources().getString(R.string.short_carbs);
 			break;
 		case 2:
-			value = "" 
+			value = entry.getUnit().getProtein() < 0 ?
+					context.getResources().getString(R.string.unknown) :
+					"" 
 					+ new Functions().roundFloats(((entry.getAmound() / entry
 							.getUnit().getStandardamound()) * entry.getUnit()
 							.getProtein()), 1)
@@ -91,14 +93,18 @@ public class CustomBaseAdapterSelectedFood extends BaseAdapter implements
 							R.string.amound_of_protein);
 			break;
 		case 3:
-			value = ""
+			value = entry.getUnit().getFat() < 0 ?
+					context.getResources().getString(R.string.unknown) :
+					""
 					+ new Functions().roundFloats(((entry.getAmound() / entry
 							.getUnit().getStandardamound()) * entry.getUnit()
 							.getFat()), 1) + " "
 					+ context.getResources().getString(R.string.amound_of_fat);
 			break;
 		case 4:
-			value = ""
+			value = entry.getUnit().getKcal() < 0 ?
+					context.getResources().getString(R.string.unknown) :
+					""
 					+ new Functions().roundFloats(((entry.getAmound() / entry
 							.getUnit().getStandardamound()) * entry.getUnit()
 							.getKcal()), 1) + " "

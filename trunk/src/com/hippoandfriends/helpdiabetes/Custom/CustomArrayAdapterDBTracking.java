@@ -171,22 +171,32 @@ public class CustomArrayAdapterDBTracking extends ArrayAdapter<DBTracking> {
 						// kcal
 						switch (defaultValue) {
 						case 1:
-							totalCalc += ((mealfood.getUnit().getCarbs() / mealfood
-									.getUnit().getStandardamound()) * mealfood
-									.getAmount());
+							totalCalc =
+									totalCalc + ((mealfood.getUnit().getCarbs() / mealfood
+											.getUnit().getStandardamound()) * mealfood
+											.getAmount());
 							break;
 						case 2:
-							totalCalc += ((mealfood.getUnit().getProtein() / mealfood
+							totalCalc = 
+							mealfood.getUnit().getProtein() < 0F ?
+									-1 :
+							totalCalc + ((mealfood.getUnit().getProtein() / mealfood
 									.getUnit().getStandardamound()) * mealfood
 									.getAmount());
 							break;
 						case 3:
-							totalCalc += ((mealfood.getUnit().getFat() / mealfood
+							totalCalc = 
+							mealfood.getUnit().getFat() < 0F ?
+									-1 :
+							totalCalc + ((mealfood.getUnit().getFat() / mealfood
 									.getUnit().getStandardamound()) * mealfood
 									.getAmount());
 							break;
 						case 4:
-							totalCalc += ((mealfood.getUnit().getKcal() / mealfood
+							totalCalc = 
+							mealfood.getUnit().getKcal() < 0F ?
+									-1 :
+							totalCalc + ((mealfood.getUnit().getKcal() / mealfood
 									.getUnit().getStandardamound()) * mealfood
 									.getAmount());
 							break;
@@ -236,7 +246,7 @@ public class CustomArrayAdapterDBTracking extends ArrayAdapter<DBTracking> {
 					tv2.setText(text);
 
 					// tv4 is for the default total value
-					tv4.setText(totalCalc + " " + value);
+					tv4.setText(totalCalc < 0 ? context.getResources().getString(R.string.unknown): totalCalc + " " + value);
 
 					tv1.setTextSize(fontSize);
 					tv2.setTextSize(fontSize - 3);
