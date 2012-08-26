@@ -490,17 +490,23 @@ public class ShowAddFoodToSelection extends Activity {
 					.getFloat(cUnit
 							.getColumnIndexOrThrow(DbAdapter.DATABASE_FOODUNIT_CARBS)));
 
-			calcKcal = ((amount / cUnit
+			calcKcal =  cUnit.getString(cUnit.getColumnIndexOrThrow(DbAdapter.DATABASE_FOODUNIT_KCAL)).length() == 0 ?
+					- 1 :
+					((amount / cUnit
 					.getFloat(cUnit
 							.getColumnIndexOrThrow(DbAdapter.DATABASE_FOODUNIT_STANDARDAMOUNT))) * cUnit
 					.getFloat(cUnit
 							.getColumnIndexOrThrow(DbAdapter.DATABASE_FOODUNIT_KCAL)));
-			calcFat = ((amount / cUnit
+			calcFat = cUnit.getString(cUnit.getColumnIndexOrThrow(DbAdapter.DATABASE_FOODUNIT_FAT)).length() == 0 ?
+					- 1 :
+					((amount / cUnit
 					.getFloat(cUnit
 							.getColumnIndexOrThrow(DbAdapter.DATABASE_FOODUNIT_STANDARDAMOUNT))) * cUnit
 					.getFloat(cUnit
 							.getColumnIndexOrThrow(DbAdapter.DATABASE_FOODUNIT_FAT)));
-			calcProtein = ((amount / cUnit
+			calcProtein = cUnit.getString(cUnit.getColumnIndexOrThrow(DbAdapter.DATABASE_FOODUNIT_PROTEIN)).length() == 0 ?
+					- 1 :
+					((amount / cUnit
 					.getFloat(cUnit
 							.getColumnIndexOrThrow(DbAdapter.DATABASE_FOODUNIT_STANDARDAMOUNT))) * cUnit
 					.getFloat(cUnit
@@ -540,31 +546,49 @@ public class ShowAddFoodToSelection extends Activity {
 					
 			// prot 
 			tvRowThreeFieldTwo
-					.setText(""
+					.setText(calcProtein == -1 ?
+							"" :
+							""
 							+ functions.roundFloats(
 									cUnit.getFloat(cUnit
 											.getColumnIndexOrThrow(DbAdapter.DATABASE_FOODUNIT_PROTEIN)),
 									1));
-			tvRowThreeFieldThree.setText("" + calcProtein);
+
+			if (calcProtein == -1)
+				tvRowThreeFieldThree.setText("" +getResources().getString(R.string.unknown));
+			else					
+				tvRowThreeFieldThree.setText("" + calcProtein);
 					 
 			// fat
 			tvRowFourFieldTwo
-					.setText(""
+					.setText(calcFat == -1 ?
+							"" :
+							""
 							+ functions.roundFloats(
 									cUnit.getFloat(cUnit
 											.getColumnIndexOrThrow(DbAdapter.DATABASE_FOODUNIT_FAT)),
 									1));
-			tvRowFourFieldThree.setText("" + calcFat);
+
+			if (calcFat == -1)
+				tvRowFourFieldThree.setText("" +getResources().getString(R.string.unknown));
+			else					
+				tvRowFourFieldThree.setText("" + calcFat);
 			 
 		 	
 			// kcal
 			tvRowFiveFieldTwo
-					.setText("" 
+					.setText(calcKcal == -1 ?
+							"" :
+							"" 
 							+ functions.roundFloats(
 									cUnit.getFloat(cUnit
 											.getColumnIndexOrThrow(DbAdapter.DATABASE_FOODUNIT_KCAL)),
 									1));
-			tvRowFiveFieldThree.setText("" + calcKcal); 
+			
+			if (calcKcal == -1)
+				tvRowFiveFieldThree.setText("" +getResources().getString(R.string.unknown));
+			else
+				tvRowFiveFieldThree.setText("" + calcKcal); 
 					
 			cUnit.close();
 		} catch (Exception e) {
