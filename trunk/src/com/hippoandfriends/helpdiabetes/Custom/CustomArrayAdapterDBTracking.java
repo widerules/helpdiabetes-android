@@ -178,7 +178,7 @@ public class CustomArrayAdapterDBTracking extends ArrayAdapter<DBTracking> {
 							break;
 						case 2:
 							totalCalc = 
-							mealfood.getUnit().getProtein() < 0F ?
+							(mealfood.getUnit().getProtein() < 0F || totalCalc < 0F) ?
 									-1 :
 							totalCalc + ((mealfood.getUnit().getProtein() / mealfood
 									.getUnit().getStandardamound()) * mealfood
@@ -186,7 +186,7 @@ public class CustomArrayAdapterDBTracking extends ArrayAdapter<DBTracking> {
 							break;
 						case 3:
 							totalCalc = 
-							mealfood.getUnit().getFat() < 0F ?
+							(mealfood.getUnit().getFat() < 0F  || totalCalc < 0F) ?
 									-1 :
 							totalCalc + ((mealfood.getUnit().getFat() / mealfood
 									.getUnit().getStandardamound()) * mealfood
@@ -194,7 +194,7 @@ public class CustomArrayAdapterDBTracking extends ArrayAdapter<DBTracking> {
 							break;
 						case 4:
 							totalCalc = 
-							mealfood.getUnit().getKcal() < 0F ?
+							(mealfood.getUnit().getKcal() < 0F  || totalCalc < 0F) ?
 									-1 :
 							totalCalc + ((mealfood.getUnit().getKcal() / mealfood
 									.getUnit().getStandardamound()) * mealfood
