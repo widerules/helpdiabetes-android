@@ -415,7 +415,7 @@ public class ShowTracking extends ListActivity {
 					break;
 				case 2:
 					calculatedValue = 
-							(mealFood.getUnit().getProtein() < 0F || totalValue < 0F)?
+							(mealFood.getUnit().getProtein() < 0F )?
 									-1:
 									((mealFood.getUnit().getProtein() / mealFood
 											.getUnit().getStandardamound()) * mealFood
@@ -425,7 +425,7 @@ public class ShowTracking extends ListActivity {
 					break;
 				case 3:
 					calculatedValue = 
-							(mealFood.getUnit().getFat() < 0F || totalValue < 0F)?
+							(mealFood.getUnit().getFat() < 0F )?
 									-1:
 									((mealFood.getUnit().getFat() / mealFood
 							.getUnit().getStandardamound()) * mealFood
@@ -435,7 +435,7 @@ public class ShowTracking extends ListActivity {
 					break;
 				case 4:
 					calculatedValue = 
-							(mealFood.getUnit().getKcal() < 0F || totalValue < 0F)?
+							(mealFood.getUnit().getKcal() < 0F )?
 									-1:
 									((mealFood.getUnit().getKcal() / mealFood
 							.getUnit().getStandardamound()) * mealFood
@@ -445,7 +445,7 @@ public class ShowTracking extends ListActivity {
 					break;
 				}
 
-				totalValue = calculatedValue < 0F ? -1: totalValue + calculatedValue;
+				totalValue = (calculatedValue < 0F || totalValue < 0f) ? -1: totalValue + calculatedValue;
 
 				// round calculatedValue
 				calculatedValue = new Functions().roundFloats(calculatedValue,
