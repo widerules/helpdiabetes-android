@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Please read info.txt for license and legal information -->
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content" >
+
+    <LinearLayout
+        android:id="@+id/linearLayout1"
+        style="@style/linearLayoutVerticalWithPadding" >
+
+        <LinearLayout style="@style/llTitel" >
+
+            <Button
+                style="@style/buttonBack"
+                android:visibility="invisible" />
+
+            <TextView
+                style="@style/defaultFontTitle"
+                android:text="@string/titelAddGlucose" />
+
+            <Button
+                android:id="@+id/buttonAdd"
+                style="@style/buttonForward" />
+        </LinearLayout>
+
+        <Button
+            android:id="@+id/buttonUpdateDateAndHour"
+            style="@style/defaultFontNormal"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="25dip"
+            android:text="@string/update" />
+
+        <TableLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:stretchColumns="0" >
+
+            <TableRow
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content" >
+
+                <Button
+                    android:id="@+id/increment"
+                    style="@style/defaultFontNormal"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/btup" />
+            </TableRow>
+
+            <TableRow
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content" >
+
+                <EditText
+                    android:id="@+id/editTextAmount"
+                    style="@style/styleEditText"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1.0"
+                    android:digits="1234567890."
+                    android:gravity="center"
+                    android:inputType="phone"
+                    android:numeric="decimal" />
+
+                <TextView
+                    android:id="@+id/textViewUnit"
+                    style="@style/defaultFontNormal"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+            </TableRow>
+
+            <TableRow
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content" >
+
+                <Button
+                    android:id="@+id/decrement"
+                    style="@style/defaultFontNormal"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/btdown" />
+            </TableRow>
+        </TableLayout>
+    </LinearLayout>
+</ScrollView>

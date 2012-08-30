@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Please read info.txt for license and legal information -->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    style="@style/linearLayoutVerticalWithPadding"
+    android:background="@drawable/bg" >
+
+    <LinearLayout style="@style/llTitel" >
+
+        <Button
+            style="@style/buttonBack"
+            android:visibility="invisible" />
+
+        <TextView
+            style="@style/defaultFontTitle"
+            android:text="@string/pref_medicine_types" />
+
+        <Button
+            style="@style/buttonForward"
+            android:visibility="invisible" />
+    </LinearLayout>
+
+    <TextView
+        style="@style/defaultFontNormal"
+        android:text="@string/select_standard_medicine_type" />
+
+    <ListView
+        android:id="@+android:id/list"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_weight="1.0"
+        android:cacheColorHint="#00000000" />
+</LinearLayout>
