@@ -13,25 +13,16 @@ import java.io.OutputStream;
 import java.nio.channels.FileChannel;
 import java.util.zip.ZipInputStream;
 
-
 import android.content.ContentValues;
-
 import android.content.Context;
-
 import android.database.Cursor;
-
 import android.database.SQLException;
-
 import android.database.sqlite.SQLiteDatabase;
-
 import android.database.sqlite.SQLiteException;
-
 import android.database.sqlite.SQLiteOpenHelper;
-
 import android.os.Environment;
+
 import com.hippoandfriends.helpdiabetes.R;
-
-
 
 /*
  * This class provides the add, delete, create of all the database components
@@ -1058,6 +1049,14 @@ public class DbAdapter extends SQLiteOpenHelper {
 				+ "=" + id, null) > 0;
 	}
 
+	//This gets triggerd from setting screen to unhide all hidden food
+	public void updateAllFoodSetVisible() {
+		ContentValues initialValues = new ContentValues();
+		initialValues.put(DATABASE_FOOD_VISIBLE, 1);
+		mDb.update(DATABASE_FOOD_TABLE, initialValues, DATABASE_FOOD_VISIBLE + " = 0",null);
+		return;
+	}
+	
 	// Update food favorite
 	public boolean updateFoodIsFavorite(long id, int favorite) {
 		ContentValues initialValues = new ContentValues();
@@ -1066,10 +1065,8 @@ public class DbAdapter extends SQLiteOpenHelper {
 				+ "=" + id, null) > 0;
 	}
 
-	/** FoodUnit Fuctions -  add FoodUnit<br>
-	 * carbs must have a value >=0 (not that the storage will fail,but it should be)<br>
-	 * prot, fat and kcal can have a value <0 which means no value, will be replaced by blanc in the database
-	*/
+	// FoodUnit Fuctions
+	// add FoodUnit
 	public long createFoodUnit(Long foodId, String name, float standardAmount,
 			float carbs, float prot, float fat, float kcal) {
 		ContentValues initialValues = new ContentValues();
@@ -1078,9 +1075,9 @@ public class DbAdapter extends SQLiteOpenHelper {
 		initialValues
 				.put(DATABASE_FOODUNIT_STANDARDAMOUNT, "" + standardAmount);
 		initialValues.put(DATABASE_FOODUNIT_CARBS, "" + carbs);
-		initialValues.put(DATABASE_FOODUNIT_PROTEIN, "" + (prot == -1 ? "":prot));
-		initialValues.put(DATABASE_FOODUNIT_FAT, "" + (fat == - 1 ? "":fat));
-		initialValues.put(DATABASE_FOODUNIT_KCAL, "" + (kcal == -1 ? "":kcal));
+		initialValues.put(DATABASE_FOODUNIT_PROTEIN, "" + prot);
+		initialValues.put(DATABASE_FOODUNIT_FAT, "" + fat);
+		initialValues.put(DATABASE_FOODUNIT_KCAL, "" + kcal);
 		initialValues.put(DATABASE_FOODUNIT_VISIBLE, 1);
 		return mDb.insert(DATABASE_FOODUNIT_TABLE, null, initialValues);
 	}
@@ -1142,9 +1139,9 @@ public class DbAdapter extends SQLiteOpenHelper {
 		initialValues
 				.put(DATABASE_FOODUNIT_STANDARDAMOUNT, "" + standardAmount);
 		initialValues.put(DATABASE_FOODUNIT_CARBS, "" + carbs);
-		initialValues.put(DATABASE_FOODUNIT_PROTEIN, "" + (prot == -1 ? "":prot));
-		initialValues.put(DATABASE_FOODUNIT_FAT, "" + (fat == - 1 ? "":fat));
-		initialValues.put(DATABASE_FOODUNIT_KCAL, "" + (kcal == -1 ? "":kcal));
+		initialValues.put(DATABASE_FOODUNIT_PROTEIN, "" + prot);
+		initialValues.put(DATABASE_FOODUNIT_FAT, "" + fat);
+		initialValues.put(DATABASE_FOODUNIT_KCAL, "" + kcal);
 		return mDb.update(DATABASE_FOODUNIT_TABLE, initialValues,
 				DATABASE_FOODUNIT_ID + "=" + unitId, null) > 0;
 	}
