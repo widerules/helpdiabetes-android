@@ -62,11 +62,12 @@
     <string name="sureToDeleteSelectedFood">Auswahl wirklich löschen?</string>
     <string name="addSelectionToTracking">Auswahl hinzufügen?</string>
     <string name="howMuch">Wie viel</string>
-    <string name="didUUse">habt ihr gebraucht ?</string>
+    <string name="didUUse">did you use?</string>
     <string name="changeTime">Zeit ändern</string>
     <string name="search">Suchen</string>
     <string name="options">Optionen</string>
     <string name="update_food_name">Produktnamen ändern</string>
+    <string name="unit_amount_cant_be_zero">Einheiten müssen größer sein als 0</string>
     <string name="add_exercise_events">Add exercise activity</string>
     <string name="menu_update_exercise_type">Intensität verändern</string>
     <string name="add_and_add_another">Hinzufügen und zurück zur Liste</string>
@@ -182,4 +183,7 @@
 	<string name="minutes">minuten</string>
 	
 	<string name="created">erstellt</string>
+	
+	<string name="unhide_hidden_food">Ton unsichtbaren Lebensmitteln</string>
+    <string name="sure_to_unhide_hidden_food">Sind Sie sicher, Sie essen alle wieder unsichtbar zu zeigen ?</string>
 </resources>

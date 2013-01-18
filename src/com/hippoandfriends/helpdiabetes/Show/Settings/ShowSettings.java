@@ -9,49 +9,30 @@ import java.util.Date;
 import java.util.List;
 
 import jxl.Workbook;
-import jxl.format.CellFormat;
 import jxl.write.Label;
 import jxl.write.WritableCellFormat;
 import jxl.write.WritableSheet;
 import jxl.write.WritableWorkbook;
-
-import android.app.ActivityGroup;
-
 import android.app.AlertDialog;
-
 import android.app.ListActivity;
-
 import android.app.ProgressDialog;
-
 import android.content.Context;
-
 import android.content.DialogInterface;
-
 import android.content.Intent;
-
 import android.content.pm.PackageManager.NameNotFoundException;
-
 import android.database.Cursor;
-
 import android.os.AsyncTask;
-
 import android.os.Bundle;
-
 import android.os.Environment;
-
 import android.view.KeyEvent;
-
 import android.view.LayoutInflater;
-
 import android.view.View;
-
 import android.widget.ListView;
-
 import android.widget.Toast;
 
-
+import com.hippoandfriends.helpdiabetes.R;
+import com.hippoandfriends.helpdiabetes.ActivityGroup.ActivityGroupMeal;
 import com.hippoandfriends.helpdiabetes.ActivityGroup.ActivityGroupSettings;
-import com.hippoandfriends.helpdiabetes.ActivityGroup.ActivityGroupTracking;
 import com.hippoandfriends.helpdiabetes.Custom.CustomArrayAdapterCharSequenceSettings;
 import com.hippoandfriends.helpdiabetes.Objects.DBBloodGlucoseEvent;
 import com.hippoandfriends.helpdiabetes.Objects.DBExerciseEvent;
@@ -67,7 +48,6 @@ import com.hippoandfriends.helpdiabetes.Rest.TimeComparator;
 import com.hippoandfriends.helpdiabetes.Rest.TrackingValues;
 import com.hippoandfriends.helpdiabetes.Show.Exercise.ShowExerciseTypes;
 import com.hippoandfriends.helpdiabetes.Show.Medicine.ShowMedicineTypes;
-import com.hippoandfriends.helpdiabetes.R;
 
 public class ShowSettings extends ListActivity {
 
@@ -131,6 +111,7 @@ public class ShowSettings extends ListActivity {
 		value.add(getResources().getString(R.string.pref_db_language));
 		value.add(getResources().getString(R.string.pref_backup));
 		value.add(getResources().getString(R.string.pref_log_to_excel));
+		value.add(getResources().getString(R.string.unhide_hidden_food));
 		value.add(getResources().getString(R.string.pref_about) + " ("
 				+ versionName + ")");
 
@@ -177,6 +158,9 @@ public class ShowSettings extends ListActivity {
 			new AsyncCreateExcelFile().execute();
 			break;
 		case 10:
+			showPopUpToUnhideFood();
+			break;
+		case 11:
 			showPopUpAbout();
 			break;
 		}
@@ -215,6 +199,30 @@ public class ShowSettings extends ListActivity {
 				.show();
 	}
 
+	//if we press the unhide food list item
+	private void showPopUpToUnhideFood(){
+		DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
+
+			public void onClick(DialogInterface dialog, int which) {
+				switch (which) {
+				case DialogInterface.BUTTON_POSITIVE:
+					//trigger to unhide all the hidden food
+					showProgressDialog(getResources().getString(R.string.loading));
+					new AsyncUnhideHiddenFood().execute();
+					break;
+				}
+			}
+		};
+
+		AlertDialog.Builder builder = new AlertDialog.Builder(
+				ActivityGroupSettings.group);
+		builder.setMessage(getResources().getString(R.string.sure_to_unhide_hidden_food))
+				.setPositiveButton(getResources().getString(R.string.yes),
+						dialogClickListener)
+				.setNegativeButton(getResources().getString(R.string.no),
+						dialogClickListener).show();
+	}
+	
 	// if we press the back button on this activity we have to show a popup to
 	// exit
 	@Override
@@ -227,7 +235,7 @@ public class ShowSettings extends ListActivity {
 		} else
 			return super.onKeyDown(keyCode, event);
 	}
-
+	
 	private void showPopUpToExitApplication() {
 		DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
 
@@ -250,6 +258,39 @@ public class ShowSettings extends ListActivity {
 						dialogClickListener).show();
 	}
 
+	// method used to unhide all hidden food
+	private class AsyncUnhideHiddenFood extends AsyncTask<Void, Void, String>{
+
+		@Override
+		protected String doInBackground(Void... arg0) {
+			//trigger sql to unhide hidden food
+			DbAdapter dbHelper = new DbAdapter(context);
+			dbHelper.open();
+			dbHelper.updateAllFoodSetVisible();
+			return null;
+		}
+		
+		protected void onPostExecute(String result) {
+			pd.dismiss();
+			showPopUpToExit();
+	};
+		
+	}
+	
+	private void showPopUpToExit() {
+		new AlertDialog.Builder(ActivityGroupMeal.group)
+				.setTitle(getResources().getString(R.string.warning))
+				.setMessage(getResources().getString(R.string.app_will_exit))
+				.setPositiveButton(getResources().getString(R.string.oke),
+						new AlertDialog.OnClickListener() {
+							public void onClick(DialogInterface dialog,
+									int which) {
+								// exit application
+								ActivityGroupMeal.group.killApplication();
+							}
+						}).show();
+	}
+	
 	// //////////////For log to excel
 	// method used to get all history data and create excel file.
 	private class AsyncCreateExcelFile extends AsyncTask<Void, Void, String> {
@@ -395,20 +436,14 @@ public class ShowSettings extends ListActivity {
 																	.getColumnIndexOrThrow(DbAdapter.DATABASE_FOODUNIT_DESCRIPTION)),
 															cUnit.getFloat(cUnit
 																	.getColumnIndexOrThrow(DbAdapter.DATABASE_FOODUNIT_STANDARDAMOUNT)),
-															cUnit.getString(cUnit.getColumnIndexOrThrow(DbAdapter.DATABASE_FOODUNIT_KCAL)).length() == 0 ?
-																	-1F:
-																	cUnit.getFloat(cUnit
-																			.getColumnIndexOrThrow(DbAdapter.DATABASE_FOODUNIT_KCAL)),
-															cUnit.getString(cUnit.getColumnIndexOrThrow(DbAdapter.DATABASE_FOODUNIT_PROTEIN)).length() == 0 ?
-																	-1F:
-																	cUnit.getFloat(cUnit
-																			.getColumnIndexOrThrow(DbAdapter.DATABASE_FOODUNIT_PROTEIN)),
+															cUnit.getFloat(cUnit
+																	.getColumnIndexOrThrow(DbAdapter.DATABASE_FOODUNIT_KCAL)),
+															cUnit.getFloat(cUnit
+																	.getColumnIndexOrThrow(DbAdapter.DATABASE_FOODUNIT_PROTEIN)),
 															cUnit.getFloat(cUnit
 																	.getColumnIndexOrThrow(DbAdapter.DATABASE_FOODUNIT_CARBS)),
-															cUnit.getString(cUnit.getColumnIndexOrThrow(DbAdapter.DATABASE_FOODUNIT_FAT)).length() == 0 ?
-																	-1F:
-																	cUnit.getFloat(cUnit
-																			.getColumnIndexOrThrow(DbAdapter.DATABASE_FOODUNIT_FAT)),
+															cUnit.getFloat(cUnit
+																	.getColumnIndexOrThrow(DbAdapter.DATABASE_FOODUNIT_FAT)),
 															cUnit.getFloat(cUnit
 																	.getColumnIndexOrThrow(DbAdapter.DATABASE_FOODUNIT_VISIBLE)),
 															cUnit.getInt(cUnit
