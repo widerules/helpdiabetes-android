@@ -2,7 +2,7 @@ package com.hippoandfriends.helpdiabetes.Rest;
 
 public class TrackingValues {
 	//The code used for uploading the trackings
-	public static final String trackingCode = "UA-33409285-1";
+	public static final String trackingCode = "UA-32004285-1";
 	
 	//event categorys with their labels
 	 

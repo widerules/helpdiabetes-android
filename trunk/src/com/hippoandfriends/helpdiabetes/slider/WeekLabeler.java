@@ -4,13 +4,9 @@ package com.hippoandfriends.helpdiabetes.slider;
 
 import java.util.Calendar;
 
-
 import android.content.Context;
-
 import android.graphics.Typeface;
-
 import android.util.TypedValue;
-
 import android.view.Gravity;
 
 /**

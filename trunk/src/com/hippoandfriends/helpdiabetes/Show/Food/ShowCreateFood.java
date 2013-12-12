@@ -5,7 +5,6 @@ package com.hippoandfriends.helpdiabetes.Show.Food;
 import java.util.ArrayList;
 import java.util.List;
 
-
 import android.app.Activity;
 import android.os.Bundle;
 import android.view.KeyEvent;
@@ -21,13 +20,12 @@ import android.widget.Spinner;
 import android.widget.TableRow;
 import android.widget.Toast;
 
-
+import com.hippoandfriends.helpdiabetes.R;
 import com.hippoandfriends.helpdiabetes.ActivityGroup.ActivityGroupMeal;
 import com.hippoandfriends.helpdiabetes.Custom.CustomArrayAdapterCharSequenceShowCreateFood;
 import com.hippoandfriends.helpdiabetes.Rest.DataParser;
 import com.hippoandfriends.helpdiabetes.Rest.DbAdapter;
 import com.hippoandfriends.helpdiabetes.Rest.TrackingValues;
-import com.hippoandfriends.helpdiabetes.R;
 
 public class ShowCreateFood extends Activity {
 	private EditText editTextfoodName;
@@ -36,8 +34,7 @@ public class ShowCreateFood extends Activity {
 	private Button btAdd, btBack;
 
 	private Spinner spinnerUnit;
-	private TableRow tableRowSpecialFoodUnit_Unit;
-	private TableRow tableRowSpecialFoodUnit_Amount;
+	private TableRow tableRowSpecialFoodUnit;
 
 	private DbAdapter dbHelper;
 
@@ -61,8 +58,7 @@ public class ShowCreateFood extends Activity {
 		dbHelper = new DbAdapter(this);
 
 		spinnerUnit = (Spinner) findViewById(R.id.spinnerShowCreateFoodUnit);
-		tableRowSpecialFoodUnit_Unit = (TableRow) findViewById(R.id.tableRowSpecialFoodUnit_Unit);
-		tableRowSpecialFoodUnit_Amount = (TableRow) findViewById(R.id.tableRowSpecialFoodUnit_Amount);
+		tableRowSpecialFoodUnit = (TableRow) findViewById(R.id.tableRowSpecialFoodUnit);
 		editTextfoodName = (EditText) findViewById(R.id.editTextFoodName);
 		editTextUnitStandardAmound = (EditText) findViewById(R.id.editTextFoodUnitStandardAmound);
 		editTextUnitName = (EditText) findViewById(R.id.editTextFoodUnitName);
@@ -89,7 +85,7 @@ public class ShowCreateFood extends Activity {
 
 			public void onItemSelected(AdapterView<?> arg0, View arg1,
 					int arg2, long arg3) {
-				// hide or show the tableRowSpecialFoodUnit_Unit and tableRowSpecialFoodUnit_Amount
+				// hide or show the tableRowSpecialFoodUnit
 				hideOrShowSpecialFoodUnitTableRow();
 			}
 
@@ -174,13 +170,11 @@ public class ShowCreateFood extends Activity {
 	// spinner item is selected.
 	private void hideOrShowSpecialFoodUnitTableRow() {
 		if (spinnerUnit.getCount() == spinnerUnit.getSelectedItemPosition() + 1) {
-			// Show the rows
-			tableRowSpecialFoodUnit_Unit.setVisibility(View.VISIBLE);
-			tableRowSpecialFoodUnit_Amount.setVisibility(View.VISIBLE);
+			// Show the row
+			tableRowSpecialFoodUnit.setVisibility(View.VISIBLE);
 		} else {
-			// Hide the rows
-			tableRowSpecialFoodUnit_Unit.setVisibility(View.GONE);
-			tableRowSpecialFoodUnit_Amount.setVisibility(View.GONE);
+			// Hide the row
+			tableRowSpecialFoodUnit.setVisibility(View.GONE);
 		}
 	}
 
@@ -326,8 +320,6 @@ public class ShowCreateFood extends Activity {
 		}
 	}
 
-	//has been changed by Johan Degraeve on 18/08/2012
-	//before the change it returned false when there were invalid values, now invalid values are replaced by default valid values
 	private boolean checkAllFieldsGotSomeValue() {
 		if (editTextfoodName.getText().length() <= 0) {
 			Toast.makeText(this,
@@ -339,32 +331,39 @@ public class ShowCreateFood extends Activity {
 			// if we selected the last spinner option we have to check if
 			// standardamount and unitName are filled in
 			if (editTextUnitStandardAmound.getText().length() <= 0) {
-				//standardamount not filled in, take "1" as value
-				editTextUnitStandardAmound.setText("1");
+				Toast.makeText(
+						this,
+						getResources().getString(
+								R.string.standardAmountCantBeEmpty),
+						Toast.LENGTH_LONG).show();
+				return false;
 			}
 			if (editTextUnitName.getText().length() <= 0) {
-				//standard unit name not filled in, take part as value
-				editTextUnitName.setText(R.string.part);
+				Toast.makeText(this,
+						getResources().getString(R.string.unit_cant_be_empty),
+						Toast.LENGTH_LONG).show();
+				return false;
+			}
+			
+
+			// and check if standardamount != 0
+			float checkStandardAmount = 0;
+			try {
+				checkStandardAmount = Float
+						.parseFloat(editTextUnitStandardAmound.getText()
+								.toString());
+			} catch (Exception e) {
+				checkStandardAmount = 0;
+			}
+			if (checkStandardAmount == 0) {
+				Toast.makeText(
+						this,
+						getResources().getString(
+								R.string.unit_amount_cant_be_zero),
+						Toast.LENGTH_LONG).show();
+				return false;
 			}
 		}
-		if (etCarb.getText().length() == 0) {
-			Toast.makeText(
-					this,
-					getResources().getString(R.string.carb_value_cant_be_empty),
-					Toast.LENGTH_LONG).show();
-			return false;
-		}
-		//if fat or protein or kcal values empty, then set to -1
-		if (etFat.getText().length() == 0) {
-			etFat.setText("-1");
-		}
-		if (etProt.getText().length() == 0) {
-			etProt.setText("-1");
-		}
-		if (etKcal.getText().length() == 0) {
-			etKcal.setText("-1");
-		}
-
 		// if everything went OK we return true
 		return true;
 	}

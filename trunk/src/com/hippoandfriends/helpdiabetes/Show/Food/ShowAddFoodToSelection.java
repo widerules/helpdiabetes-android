@@ -11,7 +11,6 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
-
 import android.app.Activity;
 import android.database.Cursor;
 import android.os.Bundle;
@@ -30,7 +29,7 @@ import android.widget.Spinner;
 import android.widget.TableRow;
 import android.widget.TextView;
 
-
+import com.hippoandfriends.helpdiabetes.R;
 import com.hippoandfriends.helpdiabetes.ActivityGroup.ActivityGroupMeal;
 import com.hippoandfriends.helpdiabetes.Custom.CustomSimpleArrayAdapterForASpinner;
 import com.hippoandfriends.helpdiabetes.Objects.DBNameAndID;
@@ -38,7 +37,6 @@ import com.hippoandfriends.helpdiabetes.Rest.DataParser;
 import com.hippoandfriends.helpdiabetes.Rest.DbAdapter;
 import com.hippoandfriends.helpdiabetes.Rest.Functions;
 import com.hippoandfriends.helpdiabetes.Rest.TrackingValues;
-import com.hippoandfriends.helpdiabetes.R;
 
 public class ShowAddFoodToSelection extends Activity {
 	private DbAdapter dbHelper;
@@ -490,23 +488,17 @@ public class ShowAddFoodToSelection extends Activity {
 					.getFloat(cUnit
 							.getColumnIndexOrThrow(DbAdapter.DATABASE_FOODUNIT_CARBS)));
 
-			calcKcal =  cUnit.getString(cUnit.getColumnIndexOrThrow(DbAdapter.DATABASE_FOODUNIT_KCAL)).length() == 0 ?
-					- 1 :
-					((amount / cUnit
+			calcKcal = ((amount / cUnit
 					.getFloat(cUnit
 							.getColumnIndexOrThrow(DbAdapter.DATABASE_FOODUNIT_STANDARDAMOUNT))) * cUnit
 					.getFloat(cUnit
 							.getColumnIndexOrThrow(DbAdapter.DATABASE_FOODUNIT_KCAL)));
-			calcFat = cUnit.getString(cUnit.getColumnIndexOrThrow(DbAdapter.DATABASE_FOODUNIT_FAT)).length() == 0 ?
-					- 1 :
-					((amount / cUnit
+			calcFat = ((amount / cUnit
 					.getFloat(cUnit
 							.getColumnIndexOrThrow(DbAdapter.DATABASE_FOODUNIT_STANDARDAMOUNT))) * cUnit
 					.getFloat(cUnit
 							.getColumnIndexOrThrow(DbAdapter.DATABASE_FOODUNIT_FAT)));
-			calcProtein = cUnit.getString(cUnit.getColumnIndexOrThrow(DbAdapter.DATABASE_FOODUNIT_PROTEIN)).length() == 0 ?
-					- 1 :
-					((amount / cUnit
+			calcProtein = ((amount / cUnit
 					.getFloat(cUnit
 							.getColumnIndexOrThrow(DbAdapter.DATABASE_FOODUNIT_STANDARDAMOUNT))) * cUnit
 					.getFloat(cUnit
@@ -546,49 +538,31 @@ public class ShowAddFoodToSelection extends Activity {
 					
 			// prot 
 			tvRowThreeFieldTwo
-					.setText(calcProtein == -1 ?
-							"" :
-							""
+					.setText(""
 							+ functions.roundFloats(
 									cUnit.getFloat(cUnit
 											.getColumnIndexOrThrow(DbAdapter.DATABASE_FOODUNIT_PROTEIN)),
 									1));
-
-			if (calcProtein == -1)
-				tvRowThreeFieldThree.setText("" +getResources().getString(R.string.unknown));
-			else					
-				tvRowThreeFieldThree.setText("" + calcProtein);
+			tvRowThreeFieldThree.setText("" + calcProtein);
 					 
 			// fat
 			tvRowFourFieldTwo
-					.setText(calcFat == -1 ?
-							"" :
-							""
+					.setText(""
 							+ functions.roundFloats(
 									cUnit.getFloat(cUnit
 											.getColumnIndexOrThrow(DbAdapter.DATABASE_FOODUNIT_FAT)),
 									1));
-
-			if (calcFat == -1)
-				tvRowFourFieldThree.setText("" +getResources().getString(R.string.unknown));
-			else					
-				tvRowFourFieldThree.setText("" + calcFat);
+			tvRowFourFieldThree.setText("" + calcFat);
 			 
 		 	
 			// kcal
 			tvRowFiveFieldTwo
-					.setText(calcKcal == -1 ?
-							"" :
-							"" 
+					.setText("" 
 							+ functions.roundFloats(
 									cUnit.getFloat(cUnit
 											.getColumnIndexOrThrow(DbAdapter.DATABASE_FOODUNIT_KCAL)),
 									1));
-			
-			if (calcKcal == -1)
-				tvRowFiveFieldThree.setText("" +getResources().getString(R.string.unknown));
-			else
-				tvRowFiveFieldThree.setText("" + calcKcal); 
+			tvRowFiveFieldThree.setText("" + calcKcal); 
 					
 			cUnit.close();
 		} catch (Exception e) {

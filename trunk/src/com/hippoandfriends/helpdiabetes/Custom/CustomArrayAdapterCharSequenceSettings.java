@@ -4,23 +4,14 @@ package com.hippoandfriends.helpdiabetes.Custom;
 
 import java.util.List;
 
-import com.hippoandfriends.helpdiabetes.R;
-
-
-
 import android.content.Context;
-
 import android.view.LayoutInflater;
-
 import android.view.View;
-
 import android.view.ViewGroup;
-
 import android.widget.ArrayAdapter;
-
 import android.widget.TextView;
 
-
+import com.hippoandfriends.helpdiabetes.R;
 
 public class CustomArrayAdapterCharSequenceSettings extends ArrayAdapter<CharSequence> {
  

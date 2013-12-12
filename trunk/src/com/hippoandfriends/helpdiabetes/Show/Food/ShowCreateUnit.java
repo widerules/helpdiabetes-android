@@ -10,7 +10,6 @@ package com.hippoandfriends.helpdiabetes.Show.Food;
 import java.util.ArrayList;
 import java.util.List;
 
-
 import android.app.Activity;
 import android.database.Cursor;
 import android.os.Bundle;
@@ -27,14 +26,13 @@ import android.widget.Spinner;
 import android.widget.TableRow;
 import android.widget.Toast;
 
-
+import com.hippoandfriends.helpdiabetes.R;
 import com.hippoandfriends.helpdiabetes.ActivityGroup.ActivityGroupMeal;
 import com.hippoandfriends.helpdiabetes.Custom.CustomArrayAdapterCharSequenceShowCreateFood;
 import com.hippoandfriends.helpdiabetes.Rest.DataParser;
 import com.hippoandfriends.helpdiabetes.Rest.DbAdapter;
 import com.hippoandfriends.helpdiabetes.Rest.Functions;
 import com.hippoandfriends.helpdiabetes.Rest.TrackingValues;
-import com.hippoandfriends.helpdiabetes.R;
 
 public class ShowCreateUnit extends Activity {
 	private long foodId, unitId;
@@ -45,9 +43,8 @@ public class ShowCreateUnit extends Activity {
 	private Button btDelete, btBack;
 
 	private Spinner spinnerUnit;
-	private TableRow tableRowSpecialUnit_Unit;
-	private TableRow tableRowSpecialUnit_Amount;
-	
+	private TableRow tableRowSpecialUnit;
+
 	private EditText etCarb, etProt, etFat, etKcal;
 
 	// used to hide the ones we dont need to show
@@ -70,8 +67,7 @@ public class ShowCreateUnit extends Activity {
 		btAdd = (Button) findViewById(R.id.buttonShowCreateUnitAddOrUpdate);
 		btDelete = (Button) findViewById(R.id.buttonShowCreateUnitDelete);
 		spinnerUnit = (Spinner) findViewById(R.id.spinnerShowCreateUnit);
-		tableRowSpecialUnit_Unit = (TableRow) findViewById(R.id.tableRowShowCreateUnitSpecialFoodUnit_Unit);
-		tableRowSpecialUnit_Amount = (TableRow) findViewById(R.id.tableRowShowCreateUnitSpecialFoodUnit_Amount);
+		tableRowSpecialUnit = (TableRow) findViewById(R.id.tableRowShowCreateUnitSpecialFoodUnit);
 
 		etCarb = (EditText) findViewById(R.id.editTextShowCreateUnit1);
 		etProt = (EditText) findViewById(R.id.editTextShowCreateUnit2);
@@ -307,36 +303,43 @@ public class ShowCreateUnit extends Activity {
 		}
 	}
 
-	//has been changed by Johan Degraeve on 18/08/2012
-	//before the change it returned false when there were invalid values, now invalid values are replaced by default valid values
 	private boolean checkValues() {
 		if (spinnerUnit.getCount() == spinnerUnit.getSelectedItemPosition() + 1) {
 			// if we selected the last spinner option we have to check if
 			// standardamount and unitname are filled in
 			if (editTextStandardAmound.getText().length() <= 0) {
-				//standardamount not filled in, take "1" as value
-				editTextStandardAmound.setText("1");
+				Toast.makeText(
+						this,
+						getResources().getString(
+								R.string.standardAmountCantBeEmpty),
+						Toast.LENGTH_LONG).show();
+				return false;
 			} else if (editTextName.getText().length() <= 0) {
-				editTextName.setText(R.string.part);
+				Toast.makeText(this,
+						getResources().getString(R.string.name_cant_be_empty),
+						Toast.LENGTH_LONG).show();
+				return false;
 			}
-		} 
-		if (etCarb.getText().length() == 0) {
-			Toast.makeText(
-					this,
-					getResources().getString(R.string.carb_value_cant_be_empty),
-					Toast.LENGTH_LONG).show();
-			return false;
-		}
-
-		//if fat or protein or kcal values empty, then set to -1
-		if (etFat.getText().length() == 0) {
-			etFat.setText("-1");
-		}
-		if (etProt.getText().length() == 0) {
-			etProt.setText("-1");
-		}
-		if (etKcal.getText().length() == 0) {
-			etKcal.setText("-1");
+		} else {
+			// if there is a value in everything ( check if the value aint '0'
+			// or '0.'
+			try {
+				float unitStandardAmound = Float
+						.parseFloat(editTextStandardAmound.getText().toString());
+				if (unitStandardAmound <= 0) {
+					Toast.makeText(
+							this,
+							getResources().getString(
+									R.string.name_cant_be_empty),
+							Toast.LENGTH_LONG).show();
+					return false;
+				}
+			} catch (Exception e) {
+				Toast.makeText(this,
+						getResources().getString(R.string.name_cant_be_empty),
+						Toast.LENGTH_LONG).show();
+				return false;
+			}
 		}
 		// if everything went OK we return true
 		return true;
@@ -481,11 +484,9 @@ public class ShowCreateUnit extends Activity {
 	// spinner item is selected
 	private void hideOrShowSpecialFoodUnitTableRow() {
 		if (spinnerUnit.getCount() == spinnerUnit.getSelectedItemPosition() + 1) {
-			tableRowSpecialUnit_Unit.setVisibility(View.VISIBLE);
-			tableRowSpecialUnit_Amount.setVisibility(View.VISIBLE);
+			tableRowSpecialUnit.setVisibility(View.VISIBLE);
 		} else {
-			tableRowSpecialUnit_Unit.setVisibility(View.GONE);
-			tableRowSpecialUnit_Amount.setVisibility(View.GONE);
+			tableRowSpecialUnit.setVisibility(View.GONE);
 		}
 	}
 

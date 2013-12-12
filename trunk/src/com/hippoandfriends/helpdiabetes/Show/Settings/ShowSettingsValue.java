@@ -2,35 +2,24 @@
 
 package com.hippoandfriends.helpdiabetes.Show.Settings;
 
-
 import android.app.Activity;
-
 import android.database.Cursor;
-
 import android.os.Bundle;
-
 import android.view.KeyEvent;
-
 import android.view.View;
-
 import android.view.View.OnClickListener;
-
 import android.widget.Button;
-
 import android.widget.RadioButton;
-
 import android.widget.Toast;
-
 import android.widget.ToggleButton;
 
-
+import com.hippoandfriends.helpdiabetes.R;
 import com.hippoandfriends.helpdiabetes.ActivityGroup.ActivityGroupMeal;
 import com.hippoandfriends.helpdiabetes.ActivityGroup.ActivityGroupSettings;
 import com.hippoandfriends.helpdiabetes.Rest.DataParser;
 import com.hippoandfriends.helpdiabetes.Rest.DbAdapter;
 import com.hippoandfriends.helpdiabetes.Rest.DbSettings;
 import com.hippoandfriends.helpdiabetes.Rest.TrackingValues;
-import com.hippoandfriends.helpdiabetes.R;
 
 public class ShowSettingsValue extends Activity {
 

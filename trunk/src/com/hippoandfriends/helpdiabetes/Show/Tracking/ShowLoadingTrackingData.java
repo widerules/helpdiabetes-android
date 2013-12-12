@@ -6,24 +6,16 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
-
 import android.app.Activity;
-
 import android.content.Context;
-
 import android.content.Intent;
-
 import android.database.Cursor;
-
 import android.os.AsyncTask;
-
 import android.os.Bundle;
-
 import android.view.LayoutInflater;
-
 import android.view.View;
 
-
+import com.hippoandfriends.helpdiabetes.R;
 import com.hippoandfriends.helpdiabetes.ActivityGroup.ActivityGroupTracking;
 import com.hippoandfriends.helpdiabetes.Objects.DBBloodGlucoseEvent;
 import com.hippoandfriends.helpdiabetes.Objects.DBExerciseEvent;
@@ -36,7 +28,6 @@ import com.hippoandfriends.helpdiabetes.Rest.DataParser;
 import com.hippoandfriends.helpdiabetes.Rest.DbAdapter;
 import com.hippoandfriends.helpdiabetes.Rest.Functions;
 import com.hippoandfriends.helpdiabetes.Rest.TimeComparator;
-import com.hippoandfriends.helpdiabetes.R;
 
 public class ShowLoadingTrackingData extends Activity {
 	// This boolean is used to see if we are finisht with gething our data from
@@ -269,20 +260,14 @@ public class ShowLoadingTrackingData extends Activity {
 																.getColumnIndexOrThrow(DbAdapter.DATABASE_FOODUNIT_DESCRIPTION)),
 														cUnit.getFloat(cUnit
 																.getColumnIndexOrThrow(DbAdapter.DATABASE_FOODUNIT_STANDARDAMOUNT)),
-														cUnit.getString(cUnit.getColumnIndexOrThrow(DbAdapter.DATABASE_FOODUNIT_KCAL)).length() == 0 ?
-																-1F:
-																cUnit.getFloat(cUnit
-																		.getColumnIndexOrThrow(DbAdapter.DATABASE_FOODUNIT_KCAL)),
-														cUnit.getString(cUnit.getColumnIndexOrThrow(DbAdapter.DATABASE_FOODUNIT_PROTEIN)).length() == 0 ?
-																-1F:
-																cUnit.getFloat(cUnit
-																	.getColumnIndexOrThrow(DbAdapter.DATABASE_FOODUNIT_PROTEIN)),
+														cUnit.getFloat(cUnit
+																.getColumnIndexOrThrow(DbAdapter.DATABASE_FOODUNIT_KCAL)),
+														cUnit.getFloat(cUnit
+																.getColumnIndexOrThrow(DbAdapter.DATABASE_FOODUNIT_PROTEIN)),
 														cUnit.getFloat(cUnit
 																.getColumnIndexOrThrow(DbAdapter.DATABASE_FOODUNIT_CARBS)),
-														cUnit.getString(cUnit.getColumnIndexOrThrow(DbAdapter.DATABASE_FOODUNIT_FAT)).length() == 0 ?
-																-1F:
-																cUnit.getFloat(cUnit
-																		.getColumnIndexOrThrow(DbAdapter.DATABASE_FOODUNIT_FAT)),
+														cUnit.getFloat(cUnit
+																.getColumnIndexOrThrow(DbAdapter.DATABASE_FOODUNIT_FAT)),
 														cUnit.getFloat(cUnit
 																.getColumnIndexOrThrow(DbAdapter.DATABASE_FOODUNIT_VISIBLE)),
 														cUnit.getInt(cUnit

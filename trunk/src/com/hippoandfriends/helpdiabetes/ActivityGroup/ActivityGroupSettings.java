@@ -11,19 +11,12 @@ import com.hippoandfriends.helpdiabetes.Show.Medicine.ShowMedicineTypes;
 import com.hippoandfriends.helpdiabetes.Show.Settings.ShowSettings;
 import com.hippoandfriends.helpdiabetes.Show.Settings.ShowSettingsMealTimes;
 
-
 import android.app.ActivityGroup;
-
 import android.content.Context;
-
 import android.content.Intent;
-
 import android.os.Bundle;
-
 import android.view.KeyEvent;
-
 import android.view.View;
-
 import android.view.inputmethod.InputMethodManager;
 
 public class ActivityGroupSettings extends ActivityGroup {

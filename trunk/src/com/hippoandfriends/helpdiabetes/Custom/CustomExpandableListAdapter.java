@@ -4,28 +4,18 @@ package com.hippoandfriends.helpdiabetes.Custom;
 
 import java.util.ArrayList;
 
-
 import android.content.Context;
-
 import android.util.DisplayMetrics;
-
 import android.view.LayoutInflater;
-
 import android.view.View;
-
 import android.view.ViewGroup;
-
 import android.view.ViewGroup.LayoutParams;
-
 import android.widget.BaseExpandableListAdapter;
-
 import android.widget.LinearLayout;
-
 import android.widget.TextView;
 
-
-import com.hippoandfriends.helpdiabetes.Objects.DBTotalCalculated;
 import com.hippoandfriends.helpdiabetes.R;
+import com.hippoandfriends.helpdiabetes.Objects.DBTotalCalculated;
 
 public class CustomExpandableListAdapter extends BaseExpandableListAdapter {
 

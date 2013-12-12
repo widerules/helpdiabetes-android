@@ -2,19 +2,12 @@
 
 package com.hippoandfriends.helpdiabetes.Custom;
 
-
 import android.content.Context;
-
 import android.database.Cursor;
-
 import android.view.LayoutInflater;
-
 import android.view.View;
-
 import android.view.ViewGroup;
-
 import android.widget.SimpleCursorAdapter;
-
 import android.widget.TextView;
 
 public class CustomSimpleCursorAdapter extends SimpleCursorAdapter {

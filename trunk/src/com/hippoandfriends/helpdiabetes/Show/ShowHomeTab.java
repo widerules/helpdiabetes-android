@@ -2,33 +2,21 @@
 
 package com.hippoandfriends.helpdiabetes.Show;
 
-
 import android.app.TabActivity;
-
 import android.content.Context;
-
 import android.content.Intent;
-
 import android.content.pm.ActivityInfo;
-
 import android.os.Bundle;
-
 import android.view.LayoutInflater;
-
 import android.view.View;
-
 import android.widget.ImageView;
-
 import android.widget.TabHost;
-
 import android.widget.TabHost.TabContentFactory;
-
 import android.widget.TabHost.TabSpec;
-
 import android.widget.TextView;
 
 import com.google.android.apps.analytics.GoogleAnalyticsTracker;
-
+import com.hippoandfriends.helpdiabetes.R;
 import com.hippoandfriends.helpdiabetes.ActivityGroup.ActivityGroupExercise;
 import com.hippoandfriends.helpdiabetes.ActivityGroup.ActivityGroupGlucose;
 import com.hippoandfriends.helpdiabetes.ActivityGroup.ActivityGroupMeal;
@@ -37,7 +25,6 @@ import com.hippoandfriends.helpdiabetes.ActivityGroup.ActivityGroupSettings;
 import com.hippoandfriends.helpdiabetes.ActivityGroup.ActivityGroupTracking;
 import com.hippoandfriends.helpdiabetes.Rest.DataParser;
 import com.hippoandfriends.helpdiabetes.Rest.TrackingValues;
-import com.hippoandfriends.helpdiabetes.R;
 
 public class ShowHomeTab extends TabActivity {
 	private TabHost tabHost;

@@ -6,27 +6,18 @@ package com.hippoandfriends.helpdiabetes.Custom;
 
 import java.util.List;
 
-
 import android.content.Context;
-
 import android.view.LayoutInflater;
-
 import android.view.View;
-
 import android.view.View.OnClickListener;
-
 import android.view.ViewGroup;
-
 import android.widget.BaseAdapter;
-
 import android.widget.LinearLayout;
-
 import android.widget.TextView;
 
-
+import com.hippoandfriends.helpdiabetes.R;
 import com.hippoandfriends.helpdiabetes.Objects.DBSelectedFood;
 import com.hippoandfriends.helpdiabetes.Rest.Functions;
-import com.hippoandfriends.helpdiabetes.R;
 
 public class CustomBaseAdapterSelectedFood extends BaseAdapter implements
 		OnClickListener {
@@ -82,9 +73,7 @@ public class CustomBaseAdapterSelectedFood extends BaseAdapter implements
 					+ context.getResources().getString(R.string.short_carbs);
 			break;
 		case 2:
-			value = entry.getUnit().getProtein() < 0 ?
-					context.getResources().getString(R.string.unknown) :
-					"" 
+			value = "" 
 					+ new Functions().roundFloats(((entry.getAmound() / entry
 							.getUnit().getStandardamound()) * entry.getUnit()
 							.getProtein()), 1)
@@ -93,18 +82,14 @@ public class CustomBaseAdapterSelectedFood extends BaseAdapter implements
 							R.string.amound_of_protein);
 			break;
 		case 3:
-			value = entry.getUnit().getFat() < 0 ?
-					context.getResources().getString(R.string.unknown) :
-					""
+			value = ""
 					+ new Functions().roundFloats(((entry.getAmound() / entry
 							.getUnit().getStandardamound()) * entry.getUnit()
 							.getFat()), 1) + " "
 					+ context.getResources().getString(R.string.amound_of_fat);
 			break;
 		case 4:
-			value = entry.getUnit().getKcal() < 0 ?
-					context.getResources().getString(R.string.unknown) :
-					""
+			value = ""
 					+ new Functions().roundFloats(((entry.getAmound() / entry
 							.getUnit().getStandardamound()) * entry.getUnit()
 							.getKcal()), 1) + " "

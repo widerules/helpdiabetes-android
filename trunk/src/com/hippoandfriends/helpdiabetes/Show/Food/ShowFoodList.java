@@ -6,7 +6,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-
 import android.app.AlertDialog;
 import android.app.ListActivity;
 import android.content.Context;
@@ -32,7 +31,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-
+import com.hippoandfriends.helpdiabetes.R;
 import com.hippoandfriends.helpdiabetes.ActivityGroup.ActivityGroupMeal;
 import com.hippoandfriends.helpdiabetes.Objects.DBFoodComparable;
 import com.hippoandfriends.helpdiabetes.Rest.DataParser;
@@ -42,7 +41,6 @@ import com.hippoandfriends.helpdiabetes.Rest.ExcelCharacter;
 import com.hippoandfriends.helpdiabetes.Rest.FoodComparator;
 import com.hippoandfriends.helpdiabetes.Rest.SpecialCharactersToNormal;
 import com.hippoandfriends.helpdiabetes.Rest.TrackingValues;
-import com.hippoandfriends.helpdiabetes.R;
 
 public class ShowFoodList extends ListActivity {
 	// dbHelper to get the food list out the database
@@ -448,7 +446,7 @@ public class ShowFoodList extends ListActivity {
 
 		// split with spaces
 		String[] searchWorths = editTextSearch.getText().toString().split(" ");
-
+		
 		// do for every object in the normal list
 		for (DBFoodComparable obj : ActivityGroupMeal.group.getFoodData().listFood) {
 			String tempName = SpecialCharactersToNormal.removeAccents(obj
@@ -456,7 +454,7 @@ public class ShowFoodList extends ListActivity {
 			// if tempname.indexof != -1 then we found the search string in the
 			// obj
 			for (String worth : searchWorths) {
-				if (tempName.toLowerCase().indexOf(worth.toLowerCase()) != -1) {
+				if (tempName.toLowerCase().indexOf(worth.toLowerCase()) != -1 && worth.trim().length() > 0) {
 					listDBFoodComparableWithFilter.add(obj);
 				}
 			}

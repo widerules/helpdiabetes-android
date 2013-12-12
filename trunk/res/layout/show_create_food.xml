@@ -58,41 +58,25 @@
             </TableRow>
 
             <TableRow
-                android:id="@+id/tableRowSpecialFoodUnit_Unit"
+                android:id="@+id/tableRowSpecialFoodUnit"
                 style="@style/styleTableRowGravityCenter"
                 android:visibility="gone" >
 
                 <TextView
                     android:id="@+id/textView2"
-                    style="@style/textViewInTableAlignRight" 
-                    android:text="@string/unit_name"/>
-
-                <EditText
-                    android:id="@+id/editTextFoodUnitName"
-                    style="@style/editTextInTableText"
-                    android:hint="@string/part"
-                    android:text="@string/part" >
-                </EditText>
-            </TableRow>
-
-            <TableRow
-                android:id="@+id/tableRowSpecialFoodUnit_Amount"
-                style="@style/styleTableRowGravityCenter"
-                android:visibility="gone" >
-
-                <TextView
-                    android:id="@+id/textView2_Amount"
-                    style="@style/textViewInTableAlignRight"
-                    android:text="@string/unit_amount"/>
+                    style="@style/textViewInTableAlignRight" />
 
                 <EditText
                     android:id="@+id/editTextFoodUnitStandardAmound"
                     style="@style/editTextInTableFloat"
-                    android:digits="1234567890."
-                    android:inputType="phone"
-                    android:text="1" android:hint="1">
+                    android:text="1" >
                 </EditText>
 
+                <EditText
+                    android:id="@+id/editTextFoodUnitName"
+                    style="@style/editTextInTableText"
+                    android:text="@string/part" >
+                </EditText>
             </TableRow>
 
             <TableRow
@@ -120,8 +104,7 @@
 
                 <EditText
                     android:id="@+id/editTextShowCreateFood2"
-                    style="@style/editTextInTableFloat"
-                    android:hint="@string/unknown"/>
+                    style="@style/editTextInTableFloat" />
             </TableRow>
 
             <TableRow
@@ -135,8 +118,7 @@
 
                 <EditText
                     android:id="@+id/editTextShowCreateFood3"
-                    style="@style/editTextInTableFloat"  
-                    android:hint="@string/unknown"/>
+                    style="@style/editTextInTableFloat" />
             </TableRow>
 
             <TableRow
@@ -146,12 +128,11 @@
                 <TextView
                     android:id="@+id/textViewShowCreateFood4"
                     style="@style/textViewInTableAlignRight"
-                    android:text="@string/short_kcal"/>
+                    android:text="@string/short_kcal" />
 
                 <EditText
                     android:id="@+id/editTextShowCreateFood4"
-                    style="@style/editTextInTableFloat" 
-                    android:hint="@string/unknown" />
+                    style="@style/editTextInTableFloat" />
             </TableRow>
         </TableLayout>
     </LinearLayout>

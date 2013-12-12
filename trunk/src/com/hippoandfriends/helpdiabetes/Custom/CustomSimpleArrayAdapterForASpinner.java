@@ -7,21 +7,13 @@ import java.util.List;
 import com.hippoandfriends.helpdiabetes.Objects.DBNameAndID;
 import com.hippoandfriends.helpdiabetes.Rest.Functions;
 
-
 import android.content.Context;
-
 import android.view.Gravity;
-
 import android.view.LayoutInflater;
-
 import android.view.View;
-
 import android.view.ViewGroup;
-
 import android.view.ViewGroup.LayoutParams;
-
 import android.widget.ArrayAdapter;
-
 import android.widget.TextView;
 
 public class CustomSimpleArrayAdapterForASpinner extends
