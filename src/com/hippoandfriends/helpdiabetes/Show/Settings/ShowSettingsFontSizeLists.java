@@ -4,22 +4,15 @@ package com.hippoandfriends.helpdiabetes.Show.Settings;
 
 import java.util.ArrayList;
 
-
 import android.app.ListActivity;
-
 import android.os.Bundle;
-
 import android.view.KeyEvent;
-
 import android.view.View;
-
 import android.view.View.OnClickListener;
-
 import android.widget.Button;
-
 import android.widget.ListView;
 
-
+import com.hippoandfriends.helpdiabetes.R;
 import com.hippoandfriends.helpdiabetes.ActivityGroup.ActivityGroupMeal;
 import com.hippoandfriends.helpdiabetes.ActivityGroup.ActivityGroupSettings;
 import com.hippoandfriends.helpdiabetes.ActivityGroup.ActivityGroupTracking;
@@ -27,7 +20,6 @@ import com.hippoandfriends.helpdiabetes.Custom.CustomArrayAdapterFontSize;
 import com.hippoandfriends.helpdiabetes.Rest.DbAdapter;
 import com.hippoandfriends.helpdiabetes.Rest.DbSettings;
 import com.hippoandfriends.helpdiabetes.Rest.TrackingValues;
-import com.hippoandfriends.helpdiabetes.R;
 
 public class ShowSettingsFontSizeLists extends ListActivity {
 

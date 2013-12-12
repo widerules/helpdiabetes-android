@@ -8,19 +8,12 @@ import com.hippoandfriends.helpdiabetes.Rest.DataParser;
 import com.hippoandfriends.helpdiabetes.Show.ShowHomeTab;
 import com.hippoandfriends.helpdiabetes.Show.Tracking.ShowLoadingTrackingData;
 
-
 import android.app.ActivityGroup;
-
 import android.content.Context;
-
 import android.content.Intent;
-
 import android.os.Bundle;
-
 import android.view.KeyEvent;
-
 import android.view.View;
-
 import android.view.inputmethod.InputMethodManager;
 
 public class ActivityGroupTracking extends ActivityGroup {

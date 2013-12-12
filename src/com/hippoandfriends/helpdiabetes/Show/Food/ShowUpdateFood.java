@@ -5,36 +5,22 @@ package com.hippoandfriends.helpdiabetes.Show.Food;
 import java.util.ArrayList;
 import java.util.List;
 
-
 import android.app.AlertDialog;
-
 import android.app.ListActivity;
-
 import android.content.DialogInterface;
-
 import android.content.Intent;
-
 import android.database.Cursor;
-
 import android.os.Bundle;
-
 import android.view.KeyEvent;
-
 import android.view.LayoutInflater;
-
 import android.view.View;
-
 import android.view.View.OnClickListener;
-
 import android.widget.Button;
-
 import android.widget.EditText;
-
 import android.widget.ListView;
-
 import android.widget.Toast;
 
-
+import com.hippoandfriends.helpdiabetes.R;
 import com.hippoandfriends.helpdiabetes.ActivityGroup.ActivityGroupMeal;
 import com.hippoandfriends.helpdiabetes.Custom.CustomArrayAdapterListViewShowUpdateFoodDBFoodUnit;
 import com.hippoandfriends.helpdiabetes.Objects.DBFood;
@@ -42,7 +28,6 @@ import com.hippoandfriends.helpdiabetes.Objects.DBFoodUnit;
 import com.hippoandfriends.helpdiabetes.Rest.DataParser;
 import com.hippoandfriends.helpdiabetes.Rest.DbAdapter;
 import com.hippoandfriends.helpdiabetes.Rest.TrackingValues;
-import com.hippoandfriends.helpdiabetes.R;
 
 public class ShowUpdateFood extends ListActivity {
 
@@ -180,16 +165,12 @@ public class ShowUpdateFood extends ListActivity {
 			do {
 				listFoodUnit
 						.add(new DBFoodUnit(
-								cFoodUnit.getLong(cFoodUnit.getColumnIndexOrThrow(DbAdapter.DATABASE_FOODUNIT_ID)),//id
-								cFoodUnit.getString(cFoodUnit.getColumnIndexOrThrow(DbAdapter.DATABASE_FOODUNIT_NAME)),//name
-								"", //description
-								0F, //standardamount
-								0F, //kcal
-								0F, //protein
-								0F, //carbs
-								0F, //fat
-								1F, //visible
-								0));//foodid
+								cFoodUnit
+										.getLong(cFoodUnit
+												.getColumnIndexOrThrow(DbAdapter.DATABASE_FOODUNIT_ID)),
+								cFoodUnit.getString(cFoodUnit
+										.getColumnIndexOrThrow(DbAdapter.DATABASE_FOODUNIT_NAME)),
+								"", 0F, 0F, 0F, 0F, 0F, 1F, 0));
 			} while (cFoodUnit.moveToNext());
 		}
 		cFoodUnit.close();

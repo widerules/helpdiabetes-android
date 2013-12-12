@@ -11,52 +11,30 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
-
 import android.app.AlertDialog;
-
 import android.app.Dialog;
-
 import android.app.ListActivity;
-
 import android.content.DialogInterface;
-
 import android.content.Intent;
-
 import android.database.Cursor;
-
 import android.os.Bundle;
-
 import android.text.InputType;
-
 import android.util.DisplayMetrics;
-
 import android.view.Gravity;
-
 import android.view.KeyEvent;
-
 import android.view.LayoutInflater;
-
 import android.view.View;
-
 import android.view.View.OnClickListener;
-
 import android.widget.Button;
-
 import android.widget.EditText;
-
 import android.widget.ExpandableListView;
-
 import android.widget.ExpandableListView.OnGroupCollapseListener;
-
 import android.widget.ExpandableListView.OnGroupExpandListener;
-
 import android.widget.ListView;
-
 import android.widget.TextView;
-
 import android.widget.Toast;
 
-
+import com.hippoandfriends.helpdiabetes.R;
 import com.hippoandfriends.helpdiabetes.ActivityGroup.ActivityGroupMeal;
 import com.hippoandfriends.helpdiabetes.ActivityGroup.ActivityGroupTracking;
 import com.hippoandfriends.helpdiabetes.Custom.CustomBaseAdapterSelectedFood;
@@ -72,7 +50,6 @@ import com.hippoandfriends.helpdiabetes.Rest.TrackingValues;
 import com.hippoandfriends.helpdiabetes.Show.ShowHomeTab;
 import com.hippoandfriends.helpdiabetes.slider.DateSlider;
 import com.hippoandfriends.helpdiabetes.slider.DateTimeSlider;
-import com.hippoandfriends.helpdiabetes.R;
 
 public class ShowSelectedFood extends ListActivity {
 	private DbAdapter dbHelper;
@@ -524,20 +501,14 @@ public class ShowSelectedFood extends ListActivity {
 										.getColumnIndexOrThrow(DbAdapter.DATABASE_FOODUNIT_DESCRIPTION)),
 								cUnit.getFloat(cUnit
 										.getColumnIndexOrThrow(DbAdapter.DATABASE_FOODUNIT_STANDARDAMOUNT)),
-								cUnit.getString(cUnit.getColumnIndexOrThrow(DbAdapter.DATABASE_FOODUNIT_KCAL)).length() == 0 ?		
-										-1F:
-										cUnit.getFloat(cUnit
-												.getColumnIndexOrThrow(DbAdapter.DATABASE_FOODUNIT_KCAL)),
-								cUnit.getString(cUnit.getColumnIndexOrThrow(DbAdapter.DATABASE_FOODUNIT_PROTEIN)).length() == 0 ?		
-										-1F:
-										cUnit.getFloat(cUnit
-												.getColumnIndexOrThrow(DbAdapter.DATABASE_FOODUNIT_PROTEIN)),
+								cUnit.getFloat(cUnit
+										.getColumnIndexOrThrow(DbAdapter.DATABASE_FOODUNIT_KCAL)),
+								cUnit.getFloat(cUnit
+										.getColumnIndexOrThrow(DbAdapter.DATABASE_FOODUNIT_PROTEIN)),
 								cUnit.getFloat(cUnit
 										.getColumnIndexOrThrow(DbAdapter.DATABASE_FOODUNIT_CARBS)),
-								cUnit.getString(cUnit.getColumnIndexOrThrow(DbAdapter.DATABASE_FOODUNIT_FAT)).length() == 0 ?		
-										-1F:
-										cUnit.getFloat(cUnit
-												.getColumnIndexOrThrow(DbAdapter.DATABASE_FOODUNIT_FAT)),
+								cUnit.getFloat(cUnit
+										.getColumnIndexOrThrow(DbAdapter.DATABASE_FOODUNIT_FAT)),
 								cUnit.getFloat(cUnit
 										.getColumnIndexOrThrow(DbAdapter.DATABASE_FOODUNIT_VISIBLE)),
 								cUnit.getInt(cUnit
@@ -593,11 +564,7 @@ public class ShowSelectedFood extends ListActivity {
 				cUnit.moveToFirst();
 
 				// add the calculated kcal to the total
-				subKcal = (cUnit
-						.getString(cUnit
-								.getColumnIndexOrThrow(DbAdapter.DATABASE_FOODUNIT_KCAL)).length() == 0) || (totalKcal < 0) ?
-						-1:
-						((cSelectedFood
+				subKcal = ((cSelectedFood
 						.getFloat(cSelectedFood
 								.getColumnIndexOrThrow(DbAdapter.DATABASE_SELECTEDFOOD_AMOUNT)) / cUnit
 						.getFloat(cUnit
@@ -615,11 +582,7 @@ public class ShowSelectedFood extends ListActivity {
 								.getColumnIndexOrThrow(DbAdapter.DATABASE_FOODUNIT_CARBS)));
 
 				// add the calculated protein to the total
-				subProtein = (cUnit
-						.getString(cUnit
-								.getColumnIndexOrThrow(DbAdapter.DATABASE_FOODUNIT_PROTEIN)).length() == 0) || (totalProtein < 0) ?
-						-1:
-						((cSelectedFood
+				subProtein = ((cSelectedFood
 						.getFloat(cSelectedFood
 								.getColumnIndexOrThrow(DbAdapter.DATABASE_SELECTEDFOOD_AMOUNT)) / cUnit
 						.getFloat(cUnit
@@ -627,11 +590,7 @@ public class ShowSelectedFood extends ListActivity {
 						.getFloat(cUnit
 								.getColumnIndexOrThrow(DbAdapter.DATABASE_FOODUNIT_PROTEIN)));
 				// add the calculated fat to the total
-				subFat = (cUnit
-						.getString(cUnit
-								.getColumnIndexOrThrow(DbAdapter.DATABASE_FOODUNIT_FAT)).length() == 0) || (totalFat < 0) ?
-						-1:
-						((cSelectedFood
+				subFat = ((cSelectedFood
 						.getFloat(cSelectedFood
 								.getColumnIndexOrThrow(DbAdapter.DATABASE_SELECTEDFOOD_AMOUNT)) / cUnit
 						.getFloat(cUnit
@@ -639,10 +598,10 @@ public class ShowSelectedFood extends ListActivity {
 						.getFloat(cUnit
 								.getColumnIndexOrThrow(DbAdapter.DATABASE_FOODUNIT_FAT)));
 
-				totalKcal = subKcal == -1 ? -1 : totalKcal + subKcal;
-				totalCarbs = totalCarbs + subCarbs;
-				totalProtein = subProtein == -1 ? -1 : totalProtein + subProtein;
-				totalFat = subFat == -1 ? -1 : totalFat + subFat;
+				totalKcal += subKcal;
+				totalCarbs += subCarbs;
+				totalProtein += subProtein;
+				totalFat += subFat;
 
 				cUnit.close();
 			} while (cSelectedFood.moveToNext());
@@ -738,10 +697,8 @@ public class ShowSelectedFood extends ListActivity {
 			if (expandableListview != null
 					&& ActivityGroupMeal.group.getFoodData().defaultValue != 1)
 
-				items.add(new DBTotalCalculated(
-							Float.toString(totalCarbs), 
-							1, 
-							getResources().getString(R.string.short_carbs)));
+				items.add(new DBTotalCalculated(totalCarbs, 1, getResources()
+						.getString(R.string.short_carbs)));
 			// adapter.addItem(totalCarbs + " "
 			// + getResources().getString(R.string.amound_of_carbs));
 
@@ -753,9 +710,8 @@ public class ShowSelectedFood extends ListActivity {
 					&& ActivityGroupMeal.group.getFoodData().defaultValue != 2)
 				// adapter.addItem(totalProtein + " "
 				// + getResources().getString(R.string.amound_of_protein));
-				items.add(new DBTotalCalculated(
-							totalProtein == -1 ? getResources().getString(R.string.unknown): Float.toString(totalProtein), 
-							2, getResources().getString(R.string.amound_of_protein)));
+				items.add(new DBTotalCalculated(totalProtein, 2, getResources()
+						.getString(R.string.amound_of_protein)));
 
 		}
 
@@ -765,10 +721,8 @@ public class ShowSelectedFood extends ListActivity {
 					&& ActivityGroupMeal.group.getFoodData().defaultValue != 3)
 				// adapter.addItem(totalFat + " "
 				// + getResources().getString(R.string.amound_of_fat));
-				items.add(new DBTotalCalculated(
-							totalFat == -1 ? getResources().getString(R.string.unknown): Float.toString(totalFat), 
-							3, 
-							getResources().getString(R.string.amound_of_fat)));
+				items.add(new DBTotalCalculated(totalFat, 3, getResources()
+						.getString(R.string.amound_of_fat)));
 
 		}
 
@@ -778,10 +732,8 @@ public class ShowSelectedFood extends ListActivity {
 					&& ActivityGroupMeal.group.getFoodData().defaultValue != 4)
 				// adapter.addItem(totalKcal + " "
 				// + getResources().getString(R.string.amound_of_kcal));
-				items.add(new DBTotalCalculated(
-							totalKcal == -1 ? getResources().getString(R.string.unknown): Float.toString(totalKcal), 
-							4, 
-							getResources().getString(R.string.short_kcal)));
+				items.add(new DBTotalCalculated(totalKcal, 4, getResources()
+						.getString(R.string.short_kcal)));
 
 		}
 
@@ -805,25 +757,25 @@ public class ShowSelectedFood extends ListActivity {
 		switch (ActivityGroupMeal.group.getFoodData().defaultValue) {
 		case 1:
 			if (expandableListview != null)
-				adapter.setDefaultCalculated("" + (totalCarbs == -1 ? getResources().getString(R.string.unknown) : totalCarbs));
+				adapter.setDefaultCalculated("" + totalCarbs);
 			adapter.setDefaultCalculatedText(getResources().getString(
 					R.string.short_carbs));
 			break;
 		case 2:
 			if (expandableListview != null)
-				adapter.setDefaultCalculated("" + (totalProtein == -1 ? getResources().getString(R.string.unknown) : totalProtein));
+				adapter.setDefaultCalculated("" + totalProtein);
 			adapter.setDefaultCalculatedText(getResources().getString(
 					R.string.amound_of_protein));
 			break;
 		case 3:
 			if (expandableListview != null)
-				adapter.setDefaultCalculated(""  + (totalFat == -1 ? getResources().getString(R.string.unknown) : totalFat));
+				adapter.setDefaultCalculated("" + totalFat);
 			adapter.setDefaultCalculatedText(getResources().getString(
 					R.string.amound_of_fat));
 			break;
 		case 4:
 			if (expandableListview != null)
-				adapter.setDefaultCalculated(""  + (totalKcal == -1 ? getResources().getString(R.string.unknown) : totalKcal));
+				adapter.setDefaultCalculated("" + totalKcal);
 			adapter.setDefaultCalculatedText(getResources().getString(
 					R.string.short_kcal));
 			break;

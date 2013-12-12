@@ -4,40 +4,24 @@ package com.hippoandfriends.helpdiabetes.Show.Glucose;
 
 import java.util.Calendar;
 
-
 import android.app.Activity;
-
 import android.app.AlertDialog;
-
 import android.app.Dialog;
-
 import android.content.DialogInterface;
-
 import android.database.Cursor;
-
 import android.os.Bundle;
-
 import android.os.Handler;
-
 import android.view.KeyEvent;
-
 import android.view.LayoutInflater;
-
 import android.view.MotionEvent;
-
 import android.view.View;
-
 import android.view.View.OnClickListener;
-
 import android.widget.Button;
-
 import android.widget.EditText;
-
 import android.widget.TextView;
-
 import android.widget.Toast;
 
-
+import com.hippoandfriends.helpdiabetes.R;
 import com.hippoandfriends.helpdiabetes.ActivityGroup.ActivityGroupGlucose;
 import com.hippoandfriends.helpdiabetes.ActivityGroup.ActivityGroupTracking;
 import com.hippoandfriends.helpdiabetes.Rest.DataParser;
@@ -48,7 +32,6 @@ import com.hippoandfriends.helpdiabetes.Rest.TrackingValues;
 import com.hippoandfriends.helpdiabetes.Show.ShowHomeTab;
 import com.hippoandfriends.helpdiabetes.slider.DateSlider;
 import com.hippoandfriends.helpdiabetes.slider.DateTimeSlider;
-import com.hippoandfriends.helpdiabetes.R;
 
 public class ShowAddGlucoseEvent extends Activity {
 	private Button btUpdateDateAndHour, btAdd;

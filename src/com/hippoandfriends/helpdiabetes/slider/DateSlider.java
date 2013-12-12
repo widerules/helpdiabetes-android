@@ -21,24 +21,16 @@ package com.hippoandfriends.helpdiabetes.slider;
 
 import java.util.Calendar;
 
-
 import android.app.Dialog;
-
 import android.content.Context;
-
 import android.os.Bundle;
-
 import android.view.View;
-
 import android.view.Window;
-
 import android.widget.Button;
-
 import android.widget.TextView;
 
-
-import com.hippoandfriends.helpdiabetes.slider.SliderContainer.OnTimeChangeListener;
 import com.hippoandfriends.helpdiabetes.R;
+import com.hippoandfriends.helpdiabetes.slider.SliderContainer.OnTimeChangeListener;
 
 /**
  * A Dialog subclass that hosts a SliderContainer and a couple of buttons,

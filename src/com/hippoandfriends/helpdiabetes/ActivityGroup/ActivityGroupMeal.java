@@ -4,19 +4,12 @@ package com.hippoandfriends.helpdiabetes.ActivityGroup;
 
 import java.util.ArrayList;
 
-
 import android.app.ActivityGroup;
-
 import android.content.Context;
-
 import android.content.Intent;
-
 import android.os.Bundle;
-
 import android.view.KeyEvent;
-
 import android.view.View;
-
 import android.view.inputmethod.InputMethodManager;
 
 import com.hippoandfriends.helpdiabetes.Rest.DataParser;

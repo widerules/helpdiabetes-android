@@ -6,24 +6,16 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 
-
 import android.app.ListActivity;
-
 import android.database.Cursor;
-
 import android.os.Bundle;
-
 import android.view.KeyEvent;
-
 import android.view.View;
-
 import android.view.View.OnClickListener;
-
 import android.widget.Button;
-
 import android.widget.ListView;
 
-
+import com.hippoandfriends.helpdiabetes.R;
 import com.hippoandfriends.helpdiabetes.ActivityGroup.ActivityGroupSettings;
 import com.hippoandfriends.helpdiabetes.Custom.CustomArrayAdapterSettingsMealTimes;
 import com.hippoandfriends.helpdiabetes.Rest.DataParser;
@@ -33,7 +25,6 @@ import com.hippoandfriends.helpdiabetes.Rest.Functions;
 import com.hippoandfriends.helpdiabetes.Rest.TrackingValues;
 import com.hippoandfriends.helpdiabetes.slider.DateSlider;
 import com.hippoandfriends.helpdiabetes.slider.TimeSlider;
-import com.hippoandfriends.helpdiabetes.R;
 
 public class ShowSettingsMealTimes extends ListActivity {
 	private DbAdapter dbHelper;

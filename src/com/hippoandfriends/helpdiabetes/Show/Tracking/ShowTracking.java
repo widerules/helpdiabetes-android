@@ -5,46 +5,39 @@ package com.hippoandfriends.helpdiabetes.Show.Tracking;
 import java.util.ArrayList;
 import java.util.Calendar;
 
+import java.io.File;
+import java.io.IOException;
+
+import jxl.Workbook;
+import jxl.write.Label;
+import jxl.write.Number;
+import jxl.write.WritableSheet;
+import jxl.write.WritableWorkbook;
+import jxl.write.WriteException;
+import jxl.write.biff.RowsExceededException;
 
 import android.app.AlertDialog;
-
 import android.app.Dialog;
-
 import android.app.ListActivity;
-
+import android.app.ProgressDialog;
 import android.content.Context;
-
 import android.content.DialogInterface;
-
 import android.content.DialogInterface.OnClickListener;
-
-import android.content.Intent;
-
 import android.database.Cursor;
-
 import android.os.AsyncTask;
-
 import android.os.Bundle;
-
+import android.os.Environment;
 import android.text.Editable;
-
 import android.text.TextWatcher;
-
 import android.view.KeyEvent;
-
 import android.view.View;
-
 import android.widget.Button;
-
 import android.widget.EditText;
-
 import android.widget.LinearLayout;
-
 import android.widget.ListView;
-
 import android.widget.Toast;
 
-
+import com.hippoandfriends.helpdiabetes.R;
 import com.hippoandfriends.helpdiabetes.ActivityGroup.ActivityGroupMeal;
 import com.hippoandfriends.helpdiabetes.ActivityGroup.ActivityGroupTracking;
 import com.hippoandfriends.helpdiabetes.Custom.CustomArrayAdapterDBTracking;
@@ -60,11 +53,10 @@ import com.hippoandfriends.helpdiabetes.Rest.TrackingValues;
 import com.hippoandfriends.helpdiabetes.Show.ShowHomeTab;
 import com.hippoandfriends.helpdiabetes.slider.DateSlider;
 import com.hippoandfriends.helpdiabetes.slider.DateTimeSlider;
-import com.hippoandfriends.helpdiabetes.R;
 
 public class ShowTracking extends ListActivity {
 	private CustomArrayAdapterDBTracking adapter;
-	private Button btMore /*,btForward*/;
+	private Button btMore, btForward;
 
 	// search function
 	private Button btSearch, btSearchNext;
@@ -78,6 +70,8 @@ public class ShowTracking extends ListActivity {
 	private int selectedPosition;
 	private Context ctx;
 
+	private ProgressDialog pd;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -90,10 +84,13 @@ public class ShowTracking extends ListActivity {
 		ActivityGroupTracking.group.parent
 				.trackPageView(TrackingValues.pageShowTrackingTab);
 
+		pd = new ProgressDialog(ActivityGroupTracking.group);
+
 		// search function
 		btSearch = (Button) findViewById(R.id.buttonSearch);
 		btSearchNext = (Button) findViewById(R.id.buttonSearchNext);
 		btMore = (Button) findViewById(R.id.buttonMore);
+		btForward = (Button) findViewById(R.id.ButtonForward);
 		llSearch = (LinearLayout) findViewById(R.id.LinearLayoutSearch);
 		llButtons = (LinearLayout) findViewById(R.id.LinearLayoutButtons);
 		et = (EditText) findViewById(R.id.editText1);
@@ -107,18 +104,15 @@ public class ShowTracking extends ListActivity {
 		adapter = null;
 
 		searchPosition = 0;
+
+		btForward.setVisibility(View.INVISIBLE);
 		
-		//hide the charts part
-		//btForward.setVisibility(View.GONE);
-		
-		/*btForward.setOnClickListener(new View.OnClickListener() {
+		btForward.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
-				Intent i = new Intent(ActivityGroupTracking.group,
-						ShowTrackingAScatterChartBloodGlucose.class).addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-				View view = ActivityGroupTracking.group.getLocalActivityManager().startActivity(DataParser.activityIDTracking, i).getDecorView();
-				ActivityGroupTracking.group.setContentView(view);
+				// start asynctask to make excel file
+				new AsyncWriteExcel().execute();
 			}
-		});*/
+		});
 
 		btMore.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
@@ -126,7 +120,7 @@ public class ShowTracking extends ListActivity {
 				ActivityGroupMeal.group.parent.trackEvent(
 						TrackingValues.eventCategoryTracking,
 						TrackingValues.eventCategoryTrackingSeeMore);
-				
+
 				setListAdapter(null);
 
 				// start a background thread to add the next month (where are
@@ -153,14 +147,14 @@ public class ShowTracking extends ListActivity {
 			}
 		});
 
-		btSearchNext.setOnClickListener(new View.OnClickListener() { 
+		btSearchNext.setOnClickListener(new View.OnClickListener() {
 
 			public void onClick(View v) {
 				// track we come here
 				ActivityGroupMeal.group.parent.trackEvent(
 						TrackingValues.eventCategoryTracking,
 						TrackingValues.eventCategoryTrackingFindNext);
-				
+
 				onClickFindNext();
 				setNext();
 			}
@@ -183,6 +177,60 @@ public class ShowTracking extends ListActivity {
 
 			}
 		});
+	}
+
+	private class AsyncWriteExcel extends AsyncTask<Void, Void, Void> {
+
+		@Override
+		protected Void doInBackground(Void... arg0) {
+
+			createExcelFile();
+
+			return null;
+		}
+
+		@Override
+		protected void onPostExecute(Void result) {
+			Toast.makeText(ActivityGroupTracking.group,
+					"Finished creating excel", Toast.LENGTH_LONG).show();
+			super.onPostExecute(result);
+		}
+
+	}
+
+	private void createExcelFile() {
+
+		File sd = Environment.getExternalStorageDirectory();
+		if (sd.canWrite()) {
+			try{
+			WritableWorkbook workbook = Workbook.createWorkbook(new File(sd, "HelpDiabetesExcel.xls"));
+			WritableSheet sheet = workbook.createSheet("HelpDiabetes", 0);
+ 
+			int column = 0;
+			int row = 0;
+
+			Label label = new Label(column, row, "A label record");
+			sheet.addCell(label);
+			
+			for (DBTracking obj : ActivityGroupTracking.group.getTrackingData().listTracking) {
+				try {
+
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+
+			row++;
+			
+			Label labelTwo = new Label(column, row, "A label record again");
+			sheet.addCell(labelTwo);
+
+			workbook.write();
+			workbook.close();
+			} catch (Exception e){
+				
+			}
+		}
 	}
 
 	@Override
@@ -414,30 +462,21 @@ public class ShowTracking extends ListActivity {
 							R.string.short_carbs);
 					break;
 				case 2:
-					calculatedValue = 
-							(mealFood.getUnit().getProtein() < 0F )?
-									-1:
-									((mealFood.getUnit().getProtein() / mealFood
-											.getUnit().getStandardamound()) * mealFood
-											.getAmount());
+					calculatedValue = ((mealFood.getUnit().getProtein() / mealFood
+							.getUnit().getStandardamound()) * mealFood
+							.getAmount());
 					defaultValueText = getResources().getString(
 							R.string.amound_of_protein);
 					break;
 				case 3:
-					calculatedValue = 
-							(mealFood.getUnit().getFat() < 0F )?
-									-1:
-									((mealFood.getUnit().getFat() / mealFood
+					calculatedValue = ((mealFood.getUnit().getFat() / mealFood
 							.getUnit().getStandardamound()) * mealFood
 							.getAmount());
 					defaultValueText = getResources().getString(
 							R.string.amound_of_fat);
 					break;
 				case 4:
-					calculatedValue = 
-							(mealFood.getUnit().getKcal() < 0F )?
-									-1:
-									((mealFood.getUnit().getKcal() / mealFood
+					calculatedValue = ((mealFood.getUnit().getKcal() / mealFood
 							.getUnit().getStandardamound()) * mealFood
 							.getAmount());
 					defaultValueText = getResources().getString(
@@ -445,7 +484,7 @@ public class ShowTracking extends ListActivity {
 					break;
 				}
 
-				totalValue = (calculatedValue < 0F || totalValue < 0f) ? -1: totalValue + calculatedValue;
+				totalValue += calculatedValue;
 
 				// round calculatedValue
 				calculatedValue = new Functions().roundFloats(calculatedValue,
@@ -453,7 +492,7 @@ public class ShowTracking extends ListActivity {
 
 				text += "" + mealFood.getAmount() + " "
 						+ mealFood.getUnit().getName() + " "
-						+ mealFood.getFoodName() + " (" + (calculatedValue < 0 ? getResources().getString(R.string.unknown) : calculatedValue) + " "
+						+ mealFood.getFoodName() + " (" + calculatedValue + " "
 						+ defaultValueText + ") \n";
 			}
 
@@ -483,7 +522,7 @@ public class ShowTracking extends ListActivity {
 					ActivityGroupTracking.group.getTrackingData().listTracking
 							.get(position).getMealEvent().getId(),
 					getResources().getString(R.string.realTotal) + ": "
-							+ (totalValue < 0F ? getResources().getString(R.string.unknown):totalValue)  + " " + defaultValueText + " \n"
+							+ totalValue + " " + defaultValueText + " \n"
 							+ text + " \n" + calculatedInsuline, position);
 		}
 	}

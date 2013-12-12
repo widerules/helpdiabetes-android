@@ -20,39 +20,23 @@ package com.hippoandfriends.helpdiabetes.slider;
 
 import java.lang.reflect.Constructor;
 
-
 import android.content.Context;
-
 import android.content.res.TypedArray;
-
 import android.graphics.Canvas;
-
 import android.graphics.drawable.Drawable;
-
 import android.util.AttributeSet;
-
 import android.util.Log;
-
 import android.view.Display;
-
 import android.view.Gravity;
-
 import android.view.MotionEvent;
-
 import android.view.VelocityTracker;
-
 import android.view.View;
-
 import android.view.ViewConfiguration;
-
 import android.view.WindowManager;
-
 import android.widget.LinearLayout;
-
 import android.widget.Scroller;
+
 import com.hippoandfriends.helpdiabetes.R;
-
-
 
 /**
  * This is where most of the magic happens. This is a subclass of LinearLayout

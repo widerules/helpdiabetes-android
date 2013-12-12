@@ -4,23 +4,14 @@ package com.hippoandfriends.helpdiabetes.Custom;
 
 import com.hippoandfriends.helpdiabetes.Rest.Functions;
 
-
 import android.content.Context;
-
 import android.database.Cursor;
-
 import android.view.Gravity;
-
 import android.view.LayoutInflater;
-
 import android.view.View;
-
 import android.view.ViewGroup;
-
 import android.view.ViewGroup.LayoutParams;
-
 import android.widget.SimpleCursorAdapter;
-
 import android.widget.TextView;
 
 public class CustomSimpleCursorAdapterAddFoodToSelectionSpinner extends

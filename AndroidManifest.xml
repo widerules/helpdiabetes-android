@@ -2,8 +2,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.hippoandfriends.helpdiabetes"
     android:installLocation="auto"
-    android:versionCode="19"
-    android:versionName="2.0.5" >
+    android:versionCode="21"
+    android:versionName="2.0.7" >
 
     <uses-sdk
         android:minSdkVersion="4"
@@ -92,6 +92,12 @@
         <activity android:name="com.hippoandfriends.helpdiabetes.Show.Settings.ShowSettingsDefaultMedicineType" >
         </activity>
         <activity android:name="com.hippoandfriends.helpdiabetes.Show.Tracking.ShowLoadingTrackingData" >
+        </activity>
+        <activity android:name="com.hippoandfriends.helpdiabetes.Show.Tracking.ShowTrackingBloodGlucoseChart" >
+        </activity>
+        <activity android:name="com.hippoandfriends.helpdiabetes.Show.Tracking.ShowTrackingDefaultInsulineChart" >
+        </activity>
+        <activity android:name=".Show.Tracking.ShowTrackingAScatterChartBloodGlucose" >
         </activity>
     </application>
 

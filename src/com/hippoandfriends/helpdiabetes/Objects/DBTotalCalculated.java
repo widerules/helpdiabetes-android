@@ -1,15 +1,13 @@
 package com.hippoandfriends.helpdiabetes.Objects;
 
-import com.hippoandfriends.helpdiabetes.R.string;
-
 public class DBTotalCalculated {
-	private String calculatedValue;
+	private float calculatedValue;
 	// use to know if we have carb, prot, fat or kcal
 	// carb = 1, prot = 2, fat = 3, kcal = 4
 	private int valueNumber;
 	private String valueText;
 
-	public DBTotalCalculated(String calculatedValue, int valueNumber,
+	public DBTotalCalculated(float calculatedValue, int valueNumber,
 			String valueText) {
 		super();
 		this.calculatedValue = calculatedValue;
@@ -17,11 +15,11 @@ public class DBTotalCalculated {
 		this.valueText = valueText;
 	}
 
-	public String getCalculatedValue() {
+	public float getCalculatedValue() {
 		return calculatedValue;
 	}
 
-	public void setCalculatedValue(String calculatedValue) {
+	public void setCalculatedValue(float calculatedValue) {
 		this.calculatedValue = calculatedValue;
 	}
 
